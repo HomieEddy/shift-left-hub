@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,12 @@ public class AdminUserService {
 
     @Transactional
     public UserResponse updateUserRole(UUID id, UserRole newRole) {
+        var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         var user = userRepository.findById(id)
             .orElseThrow(() -> new UserNotFoundException(id));
+        if (user.getEmail().equals(currentUserEmail)) {
+            throw new IllegalStateException("Cannot modify your own role");
+        }
         user.setRole(newRole);
         userRepository.save(user);
         return UserResponse.from(user);
@@ -43,8 +48,12 @@ public class AdminUserService {
 
     @Transactional
     public UserResponse toggleUserStatus(UUID id) {
+        var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         var user = userRepository.findById(id)
             .orElseThrow(() -> new UserNotFoundException(id));
+        if (user.getEmail().equals(currentUserEmail)) {
+            throw new IllegalStateException("Cannot modify your own account status");
+        }
         user.setEnabled(!user.isEnabled());
         userRepository.save(user);
         return UserResponse.from(user);
