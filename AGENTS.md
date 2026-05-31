@@ -104,6 +104,34 @@ Next: `/gsd-plan-phase 1`
 - **Keep Logic Out of Templates** — No complex expressions in `{{ }}`. Calculate in TS or use Pipes.
 - **File Naming** — Strict kebab-case per Angular Style Guide: `ticket-list.component.ts`, `ticket.service.ts`, `ticket.model.ts`
 
+## Testing Guidelines (from TSD.md)
+
+High-ROI testing only — no trivial tests (getters/setters, visual component snapshots).
+
+### Backend Testing (JUnit 5 + Mockito + Testcontainers)
+- **Unit test only the Service layer** — Controllers have zero business logic, skip them.
+- **Mock all external dependencies** (Repositories, `ChatClient`) via `@ExtendWith(MockitoExtension.class)`.
+- **Never call real AI APIs in tests** — mock AI responses for deterministic, fast, cost-free tests.
+- **Integration tests use Testcontainers** — never H2 (doesn't support JSONB/TSVECTOR). Real PostgreSQL in ephemeral Docker containers.
+- **Test directory structure** mirrors the module structure: `user/`, `article/`, `ticket/`, `ai/`.
+
+### Frontend Testing (Jasmine + Karma/Jest)
+- **Test only Smart components and Services** — skip Dumb component presentation tests.
+- **Use `HttpTestingController`** to mock API responses — never hit the real network.
+- **Test RxJS logic** — debounce on search input, stream transformations, error handling.
+- **Prefer `async` pipe in templates** — avoid `.subscribe()` where possible.
+
+### E2E Testing (Playwright — one Golden Path)
+- Exactly **one** Playwright script covering the critical happy path:
+  `login → AI query → escalate to human → agent receives ticket`
+- **Two browser contexts** — simulate both User and Agent in the same test.
+- Located at `e2e/playwright/golden-path.spec.ts`.
+
+### CI/CD Gatekeeping
+- **Backend CI:** `mvn test` must pass (JUnit + Testcontainers). Build fails → Railway blocks deploy.
+- **Frontend CI:** `npm run test -- --watch=false` must pass. Vercel aborts deploy on failure.
+- **Post-Deploy:** Optional Playwright health check against live domain.
+
 ## Critical GOTCHAs (from research)
 
 - Angular 19 is EOL — use Angular 21.2+ LTS
