@@ -35,19 +35,19 @@ export class AuthService {
   }
 
   getUsers(): Observable<UserDto[]> {
-    return this.http.get<UserDto[]>('/api/admin/users');
+    return this.http.get<UserDto[]>('/api/admin/users', { withCredentials: true });
   }
 
   getUserById(id: string): Observable<UserDto> {
-    return this.http.get<UserDto>(`/api/admin/users/${id}`);
+    return this.http.get<UserDto>(`/api/admin/users/${id}`, { withCredentials: true });
   }
 
   updateUserRole(id: string, role: string): Observable<UserDto> {
-    return this.http.put<UserDto>(`/api/admin/users/${id}/role`, { role });
+    return this.http.put<UserDto>(`/api/admin/users/${id}/role`, { role }, { withCredentials: true });
   }
 
   toggleUserStatus(id: string): Observable<UserDto> {
-    return this.http.put<UserDto>(`/api/admin/users/${id}/status`, {});
+    return this.http.put<UserDto>(`/api/admin/users/${id}/status`, {}, { withCredentials: true });
   }
 
   private setSession(response: AuthResponse): void {
