@@ -1,6 +1,7 @@
 package com.shiftleft.hub.common.config;
 
 import com.shiftleft.hub.common.DuplicateEmailException;
+import com.shiftleft.hub.user.domain.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleDuplicateEmail(
             DuplicateEmailException ex) {
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFound(
+            UserNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
