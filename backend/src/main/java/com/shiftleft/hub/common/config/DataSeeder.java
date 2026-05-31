@@ -30,7 +30,8 @@ public class DataSeeder implements CommandLineRunner {
                 .enabled(true)
                 .build();
             userRepository.save(admin);
-            log.info("Created default admin user: admin@shiftleft.com / Admin123!");
+            log.info("Created default admin user with email: admin@shiftleft.com");
+            log.warn("Default admin password is 'Admin123!'. Change it on first login for security.");
         }
     }
 }
