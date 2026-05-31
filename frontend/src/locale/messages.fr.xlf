@@ -2,6 +2,122 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" target-language="fr" datatype="plaintext">
     <body>
+      <trans-unit id="login.title">
+        <source>Login</source>
+        <target>Connexion</target>
+      </trans-unit>
+      <trans-unit id="login.signin">
+        <source>Sign In</source>
+        <target>Se connecter</target>
+      </trans-unit>
+      <trans-unit id="login.signing-in">
+        <source>Signing in...</source>
+        <target>Connexion en cours...</target>
+      </trans-unit>
+      <trans-unit id="login.no-account">
+        <source>Don't have an account?</source>
+        <target>Pas encore de compte?</target>
+      </trans-unit>
+      <trans-unit id="register.title">
+        <source>Create Account</source>
+        <target>Créer un compte</target>
+      </trans-unit>
+      <trans-unit id="register.create">
+        <source>Create Account</source>
+        <target>Créer un compte</target>
+      </trans-unit>
+      <trans-unit id="register.creating">
+        <source>Creating account...</source>
+        <target>Création du compte...</target>
+      </trans-unit>
+      <trans-unit id="register.has-account">
+        <source>Already have an account?</source>
+        <target>Déjà un compte?</target>
+      </trans-unit>
+      <trans-unit id="admin.users.title">
+        <source>User Management</source>
+        <target>Gestion des utilisateurs</target>
+      </trans-unit>
+      <trans-unit id="admin.users.refresh">
+        <source>Refresh</source>
+        <target>Actualiser</target>
+      </trans-unit>
+      <trans-unit id="admin.users.loading">
+        <source>Loading users...</source>
+        <target>Chargement des utilisateurs...</target>
+      </trans-unit>
+      <trans-unit id="admin.users.no-users">
+        <source>No users found.</source>
+        <target>Aucun utilisateur trouvé.</target>
+      </trans-unit>
+      <trans-unit id="admin.users.edit-role">
+        <source>Edit Role</source>
+        <target>Modifier le rôle</target>
+      </trans-unit>
+      <trans-unit id="admin.users.disable">
+        <source>Disable</source>
+        <target>Désactiver</target>
+      </trans-unit>
+      <trans-unit id="admin.users.enable">
+        <source>Enable</source>
+        <target>Activer</target>
+      </trans-unit>
+      <trans-unit id="nav.users">
+        <source>Users</source>
+        <target>Utilisateurs</target>
+      </trans-unit>
+      <trans-unit id="nav.logout">
+        <source>Logout</source>
+        <target>Déconnexion</target>
+      </trans-unit>
+      <trans-unit id="app.title">
+        <source>SL Knowledge Hub</source>
+        <target>SL Knowledge Hub</target>
+      </trans-unit>
+      <trans-unit id="error.invalid-credentials">
+        <source>Invalid email or password.</source>
+        <target>Email ou mot de passe invalide.</target>
+      </trans-unit>
+      <trans-unit id="error.login-failed">
+        <source>Login failed. Please try again.</source>
+        <target>Échec de connexion. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="error.email-exists">
+        <source>An account with this email already exists.</source>
+        <target>Un compte avec cet email existe déjà.</target>
+      </trans-unit>
+      <trans-unit id="error.registration-failed">
+        <source>Registration failed. Please try again.</source>
+        <target>Échec d'inscription. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="error.password-rules">
+        <source>Password must be at least 8 characters with 1 uppercase letter and 1 number.</source>
+        <target>Le mot de passe doit contenir au moins 8 caractères, dont 1 majuscule et 1 chiffre.</target>
+      </trans-unit>
+      <trans-unit id="error.load-users">
+        <source>Failed to load users. Make sure you have admin access.</source>
+        <target>Échec du chargement des utilisateurs. Vérifiez vos droits d'administration.</target>
+      </trans-unit>
+      <trans-unit id="error.update-role">
+        <source>Failed to update role. Please try again.</source>
+        <target>Échec de la mise à jour du rôle. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="error.toggle-status">
+        <source>Failed to toggle user status.</source>
+        <target>Échec du changement de statut.</target>
+      </trans-unit>
+      <trans-unit id="auth.email.label">
+        <source>Email</source>
+        <target>Email</target>
+      </trans-unit>
+      <trans-unit id="auth.password.label">
+        <source>Password</source>
+        <target>Mot de passe</target>
+      </trans-unit>
+      <trans-unit id="auth.display-name.label">
+        <source>Display Name</source>
+        <target>Nom d'affichage</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

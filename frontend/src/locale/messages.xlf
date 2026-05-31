@@ -2,6 +2,122 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="login.title">
+        <source>Login</source>
+        <target>Login</target>
+      </trans-unit>
+      <trans-unit id="login.signin">
+        <source>Sign In</source>
+        <target>Sign In</target>
+      </trans-unit>
+      <trans-unit id="login.signing-in">
+        <source>Signing in...</source>
+        <target>Signing in...</target>
+      </trans-unit>
+      <trans-unit id="login.no-account">
+        <source>Don't have an account?</source>
+        <target>Don't have an account?</target>
+      </trans-unit>
+      <trans-unit id="register.title">
+        <source>Create Account</source>
+        <target>Create Account</target>
+      </trans-unit>
+      <trans-unit id="register.create">
+        <source>Create Account</source>
+        <target>Create Account</target>
+      </trans-unit>
+      <trans-unit id="register.creating">
+        <source>Creating account...</source>
+        <target>Creating account...</target>
+      </trans-unit>
+      <trans-unit id="register.has-account">
+        <source>Already have an account?</source>
+        <target>Already have an account?</target>
+      </trans-unit>
+      <trans-unit id="admin.users.title">
+        <source>User Management</source>
+        <target>User Management</target>
+      </trans-unit>
+      <trans-unit id="admin.users.refresh">
+        <source>Refresh</source>
+        <target>Refresh</target>
+      </trans-unit>
+      <trans-unit id="admin.users.loading">
+        <source>Loading users...</source>
+        <target>Loading users...</target>
+      </trans-unit>
+      <trans-unit id="admin.users.no-users">
+        <source>No users found.</source>
+        <target>No users found.</target>
+      </trans-unit>
+      <trans-unit id="admin.users.edit-role">
+        <source>Edit Role</source>
+        <target>Edit Role</target>
+      </trans-unit>
+      <trans-unit id="admin.users.disable">
+        <source>Disable</source>
+        <target>Disable</target>
+      </trans-unit>
+      <trans-unit id="admin.users.enable">
+        <source>Enable</source>
+        <target>Enable</target>
+      </trans-unit>
+      <trans-unit id="nav.users">
+        <source>Users</source>
+        <target>Users</target>
+      </trans-unit>
+      <trans-unit id="nav.logout">
+        <source>Logout</source>
+        <target>Logout</target>
+      </trans-unit>
+      <trans-unit id="app.title">
+        <source>SL Knowledge Hub</source>
+        <target>SL Knowledge Hub</target>
+      </trans-unit>
+      <trans-unit id="error.invalid-credentials">
+        <source>Invalid email or password.</source>
+        <target>Invalid email or password.</target>
+      </trans-unit>
+      <trans-unit id="error.login-failed">
+        <source>Login failed. Please try again.</source>
+        <target>Login failed. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="error.email-exists">
+        <source>An account with this email already exists.</source>
+        <target>An account with this email already exists.</target>
+      </trans-unit>
+      <trans-unit id="error.registration-failed">
+        <source>Registration failed. Please try again.</source>
+        <target>Registration failed. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="error.password-rules">
+        <source>Password must be at least 8 characters with 1 uppercase letter and 1 number.</source>
+        <target>Password must be at least 8 characters with 1 uppercase letter and 1 number.</target>
+      </trans-unit>
+      <trans-unit id="error.load-users">
+        <source>Failed to load users. Make sure you have admin access.</source>
+        <target>Failed to load users. Make sure you have admin access.</target>
+      </trans-unit>
+      <trans-unit id="error.update-role">
+        <source>Failed to update role. Please try again.</source>
+        <target>Failed to update role. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="error.toggle-status">
+        <source>Failed to toggle user status.</source>
+        <target>Failed to toggle user status.</target>
+      </trans-unit>
+      <trans-unit id="auth.email.label">
+        <source>Email</source>
+        <target>Email</target>
+      </trans-unit>
+      <trans-unit id="auth.password.label">
+        <source>Password</source>
+        <target>Password</target>
+      </trans-unit>
+      <trans-unit id="auth.display-name.label">
+        <source>Display Name</source>
+        <target>Display Name</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
