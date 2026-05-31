@@ -93,6 +93,11 @@ public class JwtService {
         usedRefreshTokens.remove(tokenId);
     }
 
+    public String extractTokenId(String token) {
+        Claims claims = parseToken(token);
+        return claims.get("tokenId", String.class);
+    }
+
     private Claims parseToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
