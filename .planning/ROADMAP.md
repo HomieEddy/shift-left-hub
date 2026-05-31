@@ -6,7 +6,7 @@
 
 | # | Phase | Goal | Requirements | Success Criteria |
 |--|-------|------|--------------|------------------|
-| 1 | Foundation | 4/4 | Planned    | 2026-05-31 |
+| 1 | Foundation | 3/4 | Executing  | 2026-05-31 |
 | 2 | Knowledge Base | Article CRUD + FTS + tags + bilingual EN/FR | KB-01-05, ADM-04 | 4 |
 | 3 | AI Self-Service Portal | Conversational chat + RAG + SSE streaming | AI-01-06, INF-04 | 4 |
 | 4 | Escalation & Ticketing | Contextual ticket creation | TKT-01-04 | 3 |
@@ -30,7 +30,7 @@
 3. User session persists across browser refresh via refresh token rotation (HttpOnly cookies)
 4. Admin can manage users and assign roles via the admin console
 
-**Plans:** 4 plans in 3 waves
+**Plans:** 4 plans in 3 waves (3/4 complete)
 
 | Wave | Plans | Objective |
 |------|-------|-----------|
@@ -42,7 +42,7 @@ Plans:
 - [ ] 01-01 — Infrastructure: Docker Compose, backend Dockerfile, .gitignore, application config
 - [ ] 01-02 — Backend Auth: pom.xml, JWT auth (HttpOnly cookies + refresh rotation), User entity, RBAC, admin seeder
 - [x] 01-03 — Admin API + Angular scaffold: AdminUserController, Angular CLI project, Tailwind, i18n, core services
-- [ ] 01-04 — Frontend Auth UI + Admin Console: Login/Register pages, user management table, language switcher, translations
+- [x] 01-04 — Frontend Auth UI + Admin Console: Login/Register pages, user management table, language switcher, translations
 
 ---
 

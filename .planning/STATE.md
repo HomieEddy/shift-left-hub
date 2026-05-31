@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-05-31T16:31:00.000Z"
+last_updated: "2026-05-31T16:36:00.000Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -22,12 +22,12 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-31)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
-**Current focus:** Executing Wave 2 (01-03 complete, 01-04 remaining)
+**Current focus:** Executing (01-04 complete, Phase 1 pending completion)
 
 ## Current Phase
 
 - **Phase:** 1 — Foundation
-- **Status:** Executing (2/4 plans complete)
+- **Status:** Executing (3/4 plans complete)
 
 ## Completed Plans
 
@@ -35,6 +35,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 |------|------|---------|---------|
 | 01-02 | Auth Backend | JWT auth with HttpOnly cookies, refresh rotation, User entity/RBAC, admin seeder | `9ce159d`, `a704907`, `9846203` |
 | 01-03 | Angular Scaffold + Admin API | Admin user REST API, Angular 21.2 SPA with Tailwind v4, i18n, proxy, AuthService, auth guard, error interceptor | `e2e130d`, `31e92a8`, `3be9b7d` |
+| 01-04 | Frontend Auth UI | Login/Register forms with auto-login, admin user table with role edit/status toggle, app shell with language switcher, EN/FR i18n translations | `cc106c6`, `e2017f3`, `77150e7` |
 
 ## Artifacts
 
@@ -84,12 +85,18 @@ Requirements completed in Plan 01-03:
 - **ADM-03**: Admin can view, edit role, and disable/enable users via REST API ✓
 - **INF-03**: Angular 21 SPA with pnpm, Tailwind CSS, i18n, and dev proxy ✓
 
+Frontend UI requirements (AUTH-01 through AUTH-04, ADM-03) realized via:
+- Login/Register forms calling AuthService ✓
+- Auto-login after signup (D-18) ✓
+- Admin user table with role edit dialog and status toggle ✓
+- EN/FR language switcher ✓
+
 ## Next Steps
 
-1. Execute remaining Phase 1 plans in wave order:
-   - Wave 1: 01-01 (Docker setup) ✓, 01-02 (Auth backend) ✓
-   - Wave 2: 01-03 (Angular scaffold) ✓
-   - Wave 3: 01-04 (Frontend auth UI)
+1. Remaining Phase 1 plans:
+   - 01-01 (Docker setup) — Not yet started
+   - 01-04 (Frontend auth UI) ✓ Complete
+2. After all Phase 1 plans complete, transition to Phase 2 (Knowledge Base)
 
 ---
 
