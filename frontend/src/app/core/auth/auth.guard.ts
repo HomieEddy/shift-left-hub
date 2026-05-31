@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export const authGuard: CanActivateFn = () => {
@@ -13,5 +13,9 @@ export const authGuard: CanActivateFn = () => {
 
   return authService.refresh().pipe(
     map(() => true),
+    catchError(() => {
+      router.navigate(['/login']);
+      return of(false);
+    }),
   );
 };
