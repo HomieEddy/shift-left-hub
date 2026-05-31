@@ -109,7 +109,7 @@ public class SecurityConfig {
                                         u.getRole().name()));
                                 var authentication =
                                     new UsernamePasswordAuthenticationToken(
-                                        u, null, authorities);
+                                        u.getEmail(), null, authorities);
                                 SecurityContextHolder.getContext()
                                     .setAuthentication(authentication);
                             }
