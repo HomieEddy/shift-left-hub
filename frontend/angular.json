@@ -33,7 +33,7 @@
               }
             ],
             "styles": ["src/styles.css"],
-            "polyfills": ["@angular/localize/init"]
+            "polyfills": ["zone.js", "@angular/localize/init"]
           },
           "configurations": {
             "production": {
