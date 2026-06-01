@@ -29,6 +29,7 @@ shift-left-hub/
         │   ├── features/    # Sub-modules: portal, agent-dashboard
         │   └── shared/      # UI components, animations
         └── styles.css       # Tailwind imports
+```
 		
 ## 2. Containerization Strategy (`docker-compose.yml`)
 ```yaml

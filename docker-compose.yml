@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.0-pg16
+    container_name: shiftleft-db
+    environment:
+      POSTGRES_USER: shiftleft
+      POSTGRES_PASSWORD: shiftleft
+      POSTGRES_DB: shiftleft
+    ports:
+      # T-01-01: Bind to 127.0.0.1 only — prevent external network access to database
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shiftleft -d shiftleft"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: shiftleft-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@shiftleft.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shiftleft-backend
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shiftleft
+      SPRING_DATASOURCE_USERNAME: shiftleft
+      SPRING_DATASOURCE_PASSWORD: shiftleft
+      APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL:-admin@shiftleft.com}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-Admin123!}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:

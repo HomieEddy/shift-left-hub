@@ -1,0 +1,42 @@
+{
+  "name": "shiftleft-hub",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "tailwind:css": "tailwindcss -i src/tailwind.src.css -o src/styles.css",
+    "prestart": "pnpm tailwind:css",
+    "start": "ng serve",
+    "prebuild": "pnpm tailwind:css",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "dependencies": {
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/localize": "^21.2.15",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "^0.16.2"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.13",
+    "@angular/cli": "^21.2.13",
+    "@angular/compiler-cli": "^21.2.0",
+    "@tailwindcss/cli": "^4.3.0",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "jsdom": "^28.0.0",
+    "postcss": "^8.5.15",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^4.3.0",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}
