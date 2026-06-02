@@ -55,13 +55,18 @@ public class PublicArticleService {
                 var publishedAt = (LocalDateTime) row[5];
                 var headlineEn = (String) row[6];
                 var headlineFr = (String) row[7];
+                var tagNamesStr = (String) row[8];
 
                 // Return English headline by default; frontend can switch
                 var title = titleEn != null ? titleEn : titleFr;
                 var headline = headlineEn != null ? headlineEn : headlineFr;
 
+                var tagNames = tagNamesStr != null && !tagNamesStr.isEmpty()
+                    ? Set.of(tagNamesStr.split(","))
+                    : Set.<String>of();
+
                 return new ArticleSearchResult(
-                    id, title, headline, slug, excerpt, publishedAt, Set.of());
+                    id, title, headline, slug, excerpt, publishedAt, tagNames);
             })
             .toList();
 

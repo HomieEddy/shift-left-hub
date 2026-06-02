@@ -15,23 +15,27 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     Page<Article> findByStatus(ArticleStatus status, Pageable pageable);
 
     @Query(value = """
-        SELECT id, title_en, title_fr, slug, excerpt, published_at,
-               ts_headline('english', content_en, plainto_tsquery('english', :query),
+        SELECT a.id, a.title_en, a.title_fr, a.slug, a.excerpt, a.published_at,
+               ts_headline('english', a.content_en, plainto_tsquery('english', :query),
                            'MaxWords=50, MinWords=20, StartSel=<mark>, StopSel=</mark>') AS headline_en,
-               ts_headline('french', content_fr, plainto_tsquery('french', :query),
-                           'MaxWords=50, MinWords=20, StartSel=<mark>, StopSel=</mark>') AS headline_fr
-        FROM article
-        WHERE status = 'PUBLISHED'
-          AND (tsv_en @@ plainto_tsquery('english', :query)
-            OR tsv_fr @@ plainto_tsquery('french', :query))
-        ORDER BY ts_rank(tsv_en, plainto_tsquery('english', :query)) DESC
+               ts_headline('french', a.content_fr, plainto_tsquery('french', :query),
+                           'MaxWords=50, MinWords=20, StartSel=<mark>, StopSel=</mark>') AS headline_fr,
+               COALESCE(
+                 (SELECT string_agg(t.name_en, ',') FROM article_tag at2 JOIN tag t ON t.id = at2.tag_id WHERE at2.article_id = a.id),
+                 ''
+               ) AS tag_names
+        FROM article a
+        WHERE a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ plainto_tsquery('english', :query)
+            OR a.tsv_fr @@ plainto_tsquery('french', :query))
+        ORDER BY ts_rank(a.tsv_en, plainto_tsquery('english', :query)) DESC
         """,
         countQuery = """
         SELECT count(*)
-        FROM article
-        WHERE status = 'PUBLISHED'
-          AND (tsv_en @@ plainto_tsquery('english', :query)
-            OR tsv_fr @@ plainto_tsquery('french', :query))
+        FROM article a
+        WHERE a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ plainto_tsquery('english', :query)
+            OR a.tsv_fr @@ plainto_tsquery('french', :query))
         """,
         nativeQuery = true)
     Page<Object[]> searchByText(@Param("query") String query, Pageable pageable);
