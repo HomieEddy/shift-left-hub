@@ -20,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -126,7 +128,14 @@ public class ArticleService {
         if (tagIds == null || tagIds.isEmpty()) {
             return new HashSet<>();
         }
-        return new HashSet<>(tagRepository.findAllById(tagIds));
+        List<Tag> foundTags = tagRepository.findAllById(tagIds);
+        if (foundTags.size() != tagIds.size()) {
+            Set<UUID> foundIds = foundTags.stream().map(Tag::getId).collect(Collectors.toSet());
+            Set<UUID> missing = new HashSet<>(tagIds);
+            missing.removeAll(foundIds);
+            throw new TagNotFoundException(missing.iterator().next());
+        }
+        return new HashSet<>(foundTags);
     }
 
     private String slugify(String title) {
