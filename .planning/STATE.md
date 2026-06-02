@@ -7,29 +7,31 @@ last_updated: "2026-05-31T16:38:00.000Z"
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 8
+  completed_plans: 6
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** Phase 1 Complete
+**Status:** Phase 2 Executing (Plans 02-01, 02-02 Complete)
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-05-31)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
-**Current focus:** Phase 1 complete — ready for Phase 2
+**Current focus:** Phase 2 executing — Plans 02-01, 02-02 complete, 2 plans remaining
 
 ## Current Phase
 
-- **Phase:** 1 — Foundation
-- **Status:** Complete (4/4 plans complete)
+- **Phase:** 2 — Knowledge Base
+- **Status:** Executing (2/4 plans complete)
 
 ## Completed Plans
+
+### Phase 1: Foundation
 
 | Plan | Name | Summary | Commits |
 |------|------|---------|---------|
@@ -37,6 +39,17 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 | 01-02 | Auth Backend | JWT auth with HttpOnly cookies, refresh rotation, User entity/RBAC, admin seeder | `9ce159d`, `a704907`, `9846203` |
 | 01-03 | Angular Scaffold + Admin API | Admin user REST API, Angular 21.2 SPA with Tailwind v4, i18n, proxy, AuthService, auth guard, error interceptor | `e2e130d`, `31e92a8`, `3be9b7d` |
 | 01-04 | Frontend Auth UI | Login/Register forms with auto-login, admin user table with role edit/status toggle, app shell with language switcher, EN/FR i18n translations | `cc106c6`, `e2017f3`, `77150e7` |
+
+### Phase 2: Knowledge Base
+
+| Plan | Name | Status | Summary | Commits |
+|------|------|--------|---------|---------|
+| 02-01 | DB schema + entities + repositories + tsvector/GIN index | ✓ Complete | [02-01-SUMMARY.md](../phases/02-knowledge-base/02-01-SUMMARY.md) | `e727e1d`, `68412b4`, `52a7f78`, `971de5f`, `fe3049d`, `718abda` |
+| 02-02 | Backend services + REST APIs (admin CRUD, public search) | ✓ Complete | [02-02-SUMMARY.md](../phases/02-knowledge-base/02-02-SUMMARY.md) | `04d348e`, `87d9543`, `55827dd`, `f04b3ea`, `98ccda0`, `44d7d6e`, `123968f`, `664febc`, `e70a557`, `27a4789` |
+| 02-03 | Shared UI components + Admin KB (article editor, tag manager) | ○ Pending | — | — |
+| 02-04 | Public KB (article listing, search, viewer, bilingual) | ○ Pending | — | — |
+
+### Artifacts
 
 ## Artifacts
 
@@ -58,7 +71,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 | Phase | Name | Status |
 |-------|------|--------|
 | 1 | Foundation | ✓ Complete |
-| 2 | Knowledge Base | ○ Pending |
+| 2 | Knowledge Base | ◐ Executing (2/4 plans) |
 | 3 | AI Self-Service Portal | ○ Pending |
 | 4 | Escalation & Ticketing | ○ Pending |
 | 5 | Agent Dashboard | ○ Pending |
@@ -85,12 +98,20 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 - **INF-01**: Docker Compose environment (PostgreSQL 16 + pgvector) ✓
 - **INF-02**: Backend runs on Spring Boot with Java 21 ✓
 - **INF-03**: Frontend serves as standalone Angular SPA ✓
+- **KB-01**: Admin can create, edit, and archive KB articles (schema foundation) ✓
+- **KB-01**: Admin can create, edit, and archive KB articles (schema foundation + REST API) ✓
+- **KB-02**: Users can browse articles with pagination (public listing + detail endpoints) ✓
+- **KB-03**: Users can search articles using FTS with highlighted snippets (search endpoint + ts_headline) ✓
+- **KB-04**: Articles support tags for categorization (Tag entity + M2M + CRUD API) ✓
+- **KB-05**: Articles are bilingual EN/FR (columnar schema + DTO support) ✓
+- **ADM-04**: Admin can manage tags (CRUD + article count + delete guard) ✓
 
 ## Next Steps
 
-1. Phase 1 complete — transition to Phase 2 (Knowledge Base)
-2. Run `/gsd-plan-phase 2` or `/gsd-discuss-phase 2`
+1. Phase 2 Plans 02-01 and 02-02 complete — data layer and API surface ready
+2. Execute Plan 02-03: Shared UI components + Admin KB (article editor, tag manager)
+3. Execute Plan 02-04: Public KB (article listing, search, viewer, bilingual)
 
 ---
 
-*Last updated: 2026-05-31 after Phase 1 execution complete*
+*Last updated: 2026-06-01 after Phase 2 planning complete*

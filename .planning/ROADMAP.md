@@ -59,10 +59,10 @@ Plans:
 4. Articles display correctly in both English and French based on user preference
 
 **Plans:**
-1. Implement article database schema with persistent tsvector + GIN index + pgvector embedding column
-2. Build Spring Boot article module: CRUD API, FTS search service, tag management
-3. Build Angular KB feature: article list, search UI with debounce, article viewer with ngx-markdown
-4. Implement bilingual article storage and language selector
+- [x] 02-01 — Database schema: Article + Tag JPA entities, repositories, ArticleStatus enum, tsvector columns + GIN index + trigger
+- [x] 02-02 — Backend services: ArticleService (CRUD with slug generation, lifecycle), TagService, admin REST APIs, public search endpoint
+- [ ] 02-03 — Angular admin UI: shared components (table, card, badge, modal), admin article editor, tag manager
+- [ ] 02-04 — Public KB: article listing, FTS search with snippets, bilingual viewer, tag filtering
 
 ---
 

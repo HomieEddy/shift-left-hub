@@ -16,11 +16,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Knowledge Base
 
-- [ ] **KB-01**: Admin can create, edit, and archive knowledge base articles in markdown
+- [x] **KB-01**: Admin can create, edit, and archive knowledge base articles in markdown — *Plan 02-01 (schema)*
 - [ ] **KB-02**: User can browse published articles with title and tag listing
 - [ ] **KB-03**: User can search articles using full-text search with result snippets
-- [ ] **KB-04**: Articles support tags (PostgreSQL TEXT[]) for categorization
-- [ ] **KB-05**: Articles are bilingual — separate content per language (EN/FR)
+- [x] **KB-04**: Articles support tags for categorization (Tag entity with M2M) — *Plan 02-01*
+- [x] **KB-05**: Articles are bilingual — separate content per language (EN/FR columns) — *Plan 02-01*
 
 ### AI Self-Service Portal
 
@@ -112,11 +112,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 1 (Plan 01-02) | Complete |
 | AUTH-03 | Phase 1 (Plan 01-02) | Complete |
 | AUTH-04 | Phase 1 (Plan 01-02) | Complete |
-| KB-01 | Phase 2 | Pending |
+| KB-01 | Phase 2 (Plan 02-01) | Complete |
 | KB-02 | Phase 2 | Pending |
 | KB-03 | Phase 2 | Pending |
-| KB-04 | Phase 2 | Pending |
-| KB-05 | Phase 2 | Pending |
+| KB-04 | Phase 2 (Plan 02-01) | Complete |
+| KB-05 | Phase 2 (Plan 02-01) | Complete |
 | AI-01 | Phase 3 | Pending |
 | AI-02 | Phase 3 | Pending |
 | AI-03 | Phase 3 | Pending |
