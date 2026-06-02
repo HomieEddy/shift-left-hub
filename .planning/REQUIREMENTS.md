@@ -58,7 +58,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **ADM-01**: Admin can view a queue of AI-drafted articles pending review
 - [ ] **ADM-02**: Admin can edit, approve (→ PUBLISHED), or reject (→ ARCHIVED) draft articles
 - [x] **ADM-03**: Admin can manage users (view, assign roles)
-- [ ] **ADM-04**: Admin can manage article tags
+- [x] **ADM-04**: Admin can manage article tags — *Plan 02-03*
 
 ### Infrastructure
 
@@ -139,7 +139,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADM-01 | Phase 6 | Pending |
 | ADM-02 | Phase 6 | Pending |
 | ADM-03 | Phase 1 | Complete |
-| ADM-04 | Phase 2 | Pending |
+| ADM-04 | Phase 2 (Plan 02-03) | Complete |
 | INF-01 | Phase 1 | Complete |
 | INF-02 | Phase 1 | Complete |
 | INF-03 | Phase 1 | Complete |
@@ -162,4 +162,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-31*
-*Last updated: 2026-05-31 after roadmap creation*
+*Last updated: 2026-06-01 after Phase 2 execution*

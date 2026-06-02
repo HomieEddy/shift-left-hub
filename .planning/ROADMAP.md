@@ -39,8 +39,8 @@
 | 3 | 01-04 | Frontend auth UI + Admin console |
 
 Plans:
-- [ ] 01-01 — Infrastructure: Docker Compose, backend Dockerfile, .gitignore, application config
-- [ ] 01-02 — Backend Auth: pom.xml, JWT auth (HttpOnly cookies + refresh rotation), User entity, RBAC, admin seeder
+- [x] 01-01 — Infrastructure: Docker Compose, backend Dockerfile, .gitignore, application config
+- [x] 01-02 — Backend Auth: pom.xml, JWT auth (HttpOnly cookies + refresh rotation), User entity, RBAC, admin seeder
 - [x] 01-03 — Admin API + Angular scaffold: AdminUserController, Angular CLI project, Tailwind, i18n, core services
 - [x] 01-04 — Frontend Auth UI + Admin Console: Login/Register pages, user management table, language switcher, translations
 
@@ -191,4 +191,4 @@ Each phase depends on all previous phases. Strict sequential execution.
 
 ---
 *Created: 2026-05-31*
-*Next: `/gsd-plan-phase 1`*
+*Next: `/gsd-plan-phase 3`*
