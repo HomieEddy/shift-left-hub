@@ -28,6 +28,23 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(com.shiftleft.hub.article.domain.ArticleNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleArticleNotFound(
+            com.shiftleft.hub.article.domain.ArticleNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(com.shiftleft.hub.tag.domain.TagNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleTagNotFound(
+            com.shiftleft.hub.tag.domain.TagNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalState(IllegalStateException ex) {
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleBadCredentials(
             BadCredentialsException ex) {
