@@ -77,6 +77,8 @@ export class ArticleSearchComponent implements OnInit {
   }
 
   sanitizeHeadline(html: string): string {
-    return html || '';
+    if (!html) return '';
+    // Only allow <mark> tags from ts_headline, strip everything else
+    return html.replace(/<(?!\/?mark(?=>|\s.*>))\/?.*?>/gi, '');
   }
 }
