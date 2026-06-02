@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -39,35 +40,36 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "title_en", nullable = false)
     private String titleEn;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content_en", nullable = false, columnDefinition = "TEXT")
     private String contentEn;
 
-    @Column
+    @Column(name = "title_fr")
     private String titleFr;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "content_fr", columnDefinition = "TEXT")
     private String contentFr;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String slug;
 
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String excerpt;
 
-    @Column
+    @Column(name = "featured_image")
     private String featuredImage;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ArticleStatus status;
 
-    @Column(nullable = false)
-    private int viewCount;
+    @Column(name = "view_count", nullable = false)
+    @Builder.Default
+    private int viewCount = 0;
 
-    @Column
+    @Column(name = "published_at")
     private LocalDateTime publishedAt;
 
     @ManyToOne
@@ -78,12 +80,6 @@ public class Article {
     @JoinColumn(name = "last_editor_id")
     private User lastEditor;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @ManyToMany
     @JoinTable(
         name = "article_tag",
@@ -92,6 +88,14 @@ public class Article {
     )
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Override
     public boolean equals(Object o) {
