@@ -62,7 +62,7 @@ Plans:
 - [x] 02-01 — Database schema: Article + Tag JPA entities, repositories, ArticleStatus enum, tsvector columns + GIN index + trigger
 - [x] 02-02 — Backend services: ArticleService (CRUD with slug generation, lifecycle), TagService, admin REST APIs, public search endpoint
 - [x] 02-03 — Angular admin UI: shared components (table, card, badge, modal), admin article editor, tag manager
-- [ ] 02-04 — Public KB: article listing, FTS search with snippets, bilingual viewer, tag filtering
+- [x] 02-04 — Public KB: article listing, FTS search with snippets, bilingual viewer, tag filtering
 
 ---
 
