@@ -194,6 +194,66 @@
         <source>Update</source>
         <target>Mettre à jour</target>
       </trans-unit>
+      <trans-unit id="nav.knowledge-base">
+        <source>Knowledge Base</source>
+        <target>Base de connaissances</target>
+      </trans-unit>
+      <trans-unit id="kb.title">
+        <source>Knowledge Base</source>
+        <target>Base de connaissances</target>
+      </trans-unit>
+      <trans-unit id="kb.search.title">
+        <source>Search Knowledge Base</source>
+        <target>Rechercher dans la base</target>
+      </trans-unit>
+      <trans-unit id="kb.search.placeholder">
+        <source>Search articles...</source>
+        <target>Rechercher des articles...</target>
+      </trans-unit>
+      <trans-unit id="kb.search.no-results">
+        <source>No results found</source>
+        <target>Aucun résultat trouvé</target>
+      </trans-unit>
+      <trans-unit id="kb.search.hint">
+        <source>Type a query above to search the knowledge base</source>
+        <target>Tapez une requête pour rechercher dans la base</target>
+      </trans-unit>
+      <trans-unit id="kb.search.results">
+        <source>Found {VAR_PLURAL, plural, one {# result} other {# results}} for "{VAR_QUERY}"</source>
+        <target>{VAR_PLURAL, plural, one {# résultat} other {# résultats}} trouvé(s) pour "{VAR_QUERY}"</target>
+      </trans-unit>
+      <trans-unit id="kb.back">
+        <source>Back to articles</source>
+        <target>Retour aux articles</target>
+      </trans-unit>
+      <trans-unit id="kb.not-found">
+        <source>Article not found.</source>
+        <target>Article non trouvé.</target>
+      </trans-unit>
+      <trans-unit id="kb.fallback-notice">
+        <source>This article is only available in {VAR_LANG}.</source>
+        <target>Cet article est uniquement disponible en {VAR_LANG}.</target>
+      </trans-unit>
+      <trans-unit id="kb.browse-all">
+        <source>Browse all articles</source>
+        <target>Parcourir tous les articles</target>
+      </trans-unit>
+      <trans-unit id="kb.search-articles">
+        <source>Search Articles</source>
+        <target>Rechercher des articles</target>
+      </trans-unit>
+      <trans-unit id="kb.no-articles">
+        <source>No articles published yet.</source>
+        <target>Aucun article publié pour le moment.</target>
+      </trans-unit>
+      <trans-unit id="kb.loading">
+        <source>Loading articles...</source>
+        <target>Chargement des articles...</target>
+      </trans-unit>
+      <trans-unit id="kb.views">
+        <source>{VAR_COUNT, plural, one {# view} other {# views}}</source>
+        <target>{VAR_COUNT, plural, one {# vue} other {# vues}}</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

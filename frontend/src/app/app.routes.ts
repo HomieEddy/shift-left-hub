@@ -40,6 +40,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'articles',
+    loadComponent: () => import('./features/kb/public/article-list/article-list.component').then(m => m.ArticleListComponent),
+  },
+  {
+    path: 'articles/search',
+    loadComponent: () => import('./features/kb/public/article-search/article-search.component').then(m => m.ArticleSearchComponent),
+  },
+  {
+    path: 'articles/:id',
+    loadComponent: () => import('./features/kb/public/article-viewer/article-viewer.component').then(m => m.ArticleViewerComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

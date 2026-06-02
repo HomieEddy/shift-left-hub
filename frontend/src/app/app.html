@@ -30,6 +30,14 @@
           >
             Tags
           </a>
+          <a
+            *ngIf="authService.isAuthenticated()"
+            routerLink="/articles"
+            routerLinkActive="text-blue-600 font-medium"
+            class="text-slate-600 hover:text-slate-800 transition-colors"
+          >
+            Knowledge Base
+          </a>
         </nav>
       </div>
 
