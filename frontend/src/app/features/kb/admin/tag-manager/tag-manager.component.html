@@ -1,9 +1,10 @@
 <div class="p-6 max-w-4xl mx-auto">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-slate-800">Tag Management</h1>
+    <h1 class="text-2xl font-bold text-slate-800" i18n="@@admin.tags.title">Tag Management</h1>
     <button
       (click)="openCreate()"
       class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      i18n="@@admin.tags.new"
     >
       New Tag
     </button>
@@ -14,11 +15,12 @@
   <!-- Create/Edit Form -->
   <div *ngIf="showForm()" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
     <h3 class="text-lg font-semibold text-slate-800 mb-4">
-      {{ editingTag() ? 'Edit Tag' : 'Create Tag' }}
+      <ng-container *ngIf="editingTag()" i18n="@@admin.tags.edit">Edit Tag</ng-container>
+      <ng-container *ngIf="!editingTag()" i18n="@@admin.tags.create">Create Tag</ng-container>
     </h3>
     <div class="grid grid-cols-3 gap-4 mb-4">
       <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Name (EN)</label>
+        <label class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.tags.label.name-en">Name (EN)</label>
         <input
           type="text"
           [(ngModel)]="formNameEn"
@@ -27,7 +29,7 @@
         />
       </div>
       <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Name (FR)</label>
+        <label class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.tags.label.name-fr">Name (FR)</label>
         <input
           type="text"
           [(ngModel)]="formNameFr"
@@ -36,7 +38,7 @@
         />
       </div>
       <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Color</label>
+        <label class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.tags.label.color">Color</label>
         <div class="flex items-center gap-2">
           <input
             type="color"
@@ -53,11 +55,13 @@
         [disabled]="!formNameEn || !formNameFr"
         class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
       >
-        {{ editingTag() ? 'Update' : 'Create' }}
+        <ng-container *ngIf="editingTag()" i18n="@@admin.tags.update">Update</ng-container>
+        <ng-container *ngIf="!editingTag()" i18n="@@admin.tags.create">Create</ng-container>
       </button>
       <button
         (click)="cancelForm()"
         class="px-4 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
+        i18n="@@admin.articles.cancel"
       >
         Cancel
       </button>
@@ -65,17 +69,17 @@
   </div>
 
   <!-- Tag List -->
-  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500">Loading tags...</div>
+  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500" i18n="@@admin.tags.loading">Loading tags...</div>
 
   <div *ngIf="!isLoading()" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <table class="w-full text-sm">
       <thead class="bg-slate-50 border-b border-slate-200">
         <tr>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Color</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Name (EN)</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Name (FR)</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Articles</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Actions</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.tags.col.color">Color</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.tags.col.name-en">Name (EN)</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.tags.col.name-fr">Name (FR)</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.tags.col.articles">Articles</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.tags.col.actions">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100">
@@ -93,10 +97,10 @@
           </td>
           <td class="px-4 py-3">
             <div class="flex items-center gap-1">
-              <button (click)="openEdit(tag)" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100">
+              <button (click)="openEdit(tag)" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" i18n="@@admin.articles.edit">
                 Edit
               </button>
-              <button (click)="deleteTag(tag.id, tag.nameEn)" class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50">
+              <button (click)="deleteTag(tag.id, tag.nameEn)" class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50" i18n="@@admin.articles.delete">
                 Delete
               </button>
             </div>
@@ -105,7 +109,7 @@
       </tbody>
     </table>
 
-    <p *ngIf="tags().length === 0" class="text-center py-8 text-slate-500">
+    <p *ngIf="tags().length === 0" class="text-center py-8 text-slate-500" i18n="@@admin.tags.no-tags">
       No tags created yet. Click "New Tag" to add one.
     </p>
   </div>

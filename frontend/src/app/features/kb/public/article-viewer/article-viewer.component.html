@@ -1,5 +1,5 @@
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <a routerLink="/articles" class="text-sm text-blue-600 hover:text-blue-800 mb-6 inline-block">&larr; Back to articles</a>
+  <a routerLink="/articles" class="text-sm text-blue-600 hover:text-blue-800 mb-6 inline-block" i18n="@@kb.back">&larr; Back to articles</a>
 
   <div *ngIf="isLoading()" class="text-center py-16">
     <div class="animate-pulse space-y-4">
@@ -11,12 +11,12 @@
 
   <div *ngIf="errorMessage()" class="text-center py-16">
     <p class="text-lg text-red-600 mb-4">{{ errorMessage() }}</p>
-    <a routerLink="/articles" class="text-blue-600 hover:text-blue-800">Browse all articles</a>
+    <a routerLink="/articles" class="text-blue-600 hover:text-blue-800" i18n="@@kb.browse-all">Browse all articles</a>
   </div>
 
   <article *ngIf="!isLoading() && article()" class="prose prose-slate max-w-none">
     <!-- Bilingual fallback notice -->
-    <div *ngIf="isFallback" class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-6 text-sm">
+    <div *ngIf="isFallback" class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-6 text-sm" i18n="@@kb.fallback-notice">
       This article is only available in {{ fallbackLanguage }}.
     </div>
 
@@ -24,7 +24,7 @@
     <div class="not-prose flex items-center gap-4 mb-8 text-sm text-slate-500">
       <span>{{ article()!.authorName }}</span>
       <span>{{ article()!.publishedAt | date:'longDate' }}</span>
-      <span class="text-xs">{{ article()!.viewCount }} view{{ article()!.viewCount === 1 ? '' : 's' }}</span>
+      <span class="text-xs" i18n="@@kb.views">{{ article()!.viewCount }} view{{ article()!.viewCount === 1 ? '' : 's' }}</span>
     </div>
 
     <!-- Tag chips -->

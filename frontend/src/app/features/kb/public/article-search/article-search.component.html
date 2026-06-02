@@ -1,5 +1,5 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <h1 class="text-3xl font-bold text-slate-800 mb-6">Search Knowledge Base</h1>
+  <h1 class="text-3xl font-bold text-slate-800 mb-6" i18n="@@kb.search.title">Search Knowledge Base</h1>
 
   <!-- Search input -->
   <div class="relative mb-8">
@@ -7,7 +7,7 @@
       type="text"
       [ngModel]="query()"
       (ngModelChange)="onSearchInput($event)"
-      placeholder="Search articles..."
+      placeholder="Search articles..." i18n-placeholder="@@kb.search.placeholder"
       class="w-full pl-12 pr-4 py-3 text-lg border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
     />
     <svg class="absolute left-4 top-3.5 w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -25,13 +25,13 @@
 
   <!-- Results -->
   <div *ngIf="!isLoading() && hasSearched()">
-    <p class="text-sm text-slate-500 mb-6">
+    <p class="text-sm text-slate-500 mb-6" i18n="@@kb.search.results">
       Found {{ totalResults() }} result{{ totalResults() === 1 ? '' : 's' }} for "{{ query() }}"
     </p>
 
     <div *ngIf="results().length === 0" class="text-center py-12 text-slate-500">
-      <p class="text-lg mb-2">No results found</p>
-      <p class="text-sm">Try different keywords or browse all articles</p>
+      <p class="text-lg mb-2" i18n="@@kb.search.no-results">No results found</p>
+      <p class="text-sm" i18n="@@kb.search.hint">Try different keywords or browse all articles</p>
     </div>
 
     <div class="space-y-4">
@@ -59,6 +59,7 @@
         (click)="changePage(currentPage() - 1)"
         [disabled]="currentPage() === 0"
         class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+        i18n="@@pagination.previous"
       >
         Previous
       </button>
@@ -67,6 +68,7 @@
         (click)="changePage(currentPage() + 1)"
         [disabled]="currentPage() >= totalPages() - 1"
         class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+        i18n="@@pagination.next"
       >
         Next
       </button>
@@ -78,6 +80,6 @@
     <svg class="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
-    <p class="text-lg">Type a query above to search the knowledge base</p>
+    <p class="text-lg" i18n="@@kb.search.hint">Type a query above to search the knowledge base</p>
   </div>
 </div>

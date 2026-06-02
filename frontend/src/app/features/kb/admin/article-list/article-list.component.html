@@ -1,9 +1,10 @@
 <div class="p-6 max-w-6xl mx-auto">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-slate-800">Articles</h1>
+    <h1 class="text-2xl font-bold text-slate-800" i18n="@@admin.articles.title">Articles</h1>
     <a
       routerLink="/admin/articles/new"
       class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      i18n="@@admin.articles.new"
     >
       New Article
     </a>
@@ -11,18 +12,18 @@
 
   <p *ngIf="errorMessage()" class="bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</p>
 
-  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500">Loading articles...</div>
+  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500" i18n="@@admin.articles.loading">Loading articles...</div>
 
   <div *ngIf="!isLoading()" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <table class="w-full text-sm">
       <thead class="bg-slate-50 border-b border-slate-200">
         <tr>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Title</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Status</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Tags</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Author</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Updated</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Actions</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.title">Title</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.status">Status</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.tags">Tags</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.author">Author</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.updated">Updated</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.actions">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100">
@@ -56,16 +57,16 @@
           <td class="px-4 py-3 text-slate-500 text-xs">{{ article.updatedAt | date:'mediumDate' }}</td>
           <td class="px-4 py-3">
             <div class="flex items-center gap-1">
-              <a [routerLink]="['/admin/articles', article.id, 'edit']" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100">
+              <a [routerLink]="['/admin/articles', article.id, 'edit']" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" i18n="@@admin.articles.edit">
                 Edit
               </a>
-              <button *ngIf="article.status === 'DRAFT'" (click)="publish(article.id)" class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50">
+              <button *ngIf="article.status === 'DRAFT'" (click)="publish(article.id)" class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50" i18n="@@admin.articles.publish">
                 Publish
               </button>
-              <button *ngIf="article.status === 'PUBLISHED'" (click)="archive(article.id)" class="text-xs px-2 py-1 rounded border border-yellow-300 text-yellow-600 hover:bg-yellow-50">
+              <button *ngIf="article.status === 'PUBLISHED'" (click)="archive(article.id)" class="text-xs px-2 py-1 rounded border border-yellow-300 text-yellow-600 hover:bg-yellow-50" i18n="@@admin.articles.archive">
                 Archive
               </button>
-              <button (click)="deleteArticle(article.id)" class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50">
+              <button (click)="deleteArticle(article.id)" class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50" i18n="@@admin.articles.delete">
                 Delete
               </button>
             </div>
@@ -74,7 +75,7 @@
       </tbody>
     </table>
 
-    <p *ngIf="articles().length === 0" class="text-center py-8 text-slate-500">
+    <p *ngIf="articles().length === 0" class="text-center py-8 text-slate-500" i18n="@@admin.articles.no-articles">
       No articles found.
     </p>
   </div>
@@ -85,6 +86,7 @@
       (click)="changePage(currentPage() - 1)"
       [disabled]="currentPage() === 0"
       class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+      i18n="@@pagination.previous"
     >
       Previous
     </button>
@@ -93,6 +95,7 @@
       (click)="changePage(currentPage() + 1)"
       [disabled]="currentPage() >= totalPages() - 1"
       class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+      i18n="@@pagination.next"
     >
       Next
     </button>
