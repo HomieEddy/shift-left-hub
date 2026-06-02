@@ -10,6 +10,8 @@ import java.util.UUID;
 
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
+    java.util.Optional<Article> findBySlug(String slug);
+
     Page<Article> findByStatus(ArticleStatus status, Pageable pageable);
 
     @Query(value = """

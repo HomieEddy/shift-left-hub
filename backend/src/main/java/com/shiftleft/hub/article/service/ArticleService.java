@@ -55,12 +55,17 @@ public class ArticleService {
     public ArticleResponse createArticle(CreateArticleRequest request, User author) {
         Set<Tag> tags = resolveTags(request.tagIds());
 
+        String slug = slugify(request.titleEn());
+        if (articleRepository.findBySlug(slug).isPresent()) {
+            slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
+        }
+
         Article article = Article.builder()
             .titleEn(request.titleEn())
             .contentEn(request.contentEn())
             .titleFr(request.titleFr())
             .contentFr(request.contentFr())
-            .slug(slugify(request.titleEn()))
+            .slug(slug)
             .excerpt(request.excerpt())
             .featuredImage(request.featuredImage())
             .status(ArticleStatus.DRAFT)
@@ -79,7 +84,11 @@ public class ArticleService {
             .orElseThrow(() -> new ArticleNotFoundException(id));
 
         article.setTitleEn(request.titleEn());
-        article.setSlug(slugify(request.titleEn()));
+        String newSlug = slugify(request.titleEn());
+        if (!newSlug.equals(article.getSlug()) && articleRepository.findBySlug(newSlug).isPresent()) {
+            newSlug = newSlug + "-" + UUID.randomUUID().toString().substring(0, 8);
+        }
+        article.setSlug(newSlug);
         article.setContentEn(request.contentEn());
         article.setTitleFr(request.titleFr());
         article.setContentFr(request.contentFr());
