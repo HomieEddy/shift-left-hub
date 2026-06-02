@@ -1,0 +1,133 @@
+package com.shiftleft.hub.article.service;
+
+import com.shiftleft.hub.article.api.dto.ArticleResponse;
+import com.shiftleft.hub.article.api.dto.CreateArticleRequest;
+import com.shiftleft.hub.article.api.dto.UpdateArticleRequest;
+import com.shiftleft.hub.article.domain.Article;
+import com.shiftleft.hub.article.domain.ArticleNotFoundException;
+import com.shiftleft.hub.article.domain.ArticleRepository;
+import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.tag.domain.Tag;
+import com.shiftleft.hub.tag.domain.TagNotFoundException;
+import com.shiftleft.hub.tag.domain.TagRepository;
+import com.shiftleft.hub.user.domain.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ArticleService {
+
+    private final ArticleRepository articleRepository;
+    private final TagRepository tagRepository;
+
+    public ArticleResponse getArticleById(UUID id) {
+        return articleRepository.findById(id)
+            .map(ArticleResponse::from)
+            .orElseThrow(() -> new ArticleNotFoundException(id));
+    }
+
+    public Page<ArticleResponse> getAllArticles(int page, int size) {
+        return articleRepository.findAll(
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")))
+            .map(ArticleResponse::from);
+    }
+
+    public Page<ArticleResponse> getArticlesByStatus(ArticleStatus status, int page, int size) {
+        return articleRepository.findByStatus(status,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")))
+            .map(ArticleResponse::from);
+    }
+
+    @Transactional
+    public ArticleResponse createArticle(CreateArticleRequest request, User author) {
+        Set<Tag> tags = resolveTags(request.tagIds());
+
+        Article article = Article.builder()
+            .titleEn(request.titleEn())
+            .contentEn(request.contentEn())
+            .titleFr(request.titleFr())
+            .contentFr(request.contentFr())
+            .slug(slugify(request.titleEn()))
+            .excerpt(request.excerpt())
+            .featuredImage(request.featuredImage())
+            .status(ArticleStatus.DRAFT)
+            .viewCount(0)
+            .author(author)
+            .tags(tags)
+            .build();
+
+        article = articleRepository.save(article);
+        return ArticleResponse.from(article);
+    }
+
+    @Transactional
+    public ArticleResponse updateArticle(UUID id, UpdateArticleRequest request, User editor) {
+        Article article = articleRepository.findById(id)
+            .orElseThrow(() -> new ArticleNotFoundException(id));
+
+        article.setTitleEn(request.titleEn());
+        article.setContentEn(request.contentEn());
+        article.setTitleFr(request.titleFr());
+        article.setContentFr(request.contentFr());
+        article.setExcerpt(request.excerpt());
+        article.setFeaturedImage(request.featuredImage());
+        article.setLastEditor(editor);
+        article.setTags(resolveTags(request.tagIds()));
+
+        article = articleRepository.save(article);
+        return ArticleResponse.from(article);
+    }
+
+    @Transactional
+    public ArticleResponse publishArticle(UUID id) {
+        Article article = articleRepository.findById(id)
+            .orElseThrow(() -> new ArticleNotFoundException(id));
+        article.setStatus(ArticleStatus.PUBLISHED);
+        article.setPublishedAt(LocalDateTime.now());
+        article = articleRepository.save(article);
+        return ArticleResponse.from(article);
+    }
+
+    @Transactional
+    public ArticleResponse archiveArticle(UUID id) {
+        Article article = articleRepository.findById(id)
+            .orElseThrow(() -> new ArticleNotFoundException(id));
+        article.setStatus(ArticleStatus.ARCHIVED);
+        article = articleRepository.save(article);
+        return ArticleResponse.from(article);
+    }
+
+    @Transactional
+    public void deleteArticle(UUID id) {
+        if (!articleRepository.existsById(id)) {
+            throw new ArticleNotFoundException(id);
+        }
+        articleRepository.deleteById(id);
+    }
+
+    private Set<Tag> resolveTags(Set<UUID> tagIds) {
+        if (tagIds == null || tagIds.isEmpty()) {
+            return new HashSet<>();
+        }
+        return new HashSet<>(tagRepository.findAllById(tagIds));
+    }
+
+    private String slugify(String title) {
+        return title.toLowerCase()
+            .replaceAll("[^a-z0-9\\s-]", "")
+            .replaceAll("\\s+", "-")
+            .replaceAll("-+", "-")
+            .replaceAll("^-|-$", "");
+    }
+}
