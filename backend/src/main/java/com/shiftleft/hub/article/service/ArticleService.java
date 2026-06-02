@@ -77,6 +77,7 @@ public class ArticleService {
             .orElseThrow(() -> new ArticleNotFoundException(id));
 
         article.setTitleEn(request.titleEn());
+        article.setSlug(slugify(request.titleEn()));
         article.setContentEn(request.contentEn());
         article.setTitleFr(request.titleFr());
         article.setContentFr(request.contentFr());
