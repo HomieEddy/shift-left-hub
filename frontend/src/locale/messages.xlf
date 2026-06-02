@@ -118,6 +118,82 @@
         <source>Display Name</source>
         <target>Display Name</target>
       </trans-unit>
+      <trans-unit id="nav.articles">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
+      <trans-unit id="nav.tags">
+        <source>Tags</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.title">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.new">
+        <source>New Article</source>
+        <target>New Article</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.edit">
+        <source>Edit Article</source>
+        <target>Edit Article</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.loading">
+        <source>Loading articles...</source>
+        <target>Loading articles...</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.no-articles">
+        <source>No articles found.</source>
+        <target>No articles found.</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.publish">
+        <source>Publish</source>
+        <target>Publish</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.archive">
+        <source>Archive</source>
+        <target>Archive</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.delete">
+        <source>Delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.saving">
+        <source>Saving...</source>
+        <target>Saving...</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.title">
+        <source>Tag Management</source>
+        <target>Tag Management</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.new">
+        <source>New Tag</source>
+        <target>New Tag</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.loading">
+        <source>Loading tags...</source>
+        <target>Loading tags...</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.no-tags">
+        <source>No tags created yet. Click "New Tag" to add one.</source>
+        <target>No tags created yet. Click "New Tag" to add one.</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.create">
+        <source>Create Tag</source>
+        <target>Create Tag</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.edit">
+        <source>Edit Tag</source>
+        <target>Edit Tag</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.update">
+        <source>Update</source>
+        <target>Update</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

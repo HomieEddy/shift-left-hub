@@ -14,6 +14,22 @@
           >
             Users
           </a>
+          <a
+            *ngIf="authService.isAuthenticated() && authService.isAdmin()"
+            routerLink="/admin/articles"
+            routerLinkActive="text-blue-600 font-medium"
+            class="text-slate-600 hover:text-slate-800 transition-colors"
+          >
+            Articles
+          </a>
+          <a
+            *ngIf="authService.isAuthenticated() && authService.isAdmin()"
+            routerLink="/admin/tags"
+            routerLinkActive="text-blue-600 font-medium"
+            class="text-slate-600 hover:text-slate-800 transition-colors"
+          >
+            Tags
+          </a>
         </nav>
       </div>
 

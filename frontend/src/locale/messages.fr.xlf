@@ -118,6 +118,82 @@
         <source>Display Name</source>
         <target>Nom d'affichage</target>
       </trans-unit>
+      <trans-unit id="nav.articles">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
+      <trans-unit id="nav.tags">
+        <source>Tags</source>
+        <target>Étiquettes</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.title">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.new">
+        <source>New Article</source>
+        <target>Nouvel article</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.edit">
+        <source>Edit Article</source>
+        <target>Modifier l'article</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.loading">
+        <source>Loading articles...</source>
+        <target>Chargement des articles...</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.no-articles">
+        <source>No articles found.</source>
+        <target>Aucun article trouvé.</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.publish">
+        <source>Publish</source>
+        <target>Publier</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.archive">
+        <source>Archive</source>
+        <target>Archiver</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.delete">
+        <source>Delete</source>
+        <target>Supprimer</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.saving">
+        <source>Saving...</source>
+        <target>Enregistrement...</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.cancel">
+        <source>Cancel</source>
+        <target>Annuler</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.title">
+        <source>Tag Management</source>
+        <target>Gestion des étiquettes</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.new">
+        <source>New Tag</source>
+        <target>Nouvelle étiquette</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.loading">
+        <source>Loading tags...</source>
+        <target>Chargement des étiquettes...</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.no-tags">
+        <source>No tags created yet. Click "New Tag" to add one.</source>
+        <target>Aucune étiquette créée. Cliquez sur "Nouvelle étiquette" pour en ajouter.</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.create">
+        <source>Create Tag</source>
+        <target>Créer une étiquette</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.edit">
+        <source>Edit Tag</source>
+        <target>Modifier l'étiquette</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.update">
+        <source>Update</source>
+        <target>Mettre à jour</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
