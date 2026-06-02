@@ -105,6 +105,9 @@ public class ArticleService {
     public ArticleResponse archiveArticle(UUID id) {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new ArticleNotFoundException(id));
+        if (article.getStatus() == ArticleStatus.ARCHIVED) {
+            return ArticleResponse.from(article);
+        }
         article.setStatus(ArticleStatus.ARCHIVED);
         article = articleRepository.save(article);
         return ArticleResponse.from(article);
