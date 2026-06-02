@@ -1,7 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PublicArticleService } from '../../services/public-article.service';
 import { ArticleSearchResult } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -16,6 +17,7 @@ export class ArticleSearchComponent implements OnInit {
   private publicArticleService = inject(PublicArticleService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   query = signal('');
@@ -28,7 +30,9 @@ export class ArticleSearchComponent implements OnInit {
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(params => {
       const q = params['q'];
       if (q) {
         this.query.set(q);
@@ -57,7 +61,9 @@ export class ArticleSearchComponent implements OnInit {
   doSearch(query: string, page: number = 0): void {
     this.isLoading.set(true);
     this.currentPage.set(page);
-    this.publicArticleService.search(query, page).subscribe({
+    this.publicArticleService.search(query, page).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (pageData) => {
         this.results.set(pageData.content);
         this.totalResults.set(pageData.totalElements);

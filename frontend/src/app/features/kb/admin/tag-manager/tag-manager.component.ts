@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TagService } from '../../services/tag.service';
 import { TagDto, CreateTagRequest } from '../../models/tag.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -13,6 +14,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 })
 export class TagManagerComponent implements OnInit {
   private tagService = inject(TagService);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   tags = signal<TagDto[]>([]);
@@ -31,7 +33,9 @@ export class TagManagerComponent implements OnInit {
 
   loadTags(): void {
     this.isLoading.set(true);
-    this.tagService.getTags().subscribe({
+    this.tagService.getTags().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (data) => {
         this.tags.set(data);
         this.isLoading.set(false);
@@ -72,7 +76,9 @@ export class TagManagerComponent implements OnInit {
       ? this.tagService.updateTag(editing.id, request)
       : this.tagService.createTag(request);
 
-    action.subscribe({
+    action.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => {
         this.loadTags();
         this.cancelForm();
@@ -85,7 +91,9 @@ export class TagManagerComponent implements OnInit {
 
   deleteTag(id: string, nameEn: string): void {
     if (confirm(`Delete tag "${nameEn}"? This cannot be undone if the tag is unused.`)) {
-      this.tagService.deleteTag(id).subscribe({
+      this.tagService.deleteTag(id).pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
         next: () => this.loadTags(),
         error: (err) => {
           this.errorMessage.set(err.error?.error || 'Cannot delete tag: it is used by articles.');

@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleService } from '../../services/article.service';
 import { ArticleDto, ArticleStatus } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -13,6 +14,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 })
 export class ArticleListComponent implements OnInit {
   private articleService = inject(ArticleService);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   articles = signal<ArticleDto[]>([]);
@@ -29,7 +31,9 @@ export class ArticleListComponent implements OnInit {
 
   loadArticles(): void {
     this.isLoading.set(true);
-    this.articleService.getArticles(this.currentPage()).subscribe({
+    this.articleService.getArticles(this.currentPage()).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (page) => {
         this.articles.set(page.content);
         this.totalPages.set(page.totalPages);
@@ -43,14 +47,18 @@ export class ArticleListComponent implements OnInit {
   }
 
   publish(id: string): void {
-    this.articleService.publishArticle(id).subscribe({
+    this.articleService.publishArticle(id).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => this.loadArticles(),
       error: () => this.errorMessage.set('Failed to publish article.'),
     });
   }
 
   archive(id: string): void {
-    this.articleService.archiveArticle(id).subscribe({
+    this.articleService.archiveArticle(id).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => this.loadArticles(),
       error: () => this.errorMessage.set('Failed to archive article.'),
     });
@@ -58,7 +66,9 @@ export class ArticleListComponent implements OnInit {
 
   deleteArticle(id: string): void {
     if (confirm('Delete this article? This action cannot be undone.')) {
-      this.articleService.deleteArticle(id).subscribe({
+      this.articleService.deleteArticle(id).pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
         next: () => this.loadArticles(),
         error: () => this.errorMessage.set('Failed to delete article.'),
       });

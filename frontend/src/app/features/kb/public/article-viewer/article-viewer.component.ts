@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PublicArticleService } from '../../services/public-article.service';
 import { ArticleDto } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -15,6 +16,7 @@ import { MarkdownModule } from 'ngx-markdown';
 export class ArticleViewerComponent implements OnInit {
   private publicArticleService = inject(PublicArticleService);
   private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   article = signal<ArticleDto | null>(null);
@@ -30,7 +32,9 @@ export class ArticleViewerComponent implements OnInit {
 
   loadArticle(id: string): void {
     this.isLoading.set(true);
-    this.publicArticleService.getArticleById(id).subscribe({
+    this.publicArticleService.getArticleById(id).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (article) => {
         this.article.set(article);
         this.isLoading.set(false);

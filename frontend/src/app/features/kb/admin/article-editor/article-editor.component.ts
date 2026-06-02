@@ -1,7 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleService } from '../../services/article.service';
 import { TagService } from '../../services/tag.service';
 import { TagDto } from '../../models/tag.models';
@@ -20,6 +21,7 @@ export class ArticleEditorComponent implements OnInit {
   private tagService = inject(TagService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   isEdit = signal(false);
@@ -52,7 +54,9 @@ export class ArticleEditorComponent implements OnInit {
 
   loadArticle(id: string): void {
     this.isLoading.set(true);
-    this.articleService.getArticleById(id).subscribe({
+    this.articleService.getArticleById(id).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (article) => {
         this.titleEn = article.titleEn;
         this.contentEn = article.contentEn;
@@ -71,7 +75,9 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   loadTags(): void {
-    this.tagService.getTags().subscribe({
+    this.tagService.getTags().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (tags) => this.allTags.set(tags),
     });
   }
@@ -106,7 +112,9 @@ export class ArticleEditorComponent implements OnInit {
       ? this.articleService.updateArticle(this.articleId()!, request as UpdateArticleRequest)
       : this.articleService.createArticle(request as CreateArticleRequest);
 
-    action.subscribe({
+    action.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (article) => {
         this.isSaving.set(false);
         this.router.navigate(['/admin/articles']);

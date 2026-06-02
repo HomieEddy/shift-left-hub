@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PublicArticleService } from '../../services/public-article.service';
 import { ArticleDto } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -13,6 +14,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 })
 export class ArticleListComponent implements OnInit {
   private publicArticleService = inject(PublicArticleService);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   articles = signal<ArticleDto[]>([]);
@@ -27,7 +29,9 @@ export class ArticleListComponent implements OnInit {
 
   loadArticles(): void {
     this.isLoading.set(true);
-    this.publicArticleService.getArticles(this.currentPage()).subscribe({
+    this.publicArticleService.getArticles(this.currentPage()).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (page) => {
         this.articles.set(page.content);
         this.totalPages.set(page.totalPages);
