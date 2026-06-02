@@ -4,7 +4,8 @@ import { NgIf, NgFor } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ArticleService } from '../../services/article.service';
 import { TagService } from '../../services/tag.service';
-import { TagDto, CreateArticleRequest, UpdateArticleRequest } from '../../models/article.models';
+import { TagDto } from '../../models/tag.models';
+import { CreateArticleRequest, UpdateArticleRequest } from '../../models/article.models';
 import { MarkdownModule } from 'ngx-markdown';
 import { TranslationService } from '../../../../core/i18n/translation.service';
 

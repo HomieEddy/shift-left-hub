@@ -1,12 +1,13 @@
+import { TagDto } from './tag.models';
+
 export type ArticleStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
-export interface TagDto {
-  id: string;
-  nameEn: string;
-  nameFr: string;
-  color: string;
-  articleCount: number;
-  createdAt: string;
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
 }
 
 export interface ArticleDto {
