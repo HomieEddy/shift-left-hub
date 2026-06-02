@@ -94,7 +94,9 @@ public class ArticleService {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new ArticleNotFoundException(id));
         article.setStatus(ArticleStatus.PUBLISHED);
-        article.setPublishedAt(LocalDateTime.now());
+        if (article.getPublishedAt() == null) {
+            article.setPublishedAt(LocalDateTime.now());
+        }
         article = articleRepository.save(article);
         return ArticleResponse.from(article);
     }
