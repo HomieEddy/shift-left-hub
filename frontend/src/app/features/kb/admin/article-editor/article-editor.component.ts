@@ -79,6 +79,7 @@ export class ArticleEditorComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (tags) => this.allTags.set(tags),
+      error: () => this.errorMessage.set('Failed to load tags.'),
     });
   }
 

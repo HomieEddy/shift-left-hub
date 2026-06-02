@@ -24,6 +24,7 @@ export class ArticleSearchComponent implements OnInit {
   results = signal<ArticleSearchResult[]>([]);
   isLoading = signal(false);
   hasSearched = signal(false);
+  errorMessage = signal('');
   totalResults = signal(0);
   currentPage = signal(0);
   totalPages = signal(0);
@@ -60,6 +61,7 @@ export class ArticleSearchComponent implements OnInit {
 
   doSearch(query: string, page: number = 0): void {
     this.isLoading.set(true);
+    this.errorMessage.set('');
     this.currentPage.set(page);
     this.publicArticleService.search(query, page).pipe(
       takeUntilDestroyed(this.destroyRef)
@@ -73,7 +75,8 @@ export class ArticleSearchComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.hasSearched.set(true);
+        this.hasSearched.set(false);
+        this.errorMessage.set('Search failed. Please try again.');
       },
     });
   }

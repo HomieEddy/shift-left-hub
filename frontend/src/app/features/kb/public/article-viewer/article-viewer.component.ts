@@ -27,6 +27,9 @@ export class ArticleViewerComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadArticle(id);
+    } else {
+      this.errorMessage.set('Invalid article ID.');
+      this.isLoading.set(false);
     }
   }
 

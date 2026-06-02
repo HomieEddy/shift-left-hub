@@ -57,9 +57,10 @@ export class ArticleListComponent implements OnInit {
   }
 
   displayExcerpt(article: ArticleDto): string {
-    if (this.translationService.currentLang() === 'fr' && article.contentFr) {
-      return article.excerpt || article.contentFr.substring(0, 150) + '...';
-    }
-    return article.excerpt || article.contentEn.substring(0, 150) + '...';
+    if (article.excerpt) return article.excerpt;
+    const content = this.translationService.currentLang() === 'fr'
+      ? (article.contentFr || article.contentEn)
+      : article.contentEn;
+    return content ? content.substring(0, 150) + '...' : '';
   }
 }
