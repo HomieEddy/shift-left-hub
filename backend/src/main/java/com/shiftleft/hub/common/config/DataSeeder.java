@@ -1,5 +1,7 @@
 package com.shiftleft.hub.common.config;
 
+import com.shiftleft.hub.ai.domain.AiConfig;
+import com.shiftleft.hub.ai.domain.AiConfigRepository;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
@@ -23,6 +25,7 @@ public class DataSeeder implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JdbcTemplate jdbcTemplate;
+    private final AiConfigRepository aiConfigRepository;
 
     @Value("${app.admin.email:#{null}}")
     private String adminEmail;
@@ -47,6 +50,8 @@ public class DataSeeder implements CommandLineRunner {
             log.warn("Change the default admin password on first login for security.");
         }
         setupFullTextSearch();
+        setupVectorSearch();
+        seedAiConfig();
     }
 
     private void setupFullTextSearch() {
@@ -109,5 +114,27 @@ public class DataSeeder implements CommandLineRunner {
         """);
 
         log.info("Full-text search setup complete.");
+    }
+
+    private void setupVectorSearch() {
+        log.info("Setting up vector search...");
+        jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS vector");
+        log.info("Vector search setup complete.");
+    }
+
+    private void seedAiConfig() {
+        if (aiConfigRepository.count() == 0) {
+            AiConfig config = AiConfig.builder()
+                .llmProvider("OLLAMA")
+                .ollamaEndpointUrl("http://host.docker.internal:11434")
+                .openaiApiKey(null)
+                .chatModelName("llama3.2")
+                .embeddingModelName("nomic-embed-text")
+                .similarityThreshold(0.65)
+                .embeddingDimension(768)
+                .build();
+            aiConfigRepository.save(config);
+            log.info("Created default AI config (Ollama local)");
+        }
     }
 }

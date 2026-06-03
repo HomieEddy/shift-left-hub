@@ -1,5 +1,6 @@
 package com.shiftleft.hub.article.service;
 
+import com.shiftleft.hub.ai.service.EmbeddingService;
 import com.shiftleft.hub.article.api.dto.ArticleResponse;
 import com.shiftleft.hub.article.api.dto.CreateArticleRequest;
 import com.shiftleft.hub.article.api.dto.UpdateArticleRequest;
@@ -12,6 +13,7 @@ import com.shiftleft.hub.tag.domain.TagNotFoundException;
 import com.shiftleft.hub.tag.domain.TagRepository;
 import com.shiftleft.hub.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,11 +29,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final TagRepository tagRepository;
+    private final EmbeddingService embeddingService;
 
     public ArticleResponse getArticleById(UUID id) {
         return articleRepository.findById(id)
@@ -110,6 +114,13 @@ public class ArticleService {
             article.setPublishedAt(LocalDateTime.now());
         }
         article = articleRepository.save(article);
+
+        try {
+            embeddingService.generateAndStoreEmbedding(article);
+        } catch (Exception e) {
+            log.warn("Failed to generate embedding for article {}: {}", id, e.getMessage());
+        }
+
         return ArticleResponse.from(article);
     }
 
