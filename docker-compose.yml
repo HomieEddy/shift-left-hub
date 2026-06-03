@@ -12,13 +12,13 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-shiftleft}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-shiftleft}
       APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL:-admin@shiftleft.com}
-      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-Admin123!}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD}
       SPRING_DEVTOOLS_RESTART_ENABLED: "true"
       SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: 1s
       SPRING_DEVTOOLS_RESTART_QUIET_PERIOD: 400ms
     volumes:
       - ./backend:/app
-      - maven_cache:/root/.m2
+      - maven_cache:/home/app/.m2
     restart: unless-stopped
 
   frontend:
