@@ -40,6 +40,16 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'admin/settings/llm',
+    loadComponent: () => import('./features/admin/llm-settings/llm-settings.component').then(m => m.LlmSettingsComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'chat',
+    loadComponent: () => import('./features/chat/chat.component').then(m => m.ChatComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'articles',
     loadComponent: () => import('./features/kb/public/article-list/article-list.component').then(m => m.ArticleListComponent),
   },
