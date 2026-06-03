@@ -36,7 +36,7 @@
 
     <div *ngIf="showFollowUp()" class="flex justify-start ml-2">
       <div class="flex items-center gap-3 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-4 py-2">
-        <span>Is there anything else I can help you with?</span>
+        <span i18n="@@followUpPrompt">Is there anything else I can help you with?</span>
         <button (click)="handleFollowUp(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium">Yes</button>
         <button (click)="handleFollowUp(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium">No</button>
       </div>
@@ -69,9 +69,9 @@
        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div class="bg-white rounded-2xl shadow-xl px-8 py-10 text-center max-w-sm mx-4">
       <div class="text-5xl mb-4" aria-hidden="true">👋</div>
-      <h2 id="modal-title" class="text-xl font-semibold text-slate-800 mb-2">Thank You</h2>
-      <p class="text-slate-500 mb-6">See you soon!</p>
-      <button (click)="closeModal()" autofocus class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors">
+      <h2 id="modal-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@modalThankYou">Thank You</h2>
+      <p class="text-slate-500 mb-6" i18n="@@modalSeeYouSoon">See you soon!</p>
+      <button (click)="closeModal()" autofocus class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors" i18n="@@modalClose">
         Close
       </button>
     </div>
