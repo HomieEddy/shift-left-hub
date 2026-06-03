@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, DestroyRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, effect, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
@@ -140,6 +140,13 @@ export class ChatComponent {
 
   closeModal() {
     this.showCloseModal.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.showCloseModal()) {
+      this.closeModal();
+    }
   }
 
   retry() {
