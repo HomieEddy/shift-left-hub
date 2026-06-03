@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, inject, signal, effect, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
@@ -17,7 +17,7 @@ interface EscalationPayload {
   imports: [FormsModule, NgFor, NgIf, MarkdownModule],
   templateUrl: './chat.component.html',
 })
-export class ChatComponent implements AfterViewChecked {
+export class ChatComponent {
   private chatService = inject(ChatService);
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
@@ -36,9 +36,10 @@ export class ChatComponent implements AfterViewChecked {
   private streamSub: Subscription | null = null;
   private abortStream: (() => void) | null = null;
 
-  ngAfterViewChecked() {
+  private scrollEffect = effect(() => {
+    this.messages();
     this.scrollToBottom();
-  }
+  });
 
   sendMessage() {
     const text = this.currentInput.trim();
