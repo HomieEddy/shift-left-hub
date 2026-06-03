@@ -5,6 +5,12 @@ import { MarkdownModule } from 'ngx-markdown';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
 
+interface EscalationPayload {
+  issue: string;
+  transcript: ChatMessage[];
+  sources: { articleId: string; title: string; slug: string; score: number }[];
+}
+
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -23,7 +29,7 @@ export class ChatComponent implements AfterViewChecked {
   showFollowUp = signal(false);
   showCloseModal = signal(false);
   showFallback = signal(false);
-  escalationPayload = signal<any>(null);
+  escalationPayload = signal<EscalationPayload | null>(null);
   errorMessage = signal<string | null>(null);
 
   private nextId = 0;
