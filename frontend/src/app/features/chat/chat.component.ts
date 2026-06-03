@@ -1,4 +1,5 @@
-import { Component, inject, signal, effect, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, effect, DestroyRef, ViewChild, ElementRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
@@ -32,6 +33,7 @@ export class ChatComponent {
   escalationPayload = signal<EscalationPayload | null>(null);
   errorMessage = signal<string | null>(null);
 
+  private destroyRef = inject(DestroyRef);
   private nextId = 0;
   private streamSub: Subscription | null = null;
   private abortStream: (() => void) | null = null;
@@ -68,7 +70,8 @@ export class ChatComponent {
     const { events, abort } = this.chatService.sendMessage(text, history);
     this.abortStream = abort;
 
-    this.streamSub = events.subscribe({
+    this.streamSub?.unsubscribe();
+    this.streamSub = events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (event) => {
         if (event.type === 'token') {
           assistantMsg.content += event.content;
