@@ -121,7 +121,13 @@ public class AiChatService {
 
     List<HybridSearchResult> hybridSearch(String query, double threshold) {
         List<HybridSearchResult> ftsResults = ftsSearch(query);
-        List<HybridSearchResult> vectorResults = vectorSearch(query, threshold);
+        List<HybridSearchResult> vectorResults;
+        try {
+            vectorResults = vectorSearch(query, threshold);
+        } catch (Exception e) {
+            log.warn("Vector search failed, continuing with FTS-only results: {}", e.getMessage());
+            vectorResults = List.of();
+        }
 
         Map<UUID, Double> rrfScores = new HashMap<>();
         Map<UUID, HybridSearchResult> resultMap = new HashMap<>();
@@ -148,7 +154,7 @@ public class AiChatService {
     }
 
     private ChatClient buildChatClient(AiConfig config) {
-        String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2";
+        String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2:3b";
         ChatModel chatModel;
 
         if ("OPENAI".equals(config.getLlmProvider()) && config.getOpenaiApiKey() != null && !config.getOpenaiApiKey().isEmpty()) {
@@ -158,7 +164,7 @@ public class AiChatService {
                 .options(OpenAiChatOptions.builder().model(modelName).build())
                 .build();
         } else {
-            String baseUrl = config.getOllamaEndpointUrl() != null ? config.getOllamaEndpointUrl() : "http://localhost:11434";
+            String baseUrl = config.getOllamaEndpointUrl() != null ? config.getOllamaEndpointUrl() : "http://host.docker.internal:11434";
             chatModel = OllamaChatModel.builder()
                 .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
                 .defaultOptions(OllamaChatOptions.builder().model(modelName).build())
