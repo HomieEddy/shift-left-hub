@@ -98,8 +98,12 @@ export class ChatComponent implements AfterViewChecked {
   }
 
   private setEscalationPayload(event: StreamEvent) {
+    const userMessages = this.messages().filter(m => m.role === 'user');
+    const lastUserContent = userMessages.length > 0
+      ? userMessages[userMessages.length - 1].content
+      : '';
     this.escalationPayload.set({
-      issue: this.messages().find(m => m.role === 'user')?.content || '',
+      issue: lastUserContent,
       transcript: this.messages(),
       sources: event.sources || [],
     });
@@ -110,8 +114,13 @@ export class ChatComponent implements AfterViewChecked {
     if (yes) {
       this.showFollowUp.set(true);
     } else {
-      const followUp = this.messages().find(m => m.role === 'user')?.content || '';
-      this.currentInput = "The user indicated this did not solve their problem. Original issue: " + followUp;
+      // TODO: When wiring up AI context in Phase 4, include the full conversation transcript
+      // as a system instruction rather than injecting a fabricated user message.
+      const userMessages = this.messages().filter(m => m.role === 'user');
+      const lastUserContent = userMessages.length > 0
+        ? userMessages[userMessages.length - 1].content
+        : '';
+      this.currentInput = "The user indicated this did not solve their problem. Original issue: " + lastUserContent;
       this.sendMessage();
     }
   }
