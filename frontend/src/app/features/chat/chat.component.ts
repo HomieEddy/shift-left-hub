@@ -20,6 +20,8 @@ export class ChatComponent implements AfterViewChecked {
   currentInput = '';
   isStreaming = signal(false);
   showFeedback = signal(false);
+  showFollowUp = signal(false);
+  showCloseModal = signal(false);
   lastAiMessage = signal('');
   showFallback = signal(false);
   escalationPayload = signal<any>(null);
@@ -39,6 +41,8 @@ export class ChatComponent implements AfterViewChecked {
     this.currentInput = '';
     this.errorMessage.set(null);
     this.showFeedback.set(false);
+    this.showFollowUp.set(false);
+    this.showCloseModal.set(false);
     this.showFallback.set(false);
 
     const userMsg: ChatMessage = { role: 'user', content: text };
@@ -97,11 +101,26 @@ export class ChatComponent implements AfterViewChecked {
 
   handleFeedback(yes: boolean) {
     this.showFeedback.set(false);
-    if (!yes) {
+    if (yes) {
+      this.showFollowUp.set(true);
+    } else {
       const followUp = this.messages().find(m => m.role === 'user')?.content || '';
       this.currentInput = "The user indicated this did not solve their problem. Original issue: " + followUp;
       this.sendMessage();
     }
+  }
+
+  handleFollowUp(yes: boolean) {
+    this.showFollowUp.set(false);
+    if (yes) {
+      this.currentInput = '';
+    } else {
+      this.showCloseModal.set(true);
+    }
+  }
+
+  closeModal() {
+    this.showCloseModal.set(false);
   }
 
   retry() {
