@@ -12,6 +12,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,14 +36,11 @@ public class EmbeddingService {
             + "\n---\n"
             + (article.getContentFr() != null ? article.getContentFr() : "");
 
-        Document document = new Document(
-            content,
-            Map.of(
-                "articleId", article.getId().toString(),
-                "title", article.getTitleEn(),
-                "slug", article.getSlug()
-            )
-        );
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("articleId", article.getId().toString());
+        metadata.put("title", article.getTitleEn() != null ? article.getTitleEn() : "");
+        metadata.put("slug", article.getSlug() != null ? article.getSlug() : "");
+        Document document = new Document(content, metadata);
         vectorStore.add(List.of(document));
     }
 

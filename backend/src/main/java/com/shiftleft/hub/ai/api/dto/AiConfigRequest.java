@@ -1,7 +1,7 @@
 package com.shiftleft.hub.ai.api.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
@@ -19,6 +19,6 @@ public record AiConfigRequest(
 
     String embeddingModelName,
 
-    @Min(0) @Max(1)
+    @DecimalMin(value = "0.65", inclusive = false) @DecimalMax("1.0")
     Double similarityThreshold
 ) {}

@@ -55,12 +55,12 @@ export class ChatComponent {
     this.showCloseModal.set(false);
     this.showFallback.set(false);
 
+    const history = this.messages().slice(-10).map(m => ({ role: m.role, content: m.content }));
+
     const userMsg: ChatMessage = { id: `msg-${++this.nextId}`, role: 'user', content: text };
     this.messages.update(m => [...m, userMsg]);
 
     if (this.abortStream) this.abortStream();
-
-    const history = this.messages().slice(-10).map(m => ({ role: m.role, content: m.content }));
 
     this.isStreaming.set(true);
 

@@ -141,7 +141,7 @@ public class DataSeeder implements CommandLineRunner {
                 .openaiApiKey(null)
                 .chatModelName("llama3.2:3b")
                 .embeddingModelName("nomic-embed-text")
-                .similarityThreshold(0.65)
+                .similarityThreshold(0.7)
                 .embeddingDimension(768)
                 .build();
             aiConfigRepository.save(config);

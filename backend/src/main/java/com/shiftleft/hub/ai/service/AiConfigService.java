@@ -33,6 +33,7 @@ import java.util.Base64;
 public class AiConfigService {
 
     private final AiConfigRepository aiConfigRepository;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Value("${app.ai.encryption-key}")
     private String encryptionKey;
@@ -127,7 +128,7 @@ public class AiConfigService {
             SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             byte[] iv = new byte[12];
-            SecureRandom.getInstanceStrong().nextBytes(iv);
+            secureRandom.nextBytes(iv);
             GCMParameterSpec spec = new GCMParameterSpec(128, iv);
             cipher.init(Cipher.ENCRYPT_MODE, key, spec);
             byte[] ciphertext = cipher.doFinal(plaintext.getBytes("UTF-8"));
