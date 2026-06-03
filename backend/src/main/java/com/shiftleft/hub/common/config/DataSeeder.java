@@ -48,6 +48,13 @@ public class DataSeeder implements CommandLineRunner {
             userRepository.save(admin);
             log.info("Created default admin user with email: {}", adminEmail);
             log.warn("Change the default admin password on first login for security.");
+        } else {
+            User admin = userRepository.findByEmail(adminEmail).orElseThrow();
+            admin.setPassword(passwordEncoder.encode(adminPassword));
+            admin.setRole(UserRole.ROLE_ADMIN);
+            admin.setEnabled(true);
+            userRepository.save(admin);
+            log.info("Updated default admin credentials for email: {}", adminEmail);
         }
         setupFullTextSearch();
         setupVectorSearch();
@@ -118,8 +125,12 @@ public class DataSeeder implements CommandLineRunner {
 
     private void setupVectorSearch() {
         log.info("Setting up vector search...");
-        jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS vector");
-        log.info("Vector search setup complete.");
+        try {
+            jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS vector");
+            log.info("Vector search setup complete.");
+        } catch (Exception e) {
+            log.warn("Vector extension is not available on this PostgreSQL instance. Skipping vector setup.");
+        }
     }
 
     private void seedAiConfig() {
@@ -128,7 +139,7 @@ public class DataSeeder implements CommandLineRunner {
                 .llmProvider("OLLAMA")
                 .ollamaEndpointUrl("http://host.docker.internal:11434")
                 .openaiApiKey(null)
-                .chatModelName("llama3.2")
+                .chatModelName("llama3.2:3b")
                 .embeddingModelName("nomic-embed-text")
                 .similarityThreshold(0.65)
                 .embeddingDimension(768)
