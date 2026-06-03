@@ -59,3 +59,10 @@ export interface ArticleSearchResult {
   publishedAt: string;
   tagNames: string[];
 }
+
+export interface ArticleSearchTag {
+  nameEn: string;
+  nameFr: string;
+  color: string;
+  articleCount: number;
+}
