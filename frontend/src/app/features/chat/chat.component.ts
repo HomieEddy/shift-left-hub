@@ -1,6 +1,6 @@
 import { Component, inject, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, NgClass, MarkdownModule],
+  imports: [FormsModule, NgFor, NgIf, MarkdownModule],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent implements AfterViewChecked {

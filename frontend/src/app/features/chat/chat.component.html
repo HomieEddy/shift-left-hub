@@ -13,8 +13,8 @@
       </div>
 
       <div *ngIf="msg.role === 'assistant'" class="flex justify-start">
-        <div class="max-w-[75%] bg-slate-100 text-slate-800 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm prose prose-sm max-w-none">
-          <markdown *ngIf="msg.content; else typingIndicator" [data]="msg.content"></markdown>
+        <div class="max-w-[75%] bg-slate-100 text-slate-800 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm prose prose-sm">
+          <markdown *ngIf="msg.content; else typingIndicator" class="markdown-content" [data]="msg.content"></markdown>
           <ng-template #typingIndicator>
             <span class="inline-flex items-center gap-1" *ngIf="isStreaming()">
               <span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
