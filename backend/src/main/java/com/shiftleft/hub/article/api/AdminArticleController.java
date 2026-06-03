@@ -31,6 +31,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminArticleController {
 
+    private static final int MAX_PAGE_SIZE = 100;
+
     private final ArticleService articleService;
     private final UserRepository userRepository;
 
@@ -39,10 +41,12 @@ public class AdminArticleController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) ArticleStatus status) {
+        int safePage = Math.max(page, 0);
+        int safeSize = Math.max(1, Math.min(size, MAX_PAGE_SIZE));
         if (status != null) {
-            return articleService.getArticlesByStatus(status, page, size);
+            return articleService.getArticlesByStatus(status, safePage, safeSize);
         }
-        return articleService.getAllArticles(page, size);
+        return articleService.getAllArticles(safePage, safeSize);
     }
 
     @GetMapping("/{id}")

@@ -20,13 +20,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PublicArticleController {
 
+    private static final int MAX_PAGE_SIZE = 100;
+
     private final PublicArticleService publicArticleService;
 
     @GetMapping
     public Page<ArticleResponse> listArticles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return publicArticleService.getPublishedArticles(page, size);
+        int safePage = Math.max(page, 0);
+        int safeSize = Math.max(1, Math.min(size, MAX_PAGE_SIZE));
+        return publicArticleService.getPublishedArticles(safePage, safeSize);
     }
 
     @GetMapping("/search")
@@ -35,7 +39,9 @@ public class PublicArticleController {
             @RequestParam(required = false) List<String> tags,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return publicArticleService.search(q, page, size, tags);
+        int safePage = Math.max(page, 0);
+        int safeSize = Math.max(1, Math.min(size, MAX_PAGE_SIZE));
+        return publicArticleService.search(q, safePage, safeSize, tags);
     }
 
     @GetMapping("/search/tags")
