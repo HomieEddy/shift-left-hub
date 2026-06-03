@@ -49,6 +49,13 @@ export class ArticleSearchComponent implements OnInit {
       if (q) {
         this.query.set(q);
         this.doSearch(q, 0, tags);
+      } else {
+        this.query.set('');
+        this.results.set([]);
+        this.hasSearched.set(false);
+        this.totalResults.set(0);
+        this.totalPages.set(0);
+        this.currentPage.set(0);
       }
     });
   }
@@ -75,8 +82,18 @@ export class ArticleSearchComponent implements OnInit {
         });
         this.doSearch(value.trim(), 0, this.selectedTags());
       } else {
+        this.router.navigate([], {
+          queryParams: {
+            q: null,
+            tags: null,
+          },
+        });
         this.results.set([]);
         this.hasSearched.set(false);
+        this.totalResults.set(0);
+        this.totalPages.set(0);
+        this.currentPage.set(0);
+        this.errorMessage.set('');
       }
     }, 300);
   }
