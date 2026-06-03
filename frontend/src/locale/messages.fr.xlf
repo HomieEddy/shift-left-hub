@@ -322,6 +322,58 @@
         <source>AI Settings</source>
         <target>Paramètres IA</target>
       </trans-unit>
+      <trans-unit id="chat.title">
+        <source>AI Assistant</source>
+        <target>Assistant IA</target>
+      </trans-unit>
+      <trans-unit id="chat.subtitle">
+        <source>Ask me anything about IT issues</source>
+        <target>Posez-moi une question sur vos problèmes IT</target>
+      </trans-unit>
+      <trans-unit id="chat.input-placeholder">
+        <source>Describe your IT issue...</source>
+        <target>Décrivez votre problème IT...</target>
+      </trans-unit>
+      <trans-unit id="chat.send">
+        <source>Send</source>
+        <target>Envoyer</target>
+      </trans-unit>
+      <trans-unit id="chat.did-this-solve">
+        <source>Did this solve your problem?</source>
+        <target>Cela a-t-il résolu votre problème?</target>
+      </trans-unit>
+      <trans-unit id="chat.yes">
+        <source>Yes</source>
+        <target>Oui</target>
+      </trans-unit>
+      <trans-unit id="chat.no">
+        <source>No</source>
+        <target>Non</target>
+      </trans-unit>
+      <trans-unit id="chat.fallback-message">
+        <source>I couldn't find a resolution in the knowledge base.</source>
+        <target>Je n'ai pas trouvé de solution dans la base de connaissances.</target>
+      </trans-unit>
+      <trans-unit id="chat.escalate">
+        <source>Escalate to Human Agent</source>
+        <target>Transférer à un agent</target>
+      </trans-unit>
+      <trans-unit id="chat.escalate-coming">
+        <source>(Ticket creation coming in Phase 4)</source>
+        <target>(Création de ticket disponible dans la Phase 4)</target>
+      </trans-unit>
+      <trans-unit id="chat.error-message">
+        <source>Connection error. Please try again.</source>
+        <target>Erreur de connexion. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="chat.retry">
+        <source>Retry</source>
+        <target>Réessayer</target>
+      </trans-unit>
+      <trans-unit id="nav.ai-assistant">
+        <source>AI Assistant</source>
+        <target>Assistant IA</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
