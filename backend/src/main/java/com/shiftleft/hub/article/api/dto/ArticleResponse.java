@@ -23,6 +23,7 @@ public record ArticleResponse(
     UUID authorId,
     String authorName,
     UUID lastEditorId,
+    String lastEditorName,
     Set<TagResponse> tags,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
@@ -43,6 +44,7 @@ public record ArticleResponse(
             article.getAuthor().getId(),
             article.getAuthor().getDisplayName(),
             article.getLastEditor() != null ? article.getLastEditor().getId() : null,
+            article.getLastEditor() != null ? article.getLastEditor().getDisplayName() : null,
             article.getTags().stream().map(TagResponse::from).collect(Collectors.toSet()),
             article.getCreatedAt(),
             article.getUpdatedAt()

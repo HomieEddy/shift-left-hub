@@ -25,6 +25,7 @@ export interface ArticleDto {
   authorId: string;
   authorName: string;
   lastEditorId: string | null;
+  lastEditorName: string | null;
   tags: TagDto[];
   createdAt: string;
   updatedAt: string;
