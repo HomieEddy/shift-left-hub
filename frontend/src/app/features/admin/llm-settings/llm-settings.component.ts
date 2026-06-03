@@ -38,7 +38,7 @@ export class LlmSettingsComponent implements OnInit {
     } catch {
       this.config = {
         llmProvider: 'OLLAMA',
-        ollamaEndpointUrl: 'http://localhost:11434',
+        ollamaEndpointUrl: 'http://host.docker.internal:11434',
         hasOpenaiKey: false,
         chatModelName: 'llama3.2:3b',
         embeddingModelName: 'nomic-embed-text',
@@ -52,7 +52,7 @@ export class LlmSettingsComponent implements OnInit {
     if (!this.config) return;
     this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
     if (this.config?.llmProvider === 'OLLAMA') {
-      this.config.ollamaEndpointUrl = 'http://localhost:11434';
+      this.config.ollamaEndpointUrl = 'http://host.docker.internal:11434';
       this.openaiApiKey = '';
     }
   }
