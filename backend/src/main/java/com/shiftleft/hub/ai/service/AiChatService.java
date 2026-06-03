@@ -115,7 +115,7 @@ public class AiChatService {
 
     List<HybridSearchResult> hybridSearch(String query, double threshold) {
         List<HybridSearchResult> ftsResults = ftsSearch(query);
-        List<HybridSearchResult> vectorResults = vectorSearch(query);
+        List<HybridSearchResult> vectorResults = vectorSearch(query, threshold);
 
         Map<UUID, Double> rrfScores = new HashMap<>();
         Map<UUID, HybridSearchResult> resultMap = new HashMap<>();
@@ -133,7 +133,6 @@ public class AiChatService {
         }
 
         return rrfScores.entrySet().stream()
-            .filter(e -> e.getValue() >= threshold)
             .sorted(Map.Entry.<UUID, Double>comparingByValue().reversed())
             .map(e -> {
                 HybridSearchResult r = resultMap.get(e.getKey());
@@ -156,9 +155,9 @@ public class AiChatService {
             .toList();
     }
 
-    private List<HybridSearchResult> vectorSearch(String query) {
+    private List<HybridSearchResult> vectorSearch(String query, double threshold) {
         List<Document> docs = vectorStore.similaritySearch(
-            SearchRequest.builder().query(query).topK(TOP_K).build());
+            SearchRequest.builder().query(query).topK(TOP_K).similarityThreshold(threshold).build());
         return docs.stream()
             .map(doc -> {
                 Map<String, Object> meta = doc.getMetadata();
