@@ -7,7 +7,10 @@ import com.shiftleft.hub.article.domain.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
@@ -28,7 +31,6 @@ public class AiChatService {
 
     private final ArticleRepository articleRepository;
     private final VectorStore vectorStore;
-    private final ChatClient.Builder chatClientBuilder;
     private final AiConfigService aiConfigService;
 
     private static final int RRF_K = 60;
@@ -58,7 +60,7 @@ public class AiChatService {
             String history = formatHistory(request.history());
             String fullPrompt = buildPrompt(request.message(), context, history);
 
-            ChatClient chatClient = chatClientBuilder.build();
+            ChatClient chatClient = buildChatClient(config);
             AtomicReference<String> fullResponse = new AtomicReference<>("");
 
             chatClient.prompt()
@@ -139,6 +141,27 @@ public class AiChatService {
                 return new HybridSearchResult(r.articleId(), r.titleEn(), r.titleFr(), r.slug(), r.excerpt(), e.getValue());
             })
             .toList();
+    }
+
+    private ChatClient buildChatClient(AiConfig config) {
+        String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2";
+        ChatModel chatModel;
+
+        if ("OPENAI".equals(config.getLlmProvider()) && config.getOpenaiApiKey() != null && !config.getOpenaiApiKey().isEmpty()) {
+            String decryptedKey = aiConfigService.decrypt(config.getOpenaiApiKey());
+            chatModel = OpenAiChatModel.builder()
+                .apiKey(decryptedKey)
+                .model(modelName)
+                .build();
+        } else {
+            String baseUrl = config.getOllamaEndpointUrl() != null ? config.getOllamaEndpointUrl() : "http://localhost:11434";
+            chatModel = OllamaChatModel.builder()
+                .baseUrl(baseUrl)
+                .model(modelName)
+                .build();
+        }
+
+        return ChatClient.builder(chatModel).build();
     }
 
     private List<HybridSearchResult> ftsSearch(String query) {

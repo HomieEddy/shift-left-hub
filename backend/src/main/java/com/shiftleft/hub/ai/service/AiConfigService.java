@@ -11,6 +11,9 @@ import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +29,6 @@ import java.util.Base64;
 public class AiConfigService {
 
     private final AiConfigRepository aiConfigRepository;
-    private final ChatClient.Builder chatClientBuilder;
 
     @Value("${app.ai.encryption-key}")
     private String encryptionKey;
@@ -83,8 +85,23 @@ public class AiConfigService {
         try {
             String provider = request.llmProvider() != null ? request.llmProvider() : "OLLAMA";
             String model = request.chatModelName() != null ? request.chatModelName() : "llama3.2";
+            String endpointUrl = request.ollamaEndpointUrl() != null ? request.ollamaEndpointUrl() : "http://host.docker.internal:11434";
+            String apiKey = request.openaiApiKey();
 
-            ChatClient chatClient = chatClientBuilder.build();
+            ChatModel chatModel;
+            if ("OPENAI".equals(provider) && apiKey != null && !apiKey.isBlank()) {
+                chatModel = OpenAiChatModel.builder()
+                    .apiKey(apiKey)
+                    .model(model)
+                    .build();
+            } else {
+                chatModel = OllamaChatModel.builder()
+                    .baseUrl(endpointUrl)
+                    .model(model)
+                    .build();
+            }
+
+            ChatClient chatClient = ChatClient.builder(chatModel).build();
 
             String response = chatClient.prompt()
                 .user("Return only the word hello.")
