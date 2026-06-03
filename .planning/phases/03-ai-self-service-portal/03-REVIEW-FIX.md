@@ -1,106 +1,107 @@
 ---
 phase: 03-ai-self-service-portal
-fixed_at: 2026-06-03T22:00:00Z
+fixed_at: 2026-06-03T12:00:00Z
 review_path: .planning/phases/03-ai-self-service-portal/03-REVIEW.md
 iteration: 1
-findings_in_scope: 10
-fixed: 10
+findings_in_scope: 13
+fixed: 13
 skipped: 0
 status: all_fixed
 ---
 
-# Phase 3: Code Review Fix Report
+# Phase 03: Code Review Fix Report
 
-**Fixed at:** 2026-06-03T22:00:00Z
+**Fixed at:** 2026-06-03T12:00:00Z
 **Source review:** .planning/phases/03-ai-self-service-portal/03-REVIEW.md
 **Iteration:** 1
 
 **Summary:**
-- Findings in scope: 10 (3 critical + 7 warnings)
-- Fixed: 10
+- Findings in scope: 13
+- Fixed: 13
 - Skipped: 0
 
 ## Fixed Issues
 
-### CR-01: Thread Leak in ChatController — ExecutorService Never Shut Down
-
-**Files modified:** `backend/src/main/java/com/shiftleft/hub/ai/api/ChatController.java`, `backend/src/main/java/com/shiftleft/hub/config/SecurityConfig.java`
-**Commit:** efaa7f1
-**Applied fix:** Created a shared `ExecutorService` bean (`@Bean("chatExecutor")`) using `Executors.newVirtualThreadPerTaskExecutor()` (Java 21 virtual threads) in `SecurityConfig`. Modified `ChatController` to inject it via constructor with `@Qualifier("chatExecutor")`, replacing the per-request `Executors.newSingleThreadExecutor().submit(...)`.
-
-### CR-02: Hardcoded Secrets in application.properties
-
-**Files modified:** `backend/src/main/resources/application.properties`
-**Commit:** c831778
-**Applied fix:** Replaced hardcoded values with environment variable references with dev-safe defaults:
-- `app.jwt.secret` → `${APP_JWT_SECRET:...}`
-- `app.ai.encryption-key` → `${APP_AI_ENCRYPTION_KEY:...}`
-- `spring.datasource.username` → `${DB_USERNAME:shiftleft}`
-- `spring.datasource.password` → `${DB_PASSWORD:shiftleft}`
-
-### CR-03: Swallowed IOException in ChatController Timeout Handler
-
-**Files modified:** `backend/src/main/java/com/shiftleft/hub/ai/api/ChatController.java`
-**Commit:** efaa7f1
-**Applied fix:** Added `@Slf4j` annotation and replaced the empty catch block with `log.warn("Failed to send timeout error to client", e)`.
-
-### WR-01: Swallowed IOException in AiChatService Token Stream
-
-**Files modified:** `backend/src/main/java/com/shiftleft/hub/ai/service/AiChatService.java`
-**Commit:** 9d38878
-**Applied fix:** Added `log.debug("Client disconnected, aborting stream")` and `emitter.completeWithError(e)` in the `onNext` callback's IOException catch block.
-
-### WR-02: Dynamic AI Config Never Actually Wired to ChatClient at Runtime
-
-**Files modified:** `backend/src/main/java/com/shiftleft/hub/ai/service/AiChatService.java`, `backend/src/main/java/com/shiftleft/hub/ai/service/AiConfigService.java`
-**Commit:** c01ab57
-**Applied fix:** 
-- **AiChatService:** Removed `ChatClient.Builder` dependency. Added `buildChatClient(AiConfig config)` method that constructs an appropriate `ChatModel` (`OpenAiChatModel` or `OllamaChatModel`) based on the stored config. Calls `aiConfigService.decrypt()` to decrypt the API key before passing to the OpenAI builder. `processChat()` now builds a per-request `ChatClient` from the database config.
-- **AiConfigService:** Modified `testConnection()` to build a dynamic `ChatClient` from the request params instead of using the auto-configured builder. Removed unused `chatClientBuilder` field.
-
-### WR-03: RRF Threshold Used Instead of Similarity Threshold
-
-**Files modified:** `backend/src/main/java/com/shiftleft/hub/ai/service/AiChatService.java`
-**Commit:** b5872b8
-**Applied fix:** Moved the `similarityThreshold` to the `SearchRequest` in `vectorSearch()` via `.similarityThreshold(threshold)`. Removed the `.filter(e -> e.getValue() >= threshold)` from the RRF fusion stream, since RRF scores have different semantics from cosine similarity.
-
-### WR-04: Unstable TrackBy Function in Chat Component
+### WR-01: Subscription leak — `streamSub` never unsubscribed
 
 **Files modified:** `frontend/src/app/features/chat/chat.component.ts`
-**Commit:** 3414a46
-**Applied fix:** Changed `trackByFn` from `msg.content.length + msg.role` (unstable during streaming) to `return index` (stable since messages are only appended).
+**Commit:** b97fc06
+**Applied fix:** Added `DestroyRef` injection, imported `takeUntilDestroyed` from `@angular/core/rxjs-interop`, added `this.streamSub?.unsubscribe()` before reassignment, and piped the subscription through `takeUntilDestroyed(this.destroyRef)`.
 
-### WR-05: Unused Imports in AiChatService
+### WR-02: `escalationPayload` typed as `signal<any>` — ban on `any`
 
-**Files modified:** `backend/src/main/java/com/shiftleft/hub/ai/service/AiChatService.java`
-**Commit:** ad91bbe
-**Applied fix:** Removed three unused imports: `java.time.LocalDateTime`, `java.util.ArrayList`, `java.util.Comparator`.
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** f5f6c9e
+**Applied fix:** Defined `EscalationPayload` interface with `issue`, `transcript`, and `sources` fields. Changed signal type from `signal<any>` to `signal<EscalationPayload | null>`.
 
-### WR-06: Missing Input Validation on AiConfigRequest
+### WR-03: Modal has no focus trap or keyboard handling
 
-**Files modified:** `backend/src/main/java/com/shiftleft/hub/ai/api/dto/AiConfigRequest.java`
-**Commit:** b4386fc
-**Applied fix:** Added `@jakarta.validation.constraints` annotations to the record fields:
-- `@Pattern(regexp = "^(OLLAMA|OPENAI)$")` on `llmProvider`
-- `@Pattern(regexp = "^https?://.*")` on `ollamaEndpointUrl`
-- `@NotBlank` on `chatModelName`
-- `@Min(0) @Max(1)` on `similarityThreshold`
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`, `frontend/src/app/features/chat/chat.component.html`
+**Commit:** 978ffef
+**Applied fix:** Added `@HostListener('document:keydown.escape')` to close modal on Escape key. Added `role="dialog"`, `aria-modal="true"`, `aria-labelledby="modal-title"` to overlay. Added `id="modal-title"` to heading. Added `aria-hidden="true"` to decorative emoji. Added `autofocus` to Close button.
 
-Note: `@Valid` was NOT added to the controller methods to preserve partial-update behavior (null fields = skip update). Validation groups would be needed for that.
+### WR-04: `setEscalationPayload` captures first user message, not the latest
 
-### WR-07: SSE Parser May Fail on Multi-Line Data (LLM Output with Newlines)
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** eaf0b8f
+**Applied fix:** Replaced `Array.find()` with filtering for user messages and taking the last element (`[messages.length - 1]`), so the escalation issue captures the most recent user input.
 
-**Files modified:** `frontend/src/app/features/chat/chat.service.ts`
-**Commit:** ea174f8
-**Applied fix:** Rewrote the SSE parsing loop to accumulate multi-line data fields:
-- Added `currentData` accumulator variable
-- Lines starting with `data: {` start a new event; subsequent `data:` lines without a leading `{` are treated as continuations (per SSE spec)
-- Empty lines signal end of an SSE event and trigger parsing
-- Remaining data at end-of-stream is parsed on stream completion
-- Extracted `tryParseAndEmit()` helper for cleaner logic
+### WR-05: `lastAiMessage` signal is set but never read
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** 7c6ade8
+**Applied fix:** Removed the `lastAiMessage` signal declaration and its assignment in the done handler. This eliminates dead state.
+
+### IN-01: `ngAfterViewChecked` triggers scroll on every change detection
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** cf00e52
+**Applied fix:** Replaced `ngAfterViewChecked` lifecycle hook (which ran on every CD cycle) with an `effect()` that watches the `messages()` signal, so scroll only triggers when messages actually change.
+
+### IN-02: Modal missing ARIA attributes
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.html`
+**Commit:** 978ffef (covered by WR-03)
+**Applied fix:** Added `role="dialog"`, `aria-modal="true"`, `aria-labelledby="modal-title"` to overlay div; `aria-hidden="true"` to decorative emoji; `id="modal-title"` to heading.
+
+### IN-03: No `aria-live` region for dynamic chat content
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.html`
+**Commit:** 6b0d3c0
+**Applied fix:** Added `aria-live="polite"` to the `#chatContainer` div to announce dynamic AI messages.
+
+### IN-04: Hardcoded UI text not wrapped in i18n pipes
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.html`
+**Commit:** f717acc
+**Applied fix:** Added `i18n` attributes with `@@followUpPrompt`, `@@modalThankYou`, `@@modalSeeYouSoon`, and `@@modalClose` translation IDs to hardcoded text strings.
+
+### IN-05: `trackByFn` uses array index instead of unique identifier
+
+**Files modified:** `frontend/src/app/features/chat/chat.service.ts`, `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** 5aa2ce2
+**Applied fix:** Added optional `id?: string` field to `ChatMessage` interface. Added incrementing counter to generate unique IDs (`msg-N`) for each user and assistant message. Updated `trackByFn` to return `msg.id` instead of array index.
+
+### IN-06: Empty catch block in `scrollToBottom`
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** 19b74fc
+**Applied fix:** Added `console.warn('Scroll failed:', e)` to the previously empty catch block.
+
+### IN-07: `escalationPayload` not reset in `sendMessage()`
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** d295d07
+**Applied fix:** Added `this.escalationPayload.set(null)` to the state reset block in `sendMessage()`.
+
+### IN-08: `handleFeedback(false)` constructs hardcoded message for re-send
+
+**Files modified:** `frontend/src/app/features/chat/chat.component.ts`
+**Commit:** eaf0b8f (covered by WR-04)
+**Applied fix:** Updated to use the last user message instead of the first via `find()`. Added a TODO comment recommending the full conversation transcript be sent as a system instruction in Phase 4.
 
 ---
 
-_Fixed: 2026-06-03T22:00:00Z_
-_Fixer: gsd-code-fixer_
+_Fixed: 2026-06-03T12:00:00Z_
+_Fixer: the agent (gsd-code-fixer)_
 _Iteration: 1_
