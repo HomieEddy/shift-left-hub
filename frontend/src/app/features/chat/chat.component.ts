@@ -124,7 +124,7 @@ export class ChatComponent implements AfterViewChecked {
     } catch { }
   }
 
-  trackByFn(_index: number, msg: ChatMessage) {
-    return msg.content.length + msg.role;
+  trackByFn(index: number, _msg: ChatMessage) {
+    return index;
   }
 }
