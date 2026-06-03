@@ -62,8 +62,8 @@ export class ChatService {
         buffer = lines.pop() || '';
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const payload = line.slice(6);
+          if (line.startsWith('data:')) {
+            const payload = line.slice(5).trimStart();
             if (currentData && !payload.startsWith('{')) {
               // Continuation of multi-line data field (SSE spec)
               currentData += '\n' + payload;
