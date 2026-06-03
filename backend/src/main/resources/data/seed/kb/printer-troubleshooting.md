@@ -66,3 +66,65 @@ Contact the IT Service Desk:
 - **Portal:** [portal.company.com](https://portal.company.com)
 
 Include your **printer name**, **floor/location**, and a description of the issue.
+
+<!-- FR -->
+
+# Resolution des problemes d'impression
+
+Suivez ces etapes dans l'ordre pour resoudre les problemes d'impression les plus courants.
+
+## Imprimante hors ligne
+
+### Etape 1: Verifier les connexions physiques
+- Verifiez que l'imprimante est **allumee**
+- Verifiez le cable **USB ou Ethernet**
+- Verifiez le cable reseau pour les imprimantes reseau
+
+### Etape 2: Verifier l'etat sur votre ordinateur
+
+**Windows:**
+1. Ouvrez **Parametres > Bluetooth et appareils > Imprimantes et scanners**
+2. Selectionnez l'imprimante puis **Ouvrir la file d'impression**
+3. Verifiez l'etat **Pret** (pas "Hors ligne" ni "En pause")
+4. Si hors ligne, cliquez **Imprimante > Utiliser l'imprimante en ligne**
+
+**macOS:**
+1. Ouvrez **Reglages Systeme > Imprimantes et scanners**
+2. Selectionnez l'imprimante, l'etat doit etre **Inactive**
+3. Si en pause, cliquez **Reprendre**
+
+### Etape 3: Redemarrer le spouleur (Windows)
+1. Ouvrez **Executer** (`Win + R`), tapez `services.msc`
+2. Recherchez **Spouleur d'impression**
+3. Clic droit > **Redemarrer**
+4. Reessayez l'impression
+
+## Bourrage papier
+
+1. Ouvrez tous les capots de l'imprimante
+2. Retirez doucement le papier bloque dans le sens d'alimentation
+3. Verifiez le panneau arriere et le module duplex
+4. Refermez puis appuyez sur **OK** ou **Reprendre**
+
+## Qualite d'impression mediocre
+
+| Symptome | Cause probable | Solution |
+|---|---|---|
+| Texte pale | Toner faible | Remplacer la cartouche |
+| Stries verticales | Tambour/rouleau sale | Lancer un cycle de nettoyage |
+| Pages blanches | Toner vide | Remplacer la cartouche |
+| Bavures | Mauvais type de papier | Utiliser le papier recommande |
+| Lignes/texte manquant | Tete bouchee | Nettoyage tete d'impression |
+
+## Impression lente
+- Les gros fichiers prennent plus de temps a spouler
+- Le trafic reseau peut ralentir les imprimantes partagees
+- Baissez la qualite de **Meilleure** a **Normale**
+
+## Encore un probleme?
+Contactez le Service Desk IT:
+- **Telephone:** poste 4357
+- **Email:** servicedesk@company.com
+- **Portail:** [portal.company.com](https://portal.company.com)
+
+Indiquez le **nom de l'imprimante**, **l'etage/emplacement**, et une description du probleme.

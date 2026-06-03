@@ -36,3 +36,35 @@ Confirm your new password and click **Reset**. You can now log in to the VPN cli
 
 ## Need Help?
 Contact the IT Service Desk at **ext. 4357** or email **servicedesk@company.com**.
+
+<!-- FR -->
+
+# Comment reinitialiser votre mot de passe VPN
+
+Si vous avez oublie votre mot de passe VPN ou souhaitez le changer pour des raisons de securite, suivez les etapes ci-dessous.
+
+## Prerequis
+- Acces a votre adresse email enregistree
+- Un navigateur web (Chrome, Firefox, Edge ou Safari)
+
+## Etape 1: Ouvrir le portail libre-service
+Ouvrez **https://portal.company.com/vpn-reset**.
+
+## Etape 2: Saisir votre adresse email
+Entrez l'adresse associee a votre compte VPN puis cliquez **Send Reset Link**.
+
+## Etape 3: Verifier votre messagerie
+Vous recevrez un lien de reinitialisation valable **30 minutes**.
+
+## Etape 4: Creer un nouveau mot de passe
+Votre mot de passe doit:
+- contenir au moins **12 caracteres**
+- contenir **une majuscule**
+- contenir **un chiffre**
+- contenir **un caractere special** (`!@#$%^&*`)
+
+## Etape 5: Confirmer et se connecter
+Confirmez le nouveau mot de passe puis cliquez **Reset**. Vous pourrez ensuite vous connecter au client VPN.
+
+## Besoin d'aide?
+Contactez le Service Desk IT: **poste 4357** ou **servicedesk@company.com**.

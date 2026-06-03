@@ -75,3 +75,74 @@ When finished working remotely, disconnect the VPN:
 - Always **disconnect** the VPN when not actively working
 - Report lost or stolen devices immediately to IT
 - Do not use public Wi-Fi without the VPN enabled
+
+<!-- FR -->
+
+# Acceder a l'intranet de l'entreprise a distance
+
+Le travail a distance exige une connexion VPN securisee pour acceder aux ressources internes.
+
+## Avant de commencer
+
+Vous avez besoin de:
+- Un ordinateur professionnel (ou appareil personnel approuve par l'IT)
+- Le client VPN installe
+- Un compte entreprise actif avec MFA configuree
+- Une connexion internet stable
+
+## Etape 1: Installer le client VPN
+
+### Windows / macOS
+1. Telechargez le client VPN: [portal.company.com/tools/vpn](https://portal.company.com/tools/vpn)
+2. Lancez l'installation (droits administrateur requis)
+3. Redemarrez votre ordinateur si demande
+
+### Appareils professionnels
+Le client VPN est deja installe sur les ordinateurs de l'entreprise. Passez a l'etape 2.
+
+## Etape 2: Se connecter au VPN
+
+1. Ouvrez l'application **Company VPN**
+2. Entrez l'adresse du serveur: **vpn.company.com**
+3. Cliquez **Connect**
+4. Entrez votre **nom d'utilisateur AD** et votre **mot de passe**
+5. Validez la demande **MFA** sur votre telephone
+6. L'etat passe a **Connected**
+
+## Etape 3: Acceder a l'intranet
+
+Une fois connecte, vous pouvez acceder a:
+- **Accueil Intranet:** [https://intranet.company.com](https://intranet.company.com)
+- **Portail RH:** [https://hr.company.com](https://hr.company.com)
+- **Service Desk IT:** [https://servicedesk.company.com](https://servicedesk.company.com)
+- **Partages fichiers:** `\\fileserver\shared\`
+
+## Deconnexion
+
+Quand vous avez termine:
+- Clic droit sur l'icone VPN > **Disconnect**
+- Ou ouvrez l'application puis cliquez **Disconnect**
+
+## Depannage
+
+### Impossible de se connecter
+- Verifiez la connexion internet
+- Verifiez votre mot de passe
+- Verifiez la configuration MFA
+- Testez un autre reseau
+
+### VPN connecte mais intranet inaccessible
+- Votre configuration peut desactiver le split tunneling
+- Testez via adresse IP
+- Videz le cache DNS (`ipconfig /flushdns` sur Windows)
+
+### Connexion lente
+- Preferez une connexion Ethernet
+- Fermez les applications gourmandes
+- Essayez un autre protocole VPN
+
+## Rappels de securite
+- Ne laissez pas votre appareil sans surveillance
+- Deconnectez le VPN quand vous ne travaillez pas
+- Signalez tout appareil perdu/vole immediatement
+- N'utilisez pas un Wi-Fi public sans VPN actif

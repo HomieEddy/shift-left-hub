@@ -56,3 +56,55 @@ You can access your company email from your smartphone using either the **Micros
 - Enable **device PIN or biometric lock** on your phone
 - If your device is lost or stolen, contact IT immediately to remote-wipe company data
 - Do not forward company email to personal accounts
+
+<!-- FR -->
+
+# Configurer votre courriel professionnel sur mobile
+
+Vous pouvez acceder a votre courriel professionnel depuis votre telephone via **Microsoft Outlook** ou l'application **Mail** integree.
+
+## Recommande: Microsoft Outlook
+
+### iOS
+1. Installez **Microsoft Outlook** depuis l'App Store
+2. Ouvrez l'application puis touchez **Get Started**
+3. Entrez votre adresse complete (`prenom.nom@company.com`)
+4. Touchez **Add Account**
+5. Entrez votre mot de passe reseau
+6. Acceptez les autorisations
+7. Vos emails, calendrier et contacts seront synchronises
+
+### Android
+1. Installez **Microsoft Outlook** depuis Google Play
+2. Ouvrez l'application puis touchez **Get Started**
+3. Entrez votre adresse email complete
+4. Entrez votre mot de passe reseau
+5. Activez la synchro calendrier/contacts si propose
+6. La boite est prete
+
+## Alternative: application Mail du systeme
+
+### iOS (Apple Mail)
+1. **Reglages > Mail > Comptes > Ajouter un compte > Microsoft Exchange**
+2. Entrez adresse email et mot de passe
+3. Touchez **Suivant**
+4. Activez **Mail**, **Contacts**, **Calendriers** selon besoin
+5. Touchez **Enregistrer**
+
+### Android (Gmail / Samsung Email)
+1. Ouvrez l'application **Email** ou **Gmail**
+2. **Ajouter un compte > Exchange**
+3. Entrez email et mot de passe
+4. Serveur: **outlook.office365.com** (si demande)
+5. Acceptez les politiques de securite
+6. Configuration terminee
+
+## Depannage
+- **Mot de passe incorrect**: reinitialisez sur [portal.company.com/password-reset](https://portal.company.com/password-reset)
+- **Serveur introuvable**: verifiez votre reseau
+- **Double authentification**: creez un **mot de passe d'application** si necessaire
+
+## Securite
+- Activez un **code PIN** ou verrouillage biometrie
+- En cas de perte/vol, contactez l'IT pour effacement a distance
+- Ne transferez pas vos emails professionnels vers une boite personnelle

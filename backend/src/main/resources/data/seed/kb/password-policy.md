@@ -53,3 +53,52 @@ Save your **one-time backup codes** in a secure location (not on your computer).
 1. **Change your password immediately** at [portal.company.com/password-reset](https://portal.company.com/password-reset)
 2. **Contact IT Security** at **security@company.com** or **ext. 4388**
 3. If you lose your phone, deactivate MFA at [portal.company.com/security/mfa](https://portal.company.com/security/mfa)
+
+<!-- FR -->
+
+# Politique de mots de passe et securite des comptes
+
+La protection des donnees de l'entreprise commence par une securite de compte solide. Cet article presente les exigences de mot de passe et les pratiques a respecter.
+
+## Exigences de mot de passe
+
+Tous les mots de passe doivent respecter les regles suivantes:
+
+| Exigence | Standard |
+|---|---|
+| Longueur minimale | **12 caracteres** |
+| Complexite | Au moins 1 majuscule, 1 minuscule, 1 chiffre, 1 caractere special |
+| Historique | Impossible de reutiliser les **10 derniers mots de passe** |
+| Duree maximale | **90 jours** |
+| Verrouillage | Apres **5 tentatives echouees** (30 minutes) |
+
+## Authentification multifacteur (MFA)
+
+La MFA est **obligatoire** pour tous les comptes.
+
+### Etape 1: Installer une application d'authentification
+- **iOS/Android:** Microsoft Authenticator, Google Authenticator ou Authy
+
+### Etape 2: Enregistrer votre appareil
+1. Ouvrez [portal.company.com/security/mfa](https://portal.company.com/security/mfa)
+2. Cliquez sur **Set Up MFA**
+3. Scannez le code QR avec votre application
+4. Entrez le code a 6 chiffres pour confirmer
+
+### Etape 3: Codes de secours
+Conservez vos **codes de secours** dans un endroit securise (pas sur votre ordinateur).
+
+## Bonnes pratiques de securite
+
+- **Ne partagez jamais votre mot de passe**, meme avec l'IT
+- L'IT ne demandera **jamais** votre mot de passe par email ou telephone
+- **Verrouillez votre poste** en cas d'absence (`Win + L` sur Windows, `Ctrl + Cmd + Q` sur macOS)
+- Utilisez un **gestionnaire de mots de passe**
+- **Deconnectez-vous** des systemes en fin d'utilisation
+- Signalez toute activite suspecte immediatement
+
+## En cas de suspicion de compromission
+
+1. Changez votre mot de passe immediatement sur [portal.company.com/password-reset](https://portal.company.com/password-reset)
+2. Contactez IT Security: **security@company.com** ou **poste 4388**
+3. Si vous perdez votre telephone, desactivez la MFA sur [portal.company.com/security/mfa](https://portal.company.com/security/mfa)

@@ -75,3 +75,70 @@ Always verify before you trust:
 - **Check the sender address** — not just the display name
 - **Legitimate IT emails** will never ask for your password
 - When in doubt, forward the email to **phishing@company.com** for verification
+
+<!-- FR -->
+
+# Signaler un incident de securite
+
+Si vous suspectez une compromission ou observez une activite anormale, signalez-la immediatement.
+
+## Qu'est-ce qu'un incident de securite?
+
+Exemples:
+- **Email d'hameconnage** demandant des identifiants
+- **Infection malveillante** (popups, ransomware, alertes antivirus)
+- **Acces non autorise** a des systemes
+- **Fuite de donnees** sensibles
+- **Perte ou vol d'appareil** professionnel
+- **Ingenierie sociale** (usurpation IT/management)
+- **Violation de politique** de securite
+
+## Comment signaler
+
+### Option 1: Portail IT (recommande)
+1. Ouvrez [portal.company.com/security/report](https://portal.company.com/security/report)
+2. Cliquez **Report an Incident**
+3. Selectionnez le type d'incident
+4. Decrivez la situation
+5. Joignez les preuves utiles
+6. Envoyez
+
+### Option 2: Hotline securite
+- **Urgence:** poste **4388** (24/7)
+
+### Option 3: Email
+- **security@company.com** (non urgent)
+
+## Informations a fournir
+
+| Champ | Exemple |
+|---|---|
+| Type | Email d'hameconnage |
+| Date/heure | 2026-06-01 14:30 |
+| Nom | John Doe |
+| Departement | Engineering |
+| Description | Email demandant mon mot de passe |
+| Impact | 3 collegues potentiellement touches |
+| Preuves | Capture d'ecran + en-tetes email |
+
+## A ne pas faire
+
+- Ne transferez pas un email suspect a d'autres employes
+- Ne cliquez pas les liens/PIJ suspects
+- N'essayez pas de traiter l'incident seul
+- Ne communiquez pas l'incident hors personnes autorisees
+
+## Apres le signalement
+
+L'equipe securite va:
+1. Accuser reception
+2. Enqueter et escalader si necessaire
+3. Vous tenir informe
+4. Cloturer avec un resume
+
+## Bonnes pratiques anti-phishing
+
+- Survolez les liens avant de cliquer
+- Verifiez l'adresse de l'expediteur
+- L'IT legitime ne demande jamais votre mot de passe
+- En cas de doute, transferez a **phishing@company.com**

@@ -60,3 +60,59 @@ A: Open-source tools follow the same process. IT will verify the tool is safe an
 
 **Q: How long does it take?**
 A: Self-service installations are instant. Manual requests are processed within 2 business days after manager approval.
+
+<!-- FR -->
+
+# Comment demander l'installation d'un logiciel
+
+Toute installation de logiciel sur un appareil professionnel doit etre approuvee et effectuee par l'IT. Cette politique garantit conformite, securite et gestion des licences.
+
+## Avant de faire la demande
+
+Consultez d'abord le **Catalogue logiciel**: [portal.company.com/software](https://portal.company.com/software).
+
+### Logiciels disponibles en libre-service
+- Adobe Acrobat Reader
+- Microsoft 365 Apps
+- Visual Studio Code
+- 7-Zip
+- Zoom
+- Notepad++
+
+## Soumettre une demande
+
+### Etape 1: Connexion
+Ouvrez [portal.company.com](https://portal.company.com) avec vos identifiants entreprise.
+
+### Etape 2: Nouvelle demande
+Cliquez **Request Software** ou allez dans **IT Requests > Software Installation**.
+
+### Etape 3: Completer le formulaire
+Indiquez:
+- **Nom et version** du logiciel
+- **Justification metier** (ex. besoin projet)
+- **Urgence**: Low / Medium / High
+- **Approbateur** (email du manager)
+
+### Etape 4: Approbations
+1. Le **manager** recoit un email d'approbation
+2. L'**IT** verifie licence et securite
+3. Si approuve, installation distante sous **2 jours ouvres**
+
+## Installation en libre-service
+Pour les logiciels approuves:
+1. Ouvrez **Company Software Center**
+2. Recherchez l'application
+3. Cliquez **Install**
+4. Aucune elevation admin requise
+
+## FAQ
+
+**Q: Puis-je installer un logiciel gratuit moi-meme?**
+A: Non. Toute installation passe par l'IT, meme gratuite.
+
+**Q: Et les outils open-source?**
+A: Meme processus. L'IT valide securite et inventorie l'outil.
+
+**Q: Delai de traitement?**
+A: Libre-service immediat. Demandes manuelles traitees sous 2 jours ouvres apres approbation manager.
