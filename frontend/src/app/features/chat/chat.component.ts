@@ -22,7 +22,6 @@ export class ChatComponent implements AfterViewChecked {
   showFeedback = signal(false);
   showFollowUp = signal(false);
   showCloseModal = signal(false);
-  lastAiMessage = signal('');
   showFallback = signal(false);
   escalationPayload = signal<any>(null);
   errorMessage = signal<string | null>(null);
@@ -67,7 +66,6 @@ export class ChatComponent implements AfterViewChecked {
           this.messages.update(m => [...m]);
         } else if (event.type === 'done') {
           this.isStreaming.set(false);
-          this.lastAiMessage.set(assistantMsg.content);
           this.showFeedback.set(true);
           this.setEscalationPayload(event);
         } else if (event.type === 'fallback') {
