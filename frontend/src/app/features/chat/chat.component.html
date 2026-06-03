@@ -4,7 +4,7 @@
     <p class="text-sm text-slate-500">Ask me anything about IT issues</p>
   </div>
 
-  <div #chatContainer class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+  <div #chatContainer aria-live="polite" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
     <ng-container *ngFor="let msg of messages(); trackBy: trackByFn">
       <div *ngIf="msg.role === 'user'" class="flex justify-end">
         <div class="max-w-[75%] bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm">
