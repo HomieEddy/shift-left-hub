@@ -4,13 +4,17 @@ import com.shiftleft.hub.ai.api.dto.ChatRequest;
 import com.shiftleft.hub.ai.api.dto.StreamEvent;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.article.domain.ArticleRepository;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.ollama.api.OllamaApi;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
@@ -150,14 +154,14 @@ public class AiChatService {
         if ("OPENAI".equals(config.getLlmProvider()) && config.getOpenaiApiKey() != null && !config.getOpenaiApiKey().isEmpty()) {
             String decryptedKey = aiConfigService.decrypt(config.getOpenaiApiKey());
             chatModel = OpenAiChatModel.builder()
-                .apiKey(decryptedKey)
-                .model(modelName)
+                .openAiClient(OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
+                .options(OpenAiChatOptions.builder().model(modelName).build())
                 .build();
         } else {
             String baseUrl = config.getOllamaEndpointUrl() != null ? config.getOllamaEndpointUrl() : "http://localhost:11434";
             chatModel = OllamaChatModel.builder()
-                .baseUrl(baseUrl)
-                .model(modelName)
+                .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
+                .defaultOptions(OllamaChatOptions.builder().model(modelName).build())
                 .build();
         }
 

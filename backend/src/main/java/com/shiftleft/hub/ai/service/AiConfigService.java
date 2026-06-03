@@ -13,10 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.ollama.api.OllamaApi;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -44,7 +48,7 @@ public class AiConfigService {
                 AiConfig defaultConfig = AiConfig.builder()
                     .llmProvider("OLLAMA")
                     .ollamaEndpointUrl("http://host.docker.internal:11434")
-                    .chatModelName("llama3.2")
+                    .chatModelName("llama3.2:3b")
                     .embeddingModelName("nomic-embed-text")
                     .similarityThreshold(0.65)
                     .embeddingDimension(768)
@@ -84,20 +88,20 @@ public class AiConfigService {
     public TestConnectionResult testConnection(AiConfigRequest request) {
         try {
             String provider = request.llmProvider() != null ? request.llmProvider() : "OLLAMA";
-            String model = request.chatModelName() != null ? request.chatModelName() : "llama3.2";
+            String model = request.chatModelName() != null ? request.chatModelName() : "llama3.2:3b";
             String endpointUrl = request.ollamaEndpointUrl() != null ? request.ollamaEndpointUrl() : "http://host.docker.internal:11434";
             String apiKey = request.openaiApiKey();
 
             ChatModel chatModel;
             if ("OPENAI".equals(provider) && apiKey != null && !apiKey.isBlank()) {
                 chatModel = OpenAiChatModel.builder()
-                    .apiKey(apiKey)
-                    .model(model)
+                    .openAiClient(OpenAIOkHttpClient.builder().apiKey(apiKey).build())
+                    .options(OpenAiChatOptions.builder().model(model).build())
                     .build();
             } else {
                 chatModel = OllamaChatModel.builder()
-                    .baseUrl(endpointUrl)
-                    .model(model)
+                    .ollamaApi(OllamaApi.builder().baseUrl(endpointUrl).build())
+                    .defaultOptions(OllamaChatOptions.builder().model(model).build())
                     .build();
             }
 
