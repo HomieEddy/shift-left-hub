@@ -140,7 +140,9 @@ export class ChatComponent implements AfterViewChecked {
         top: this.chatContainer.nativeElement.scrollHeight,
         behavior: 'smooth',
       });
-    } catch { }
+    } catch (e) {
+        console.warn('Scroll failed:', e);
+      }
   }
 
   trackByFn(index: number, _msg: ChatMessage) {
