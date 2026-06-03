@@ -9,20 +9,20 @@ progress:
   completed_phases: 3
   total_plans: 16
   completed_plans: 16
-  current_phase: 3
-  current_phase_name: "AI Self-Service Portal"
-  current_focus: "Phase 3 complete — 4 plans finished"
+  current_phase: 4
+  current_phase_name: "Escalation & Ticketing"
+  current_focus: "Phase 3 complete — ready for Phase 4"
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** Phase 2 Complete
+**Status:** Phase 3 Complete
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-31)
+See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
 **Current focus:** Phase 3 complete — all 4 plans finished
@@ -129,15 +129,6 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 - **KB-04**: Articles support tags for categorization (Tag entity + M2M + CRUD API) ✓
 - **KB-05**: Articles are bilingual EN/FR (columnar schema + DTO support) ✓
 - **ADM-04**: Admin can manage tags (CRUD + article count + delete guard) ✓
-
-## Next Steps
-
-1. **Phase 3 complete** — AI Self-Service Portal built
-2. Active branch: `feat/phase-3-ai-portal`
-3. Next: Phase 4 (Escalation & Ticketing) via `/gsd-plan-phase 4`
-
-## Requirements Completed
-
 - **AI-01**: Conversational chat interface at /chat with bubble layout ✓
 - **AI-02**: Hybrid search (FTS + pgvector + RRF) for relevant article retrieval ✓
 - **AI-03**: SSE streaming response with typing indicator animation ✓
@@ -146,6 +137,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 - **AI-06**: Similarity threshold > 0.65 enforced in RAG pipeline ✓
 - **INF-04**: Local LLM fallback (Ollama) via admin-configurable provider ✓
 
+## Next Steps
+
+1. **Phase 3 complete** — AI Self-Service Portal built
+2. Merged to `master` — ready for Phase 4
+3. Next: Phase 4 (Escalation & Ticketing) via `/gsd-plan-phase 4`
+
 ---
 
-*Last updated: 2026-06-01 after Phase 2 planning complete*
+*Last updated: 2026-06-03 after Phase 3 merge*

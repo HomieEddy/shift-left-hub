@@ -6,9 +6,9 @@
 
 | # | Phase | Goal | Requirements | Success Criteria |
 |--|-------|------|--------------|------------------|
-| 1 | Foundation | 3/4 | Executing  | 2026-05-31 |
-| 2 | Knowledge Base | Article CRUD + FTS + tags + bilingual EN/FR | KB-01-05, ADM-04 | 4 |
-| 3 | AI Self-Service Portal | Conversational chat + RAG + SSE streaming | AI-01-06, INF-04 | 4 |
+| 1 | Foundation | 4/4 | Complete  | 2026-05-31 |
+| 2 | Knowledge Base | Article CRUD + FTS + tags + bilingual EN/FR | KB-01-05, ADM-04 | ✓ 4 |
+| 3 | AI Self-Service Portal | Conversational chat + RAG + SSE streaming | AI-01-06, INF-04 | ✓ 4 |
 | 4 | Escalation & Ticketing | Contextual ticket creation | TKT-01-04 | 3 |
 | 5 | Agent Dashboard | Prioritized ticket queue + resolution + KCS flag | AGT-01-05 | 4 |
 | 6 | KCS Auto-Drafting & Admin Review | Event-driven drafting + dedup + review queue | KCS-01-04, ADM-01-02 | 4 |
@@ -25,10 +25,10 @@
 **Requirements:** AUTH-01, AUTH-02, AUTH-03, AUTH-04, ADM-03, INF-01, INF-02, INF-03
 
 **Success criteria:**
-1. Developer can run `docker compose up` and the full stack starts (PostgreSQL + pgAdmin)
-2. User can sign up with email/password and log in
-3. User session persists across browser refresh via refresh token rotation (HttpOnly cookies)
-4. Admin can manage users and assign roles via the admin console
+1. ✅ Developer can run `docker compose up` and the full stack starts (PostgreSQL + pgAdmin)
+2. ✅ User can sign up with email/password and log in
+3. ✅ User session persists across browser refresh via refresh token rotation (HttpOnly cookies)
+4. ✅ Admin can manage users and assign roles via the admin console
 
 **Plans:** 4 plans in 3 waves (3/4 complete)
 
@@ -53,10 +53,10 @@ Plans:
 **Requirements:** KB-01, KB-02, KB-03, KB-04, KB-05, ADM-04
 
 **Success criteria:**
-1. Admin can create, edit, and archive articles using a markdown editor
-2. User can browse published articles with pagination and tag filtering
-3. FTS search returns highlighted result snippets with fast response times
-4. Articles display correctly in both English and French based on user preference
+1. ✅ Admin can create, edit, and archive articles using a markdown editor
+2. ✅ User can browse published articles with pagination and tag filtering
+3. ✅ FTS search returns highlighted result snippets with fast response times
+4. ✅ Articles display correctly in both English and French based on user preference
 
 **Plans:**
 - [x] 02-01 — Database schema: Article + Tag JPA entities, repositories, ArticleStatus enum, tsvector columns + GIN index + trigger
@@ -73,10 +73,10 @@ Plans:
 **Requirements:** AI-01, AI-02, AI-03, AI-04, AI-05, AI-06, INF-04
 
 **Success criteria:**
-1. User can describe an IT issue in a chat interface and receive relevant step-by-step guides
-2. AI responses stream in real-time with a typing indicator animation
-3. System asks "Did this solve your problem?" after presenting a guide
-4. When no relevant content found (below 0.65 threshold), system offers graceful fallback with escalation option
+1. ✅ User can describe an IT issue in a chat interface and receive relevant step-by-step guides
+2. ✅ AI responses stream in real-time with a typing indicator animation
+3. ✅ System asks "Did this solve your problem?" after presenting a guide
+4. ✅ When no relevant content found (below 0.65 threshold), system offers graceful fallback with escalation option
 
 **Plans:** 4 plans in 3 waves
 
@@ -87,10 +87,10 @@ Plans:
 | 3 | 03-04 | Frontend Chat UI (bubble layout, SSE, typing indicator, feedback) |
 
 Plans:
-- [ ] 03-01 — Backend AI Infrastructure: Spring AI 2.0.0-M8 deps, AiConfig entity with encrypted API key, EmbeddingService (pgvector + auto-embed on publish), AiConfigController (CRUD, test connection, re-embed), security wiring
-- [ ] 03-02 — Backend Chat & RAG Pipeline: SSE streaming SseEmitter endpoint, hybrid search (FTS+pgvector+RRF), similarity threshold >0.65, context construction, LLM streaming, fallback flow
-- [ ] 03-03 — Admin LLM Settings UI: /admin/settings/llm route, provider dropdown (Ollama/OpenAI), test connection button, re-embed button, EN/FR translations
-- [ ] 03-04 — Chat UI: /chat route, bubble layout, typing indicator, SSE streaming, markdown rendering (ngx-markdown), "Did this solve?" feedback, fallback + escalation placeholder, inline error + retry
+- [x] 03-01 — Backend AI Infrastructure: Spring AI 2.0.0-M8 deps, AiConfig entity with encrypted API key, EmbeddingService (pgvector + auto-embed on publish), AiConfigController (CRUD, test connection, re-embed), security wiring
+- [x] 03-02 — Backend Chat & RAG Pipeline: SSE streaming SseEmitter endpoint, hybrid search (FTS+pgvector+RRF), similarity threshold >0.65, context construction, LLM streaming, fallback flow
+- [x] 03-03 — Admin LLM Settings UI: /admin/settings/llm route, provider dropdown (Ollama/OpenAI), test connection button, re-embed button, EN/FR translations
+- [x] 03-04 — Chat UI: /chat route, bubble layout, typing indicator, SSE streaming, markdown rendering (ngx-markdown), "Did this solve?" feedback, fallback + escalation placeholder, inline error + retry
 
 ---
 
@@ -198,4 +198,4 @@ Each phase depends on all previous phases. Strict sequential execution.
 
 ---
 *Created: 2026-05-31*
-*Next: `/gsd-plan-phase 3`*
+*Next: `/gsd-plan-phase 4`*

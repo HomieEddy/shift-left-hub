@@ -24,12 +24,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### AI Self-Service Portal
 
-- [ ] **AI-01**: User can describe an IT issue in a conversational chat interface
-- [ ] **AI-02**: System searches knowledge base using hybrid search (FTS + vector) and returns step-by-step resolution guides
-- [ ] **AI-03**: AI responses stream in real-time via SSE with a typing indicator
-- [ ] **AI-04**: System asks "Did this solve your problem?" after presenting a guide
-- [ ] **AI-05**: If no relevant article found, system returns a helpful fallback message and offers escalation
-- [ ] **AI-06**: System enforces similarity threshold (>0.65) to prevent hallucinated responses
+- [x] **AI-01**: User can describe an IT issue in a conversational chat interface
+- [x] **AI-02**: System searches knowledge base using hybrid search (FTS + vector) and returns step-by-step resolution guides
+- [x] **AI-03**: AI responses stream in real-time via SSE with a typing indicator
+- [x] **AI-04**: System asks "Did this solve your problem?" after presenting a guide
+- [x] **AI-05**: If no relevant article found, system returns a helpful fallback message and offers escalation
+- [x] **AI-06**: System enforces similarity threshold (>0.65) to prevent hallucinated responses
 
 ### Escalation & Ticketing
 
@@ -65,7 +65,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **INF-01**: Local development environment runs via Docker Compose (PostgreSQL 16 + pgvector)
 - [x] **INF-02**: Backend runs on Spring Boot 3.x with Java 21 — *Plan 01-02*
 - [x] **INF-03**: Frontend serves as a standalone Angular SPA
-- [ ] **INF-04**: The AI module works with a local LLM fallback (Ollama) for API-key-free demo
+- [x] **INF-04**: The AI module works with a local LLM fallback (Ollama) for API-key-free demo
 
 ## v2 Requirements
 
@@ -117,12 +117,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | KB-03 | Phase 2 (Plan 02-04) | Complete |
 | KB-04 | Phase 2 (Plan 02-01) | Complete |
 | KB-05 | Phase 2 (Plan 02-01/02-04) | Complete |
-| AI-01 | Phase 3 | Pending |
-| AI-02 | Phase 3 | Pending |
-| AI-03 | Phase 3 | Pending |
-| AI-04 | Phase 3 | Pending |
-| AI-05 | Phase 3 | Pending |
-| AI-06 | Phase 3 | Pending |
+| AI-01 | Phase 3 | Complete |
+| AI-02 | Phase 3 | Complete |
+| AI-03 | Phase 3 | Complete |
+| AI-04 | Phase 3 | Complete |
+| AI-05 | Phase 3 | Complete |
+| AI-06 | Phase 3 | Complete |
 | TKT-01 | Phase 4 | Pending |
 | TKT-02 | Phase 4 | Pending |
 | TKT-03 | Phase 4 | Pending |
@@ -143,7 +143,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INF-01 | Phase 1 | Complete |
 | INF-02 | Phase 1 | Complete |
 | INF-03 | Phase 1 | Complete |
-| INF-04 | Phase 3 | Pending |
+| INF-04 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 36 total
