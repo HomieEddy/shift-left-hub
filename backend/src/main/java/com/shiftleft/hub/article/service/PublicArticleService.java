@@ -2,6 +2,7 @@ package com.shiftleft.hub.article.service;
 
 import com.shiftleft.hub.article.api.dto.ArticleResponse;
 import com.shiftleft.hub.article.api.dto.ArticleSearchResult;
+import com.shiftleft.hub.article.api.dto.ArticleSearchTag;
 import com.shiftleft.hub.article.domain.ArticleNotFoundException;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
@@ -41,9 +42,18 @@ public class PublicArticleService {
         return ArticleResponse.from(article);
     }
 
-    public Page<ArticleSearchResult> search(String query, int page, int size) {
+    public Page<ArticleSearchResult> search(String query, int page, int size, List<String> tagNames) {
         var pageRequest = PageRequest.of(page, size);
-        var results = articleRepository.searchByText(query, pageRequest);
+        var normalizedTags = tagNames == null
+            ? List.<String>of()
+            : tagNames.stream()
+                .filter(t -> t != null && !t.isBlank())
+                .map(String::trim)
+                .toList();
+
+        var results = normalizedTags.isEmpty()
+            ? articleRepository.searchByText(query, pageRequest)
+            : articleRepository.searchByTextAndTagNames(query, normalizedTags, pageRequest);
 
         List<ArticleSearchResult> items = results.getContent().stream()
             .map(row -> {
@@ -61,15 +71,26 @@ public class PublicArticleService {
                 var title = titleEn != null ? titleEn : titleFr;
                 var headline = headlineEn != null ? headlineEn : headlineFr;
 
-                var tagNames = tagNamesStr != null && !tagNamesStr.isEmpty()
+                var tagsForArticle = tagNamesStr != null && !tagNamesStr.isEmpty()
                     ? Set.of(tagNamesStr.split(","))
                     : Set.<String>of();
 
                 return new ArticleSearchResult(
-                    id, title, headline, slug, excerpt, publishedAt, tagNames);
+                    id, title, headline, slug, excerpt, publishedAt, tagsForArticle);
             })
             .toList();
 
         return new PageImpl<>(items, pageRequest, results.getTotalElements());
+    }
+
+    public List<ArticleSearchTag> getSearchTags() {
+        return articleRepository.findPublishedTagFacets().stream()
+            .map(row -> new ArticleSearchTag(
+                (String) row[0],
+                (String) row[1],
+                (String) row[2],
+                ((Number) row[3]).longValue()
+            ))
+            .toList();
     }
 }
