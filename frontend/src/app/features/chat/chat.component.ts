@@ -26,6 +26,7 @@ export class ChatComponent implements AfterViewChecked {
   escalationPayload = signal<any>(null);
   errorMessage = signal<string | null>(null);
 
+  private nextId = 0;
   private streamSub: Subscription | null = null;
   private abortStream: (() => void) | null = null;
 
@@ -44,7 +45,7 @@ export class ChatComponent implements AfterViewChecked {
     this.showCloseModal.set(false);
     this.showFallback.set(false);
 
-    const userMsg: ChatMessage = { role: 'user', content: text };
+    const userMsg: ChatMessage = { id: `msg-${++this.nextId}`, role: 'user', content: text };
     this.messages.update(m => [...m, userMsg]);
 
     if (this.abortStream) this.abortStream();
@@ -53,7 +54,7 @@ export class ChatComponent implements AfterViewChecked {
 
     this.isStreaming.set(true);
 
-    const assistantMsg: ChatMessage = { role: 'assistant', content: '' };
+    const assistantMsg: ChatMessage = { id: `msg-${++this.nextId}`, role: 'assistant', content: '' };
     this.messages.update(m => [...m, assistantMsg]);
 
     const { events, abort } = this.chatService.sendMessage(text, history);
@@ -143,7 +144,7 @@ export class ChatComponent implements AfterViewChecked {
       }
   }
 
-  trackByFn(index: number, _msg: ChatMessage) {
-    return index;
+  trackByFn(_index: number, msg: ChatMessage) {
+    return msg.id || _index;
   }
 }

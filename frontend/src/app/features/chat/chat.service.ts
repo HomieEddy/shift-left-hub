@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 export interface ChatMessage {
+  id?: string;
   role: 'user' | 'assistant';
   content: string;
 }
