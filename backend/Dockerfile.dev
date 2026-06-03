@@ -1,0 +1,12 @@
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+# Prime Maven dependency cache for faster container startup.
+COPY .mvn .mvn
+COPY mvnw mvnw.cmd pom.xml ./
+RUN chmod +x mvnw && ./mvnw -q -DskipTests dependency:go-offline
+
+EXPOSE 8080
+
+CMD ["sh", "-c", "chmod +x mvnw && ./mvnw -DskipTests spring-boot:run"]
