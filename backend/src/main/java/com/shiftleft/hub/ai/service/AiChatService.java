@@ -97,6 +97,8 @@ public class AiChatService {
                                 emitter.send(SseEmitter.event().name("message")
                                     .data(new StreamEvent("token", chunk, null)));
                             } catch (IOException e) {
+                                log.debug("Client disconnected, aborting stream");
+                                emitter.completeWithError(e);
                             }
                         }
                     }
