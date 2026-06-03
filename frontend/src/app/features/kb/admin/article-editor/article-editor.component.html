@@ -1,9 +1,5 @@
 <div class="p-6 max-w-4xl mx-auto">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-slate-800">
-      <ng-container *ngIf="isEdit()" i18n="@@admin.articles.edit">Edit Article</ng-container>
-      <ng-container *ngIf="!isEdit()" i18n="@@admin.articles.new">New Article</ng-container>
-    </h1>
+  <div class="flex items-center justify-end mb-6">
     <div class="flex items-center gap-2">
       <button (click)="cancel()" class="px-4 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50" i18n="@@admin.articles.cancel">
         Cancel
@@ -68,8 +64,10 @@
       </div>
       <div>
         <label class="block text-sm font-medium text-slate-700 mb-2" i18n="@@admin.articles.label.preview">Preview</label>
-        <div class="border border-slate-200 rounded-lg p-4 prose prose-sm max-w-none">
-          <markdown [data]="contentEn"></markdown>
+        <div class="border border-slate-200 rounded-lg p-4 max-w-none">
+          <div class="markdown-content">
+            <markdown [data]="contentEn"></markdown>
+          </div>
         </div>
       </div>
     </div>
@@ -96,8 +94,10 @@
       </div>
       <div>
         <label class="block text-sm font-medium text-slate-700 mb-2" i18n="@@admin.articles.label.preview">Preview</label>
-        <div class="border border-slate-200 rounded-lg p-4 prose prose-sm max-w-none">
-          <markdown [data]="contentFr"></markdown>
+        <div class="border border-slate-200 rounded-lg p-4 max-w-none">
+          <div class="markdown-content">
+            <markdown [data]="contentFr"></markdown>
+          </div>
         </div>
       </div>
     </div>
