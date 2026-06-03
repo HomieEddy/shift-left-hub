@@ -2,6 +2,7 @@ package com.shiftleft.hub.article.api;
 
 import com.shiftleft.hub.article.api.dto.ArticleResponse;
 import com.shiftleft.hub.article.api.dto.ArticleSearchResult;
+import com.shiftleft.hub.article.api.dto.ArticleSearchTag;
 import com.shiftleft.hub.article.service.PublicArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,9 +32,15 @@ public class PublicArticleController {
     @GetMapping("/search")
     public Page<ArticleSearchResult> searchArticles(
             @RequestParam String q,
+            @RequestParam(required = false) List<String> tags,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return publicArticleService.search(q, page, size);
+        return publicArticleService.search(q, page, size, tags);
+    }
+
+    @GetMapping("/search/tags")
+    public List<ArticleSearchTag> searchTags() {
+        return publicArticleService.getSearchTags();
     }
 
     @GetMapping("/{id}")
