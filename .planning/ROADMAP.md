@@ -78,12 +78,19 @@ Plans:
 3. System asks "Did this solve your problem?" after presenting a guide
 4. When no relevant content found (below 0.65 threshold), system offers graceful fallback with escalation option
 
-**Plans:**
-1. Implement Spring AI RAG pipeline: FTS + pgvector hybrid search, context construction, similarity threshold
-2. Build streaming SSE endpoint with Spring Boot
-3. Build Angular chat UI: message list, input, typing indicator, markdown rendering
-4. Integrate Ollama for local LLM fallback (no API key required for demo)
-5. Handle "Did this solve?" flow and graceful fallback UI
+**Plans:** 4 plans in 3 waves
+
+| Wave | Plans | Objective |
+|------|-------|-----------|
+| 1 | 03-01 | Backend AI Infrastructure (pom.xml, AiConfig, EmbeddingService, admin API) |
+| 2 | 03-02, 03-03 | Backend Chat + RAG Pipeline (parallel with Frontend Admin Settings) |
+| 3 | 03-04 | Frontend Chat UI (bubble layout, SSE, typing indicator, feedback) |
+
+Plans:
+- [ ] 03-01 — Backend AI Infrastructure: Spring AI 2.0.0-M8 deps, AiConfig entity with encrypted API key, EmbeddingService (pgvector + auto-embed on publish), AiConfigController (CRUD, test connection, re-embed), security wiring
+- [ ] 03-02 — Backend Chat & RAG Pipeline: SSE streaming SseEmitter endpoint, hybrid search (FTS+pgvector+RRF), similarity threshold >0.65, context construction, LLM streaming, fallback flow
+- [ ] 03-03 — Admin LLM Settings UI: /admin/settings/llm route, provider dropdown (Ollama/OpenAI), test connection button, re-embed button, EN/FR translations
+- [ ] 03-04 — Chat UI: /chat route, bubble layout, typing indicator, SSE streaming, markdown rendering (ngx-markdown), "Did this solve?" feedback, fallback + escalation placeholder, inline error + retry
 
 ---
 

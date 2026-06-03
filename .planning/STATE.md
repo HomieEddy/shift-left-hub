@@ -78,7 +78,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 |-------|------|--------|
 | 1 | Foundation | ✓ Complete |
 | 2 | Knowledge Base | ✓ Complete (4/4 plans) |
-| 3 | AI Self-Service Portal | ○ Pending |
+| 3 | AI Self-Service Portal | ■ Planned (4 plans in 3 waves) |
 | 4 | Escalation & Ticketing | ○ Pending |
 | 5 | Agent Dashboard | ○ Pending |
 | 6 | KCS Auto-Drafting & Admin Review | ○ Pending |
@@ -114,8 +114,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-31)
 
 ## Next Steps
 
-1. Phase 2 complete (all 4 plans finished)
-2. Ready for Phase 3: AI Self-Service Portal
+1. Phase 3 planned (4 plans in 3 waves)
+2. Execute Phase 3: `/gsd-execute-phase 03`
+   - Wave 1: Plan 03-01 (Backend AI Infrastructure)
+   - Wave 2: Plan 03-02 + Plan 03-03 (Backend Chat + Admin Settings — parallel)
+   - Wave 3: Plan 03-04 (Frontend Chat UI)
 
 ---
 
