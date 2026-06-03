@@ -230,6 +230,14 @@
         <source>Article not found.</source>
         <target>Article not found.</target>
       </trans-unit>
+      <trans-unit id="kb.invalid-id">
+        <source>Invalid article ID.</source>
+        <target>Invalid article ID.</target>
+      </trans-unit>
+      <trans-unit id="pagination.page-of">
+        <source>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</source>
+        <target>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</target>
+      </trans-unit>
       <trans-unit id="kb.fallback-notice">
         <source>This article is only available in {VAR_LANG}.</source>
         <target>This article is only available in {VAR_LANG}.</target>
