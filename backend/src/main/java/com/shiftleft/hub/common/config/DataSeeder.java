@@ -100,6 +100,14 @@ public class DataSeeder implements CommandLineRunner {
             $$;
         """);
 
+        jdbcTemplate.execute("""
+            UPDATE article
+            SET
+              tsv_en = to_tsvector('english', COALESCE(title_en, '') || ' ' || COALESCE(content_en, '')),
+              tsv_fr = to_tsvector('french', COALESCE(title_fr, '') || ' ' || COALESCE(content_fr, ''))
+            WHERE tsv_en IS NULL OR tsv_fr IS NULL
+        """);
+
         log.info("Full-text search setup complete.");
     }
 }
