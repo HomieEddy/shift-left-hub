@@ -262,6 +262,66 @@
         <source>{VAR_COUNT, plural, one {# view} other {# views}}</source>
         <target>{VAR_COUNT, plural, one {# vue} other {# vues}}</target>
       </trans-unit>
+      <trans-unit id="admin.settings.llm.title">
+        <source>LLM Provider Settings</source>
+        <target>Paramètres du fournisseur LLM</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.provider">
+        <source>Provider</source>
+        <target>Fournisseur</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.ollama-endpoint">
+        <source>Ollama Endpoint URL</source>
+        <target>URL du point d'accès Ollama</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.openai-key">
+        <source>OpenAI API Key</source>
+        <target>Clé API OpenAI</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.chat-model">
+        <source>Chat Model</source>
+        <target>Modèle de chat</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.embedding-model">
+        <source>Embedding Model</source>
+        <target>Modèle d'embedding</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.threshold">
+        <source>Similarity Threshold</source>
+        <target>Seuil de similarité</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.save">
+        <source>Save Settings</source>
+        <target>Enregistrer les paramètres</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.test">
+        <source>Test Connection</source>
+        <target>Tester la connexion</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindex">
+        <source>Re-Embed All Articles</source>
+        <target>Ré-encoder tous les articles</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindex-warning">
+        <source>This may take a while for large knowledge bases</source>
+        <target>Cela peut prendre du temps pour les grandes bases de connaissances</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.test-success">
+        <source>Connection successful</source>
+        <target>Connexion réussie</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.saved">
+        <source>Settings saved</source>
+        <target>Paramètres enregistrés</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindex-started">
+        <source>Re-embedding started</source>
+        <target>Ré-encodage démarré</target>
+      </trans-unit>
+      <trans-unit id="nav.ai-settings">
+        <source>AI Settings</source>
+        <target>Paramètres IA</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
