@@ -14,7 +14,7 @@
     <a routerLink="/articles" class="text-blue-600 hover:text-blue-800" i18n="@@kb.browse-all">Browse all articles</a>
   </div>
 
-  <article *ngIf="!isLoading() && article()" class="prose prose-slate max-w-none">
+  <article *ngIf="!isLoading() && article()" class="max-w-none">
     <!-- Bilingual fallback notice -->
     <div *ngIf="isFallback" class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-6 text-sm" i18n="@@kb.fallback-notice">
       This article is only available in {{ fallbackLanguage }}.
@@ -38,10 +38,9 @@
       </span>
     </div>
 
-    <!-- Title -->
-    <h1 class="text-3xl font-bold text-slate-900 mb-8">{{ displayTitle }}</h1>
-
     <!-- Content -->
-    <markdown [data]="displayContent"></markdown>
+    <div class="markdown-content">
+      <markdown [data]="displayContent"></markdown>
+    </div>
   </article>
 </div>

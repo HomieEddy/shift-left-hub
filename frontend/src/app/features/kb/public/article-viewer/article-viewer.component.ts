@@ -12,6 +12,7 @@ import { MarkdownModule } from 'ngx-markdown';
   standalone: true,
   imports: [NgIf, NgFor, DatePipe, RouterLink, MarkdownModule],
   templateUrl: './article-viewer.component.html',
+  styleUrls: ['./article-viewer.component.css'],
 })
 export class ArticleViewerComponent implements OnInit {
   private publicArticleService = inject(PublicArticleService);
@@ -47,15 +48,6 @@ export class ArticleViewerComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
-  }
-
-  get displayTitle(): string {
-    const a = this.article();
-    if (!a) return '';
-    if (this.translationService.currentLang() === 'fr' && a.titleFr) {
-      return a.titleFr;
-    }
-    return a.titleEn;
   }
 
   get displayContent(): string {
