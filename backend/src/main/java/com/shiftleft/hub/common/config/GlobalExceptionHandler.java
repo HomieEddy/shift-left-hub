@@ -40,8 +40,9 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, Object>> handleIllegalState(IllegalStateException ex) {
+    @ExceptionHandler(com.shiftleft.hub.tag.domain.TagInUseException.class)
+    public ResponseEntity<Map<String, Object>> handleTagInUse(
+            com.shiftleft.hub.tag.domain.TagInUseException ex) {
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
