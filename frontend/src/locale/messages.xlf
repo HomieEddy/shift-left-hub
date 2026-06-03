@@ -118,6 +118,150 @@
         <source>Display Name</source>
         <target>Display Name</target>
       </trans-unit>
+      <trans-unit id="nav.articles">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
+      <trans-unit id="nav.tags">
+        <source>Tags</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.title">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.new">
+        <source>New Article</source>
+        <target>New Article</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.edit">
+        <source>Edit Article</source>
+        <target>Edit Article</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.loading">
+        <source>Loading articles...</source>
+        <target>Loading articles...</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.no-articles">
+        <source>No articles found.</source>
+        <target>No articles found.</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.publish">
+        <source>Publish</source>
+        <target>Publish</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.archive">
+        <source>Archive</source>
+        <target>Archive</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.delete">
+        <source>Delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.saving">
+        <source>Saving...</source>
+        <target>Saving...</target>
+      </trans-unit>
+      <trans-unit id="admin.articles.cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.title">
+        <source>Tag Management</source>
+        <target>Tag Management</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.new">
+        <source>New Tag</source>
+        <target>New Tag</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.loading">
+        <source>Loading tags...</source>
+        <target>Loading tags...</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.no-tags">
+        <source>No tags created yet. Click "New Tag" to add one.</source>
+        <target>No tags created yet. Click "New Tag" to add one.</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.create">
+        <source>Create Tag</source>
+        <target>Create Tag</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.edit">
+        <source>Edit Tag</source>
+        <target>Edit Tag</target>
+      </trans-unit>
+      <trans-unit id="admin.tags.update">
+        <source>Update</source>
+        <target>Update</target>
+      </trans-unit>
+      <trans-unit id="nav.knowledge-base">
+        <source>Knowledge Base</source>
+        <target>Knowledge Base</target>
+      </trans-unit>
+      <trans-unit id="kb.title">
+        <source>Knowledge Base</source>
+        <target>Knowledge Base</target>
+      </trans-unit>
+      <trans-unit id="kb.search.title">
+        <source>Search Knowledge Base</source>
+        <target>Search Knowledge Base</target>
+      </trans-unit>
+      <trans-unit id="kb.search.placeholder">
+        <source>Search articles...</source>
+        <target>Search articles...</target>
+      </trans-unit>
+      <trans-unit id="kb.search.no-results">
+        <source>No results found</source>
+        <target>No results found</target>
+      </trans-unit>
+      <trans-unit id="kb.search.hint">
+        <source>Type a query above to search the knowledge base</source>
+        <target>Type a query above to search the knowledge base</target>
+      </trans-unit>
+      <trans-unit id="kb.search.results">
+        <source>Found {VAR_PLURAL, plural, one {# result} other {# results}} for "{VAR_QUERY}"</source>
+        <target>Found {VAR_PLURAL, plural, one {# result} other {# results}} for "{VAR_QUERY}"</target>
+      </trans-unit>
+      <trans-unit id="kb.back">
+        <source>Back to articles</source>
+        <target>Back to articles</target>
+      </trans-unit>
+      <trans-unit id="kb.not-found">
+        <source>Article not found.</source>
+        <target>Article not found.</target>
+      </trans-unit>
+      <trans-unit id="kb.invalid-id">
+        <source>Invalid article ID.</source>
+        <target>Invalid article ID.</target>
+      </trans-unit>
+      <trans-unit id="pagination.page-of">
+        <source>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</source>
+        <target>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</target>
+      </trans-unit>
+      <trans-unit id="kb.fallback-notice">
+        <source>This article is only available in {VAR_LANG}.</source>
+        <target>This article is only available in {VAR_LANG}.</target>
+      </trans-unit>
+      <trans-unit id="kb.browse-all">
+        <source>Browse all articles</source>
+        <target>Browse all articles</target>
+      </trans-unit>
+      <trans-unit id="kb.search-articles">
+        <source>Search Articles</source>
+        <target>Search Articles</target>
+      </trans-unit>
+      <trans-unit id="kb.no-articles">
+        <source>No articles published yet.</source>
+        <target>No articles published yet.</target>
+      </trans-unit>
+      <trans-unit id="kb.loading">
+        <source>Loading articles...</source>
+        <target>Loading articles...</target>
+      </trans-unit>
+      <trans-unit id="kb.views">
+        <source>{VAR_COUNT, plural, one {# view} other {# views}}</source>
+        <target>{VAR_COUNT, plural, one {# view} other {# views}}</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

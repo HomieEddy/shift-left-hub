@@ -20,6 +20,38 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'admin/articles',
+    loadComponent: () => import('./features/kb/admin/article-list/article-list.component').then(m => m.ArticleListComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/articles/new',
+    loadComponent: () => import('./features/kb/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/articles/:id/edit',
+    loadComponent: () => import('./features/kb/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/tags',
+    loadComponent: () => import('./features/kb/admin/tag-manager/tag-manager.component').then(m => m.TagManagerComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'articles',
+    loadComponent: () => import('./features/kb/public/article-list/article-list.component').then(m => m.ArticleListComponent),
+  },
+  {
+    path: 'articles/search',
+    loadComponent: () => import('./features/kb/public/article-search/article-search.component').then(m => m.ArticleSearchComponent),
+  },
+  {
+    path: 'articles/:id',
+    loadComponent: () => import('./features/kb/public/article-viewer/article-viewer.component').then(m => m.ArticleViewerComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

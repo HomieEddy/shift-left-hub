@@ -6,6 +6,7 @@
     "tailwind:css": "tailwindcss -i src/tailwind.src.css -o src/styles.css",
     "prestart": "pnpm tailwind:css",
     "start": "ng serve",
+    "start:docker": "sh -c \"tailwindcss -i src/tailwind.src.css -o src/styles.css --watch & ng serve --host 0.0.0.0 --port 4200 --poll 1000 --proxy-config proxy.docker.conf.json\"",
     "prebuild": "pnpm tailwind:css",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -21,6 +22,7 @@
     "@angular/localize": "^21.2.15",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "ngx-markdown": "^21.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "^0.16.2"
