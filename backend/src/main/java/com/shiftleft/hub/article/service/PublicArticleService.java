@@ -15,9 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,15 +68,19 @@ public class PublicArticleService {
                 var publishedAt = (LocalDateTime) row[5];
                 var headlineEn = (String) row[6];
                 var headlineFr = (String) row[7];
-                var tagNamesStr = (String) row[8];
+                var tagArray = (Object[]) row[8];
 
                 // Return English headline by default; frontend can switch
                 var title = titleEn != null ? titleEn : titleFr;
                 var headline = headlineEn != null ? headlineEn : headlineFr;
 
-                var tagsForArticle = tagNamesStr != null && !tagNamesStr.isEmpty()
-                    ? Set.of(tagNamesStr.split(","))
-                    : Set.<String>of();
+                var tagsForArticle = tagArray == null
+                    ? Set.<String>of()
+                    : Arrays.stream(tagArray)
+                        .filter(String.class::isInstance)
+                        .map(String.class::cast)
+                        .filter(t -> !t.isBlank())
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
 
                 return new ArticleSearchResult(
                     id, title, headline, slug, excerpt, publishedAt, tagsForArticle);
