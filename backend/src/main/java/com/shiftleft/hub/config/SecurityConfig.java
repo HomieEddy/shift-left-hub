@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,6 +41,11 @@ public class SecurityConfig {
     public SecurityConfig(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+    }
+
+    @Bean("chatExecutor")
+    public ExecutorService chatExecutor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Bean
