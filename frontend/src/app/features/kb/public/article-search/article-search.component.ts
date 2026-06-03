@@ -4,7 +4,7 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PublicArticleService } from '../../services/public-article.service';
-import { ArticleSearchResult } from '../../models/article.models';
+import { ArticleSearchResult, ArticleSearchTag } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
 
 @Component({
@@ -21,6 +21,8 @@ export class ArticleSearchComponent implements OnInit {
   protected translationService = inject(TranslationService);
 
   query = signal('');
+  availableTags = signal<ArticleSearchTag[]>([]);
+  selectedTags = signal<string[]>([]);
   results = signal<ArticleSearchResult[]>([]);
   isLoading = signal(false);
   hasSearched = signal(false);
@@ -31,14 +33,32 @@ export class ArticleSearchComponent implements OnInit {
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
+    this.loadSearchTags();
+
     this.route.queryParams.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(params => {
       const q = params['q'];
+      const tagsParam = params['tags'] as string | undefined;
+      const tags = tagsParam
+        ? tagsParam.split(',').map(t => t.trim()).filter(Boolean)
+        : [];
+
+      this.selectedTags.set(tags);
+
       if (q) {
         this.query.set(q);
-        this.doSearch(q);
+        this.doSearch(q, 0, tags);
       }
+    });
+  }
+
+  loadSearchTags(): void {
+    this.publicArticleService.getSearchTags().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (tags) => this.availableTags.set(tags),
+      error: () => this.availableTags.set([]),
     });
   }
 
@@ -48,10 +68,12 @@ export class ArticleSearchComponent implements OnInit {
     this.debounceTimer = setTimeout(() => {
       if (value.trim()) {
         this.router.navigate([], {
-          queryParams: { q: value.trim() },
-          queryParamsHandling: 'merge',
+          queryParams: {
+            q: value.trim(),
+            tags: this.selectedTags().length ? this.selectedTags().join(',') : null,
+          },
         });
-        this.doSearch(value.trim());
+        this.doSearch(value.trim(), 0, this.selectedTags());
       } else {
         this.results.set([]);
         this.hasSearched.set(false);
@@ -59,11 +81,11 @@ export class ArticleSearchComponent implements OnInit {
     }, 300);
   }
 
-  doSearch(query: string, page: number = 0): void {
+  doSearch(query: string, page: number = 0, tags: string[] = this.selectedTags()): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.currentPage.set(page);
-    this.publicArticleService.search(query, page).pipe(
+    this.publicArticleService.search(query, page, 20, tags).pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (pageData) => {
@@ -81,8 +103,34 @@ export class ArticleSearchComponent implements OnInit {
     });
   }
 
+  toggleTag(tagName: string): void {
+    this.selectedTags.update(current => {
+      if (current.includes(tagName)) {
+        return current.filter(t => t !== tagName);
+      }
+      return [...current, tagName];
+    });
+
+    if (!this.query().trim()) {
+      return;
+    }
+
+    this.router.navigate([], {
+      queryParams: {
+        q: this.query().trim(),
+        tags: this.selectedTags().length ? this.selectedTags().join(',') : null,
+      },
+    });
+
+    this.doSearch(this.query().trim(), 0, this.selectedTags());
+  }
+
+  isTagSelected(tagName: string): boolean {
+    return this.selectedTags().includes(tagName);
+  }
+
   changePage(page: number): void {
-    this.doSearch(this.query(), page);
+    this.doSearch(this.query(), page, this.selectedTags());
   }
 
   sanitizeHeadline(html: string): string {
