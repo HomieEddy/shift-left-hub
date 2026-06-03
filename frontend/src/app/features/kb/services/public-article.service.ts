@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ArticleDto, ArticleSearchResult, ArticleSearchTag, PaginatedResponse } from '../models/article.models';
 
@@ -15,15 +15,15 @@ export class PublicArticleService {
   }
 
   search(query: string, page: number = 0, size: number = 20, tags: string[] = []): Observable<PaginatedResponse<ArticleSearchResult>> {
-    const params = new URLSearchParams();
-    params.set('q', query);
-    params.set('page', String(page));
-    params.set('size', String(size));
+    let params = new HttpParams()
+      .set('q', query)
+      .set('page', String(page))
+      .set('size', String(size));
     for (const tag of tags) {
-      params.append('tags', tag);
+      params = params.append('tags', tag);
     }
 
-    return this.http.get<PaginatedResponse<ArticleSearchResult>>(`/api/articles/search?${params.toString()}`);
+    return this.http.get<PaginatedResponse<ArticleSearchResult>>('/api/articles/search', { params });
   }
 
   getSearchTags(): Observable<ArticleSearchTag[]> {

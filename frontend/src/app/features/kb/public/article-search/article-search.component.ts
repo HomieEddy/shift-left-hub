@@ -35,6 +35,13 @@ export class ArticleSearchComponent implements OnInit {
   ngOnInit(): void {
     this.loadSearchTags();
 
+    this.destroyRef.onDestroy(() => {
+      if (this.debounceTimer) {
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = null;
+      }
+    });
+
     this.route.queryParams.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(params => {
@@ -71,7 +78,10 @@ export class ArticleSearchComponent implements OnInit {
 
   onSearchInput(value: string): void {
     this.query.set(value);
-    if (this.debounceTimer) clearTimeout(this.debounceTimer);
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
     this.debounceTimer = setTimeout(() => {
       if (value.trim()) {
         this.router.navigate([], {
@@ -80,7 +90,6 @@ export class ArticleSearchComponent implements OnInit {
             tags: this.selectedTags().length ? this.selectedTags().join(',') : null,
           },
         });
-        this.doSearch(value.trim(), 0, this.selectedTags());
       } else {
         this.router.navigate([], {
           queryParams: {
@@ -88,12 +97,6 @@ export class ArticleSearchComponent implements OnInit {
             tags: null,
           },
         });
-        this.results.set([]);
-        this.hasSearched.set(false);
-        this.totalResults.set(0);
-        this.totalPages.set(0);
-        this.currentPage.set(0);
-        this.errorMessage.set('');
       }
     }, 300);
   }
@@ -138,8 +141,6 @@ export class ArticleSearchComponent implements OnInit {
         tags: this.selectedTags().length ? this.selectedTags().join(',') : null,
       },
     });
-
-    this.doSearch(this.query().trim(), 0, this.selectedTags());
   }
 
   isTagSelected(tagName: string): boolean {
@@ -152,7 +153,9 @@ export class ArticleSearchComponent implements OnInit {
 
   sanitizeHeadline(html: string): string {
     if (!html) return '';
-    // Only allow <mark> tags from ts_headline, strip everything else
-    return html.replace(/<(?!\/?mark(?=>|\s.*>))\/?.*?>/gi, '');
+    // Keep only mark tags and remove any attributes from opening mark tags.
+    return html
+      .replace(/<(?!\/?mark(?=>|\s[^>]*>))[^>]*>/gi, '')
+      .replace(/<mark\b[^>]*>/gi, '<mark>');
   }
 }
