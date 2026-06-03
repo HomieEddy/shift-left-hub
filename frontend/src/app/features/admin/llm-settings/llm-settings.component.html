@@ -9,9 +9,9 @@
           <select
             [(ngModel)]="config.llmProvider"
             (change)="onProviderChange()"
-            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 bg-white"
           >
-            <option *ngFor="let p of providers" [value]="p">{{ p }}</option>
+            <option *ngFor="let p of providers" [value]="p.value" class="text-slate-800">{{ p.label }}</option>
           </select>
         </div>
 

@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { LlmSettingsService, AiConfigResponse, AiConfigRequest } from './llm-settings.service';
 
 @Component({
   selector: 'app-llm-settings',
   standalone: true,
-  imports: [FormsModule, NgIf],
+  imports: [FormsModule, NgIf, NgFor],
   templateUrl: './llm-settings.component.html',
 })
 export class LlmSettingsComponent implements OnInit {
@@ -21,19 +21,26 @@ export class LlmSettingsComponent implements OnInit {
   isSaving = false;
   saveMessage = '';
 
-  providers = ['OLLAMA', 'OPENAI'];
-  modelExamples = ['llama3.2', 'llama3.1', 'mistral', 'mixtral'];
+  providers = [
+    { value: 'OLLAMA', label: 'Ollama' },
+    { value: 'OPENAI', label: 'OpenAI' },
+  ];
+  modelExamples = ['llama3.2:3b', 'llama3.1:8b', 'mistral', 'mixtral'];
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
 
   async ngOnInit() {
     try {
       this.config = await firstValueFrom(this.settingsService.getConfig());
+      this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
+      if (!this.providers.some(p => p.value === this.config!.llmProvider)) {
+        this.config.llmProvider = 'OLLAMA';
+      }
     } catch {
       this.config = {
         llmProvider: 'OLLAMA',
         ollamaEndpointUrl: 'http://localhost:11434',
         hasOpenaiKey: false,
-        chatModelName: 'llama3.2',
+        chatModelName: 'llama3.2:3b',
         embeddingModelName: 'nomic-embed-text',
         similarityThreshold: 0.65,
         embeddingDimension: 768,
@@ -42,6 +49,8 @@ export class LlmSettingsComponent implements OnInit {
   }
 
   onProviderChange() {
+    if (!this.config) return;
+    this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
     if (this.config?.llmProvider === 'OLLAMA') {
       this.config.ollamaEndpointUrl = 'http://localhost:11434';
       this.openaiApiKey = '';
