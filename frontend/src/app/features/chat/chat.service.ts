@@ -36,6 +36,23 @@ export class ChatService {
       const decoder = new TextDecoder();
       let buffer = '';
 
+      let currentData = '';
+
+      const tryParseAndEmit = (data: string): boolean => {
+        if (!data) return false;
+        try {
+          const event: StreamEvent = JSON.parse(data);
+          subject.next(event);
+          if (event.type === 'done' || event.type === 'fallback' || event.type === 'error') {
+            subject.complete();
+            return true;
+          }
+        } catch {
+          // skip malformed JSON
+        }
+        return false;
+      };
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -46,19 +63,24 @@ export class ChatService {
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
-            try {
-              const event: StreamEvent = JSON.parse(line.slice(6));
-              subject.next(event);
-              if (event.type === 'done' || event.type === 'fallback' || event.type === 'error') {
-                subject.complete();
-                return;
-              }
-            } catch {
-              // skip malformed JSON
+            const payload = line.slice(6);
+            if (currentData && !payload.startsWith('{')) {
+              // Continuation of multi-line data field (SSE spec)
+              currentData += '\n' + payload;
+            } else {
+              // Try to parse previous accumulated data
+              if (tryParseAndEmit(currentData)) return;
+              currentData = payload;
             }
+          } else if (line.trim() === '' && currentData) {
+            // Empty line marks end of SSE event
+            if (tryParseAndEmit(currentData)) return;
+            currentData = '';
           }
         }
       }
+      // Try to parse remaining data at end of stream
+      if (tryParseAndEmit(currentData)) return;
       subject.complete();
     }).catch(err => {
       if (err.name !== 'AbortError') {
