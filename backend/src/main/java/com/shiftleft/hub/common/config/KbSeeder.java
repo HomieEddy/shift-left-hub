@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class KbSeeder implements CommandLineRunner {
 
+    private static final String FR_BODY_SEPARATOR = "\n<!-- FR -->\n";
+
     private static final Set<String> SUPPORTED_TAGS = Set.of(
         "vpn", "password", "security", "networking", "wifi", "email", "mobile",
         "software", "it-requests", "printing", "accounts", "remote-access", "incident", "hardware"
@@ -108,10 +110,6 @@ public class KbSeeder implements CommandLineRunner {
             return;
         }
 
-        var existingSlugs = articleRepository.findAll().stream()
-            .map(Article::getSlug)
-            .collect(Collectors.toSet());
-
         adminUser = userRepository.findByRole(UserRole.ROLE_ADMIN).stream()
             .findFirst()
             .orElse(null);
@@ -127,13 +125,16 @@ public class KbSeeder implements CommandLineRunner {
         Resource[] resources = resolver.getResources("classpath:data/seed/kb/*.md");
 
         int seeded = 0;
+        int updated = 0;
         for (Resource resource : resources) {
             String fileName = resource.getFilename();
             if (fileName == null) continue;
 
             var content = readFile(resource);
             var frontmatter = parseFrontmatter(content);
-            var body = extractBody(content);
+            var bilingualBody = extractBilingualBody(content);
+            var contentEn = bilingualBody.get("contentEn");
+            var contentFr = bilingualBody.get("contentFr");
 
             String slug = frontmatter.get("slug");
             if (slug == null || slug.isBlank()) {
@@ -141,36 +142,45 @@ public class KbSeeder implements CommandLineRunner {
                 continue;
             }
 
-            if (existingSlugs.contains(slug)) {
-                log.info("Skipping {} — article with slug '{}' already exists", fileName, slug);
-                continue;
-            }
-
             var tags = resolveTags(frontmatter.getOrDefault("tags", ""));
 
-            var article = Article.builder()
-                .titleEn(frontmatter.get("title_en"))
-                .titleFr(frontmatter.get("title_fr"))
-                .contentEn(body)
-                .contentFr(body)
-                .slug(slug)
-                .excerpt(frontmatter.get("excerpt"))
-                .status(ArticleStatus.PUBLISHED)
-                .viewCount(0)
-                .publishedAt(LocalDateTime.now())
-                .author(adminUser)
-                .tags(tags)
-                .build();
+            var existing = articleRepository.findBySlug(slug);
+            if (existing.isPresent()) {
+                var article = existing.get();
+                article.setTitleEn(frontmatter.get("title_en"));
+                article.setTitleFr(frontmatter.get("title_fr"));
+                article.setContentEn(contentEn);
+                article.setContentFr(contentFr);
+                article.setExcerpt(frontmatter.get("excerpt"));
+                article.setTags(tags);
+                articleRepository.save(article);
+                updated++;
+                log.info("Updated seeded KB article: {}", slug);
+            } else {
+                var article = Article.builder()
+                    .titleEn(frontmatter.get("title_en"))
+                    .titleFr(frontmatter.get("title_fr"))
+                    .contentEn(contentEn)
+                    .contentFr(contentFr)
+                    .slug(slug)
+                    .excerpt(frontmatter.get("excerpt"))
+                    .status(ArticleStatus.PUBLISHED)
+                    .viewCount(0)
+                    .publishedAt(LocalDateTime.now())
+                    .author(adminUser)
+                    .tags(tags)
+                    .build();
 
-            articleRepository.save(article);
-            seeded++;
-            log.info("Seeded KB article: {}", slug);
+                articleRepository.save(article);
+                seeded++;
+                log.info("Seeded KB article: {}", slug);
+            }
         }
 
-        if (seeded > 0) {
-            log.info("KB seeding complete — {} articles imported", seeded);
+        if (seeded > 0 || updated > 0) {
+            log.info("KB seeding complete — {} inserted, {} updated", seeded, updated);
         } else {
-            log.info("KB seeding skipped — all articles already exist");
+            log.info("KB seeding skipped — no changes detected");
         }
     }
 
@@ -253,5 +263,28 @@ public class KbSeeder implements CommandLineRunner {
         if (endIndex == -1) return content;
 
         return content.substring(endIndex + 5).trim();
+    }
+
+    private Map<String, String> extractBilingualBody(String content) {
+        var body = extractBody(content);
+        var map = new HashMap<String, String>();
+
+        int separatorIndex = body.indexOf(FR_BODY_SEPARATOR);
+        if (separatorIndex == -1) {
+            map.put("contentEn", body);
+            map.put("contentFr", body);
+            return map;
+        }
+
+        var en = body.substring(0, separatorIndex).trim();
+        var fr = body.substring(separatorIndex + FR_BODY_SEPARATOR.length()).trim();
+
+        if (fr.isBlank()) {
+            fr = en;
+        }
+
+        map.put("contentEn", en);
+        map.put("contentFr", fr);
+        return map;
     }
 }
