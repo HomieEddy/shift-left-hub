@@ -46,6 +46,7 @@ export class ChatComponent implements AfterViewChecked {
 
     this.currentInput = '';
     this.errorMessage.set(null);
+    this.escalationPayload.set(null);
     this.showFeedback.set(false);
     this.showFollowUp.set(false);
     this.showCloseModal.set(false);
