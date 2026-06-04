@@ -91,7 +91,7 @@ public class TicketService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String generateTicketNumber() {
-        TicketNumberSequence seq = sequenceRepository.findById(1L)
+        TicketNumberSequence seq = sequenceRepository.findByIdWithLock(1L)
             .orElseGet(() -> {
                 TicketNumberSequence newSeq = TicketNumberSequence.builder()
                     .nextNumber(1)
