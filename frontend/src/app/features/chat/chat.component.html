@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <div *ngIf="showEscalationForm() && escalationPayload()" class="flex justify-start ml-2">
+    <div *ngIf="showEscalationForm() && escalationPayload()" class="w-4/5 ml-2">
       <app-escalation-form
         [escalationPayload]="escalationPayload()"
         (ticketCreated)="onTicketCreated()"
