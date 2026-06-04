@@ -2,6 +2,7 @@ import { Component, inject, signal, effect, output, DestroyRef, HostListener, Vi
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
@@ -10,7 +11,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, MarkdownModule, EscalationFormComponent],
+  imports: [FormsModule, NgFor, NgIf, RouterLink, MarkdownModule, EscalationFormComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
@@ -27,6 +28,8 @@ export class ChatComponent {
   showFallback = signal(false);
   showEscalationForm = signal(false);
   escalationPayload = signal<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] } | null>(null);
+  showTicketConfirmation = signal(false);
+  createdTicketNumber = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
   readonly escalate = output<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] }>();
@@ -145,6 +148,9 @@ export class ChatComponent {
     if (this.showCloseModal()) {
       this.closeModal();
     }
+    if (this.showTicketConfirmation()) {
+      this.closeTicketConfirmation();
+    }
   }
 
   escalateToHumanAgent() {
@@ -155,9 +161,21 @@ export class ChatComponent {
     this.showEscalationForm.set(false);
   }
 
-  onTicketCreated() {
+  onTicketCreated(ticketNumber: string) {
     this.showEscalationForm.set(false);
     this.showFallback.set(false);
+    this.createdTicketNumber.set(ticketNumber);
+    this.showTicketConfirmation.set(true);
+  }
+
+  startNewChat() {
+    this.showTicketConfirmation.set(false);
+    this.createdTicketNumber.set(null);
+    this.messages.set([]);
+  }
+
+  closeTicketConfirmation() {
+    this.showTicketConfirmation.set(false);
   }
 
   retry() {
