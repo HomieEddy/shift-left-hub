@@ -139,9 +139,8 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 ## Next Steps
 
-1. **Phase 3 complete** — AI Self-Service Portal built
-2. Merged to `master` — ready for Phase 4
-3. Next: Phase 4 (Escalation & Ticketing) via `/gsd-plan-phase 4`
+1. **Phase 4 planned** — PLAN.md created with 4 plans across 3 waves
+2. Execute Phase 4 via `/gsd-execute-phase 4` or run each plan individually
 
 ---
 
