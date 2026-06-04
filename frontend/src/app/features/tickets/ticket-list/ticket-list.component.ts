@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize/init';
 import { TicketService } from '../ticket.service';
 import { Ticket } from '../ticket.model';
 
@@ -50,7 +51,22 @@ export class TicketListComponent implements OnInit {
     }
   }
 
-  statusBadgeClass(status: string): string {
+  statusLabels: Record<string, string> = {
+    'NEW': $localize`:@@tickets.status.new:New`,
+    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
+    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
+    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
+  };
+
+  categoryLabels: Record<string, string> = {
+    'NETWORK': $localize`:@@tickets.category.network:Network`,
+    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
+    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
+    'ACCESS': $localize`:@@tickets.category.access:Access`,
+    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
+  };
+
+  statusBadgeClass = (status: string): string => {
     switch (status) {
       case 'NEW': return 'bg-blue-100 text-blue-700';
       case 'IN_PROGRESS': return 'bg-amber-100 text-amber-700';
@@ -58,9 +74,9 @@ export class TicketListComponent implements OnInit {
       case 'CANCELLED': return 'bg-gray-100 text-gray-600';
       default: return 'bg-slate-100 text-slate-600';
     }
-  }
+  };
 
-  categoryBadgeClass(category: string): string {
+  categoryBadgeClass = (category: string): string => {
     switch (category) {
       case 'NETWORK': return 'bg-purple-100 text-purple-700';
       case 'HARDWARE': return 'bg-cyan-100 text-cyan-700';
@@ -69,5 +85,5 @@ export class TicketListComponent implements OnInit {
       case 'PERIPHERALS': return 'bg-pink-100 text-pink-700';
       default: return 'bg-slate-100 text-slate-600';
     }
-  }
+  };
 }
