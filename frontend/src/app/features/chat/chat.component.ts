@@ -75,8 +75,12 @@ export class ChatComponent {
     this.streamSub = events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (event) => {
         if (event.type === 'token') {
-          assistantMsg.content += event.content;
-          this.messages.update(m => [...m]);
+          this.messages.update(m => {
+            const updated = [...m];
+            const lastIdx = updated.length - 1;
+            updated[lastIdx] = { ...updated[lastIdx], content: updated[lastIdx].content + event.content };
+            return updated;
+          });
         } else if (event.type === 'done') {
           this.isStreaming.set(false);
           this.showFeedback.set(true);
