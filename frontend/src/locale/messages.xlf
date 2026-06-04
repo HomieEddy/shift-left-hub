@@ -534,6 +534,22 @@
         <source>An agent will review your ticket shortly.</source>
         <target>An agent will review your ticket shortly.</target>
       </trans-unit>
+      <trans-unit id="tickets.modal.title">
+        <source>Ticket Submitted</source>
+        <target>Ticket Submitted</target>
+      </trans-unit>
+      <trans-unit id="tickets.modal.ticketNumber">
+        <source>Ticket Number</source>
+        <target>Ticket Number</target>
+      </trans-unit>
+      <trans-unit id="tickets.modal.myTickets">
+        <source>My Tickets</source>
+        <target>My Tickets</target>
+      </trans-unit>
+      <trans-unit id="tickets.modal.newChat">
+        <source>Start New Chat</source>
+        <target>Start New Chat</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
