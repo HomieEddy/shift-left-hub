@@ -48,6 +48,14 @@
           </a>
           <a
             *ngIf="authService.isAuthenticated()"
+            routerLink="/tickets"
+            routerLinkActive="text-blue-600 font-medium"
+            class="text-slate-600 hover:text-slate-800 transition-colors"
+          >
+            My Tickets
+          </a>
+          <a
+            *ngIf="authService.isAuthenticated()"
             routerLink="/articles"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"

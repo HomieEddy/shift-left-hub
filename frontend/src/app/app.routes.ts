@@ -45,6 +45,16 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'tickets',
+    loadComponent: () => import('./features/tickets/ticket-list/ticket-list.component').then(m => m.TicketListComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'tickets/:id',
+    loadComponent: () => import('./features/tickets/ticket-detail/ticket-detail.component').then(m => m.TicketDetailComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'chat',
     loadComponent: () => import('./features/chat/chat.component').then(m => m.ChatComponent),
     canActivate: [authGuard],

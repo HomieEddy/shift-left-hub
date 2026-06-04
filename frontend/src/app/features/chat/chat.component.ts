@@ -1,21 +1,16 @@
-import { Component, inject, signal, effect, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
+import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
-
-interface EscalationPayload {
-  issue: string;
-  transcript: ChatMessage[];
-  sources: { articleId: string; title: string; slug: string; score: number }[];
-}
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, MarkdownModule],
+  imports: [FormsModule, NgFor, NgIf, MarkdownModule, EscalationFormComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
@@ -30,8 +25,11 @@ export class ChatComponent {
   showFollowUp = signal(false);
   showCloseModal = signal(false);
   showFallback = signal(false);
-  escalationPayload = signal<EscalationPayload | null>(null);
+  showEscalationForm = signal(false);
+  escalationPayload = signal<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] } | null>(null);
   errorMessage = signal<string | null>(null);
+
+  readonly escalate = output<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] }>();
 
   private destroyRef = inject(DestroyRef);
   private nextId = 0;
@@ -147,6 +145,19 @@ export class ChatComponent {
     if (this.showCloseModal()) {
       this.closeModal();
     }
+  }
+
+  escalateToHumanAgent() {
+    this.showEscalationForm.set(true);
+  }
+
+  closeEscalationForm() {
+    this.showEscalationForm.set(false);
+  }
+
+  onTicketCreated() {
+    this.showEscalationForm.set(false);
+    this.showFallback.set(false);
   }
 
   retry() {

@@ -374,6 +374,130 @@
         <source>AI Assistant</source>
         <target>Assistant IA</target>
       </trans-unit>
+      <trans-unit id="nav.my-tickets">
+        <source>My Tickets</source>
+        <target>Mes Tickets</target>
+      </trans-unit>
+      <trans-unit id="tickets.title">
+        <source>My Tickets</source>
+        <target>Mes Tickets</target>
+      </trans-unit>
+      <trans-unit id="tickets.loading">
+        <source>Loading tickets...</source>
+        <target>Chargement des tickets...</target>
+      </trans-unit>
+      <trans-unit id="tickets.empty">
+        <source>No tickets found</source>
+        <target>Aucun ticket trouvé</target>
+      </trans-unit>
+      <trans-unit id="tickets.emptyCTA">
+        <source>Ask the AI Assistant</source>
+        <target>Demander à l'Assistant IA</target>
+      </trans-unit>
+      <trans-unit id="tickets.back">
+        <source>&amp;larr; Back to Tickets</source>
+        <target>&amp;larr; Retour aux tickets</target>
+      </trans-unit>
+      <trans-unit id="tickets.view.link">
+        <source>View Tickets</source>
+        <target>Voir les tickets</target>
+      </trans-unit>
+      <trans-unit id="tickets.issue">
+        <source>Issue Description</source>
+        <target>Description du problème</target>
+      </trans-unit>
+      <trans-unit id="tickets.transcript">
+        <source>AI Chat Transcript</source>
+        <target>Transcription de la discussion IA</target>
+      </trans-unit>
+      <trans-unit id="tickets.created">
+        <source>Created</source>
+        <target>Créé</target>
+      </trans-unit>
+      <trans-unit id="tickets.updated">
+        <source>Updated</source>
+        <target>Mis à jour</target>
+      </trans-unit>
+      <trans-unit id="tickets.resolved">
+        <source>Resolved</source>
+        <target>Résolu</target>
+      </trans-unit>
+      <trans-unit id="tickets.cancelled">
+        <source>Cancelled</source>
+        <target>Annulé</target>
+      </trans-unit>
+      <trans-unit id="tickets.cancelReason">
+        <source>Reason</source>
+        <target>Raison</target>
+      </trans-unit>
+      <trans-unit id="tickets.cancel.button">
+        <source>Cancel Ticket</source>
+        <target>Annuler le ticket</target>
+      </trans-unit>
+      <trans-unit id="tickets.cancel.confirm">
+        <source>Are you sure?</source>
+        <target>Êtes-vous sûr ?</target>
+      </trans-unit>
+      <trans-unit id="tickets.cancel.yes">
+        <source>Yes</source>
+        <target>Oui</target>
+      </trans-unit>
+      <trans-unit id="tickets.cancel.no">
+        <source>No</source>
+        <target>Non</target>
+      </trans-unit>
+      <trans-unit id="tickets.table.ticket">
+        <source>Ticket</source>
+        <target>Ticket</target>
+      </trans-unit>
+      <trans-unit id="tickets.table.category">
+        <source>Category</source>
+        <target>Catégorie</target>
+      </trans-unit>
+      <trans-unit id="tickets.table.status">
+        <source>Status</source>
+        <target>Statut</target>
+      </trans-unit>
+      <trans-unit id="tickets.table.created">
+        <source>Created</source>
+        <target>Créé</target>
+      </trans-unit>
+      <trans-unit id="escalation.title">
+        <source>Escalate to Human Agent</source>
+        <target>Transférer à un agent</target>
+      </trans-unit>
+      <trans-unit id="escalation.issue">
+        <source>Issue Description</source>
+        <target>Description du problème</target>
+      </trans-unit>
+      <trans-unit id="escalation.category">
+        <source>Category</source>
+        <target>Catégorie</target>
+      </trans-unit>
+      <trans-unit id="escalation.urgency">
+        <source>Urgency</source>
+        <target>Urgence</target>
+      </trans-unit>
+      <trans-unit id="escalation.submit">
+        <source>Submit Ticket</source>
+        <target>Soumettre le ticket</target>
+      </trans-unit>
+      <trans-unit id="escalation.submitting">
+        <source>Submitting...</source>
+        <target>Soumission en cours...</target>
+      </trans-unit>
+      <trans-unit id="escalation.cancel">
+        <source>Cancel</source>
+        <target>Annuler</target>
+      </trans-unit>
+      <trans-unit id="escalation.success">
+        <source>Ticket created!</source>
+        <target>Ticket créé !</target>
+      </trans-unit>
+      <trans-unit id="escalation.successMessage">
+        <source>An agent will review your ticket shortly.</source>
+        <target>Un agent examinera votre ticket sous peu.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
