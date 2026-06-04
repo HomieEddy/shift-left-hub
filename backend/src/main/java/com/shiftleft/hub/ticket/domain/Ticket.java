@@ -20,7 +20,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "ticket")
@@ -57,6 +59,7 @@ public class Ticket {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String issue;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "shift_left_context", columnDefinition = "JSONB")
     private String shiftLeftContext;
 

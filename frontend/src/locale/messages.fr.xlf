@@ -462,6 +462,42 @@
         <source>Created</source>
         <target>Créé</target>
       </trans-unit>
+      <trans-unit id="tickets.status.new">
+        <source>New</source>
+        <target>Nouveau</target>
+      </trans-unit>
+      <trans-unit id="tickets.status.in_progress">
+        <source>In Progress</source>
+        <target>En cours</target>
+      </trans-unit>
+      <trans-unit id="tickets.status.resolved">
+        <source>Resolved</source>
+        <target>Résolu</target>
+      </trans-unit>
+      <trans-unit id="tickets.status.cancelled">
+        <source>Cancelled</source>
+        <target>Annulé</target>
+      </trans-unit>
+      <trans-unit id="tickets.category.network">
+        <source>Network</source>
+        <target>Réseau</target>
+      </trans-unit>
+      <trans-unit id="tickets.category.hardware">
+        <source>Hardware</source>
+        <target>Matériel</target>
+      </trans-unit>
+      <trans-unit id="tickets.category.software">
+        <source>Software</source>
+        <target>Logiciel</target>
+      </trans-unit>
+      <trans-unit id="tickets.category.access">
+        <source>Access</source>
+        <target>Accès</target>
+      </trans-unit>
+      <trans-unit id="tickets.category.peripherals">
+        <source>Peripherals</source>
+        <target>Périphériques</target>
+      </trans-unit>
       <trans-unit id="escalation.title">
         <source>Escalate to Human Agent</source>
         <target>Transférer à un agent</target>
