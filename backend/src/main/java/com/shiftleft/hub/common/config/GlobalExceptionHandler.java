@@ -46,6 +46,18 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
+    @ExceptionHandler(com.shiftleft.hub.ticket.domain.TicketNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleTicketNotFound(
+            com.shiftleft.hub.ticket.domain.TicketNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalState(
+            IllegalStateException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleBadCredentials(
             BadCredentialsException ex) {
