@@ -39,7 +39,7 @@ export class EscalationFormComponent {
   ];
 
   submit(): void {
-    if (!this.issue().trim()) return;
+    if (this.isSubmitting() || !this.issue().trim()) return;
 
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
