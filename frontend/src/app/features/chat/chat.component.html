@@ -43,13 +43,20 @@
     </div>
 
     <div *ngIf="showFallback()" class="flex justify-start ml-2">
-      <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800">
+      <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 max-w-md">
         <p class="mb-2">I couldn't find a resolution in the knowledge base.</p>
-        <button class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium">
+        <button (click)="escalateToHumanAgent()" class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium">
           Escalate to Human Agent
         </button>
-        <p class="text-xs text-amber-500 mt-1">(Ticket creation coming in Phase 4)</p>
       </div>
+    </div>
+
+    <div *ngIf="showEscalationForm() && escalationPayload()" class="w-4/5 ml-2">
+      <app-escalation-form
+        [escalationPayload]="escalationPayload()"
+        (ticketCreated)="onTicketCreated($event)"
+        (cancelled)="closeEscalationForm()"
+      />
     </div>
 
     <div *ngIf="errorMessage()" class="flex justify-center">
@@ -74,6 +81,27 @@
       <button (click)="closeModal()" autofocus class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors" i18n="@@modalClose">
         Close
       </button>
+    </div>
+  </div>
+
+  <div *ngIf="showTicketConfirmation()"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="ticket-confirm-title"
+       class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div class="bg-white rounded-2xl shadow-xl px-8 py-10 text-center max-w-sm mx-4">
+      <div class="text-5xl mb-4" aria-hidden="true">🎫</div>
+      <h2 id="ticket-confirm-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@tickets.modal.title">Ticket Submitted</h2>
+      <p class="text-slate-500 mb-1 text-sm" i18n="@@tickets.modal.ticketNumber">Ticket Number</p>
+      <p class="text-lg font-mono font-bold text-blue-600 mb-6">{{ createdTicketNumber() }}</p>
+      <div class="flex flex-col gap-2">
+        <a routerLink="/tickets" class="block w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors text-center" i18n="@@tickets.modal.myTickets">
+          My Tickets
+        </a>
+        <button (click)="startNewChat()" autofocus class="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-sm font-medium transition-colors" i18n="@@tickets.modal.newChat">
+          Start New Chat
+        </button>
+      </div>
     </div>
   </div>
 

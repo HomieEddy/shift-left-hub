@@ -3,36 +3,45 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-03T15:45:00.000Z"
+last_updated: "2026-06-04T06:35:00.000Z"
 progress:
   total_phases: 7
-  completed_phases: 3
-  total_plans: 16
-  completed_plans: 16
+  completed_phases: 4
+  total_plans: 20
+  completed_plans: 20
   current_phase: 4
   current_phase_name: "Escalation & Ticketing"
-  current_focus: "Phase 3 complete — ready for Phase 4"
+  current_focus: "Phase 4 complete — ready for Phase 5"
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** Phase 3 Complete
+**Status:** Phase 4 Complete
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
-**Current focus:** Phase 3 complete — all 4 plans finished
+**Current focus:** Phase 4 complete — all 3 waves executed
 
 ## Current Phase
 
-- **Phase:** 3 — AI Self-Service Portal
-- **Status:** ✓ Complete (4/4 plans complete)
+- **Phase:** 4 — Escalation & Ticketing
+- **Status:** ✓ Complete (3/3 waves, 4/4 plans complete)
 
 ## Completed Plans
+
+### Phase 4: Escalation & Ticketing
+
+| Plan | Name | Summary | Commits |
+|------|------|---------|---------|
+| 04-01 | Ticket Database Schema | Ticket JPA entity, TicketStatus/TicketCategory/TicketUrgency enums, TicketNumberSequence, TicketRepository, TicketNotFoundException | `6f806e3` |
+| 04-02 | Backend Ticket CRUD API | TicketController, TicketService, DTOs (Create/Response/Cancel), SecurityConfig + GlobalExceptionHandler wiring | `2ae62d1` |
+| 04-03 | Angular Escalation UI | EscalationFormComponent (inline morph), wired to chat's escalate button with @Output(), pre-filled issue + category/urgency dropdowns | `ce4a621` |
+| 04-04 | Angular My Tickets List & Detail | TicketListComponent (status filter tabs, table), TicketDetailComponent (collapsible transcript, cancel button), /tickets routes, nav link, EN/FR i18n | `ce4a621` |
 
 ### Phase 1: Foundation
 
@@ -61,35 +70,6 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 03-03 | Admin LLM Settings UI | ✓ Complete | [03-03-SUMMARY.md](../phases/03-ai-self-service-portal/03-03-SUMMARY.md) | `0991744` |
 | 03-04 | Frontend Chat UI | ✓ Complete | [03-04-SUMMARY.md](../phases/03-ai-self-service-portal/03-04-SUMMARY.md) | `6abc7a6` |
 
-### Artifacts
-
-## Artifacts
-
-| Artifact | Status | Location |
-|----------|--------|----------|
-| PROJECT.md | ✓ Created | `.planning/PROJECT.md` |
-| config.json | ✓ Created | `.planning/config.json` |
-| Research | ✓ Complete | `.planning/research/` |
-| REQUIREMENTS.md | ✓ Updated | `.planning/REQUIREMENTS.md` |
-| ROADMAP.md | ✓ Updated | `.planning/ROADMAP.md` |
-| STATE.md | ✓ Updated | `.planning/STATE.md` |
-| 01-01-SUMMARY.md | ✓ Created | `.planning/phases/01-foundation/01-01-SUMMARY.md` |
-| 01-02-SUMMARY.md | ✓ Created | `.planning/phases/01-foundation/01-02-SUMMARY.md` |
-| 01-03-SUMMARY.md | ✓ Created | `.planning/phases/01-foundation/01-03-SUMMARY.md` |
-| 01-04-SUMMARY.md | ✓ Created | `.planning/phases/01-foundation/01-04-SUMMARY.md` |
-| 02-01-SUMMARY.md | ✓ Created | `.planning/phases/02-knowledge-base/02-01-SUMMARY.md` |
-| 02-02-SUMMARY.md | ✓ Created | `.planning/phases/02-knowledge-base/02-02-SUMMARY.md` |
-| 02-03-SUMMARY.md | ✓ Created | `.planning/phases/02-knowledge-base/02-03-SUMMARY.md` |
-| 02-04-SUMMARY.md | ✓ Created | `.planning/phases/02-knowledge-base/02-04-SUMMARY.md` |
-| 02-CONTEXT.md | ✓ Created | `.planning/phases/02-knowledge-base/02-CONTEXT.md` |
-| 02-DISCUSSION-LOG.md | ✓ Created | `.planning/phases/02-knowledge-base/02-DISCUSSION-LOG.md` |
-| 03-CONTEXT.md | ✓ Created | `.planning/phases/03-ai-self-service-portal/03-CONTEXT.md` |
-| 03-DISCUSSION-LOG.md | ✓ Created | `.planning/phases/03-ai-self-service-portal/03-DISCUSSION-LOG.md` |
-| 03-01-SUMMARY.md | ✓ Created | `.planning/phases/03-ai-self-service-portal/03-01-SUMMARY.md` |
-| 03-02-SUMMARY.md | ✓ Created | `.planning/phases/03-ai-self-service-portal/03-02-SUMMARY.md` |
-| 03-03-SUMMARY.md | ✓ Created | `.planning/phases/03-ai-self-service-portal/03-03-SUMMARY.md` |
-| 03-04-SUMMARY.md | ✓ Created | `.planning/phases/03-ai-self-service-portal/03-04-SUMMARY.md` |
-
 ## Roadmap Progress
 
 | Phase | Name | Status |
@@ -97,7 +77,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 1 | Foundation | ✓ Complete |
 | 2 | Knowledge Base | ✓ Complete (4/4 plans) |
 | 3 | AI Self-Service Portal | ✓ Complete (4/4 plans) |
-| 4 | Escalation & Ticketing | ○ Pending |
+| 4 | Escalation & Ticketing | ✓ Complete (4/4 plans) |
 | 5 | Agent Dashboard | ○ Pending |
 | 6 | KCS Auto-Drafting & Admin Review | ○ Pending |
 | 7 | Quality, Polish & DevOps | ○ Pending |
@@ -111,6 +91,9 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | Angular + Spring Boot | Enterprise standard pairing | ✓ Implemented |
 | JWT with HttpOnly cookies | Security best practice vs localStorage | ✓ Implemented |
 | Bilingual EN/FR from day one | Rare differentiator, costly to retrofit | ✓ Implemented |
+| Inline morph escalation form | User stays in chat flow, no page navigation | ✓ Implemented |
+| Sequential TKT-NNNN numbering | Human-readable ticket IDs vs raw UUIDs | ✓ Implemented |
+| JSONB shift_left_context | Flexible schema for AI chat transcript storage | ✓ Implemented |
 
 ## Requirements Completed
 
@@ -123,26 +106,29 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 - **INF-02**: Backend runs on Spring Boot with Java 21 ✓
 - **INF-03**: Frontend serves as standalone Angular SPA ✓
 - **KB-01**: Admin can create, edit, and archive KB articles (schema foundation) ✓
-- **KB-01**: Admin can create, edit, and archive KB articles (schema foundation + REST API) ✓
-- **KB-02**: Users can browse articles with pagination (public listing + detail endpoints) ✓
-- **KB-03**: Users can search articles using FTS with highlighted snippets (search endpoint + ts_headline) ✓
-- **KB-04**: Articles support tags for categorization (Tag entity + M2M + CRUD API) ✓
-- **KB-05**: Articles are bilingual EN/FR (columnar schema + DTO support) ✓
-- **ADM-04**: Admin can manage tags (CRUD + article count + delete guard) ✓
-- **AI-01**: Conversational chat interface at /chat with bubble layout ✓
-- **AI-02**: Hybrid search (FTS + pgvector + RRF) for relevant article retrieval ✓
-- **AI-03**: SSE streaming response with typing indicator animation ✓
-- **AI-04**: "Did this solve your problem?" feedback loop ✓
-- **AI-05**: Graceful fallback with escalation option when confidence < 0.65 ✓
-- **AI-06**: Similarity threshold > 0.65 enforced in RAG pipeline ✓
-- **INF-04**: Local LLM fallback (Ollama) via admin-configurable provider ✓
+- **KB-02**: Users can browse articles with pagination ✓
+- **KB-03**: Users can search articles using FTS with highlighted snippets ✓
+- **KB-04**: Articles support tags for categorization ✓
+- **KB-05**: Articles are bilingual EN/FR ✓
+- **ADM-04**: Admin can manage tags ✓
+- **AI-01**: Conversational chat interface at /chat ✓
+- **AI-02**: Hybrid search (FTS + pgvector + RRF) ✓
+- **AI-03**: SSE streaming response ✓
+- **AI-04**: "Did this solve your problem?" feedback ✓
+- **AI-05**: Graceful fallback with escalation option ✓
+- **AI-06**: Similarity threshold > 0.65 ✓
+- **INF-04**: Local LLM fallback (Ollama) ✓
+- **TKT-01**: User can escalate an unresolved issue to a human agent ✓
+- **TKT-02**: Escalation creates a ticket pre-filled with the user's issue and full AI chat transcript ✓
+- **TKT-03**: User selects category and urgency ✓
+- **TKT-04**: Ticket status tracks through NEW → IN_PROGRESS → RESOLVED ✓
 
 ## Next Steps
 
-1. **Phase 3 complete** — AI Self-Service Portal built
-2. Merged to `master` — ready for Phase 4
-3. Next: Phase 4 (Escalation & Ticketing) via `/gsd-plan-phase 4`
+1. **Phase 4 complete** — Escalation & Ticketing built
+2. Branch `feat/phase-4-escalation-ticketing` ready for PR
+3. Next: Phase 5 (Agent Dashboard) via `/gsd-plan-phase 5`
 
 ---
 
-*Last updated: 2026-06-03 after Phase 3 merge*
+*Last updated: 2026-06-04 after Phase 4 execution*

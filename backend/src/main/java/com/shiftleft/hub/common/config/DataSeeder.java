@@ -49,12 +49,7 @@ public class DataSeeder implements CommandLineRunner {
             log.info("Created default admin user with email: {}", adminEmail);
             log.warn("Change the default admin password on first login for security.");
         } else {
-            User admin = userRepository.findByEmail(adminEmail).orElseThrow();
-            admin.setPassword(passwordEncoder.encode(adminPassword));
-            admin.setRole(UserRole.ROLE_ADMIN);
-            admin.setEnabled(true);
-            userRepository.save(admin);
-            log.info("Updated default admin credentials for email: {}", adminEmail);
+            log.info("Admin user {} already exists — skipping re-seed", adminEmail);
         }
         setupFullTextSearch();
         setupVectorSearch();

@@ -1,21 +1,17 @@
-import { Component, inject, signal, effect, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
+import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
-
-interface EscalationPayload {
-  issue: string;
-  transcript: ChatMessage[];
-  sources: { articleId: string; title: string; slug: string; score: number }[];
-}
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, MarkdownModule],
+  imports: [FormsModule, NgFor, NgIf, RouterLink, MarkdownModule, EscalationFormComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
@@ -30,8 +26,13 @@ export class ChatComponent {
   showFollowUp = signal(false);
   showCloseModal = signal(false);
   showFallback = signal(false);
-  escalationPayload = signal<EscalationPayload | null>(null);
+  showEscalationForm = signal(false);
+  escalationPayload = signal<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] } | null>(null);
+  showTicketConfirmation = signal(false);
+  createdTicketNumber = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
+
+  readonly escalate = output<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] }>();
 
   private destroyRef = inject(DestroyRef);
   private nextId = 0;
@@ -74,8 +75,12 @@ export class ChatComponent {
     this.streamSub = events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (event) => {
         if (event.type === 'token') {
-          assistantMsg.content += event.content;
-          this.messages.update(m => [...m]);
+          this.messages.update(m => {
+            const updated = [...m];
+            const lastIdx = updated.length - 1;
+            updated[lastIdx] = { ...updated[lastIdx], content: updated[lastIdx].content + event.content };
+            return updated;
+          });
         } else if (event.type === 'done') {
           this.isStreaming.set(false);
           this.showFeedback.set(true);
@@ -147,6 +152,34 @@ export class ChatComponent {
     if (this.showCloseModal()) {
       this.closeModal();
     }
+    if (this.showTicketConfirmation()) {
+      this.closeTicketConfirmation();
+    }
+  }
+
+  escalateToHumanAgent() {
+    this.showEscalationForm.set(true);
+  }
+
+  closeEscalationForm() {
+    this.showEscalationForm.set(false);
+  }
+
+  onTicketCreated(ticketNumber: string) {
+    this.showEscalationForm.set(false);
+    this.showFallback.set(false);
+    this.createdTicketNumber.set(ticketNumber);
+    this.showTicketConfirmation.set(true);
+  }
+
+  startNewChat() {
+    this.showTicketConfirmation.set(false);
+    this.createdTicketNumber.set(null);
+    this.messages.set([]);
+  }
+
+  closeTicketConfirmation() {
+    this.showTicketConfirmation.set(false);
   }
 
   retry() {
