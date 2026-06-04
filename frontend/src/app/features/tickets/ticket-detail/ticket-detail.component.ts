@@ -1,14 +1,14 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TicketService } from '../ticket.service';
-import { Ticket } from '../ticket.model';
+import { Ticket, ShiftLeftContext } from '../ticket.model';
 
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
-  imports: [NgIf, DatePipe, RouterLink],
+  imports: [NgIf, NgFor, DatePipe, RouterLink],
   templateUrl: './ticket-detail.component.html',
 })
 export class TicketDetailComponent implements OnInit {
@@ -23,6 +23,19 @@ export class TicketDetailComponent implements OnInit {
   showCancelConfirm = signal(false);
   showTranscript = signal(false);
   showSources = signal(false);
+
+  parsedContext = computed(() => {
+    const raw = this.ticket()?.shiftLeftContext;
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as ShiftLeftContext;
+    } catch {
+      return null;
+    }
+  });
+
+  transcriptMessages = computed(() => this.parsedContext()?.transcript ?? []);
+  kbSources = computed(() => this.parsedContext()?.sources ?? []);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

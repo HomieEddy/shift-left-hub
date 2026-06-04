@@ -42,8 +42,43 @@
             <span [class.rotate-90]="showTranscript()" class="transition-transform inline-block">&rarr;</span>
             <span i18n="@@tickets.transcript">AI Chat Transcript</span>
           </button>
-          <div *ngIf="showTranscript()" class="mt-2 bg-slate-50 rounded-lg p-3 text-xs text-slate-600 max-h-60 overflow-y-auto">
-            <pre class="whitespace-pre-wrap font-sans">{{ t.shiftLeftContext }}</pre>
+          <div *ngIf="showTranscript()" class="mt-2 bg-slate-50 rounded-lg max-h-72 overflow-y-auto space-y-2 p-3">
+            <div *ngFor="let msg of transcriptMessages()"
+                 class="flex"
+                 [class.justify-end]="msg.role === 'user'"
+                 [class.justify-start]="msg.role !== 'user'">
+              <div class="max-w-[80%] rounded-lg px-3 py-2 text-sm leading-relaxed"
+                   [class.bg-blue-100]="msg.role === 'user'"
+                   [class.bg-white]="msg.role !== 'user'"
+                   [class.border]="msg.role !== 'user'"
+                   [class.border-slate-200]="msg.role !== 'user'"
+                   [class.text-blue-900]="msg.role === 'user'"
+                   [class.text-slate-700]="msg.role !== 'user'">
+                {{ msg.content }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="parsedContext()?.aiSummary" class="border-t border-slate-100 pt-3">
+          <h2 class="text-sm font-semibold text-slate-700 mb-1" i18n="@@tickets.aiSummary">AI Summary</h2>
+          <p class="text-sm text-slate-600 bg-slate-50 rounded-lg p-3">{{ parsedContext()?.aiSummary }}</p>
+        </div>
+
+        <div *ngIf="kbSources().length > 0" class="border-t border-slate-100 pt-3">
+          <button
+            (click)="showSources.set(!showSources())"
+            class="text-sm font-semibold text-slate-700 flex items-center gap-1 hover:text-slate-900"
+          >
+            <span [class.rotate-90]="showSources()" class="transition-transform inline-block">&rarr;</span>
+            <span i18n="@@tickets.sources">Knowledge Base Sources ({{ kbSources().length }})</span>
+          </button>
+          <div *ngIf="showSources()" class="mt-2 space-y-1">
+            <div *ngFor="let src of kbSources()"
+                 class="flex items-center justify-between bg-slate-50 rounded-lg px-3 py-2 text-xs text-slate-600">
+              <span>{{ src.title }}</span>
+              <span class="font-mono text-slate-400">{{ (src.score * 100).toFixed(0) }}%</span>
+            </div>
           </div>
         </div>
 
