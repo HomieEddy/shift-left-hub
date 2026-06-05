@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,6 +22,7 @@ export class KcsDraftListComponent implements OnInit {
   successMessage = signal('');
   currentPage = signal(0);
   totalPages = signal(0);
+  displayPage = computed(() => this.currentPage() + 1);
   actionLoading = signal<string | null>(null); // tracks which draft ID is being processed
   confirmModalOpen = signal(false);
   pendingAction = signal<{ type: 'approve' | 'reject'; id: string; title: string } | null>(null);

@@ -137,7 +137,7 @@
             i18n="@@pagination.previous">
       Previous
     </button>
-    <span class="text-sm text-slate-600" i18n="@@kcs.drafts.pageIndicator">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+    <span class="text-sm text-slate-600" i18n="@@kcs.drafts.pageIndicator">Page {{ displayPage() }} of {{ totalPages() }}</span>
     <button (click)="changePage(currentPage() + 1)"
             [disabled]="currentPage() >= totalPages() - 1"
             class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"

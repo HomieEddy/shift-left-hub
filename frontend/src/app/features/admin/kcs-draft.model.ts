@@ -13,6 +13,15 @@ export interface KcsDraft {
   createdAt: string;
 }
 
+/** Generic paginated API response. */
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
+}
+
 /** Response shape for the pending-count endpoint used by the nav badge. */
 export interface PendingCountResponse {
   pendingCount: number;

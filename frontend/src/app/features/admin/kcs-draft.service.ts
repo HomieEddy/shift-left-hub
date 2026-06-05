@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { KcsDraft, PendingCountResponse } from './kcs-draft.model';
+import { KcsDraft, PendingCountResponse, PaginatedResponse } from './kcs-draft.model';
 
 /** Service for interacting with the KCS draft admin API endpoints. */
 @Injectable({ providedIn: 'root' })
@@ -14,11 +14,11 @@ export class KcsDraftService {
    * @param page zero-indexed page number
    * @param size page size (default 20)
    */
-  getDrafts(page: number = 0, size: number = 20): Observable<{ content: KcsDraft[]; totalPages: number; totalElements: number; number: number; size: number }> {
+  getDrafts(page: number = 0, size: number = 20): Observable<PaginatedResponse<KcsDraft>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.http.get<any>('/api/admin/kcs/drafts', { params, withCredentials: true });
+    return this.http.get<PaginatedResponse<KcsDraft>>('/api/admin/kcs/drafts', { params, withCredentials: true });
   }
 
   /** Gets a single KCS draft by article ID. */
