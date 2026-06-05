@@ -550,6 +550,70 @@
         <source>Start New Chat</source>
         <target>Nouvelle discussion</target>
       </trans-unit>
+      <trans-unit id="kcs.drafts.title" datatype="html">
+        <source>KCS Drafts</source>
+        <target>Brouillons KCS</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.description" datatype="html">
+        <source>Review and manage AI-drafted knowledge base articles</source>
+        <target>Révisez et gérez les articles de la base de connaissances générés par l'IA</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.loading" datatype="html">
+        <source>Loading drafts...</source>
+        <target>Chargement des brouillons...</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.empty" datatype="html">
+        <source>No KCS drafts pending review</source>
+        <target>Aucun brouillon KCS en attente de révision</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.col.title" datatype="html">
+        <source>Title</source>
+        <target>Titre</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.col.ticket" datatype="html">
+        <source>Source Ticket</source>
+        <target>Ticket source</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.col.status" datatype="html">
+        <source>Status</source>
+        <target>Statut</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.col.date" datatype="html">
+        <source>Created</source>
+        <target>Créé</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.col.actions" datatype="html">
+        <source>Actions</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.edit" datatype="html">
+        <source>Edit</source>
+        <target>Modifier</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.approve" datatype="html">
+        <source>Approve</source>
+        <target>Approuver</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.reject" datatype="html">
+        <source>Reject</source>
+        <target>Rejeter</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.similarityWarning" datatype="html">
+        <source>Potential duplicate</source>
+        <target>Doublon potentiel</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.pageIndicator" datatype="html">
+        <source>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</source>
+        <target>Page {VAR_PLURAL} sur {VAR_TOTALPAGES}</target>
+      </trans-unit>
+      <trans-unit id="pagination.previous" datatype="html">
+        <source>Previous</source>
+        <target>Précédent</target>
+      </trans-unit>
+      <trans-unit id="pagination.next" datatype="html">
+        <source>Next</source>
+        <target>Suivant</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -36,6 +36,16 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'admin/kcs-drafts',
+    loadComponent: () => import('./features/admin/kcs-draft-list/kcs-draft-list.component').then(m => m.KcsDraftListComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/kcs-drafts/:id/edit',
+    loadComponent: () => import('./features/kb/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'admin/tags',
     loadComponent: () => import('./features/kb/admin/tag-manager/tag-manager.component').then(m => m.TagManagerComponent),
     canActivate: [authGuard],
