@@ -134,9 +134,9 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 ## Next Steps
 
-1. **Phase 5 planned** — Agent Dashboard ready for execution
-2. Execute Phase 5 via `/gsd-execute-phase 5`
-3. After Phase 5: Phase 6 (KCS Auto-Drafting & Admin Review)
+1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves)
+2. Phase 6 (KCS Auto-Drafting & Admin Review) — next to plan/execute
+3. Phase 7 (Quality, Polish & DevOps) — final phase
 
 ---
 

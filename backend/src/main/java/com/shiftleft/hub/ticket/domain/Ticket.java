@@ -75,7 +75,7 @@ public class Ticket {
     @Column(name = "resolution_notes", columnDefinition = "TEXT")
     private String resolutionNotes;
 
-    @Column(name = "is_knowledge_gap", nullable = false)
+    @Column(name = "is_knowledge_gap", columnDefinition = "boolean default false")
     @Builder.Default
     private boolean isKnowledgeGap = false;
 
