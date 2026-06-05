@@ -4,6 +4,7 @@ import com.shiftleft.hub.agent.api.dto.AgentTicketResponse;
 import com.shiftleft.hub.agent.api.dto.WorkNoteResponse;
 import com.shiftleft.hub.agent.domain.WorkNote;
 import com.shiftleft.hub.agent.domain.WorkNoteRepository;
+import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
 import com.shiftleft.hub.ticket.domain.Ticket;
 import com.shiftleft.hub.ticket.domain.TicketCategory;
 import com.shiftleft.hub.ticket.domain.TicketNotFoundException;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,7 @@ public class AgentTicketService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final WorkNoteRepository workNoteRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * Lists tickets with optional server-side filtering.
@@ -175,6 +178,31 @@ public class AgentTicketService {
         ticket.setStatus(TicketStatus.RESOLVED);
         ticket.setResolvedAt(LocalDateTime.now());
         ticket = ticketRepository.save(ticket);
+
+        // Publish KCS drafting event if flagged as knowledge gap (per D-01, T-06-01)
+        if (isKnowledgeGap) {
+            try {
+                eventPublisher.publishEvent(new TicketResolvedEvent(
+                    ticket.getId(),
+                    ticket.getTicketNumber(),
+                    ticket.getIssue(),
+                    ticket.getShiftLeftContext(),
+                    ticket.getCategory(),
+                    ticket.getUrgency(),
+                    ticket.getResolutionNotes(),
+                    ticket.getUser().getDisplayName(),
+                    ticket.getUser().getEmail(),
+                    agent.getDisplayName(),
+                    ticket.getResolvedAt()
+                ));
+                log.info("TicketResolvedEvent published for ticket {} (KCS)", ticket.getTicketNumber());
+            } catch (Exception e) {
+                log.error("Failed to publish TicketResolvedEvent for ticket {}: {}",
+                    ticket.getTicketNumber(), e.getMessage());
+                // Non-blocking — ticket resolution is already saved
+            }
+        }
+
         log.info("Ticket {} resolved by agent {} (KCS: {})",
             ticket.getTicketNumber(), agentEmail, isKnowledgeGap);
         return AgentTicketResponse.from(ticket);
