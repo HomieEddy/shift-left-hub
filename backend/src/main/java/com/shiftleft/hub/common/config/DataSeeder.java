@@ -122,6 +122,14 @@ public class DataSeeder implements CommandLineRunner {
         log.info("Setting up vector search...");
         try {
             jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS vector");
+            jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS vector_store (
+                    id UUID PRIMARY KEY,
+                    content TEXT,
+                    metadata JSONB,
+                    embedding vector(768)
+                )
+            """);
             log.info("Vector search setup complete.");
         } catch (Exception e) {
             log.warn("Vector extension is not available on this PostgreSQL instance. Skipping vector setup.");
