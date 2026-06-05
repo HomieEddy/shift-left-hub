@@ -205,4 +205,4 @@ Each phase depends on all previous phases. Strict sequential execution.
 
 ---
 *Created: 2026-05-31*
-*Next: `/gsd-plan-phase 4`*
+*Next: `/gsd-plan-phase 7`*
