@@ -58,6 +58,15 @@ public class KcsDraftingService {
      * @throws KcsDraftingException on non-retryable errors
      */
     public Article draftArticle(TicketResolvedEvent event, User systemUser) {
+        // 0. Check if draft already exists for this source ticket (WR-07)
+        java.util.Optional<Article> existing =
+            articleRepository.findBySourceTicketId(event.ticketId());
+        if (existing.isPresent()) {
+            log.info("KCS draft already exists for ticket {} (article {}), skipping",
+                event.ticketNumber(), existing.get().getId());
+            return existing.get();
+        }
+
         // 1. Check for duplicates (lightweight FTS first, then semantic)
         Set<UUID> duplicateIds = checkDuplicates(event);
 
