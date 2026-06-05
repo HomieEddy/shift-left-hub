@@ -1,11 +1,10 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe, NgClass } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket, WorkNote } from '../agent-ticket.model';
-import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-agent-ticket-detail',
@@ -15,7 +14,6 @@ import { AuthService } from '../../../core/auth/auth.service';
 })
 export class AgentTicketDetailComponent implements OnInit {
   private agentTicketService = inject(AgentTicketService);
-  private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
@@ -115,14 +113,6 @@ export class AgentTicketDetailComponent implements OnInit {
   cancelResolveConfirm(): void {
     this.resolveConfirmOpen.set(false);
   }
-
-  canResolve = computed(() => {
-    const t = this.ticket();
-    const userId = this.authService.user()?.userId;
-    if (!t || !userId) return false;
-    if (t.status !== 'IN_PROGRESS') return false;
-    return t.assignedToId === userId || this.authService.isAdmin();
-  });
 
   statusLabels: Record<string, string> = {
     'NEW': 'New',
