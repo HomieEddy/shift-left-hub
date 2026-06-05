@@ -34,6 +34,7 @@ export class AgentTicketDetailComponent implements OnInit {
   isResolving = signal(false);
 
   resolveConfirmOpen = signal(false);
+  isClaiming = signal(false);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -81,6 +82,23 @@ export class AgentTicketDetailComponent implements OnInit {
       error: () => {
         this.isSubmittingNote.set(false);
         alert('Failed to add work note.');
+      },
+    });
+  }
+
+  claimTicket(): void {
+    const ticketId = this.ticket()?.id;
+    if (!ticketId) return;
+
+    this.isClaiming.set(true);
+    this.agentTicketService.claimTicket(ticketId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (ticket) => {
+        this.ticket.set(ticket);
+        this.isClaiming.set(false);
+      },
+      error: () => {
+        this.isClaiming.set(false);
+        alert('Failed to claim ticket.');
       },
     });
   }

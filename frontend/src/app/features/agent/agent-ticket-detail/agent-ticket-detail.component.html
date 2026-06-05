@@ -59,6 +59,20 @@
       </div>
     </div>
 
+    <!-- Claim (visible when NEW) -->
+    <div *ngIf="t.status === 'NEW'" class="bg-white rounded-lg border border-slate-200 mb-4">
+      <div class="px-4 py-4 text-center">
+        <p class="text-sm text-slate-600 mb-3">This ticket has not been claimed yet.</p>
+        <button
+          (click)="claimTicket()"
+          [disabled]="isClaiming()"
+          class="bg-blue-600 text-white px-6 py-2 text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {{ isClaiming() ? 'Claiming...' : 'Claim Ticket' }}
+        </button>
+      </div>
+    </div>
+
     <!-- Work Notes Timeline -->
     <div class="bg-white rounded-lg border border-slate-200 mb-4 overflow-hidden">
       <div class="px-4 py-3 border-b border-slate-100">
@@ -113,7 +127,7 @@
         <button
           (click)="openResolveConfirm()"
           [disabled]="isResolving() || !resolutionNotes().trim()"
-          class="bg-green-600 text-white px-4 py-1.5 text-sm rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+          class="bg-blue-600 text-white px-4 py-1.5 text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
           {{ isResolving() ? 'Resolving...' : 'Resolve Ticket' }}
         </button>
@@ -167,7 +181,7 @@
           </button>
           <button
             (click)="confirmResolve()"
-            class="px-4 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700"
+            class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Confirm
           </button>
