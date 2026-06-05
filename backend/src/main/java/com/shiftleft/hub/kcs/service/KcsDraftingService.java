@@ -114,7 +114,8 @@ public class KcsDraftingService {
         Set<UUID> duplicates = new HashSet<>();
 
         // FTS fast-path — check if similar articles exist by keyword overlap (D-12)
-        String searchText = extractKeywords(event.issue() + " " + event.resolutionNotes());
+        String searchText = extractKeywords(
+            Objects.toString(event.issue(), "") + " " + Objects.toString(event.resolutionNotes(), ""));
         var ftsResults = articleRepository.searchByText(searchText,
             org.springframework.data.domain.PageRequest.of(0, 5));
 
@@ -125,7 +126,8 @@ public class KcsDraftingService {
 
         // Semantic search via pgvector — query with combined text (D-10)
         try {
-            String queryText = event.issue() + "\n" + event.resolutionNotes();
+            String queryText = Objects.toString(event.issue(), "") + "\n"
+                + Objects.toString(event.resolutionNotes(), "");
             List<Document> docs = vectorStore.similaritySearch(
                 SearchRequest.builder()
                     .query(queryText)
@@ -191,7 +193,7 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
                 event.issue(),
                 event.category(),
                 event.urgency(),
-                event.resolutionNotes(),
+                Objects.toString(event.resolutionNotes(), "N/A"),
                 event.agentDisplayName(),
                 event.userDisplayName()
             );
@@ -247,13 +249,14 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         if (titleEn == null || titleEn.isBlank()) {
             titleEn = event.issue();
         }
+        String notes = Objects.toString(event.resolutionNotes(), "");
         if (contentEn == null || contentEn.isBlank()) {
-            contentEn = "Resolution: " + event.resolutionNotes();
+            contentEn = "Resolution: " + notes;
         }
         if (excerpt == null || excerpt.isBlank()) {
-            excerpt = event.resolutionNotes().length() > 160
-                ? event.resolutionNotes().substring(0, 157) + "..."
-                : event.resolutionNotes();
+            excerpt = notes.length() > 160
+                ? notes.substring(0, 157) + "..."
+                : notes;
         }
 
         List<String> tags = tagsStr != null && !tagsStr.isBlank()
