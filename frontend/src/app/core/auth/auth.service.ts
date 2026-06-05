@@ -9,6 +9,7 @@ export class AuthService {
   readonly user = this.userSignal.asReadonly();
   readonly isAuthenticated = signal(false);
   readonly isAdmin = signal(false);
+  readonly isAgent = signal(false);
 
   constructor(private http: HttpClient) {
     this.tryRefreshToken();
@@ -54,12 +55,14 @@ export class AuthService {
     this.userSignal.set(response);
     this.isAuthenticated.set(true);
     this.isAdmin.set(response.role === 'ROLE_ADMIN');
+    this.isAgent.set(response.role === 'ROLE_AGENT' || response.role === 'ROLE_ADMIN');
   }
 
   private clearSession(): void {
     this.userSignal.set(null);
     this.isAuthenticated.set(false);
     this.isAdmin.set(false);
+    this.isAgent.set(false);
   }
 
   private tryRefreshToken(): void {

@@ -1,0 +1,167 @@
+<div class="max-w-4xl mx-auto px-4 py-6">
+
+  <!-- Loading -->
+  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500">Loading ticket details...</div>
+
+  <!-- Error -->
+  <div *ngIf="isError()" class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 mb-4">
+    Failed to load ticket details.
+    <button (click)="ngOnInit()" class="ml-2 underline">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !isError() && ticket() as t">
+    <!-- Header -->
+    <div class="mb-6">
+      <a routerLink="/agent/tickets" class="text-sm text-blue-600 hover:underline mb-2 inline-block">&larr; Back to Queue</a>
+      <div class="flex items-center gap-3 flex-wrap">
+        <h1 class="text-2xl font-bold text-slate-800 font-mono">{{ t.ticketNumber }}</h1>
+        <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="statusBadgeClass(t.status)">
+          {{ statusLabels[t.status] || t.status }}
+        </span>
+        <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="categoryBadgeClass(t.category)">
+          {{ categoryLabels[t.category] || t.category }}
+        </span>
+        <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="urgencyBadgeClass(t.urgency)">
+          {{ urgencyLabels[t.urgency] || t.urgency }}
+        </span>
+      </div>
+      <div class="mt-1 text-sm text-slate-500">
+        {{ t.assignedToDisplayName ? 'Assigned to ' + t.assignedToDisplayName : 'Unassigned' }}
+        &middot; Opened by {{ t.userDisplayName }} ({{ t.userEmail }})
+      </div>
+    </div>
+
+    <!-- Shift-Left Context (collapsible) -->
+    <div class="bg-white rounded-lg border border-slate-200 mb-4 overflow-hidden">
+      <button
+        (click)="contextExpanded.set(!contextExpanded())"
+        class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+      >
+        <span>Shift-Left Context</span>
+        <span>{{ contextExpanded() ? '▼' : '▶' }}</span>
+      </button>
+      <div *ngIf="contextExpanded()" class="px-4 pb-4 space-y-3">
+        <div>
+          <h3 class="text-xs font-medium text-slate-500 uppercase mb-1">Issue</h3>
+          <p class="text-sm text-slate-700 whitespace-pre-wrap">{{ t.issue }}</p>
+        </div>
+        <div *ngIf="t.shiftLeftContext">
+          <button
+            (click)="transcriptExpanded.set(!transcriptExpanded())"
+            class="text-xs font-medium text-blue-600 hover:underline"
+          >
+            {{ transcriptExpanded() ? '▼' : '▶' }} Chat Transcript
+          </button>
+          <div *ngIf="transcriptExpanded()" class="mt-2 text-sm text-slate-600">
+            <pre class="whitespace-pre-wrap font-sans">{{ t.shiftLeftContext }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work Notes Timeline -->
+    <div class="bg-white rounded-lg border border-slate-200 mb-4 overflow-hidden">
+      <div class="px-4 py-3 border-b border-slate-100">
+        <h2 class="text-sm font-medium text-slate-700">Work Notes</h2>
+      </div>
+      <div class="px-4 py-3 space-y-3 max-h-80 overflow-y-auto">
+        <div *ngFor="let note of workNotes()" class="border-b border-slate-50 pb-3 last:border-0">
+          <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <span class="font-medium text-slate-700">{{ note.authorDisplayName }}</span>
+            <span>{{ note.createdAt | date:'medium' }}</span>
+          </div>
+          <p class="text-sm text-slate-700 whitespace-pre-wrap">{{ note.content }}</p>
+        </div>
+        <div *ngIf="workNotes().length === 0" class="text-sm text-slate-400 text-center py-4">
+          No work notes yet.
+        </div>
+      </div>
+      <!-- Add work note (visible when IN_PROGRESS) -->
+      <div *ngIf="canResolve" class="border-t border-slate-100 px-4 py-3">
+        <textarea
+          [(ngModel)]="newWorkNote"
+          placeholder="Add a work note..."
+          rows="2"
+          class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 resize-none"
+        ></textarea>
+        <button
+          (click)="addWorkNote()"
+          [disabled]="isSubmittingNote() || !newWorkNote().trim()"
+          class="mt-2 text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {{ isSubmittingNote() ? 'Adding...' : 'Add Note' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Resolution Form (visible when IN_PROGRESS) -->
+    <div *ngIf="canResolve" class="bg-white rounded-lg border border-slate-200 mb-4 overflow-hidden">
+      <div class="px-4 py-3 border-b border-slate-100">
+        <h2 class="text-sm font-medium text-slate-700">Resolution</h2>
+      </div>
+      <div class="px-4 py-3 space-y-3">
+        <textarea
+          [(ngModel)]="resolutionNotes"
+          placeholder="Describe the resolution steps..."
+          rows="3"
+          class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 resize-none"
+        ></textarea>
+        <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+          <input type="checkbox" [(ngModel)]="isKnowledgeGap" class="rounded border-slate-300" />
+          Flag as Knowledge Gap
+        </label>
+        <button
+          (click)="openResolveConfirm()"
+          [disabled]="isResolving() || !resolutionNotes().trim()"
+          class="bg-green-600 text-white px-4 py-1.5 text-sm rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+        >
+          {{ isResolving() ? 'Resolving...' : 'Resolve Ticket' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Resolved state -->
+    <div *ngIf="t.status === 'RESOLVED'" class="bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+      <p class="text-sm text-green-700">
+        Resolved by {{ t.resolvedByDisplayName || 'Unknown' }}
+        <span *ngIf="t.resolvedAt">on {{ t.resolvedAt | date:'medium' }}</span>
+      </p>
+      <p *ngIf="t.isKnowledgeGap" class="text-xs text-green-600 mt-1 font-medium">
+        Flagged as Knowledge Gap
+      </p>
+      <p *ngIf="t.resolutionNotes" class="text-sm text-green-800 mt-2 whitespace-pre-wrap">
+        {{ t.resolutionNotes }}
+      </p>
+    </div>
+
+    <!-- Cancelled state -->
+    <div *ngIf="t.status === 'CANCELLED'" class="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+      <p class="text-sm text-gray-600">Cancelled by user</p>
+      <p *ngIf="t.cancelReason" class="text-sm text-gray-600 mt-1">{{ t.cancelReason }}</p>
+    </div>
+
+    <!-- Resolve confirmation modal -->
+    <div
+      *ngIf="resolveConfirmOpen()"
+      class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+        <p class="text-sm text-slate-700 mb-4">Confirm resolution for {{ t.ticketNumber }}?</p>
+        <div class="flex gap-2 justify-end">
+          <button
+            (click)="cancelResolveConfirm()"
+            class="px-4 py-1.5 text-sm text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50"
+          >
+            Cancel
+          </button>
+          <button
+            (click)="confirmResolve()"
+            class="px-4 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
