@@ -155,9 +155,9 @@ Plans:
 | 3 | 06-03 | Frontend Admin KCS UI — draft queue table, approve/reject, nav badge, routes |
 
 Plans:
-- [ ] 06-01 — Backend Foundation: Article entity sourceTicketId field, AsyncConfig, TicketResolvedEvent event record, AgentTicketService event publishing
-- [ ] 06-02 — KCS Core Backend: KcsDraftingService (AI synthesis + dedup + article creation), KcsEventListener (async listener with 3x retry), AdminKcsController (list/approve/reject/pending-count), work note auto-generation
-- [ ] 06-03 — Frontend Admin UI: KcsDraftListComponent with table + approve/reject actions, KcsDraftService, nav link with pending count badge, route wiring, EN/FR translations
+- [x] 06-01 — Backend Foundation: Article entity sourceTicketId field, AsyncConfig, TicketResolvedEvent event record, AgentTicketService event publishing
+- [x] 06-02 — KCS Core Backend: KcsDraftingService (AI synthesis + dedup + article creation), KcsEventListener (async listener with 3x retry), AdminKcsController (list/approve/reject/pending-count), work note auto-generation
+- [x] 06-03 — Frontend Admin UI: KcsDraftListComponent with table + approve/reject actions, KcsDraftService, nav link with pending count badge, route wiring, EN/FR translations
 
 ---
 
