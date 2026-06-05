@@ -24,6 +24,12 @@ export class RegisterComponent {
   isLoading = false;
   showPasswordRules = false;
 
+  constructor() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/chat']);
+    }
+  }
+
   get passwordValid(): boolean {
     return (
       this.password.length >= 8 &&

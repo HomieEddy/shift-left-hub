@@ -22,6 +22,12 @@ export class LoginComponent {
   errorMessage = '';
   isLoading = false;
 
+  constructor() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/chat']);
+    }
+  }
+
   onSubmit(): void {
     this.errorMessage = '';
     this.isLoading = true;
