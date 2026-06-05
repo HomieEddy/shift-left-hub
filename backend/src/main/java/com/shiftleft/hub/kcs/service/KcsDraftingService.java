@@ -138,7 +138,11 @@ public class KcsDraftingService {
             for (Document doc : docs) {
                 String articleIdStr = (String) doc.getMetadata().get("articleId");
                 if (articleIdStr != null) {
-                    duplicates.add(UUID.fromString(articleIdStr));
+                    try {
+                        duplicates.add(UUID.fromString(articleIdStr));
+                    } catch (IllegalArgumentException e) {
+                        log.warn("Malformed articleId in vector store metadata: {}", articleIdStr);
+                    }
                 }
             }
         } catch (Exception e) {
