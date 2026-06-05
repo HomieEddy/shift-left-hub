@@ -273,21 +273,27 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     }
 
     private String extractField(String response, String fieldName) {
+        // Normalize line endings to handle cross-platform LLM output (WR-04)
+        String normalized = response.replace("\r\n", "\n");
         String prefix = fieldName + ":";
-        int start = response.indexOf(prefix);
+        int start = normalized.indexOf(prefix);
         if (start == -1) return null;
         start += prefix.length();
+        // Skip past the newline after the field name prefix to get content start
+        if (start < normalized.length() && normalized.charAt(start) == '\n') {
+            start++;
+        }
 
-        // Find the next field marker or end of string
-        int end = response.length();
+        // Find the next field marker — search for "\n" + marker at line start
+        int end = normalized.length();
         String[] markers = {"title_en:", "title_fr:", "excerpt:", "content_en:", "content_fr:", "suggested_tags:"};
         for (String marker : markers) {
             if (marker.equals(fieldName + ":")) continue;
-            int idx = response.indexOf("\n" + marker, start);
+            int idx = normalized.indexOf("\n" + marker, start);
             if (idx != -1 && idx < end) end = idx;
         }
 
-        String value = response.substring(start, end).trim();
+        String value = normalized.substring(start, end).trim();
         // Remove markdown code fences if present
         value = value.replaceAll("```\\w*", "").trim();
         return value;
