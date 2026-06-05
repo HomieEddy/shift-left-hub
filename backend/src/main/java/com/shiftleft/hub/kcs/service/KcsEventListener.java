@@ -120,14 +120,20 @@ public class KcsEventListener {
 
     /** Determines if an exception is likely LLM-related and retryable. */
     private boolean isLikelyLlmError(Throwable e) {
+        // Spring AI transient exceptions are always retryable
+        if (e instanceof org.springframework.ai.retry.TransientAiException) {
+            return true;
+        }
+        // Non-transient AI exceptions are not retryable
+        if (e instanceof org.springframework.ai.retry.NonTransientAiException) {
+            return false;
+        }
+        // Fallback: check message for LLM-specific error patterns
         String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
         return msg.contains("timeout")
-            || msg.contains("unreachable")
-            || msg.contains("connection refused")
-            || msg.contains("5")
-            || msg.contains("server error")
             || msg.contains("too many requests")
-            || msg.contains("rate limit");
+            || msg.contains("rate limit")
+            || msg.contains("server error");
     }
 
     /**
