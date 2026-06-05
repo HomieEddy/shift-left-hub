@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe, NgClass } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -116,20 +116,13 @@ export class AgentTicketDetailComponent implements OnInit {
     this.resolveConfirmOpen.set(false);
   }
 
-  get isAssignedToMe(): boolean {
+  canResolve = computed(() => {
     const t = this.ticket();
-    const userEmail = this.authService.user()?.email;
-    return t !== null && userEmail !== null && t.assignedToId !== null;
-  }
-
-  get canResolve(): boolean {
-    const t = this.ticket();
-    return t !== null && t.status === 'IN_PROGRESS';
-  }
-
-  get isAdmin(): boolean {
-    return this.authService.isAdmin();
-  }
+    const userId = this.authService.user()?.userId;
+    if (!t || !userId) return false;
+    if (t.status !== 'IN_PROGRESS') return false;
+    return t.assignedToId === userId || this.authService.isAdmin();
+  });
 
   statusLabels: Record<string, string> = {
     'NEW': 'New',
