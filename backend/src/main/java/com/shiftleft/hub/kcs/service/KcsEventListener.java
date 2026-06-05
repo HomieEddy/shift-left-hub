@@ -54,7 +54,7 @@ public class KcsEventListener {
             User systemUser = getOrCreateSystemUser();
 
             // Attempt drafting with retries (D-25)
-            var article = draftWithRetry(event, systemUser, 1);
+            var article = draftWithRetry(event, systemUser);
 
             // On success: add auto-generated work note to source ticket (D-23)
             Ticket ticket = ticketRepository.findById(event.ticketId()).orElse(null);
@@ -81,36 +81,41 @@ public class KcsEventListener {
 
     /**
      * Attempts LLM-based drafting with exponential backoff retries.
+     * Uses an iterative loop instead of recursion to avoid blocking
+     * the limited async thread pool with recursive call chains.
      * Only retries on LLM-related failures (timeout, generation error).
      * Non-LLM errors (DB constraint, invalid state) throw KcsDraftingException immediately.
      */
     private com.shiftleft.hub.article.domain.Article draftWithRetry(
-            TicketResolvedEvent event, User systemUser, int attempt) {
-        try {
-            return draftingService.draftArticle(event, systemUser);
-        } catch (Exception e) {
-            boolean isRetryable = isLikelyLlmError(e);
-            if (isRetryable && attempt < MAX_RETRIES) {
-                long backoff = BASE_BACKOFF_MS * (long) Math.pow(2, attempt - 1);
-                log.warn("KCS draft attempt {} failed for ticket {}, retrying in {}ms: {}",
-                    attempt, event.ticketNumber(), backoff, e.getMessage());
-                try {
-                    Thread.sleep(backoff);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    throw new KcsDraftingException("Retry interrupted", ie);
+            TicketResolvedEvent event, User systemUser) {
+        Exception lastException = null;
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                return draftingService.draftArticle(event, systemUser);
+            } catch (Exception e) {
+                lastException = e;
+                boolean isRetryable = isLikelyLlmError(e);
+                if (!isRetryable) {
+                    // Non-retryable (D-27)
+                    throw new KcsDraftingException(
+                        "Non-retryable KCS drafting error: " + e.getMessage(), e);
                 }
-                return draftWithRetry(event, systemUser, attempt + 1);
-            } else if (isRetryable) {
-                // Exhausted retries (D-26)
-                throw new RuntimeException(
-                    "KCS drafting failed after " + MAX_RETRIES + " attempts", e);
-            } else {
-                // Non-retryable (D-27)
-                throw new KcsDraftingException(
-                    "Non-retryable KCS drafting error: " + e.getMessage(), e);
+                if (attempt < MAX_RETRIES) {
+                    long backoff = BASE_BACKOFF_MS * (long) Math.pow(2, attempt - 1);
+                    log.warn("KCS draft attempt {} failed for ticket {}, retrying in {}ms: {}",
+                        attempt, event.ticketNumber(), backoff, e.getMessage());
+                    try {
+                        Thread.sleep(backoff);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new KcsDraftingException("Retry interrupted", ie);
+                    }
+                }
             }
         }
+        // Exhausted retries (D-26)
+        throw new RuntimeException(
+            "KCS drafting failed after " + MAX_RETRIES + " attempts", lastException);
     }
 
     /** Determines if an exception is likely LLM-related and retryable. */
