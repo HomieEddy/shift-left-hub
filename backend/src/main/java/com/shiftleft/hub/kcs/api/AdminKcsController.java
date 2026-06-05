@@ -5,7 +5,6 @@ import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.article.service.ArticleService;
 import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
-import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.ticket.domain.TicketRepository;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,7 +54,7 @@ public class AdminKcsController {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new com.shiftleft.hub.article.domain.ArticleNotFoundException(id));
         if (article.getSourceTicketId() == null) {
-            throw new IllegalArgumentException("Article " + id + " is not a KCS draft");
+            throw new com.shiftleft.hub.article.domain.ArticleNotFoundException(id);
         }
         return enrichDraftResponse(article);
     }
