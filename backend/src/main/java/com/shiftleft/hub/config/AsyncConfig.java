@@ -10,7 +10,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * Async execution configuration for fire-and-forget event processing.
  * <p>Enables Spring's {@code @Async} support and provides a dedicated
  * task executor for KCS drafting and other background operations.
- * Uses virtual threads when available (Spring Boot 4.x + Java 21).</p>
+ * Uses a ThreadPoolTaskExecutor backed by platform threads.</p>
  */
 @Configuration
 @EnableAsync
