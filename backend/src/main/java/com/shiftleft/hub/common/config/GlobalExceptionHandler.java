@@ -1,6 +1,7 @@
 package com.shiftleft.hub.common.config;
 
 import com.shiftleft.hub.common.DuplicateEmailException;
+import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.user.domain.UserNotFoundException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -51,6 +52,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleTicketNotFound(
             com.shiftleft.hub.ticket.domain.TicketNotFoundException ex) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(KcsDraftingException.class)
+    public ResponseEntity<Map<String, Object>> handleKcsDraftingError(
+            KcsDraftingException ex) {
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)
