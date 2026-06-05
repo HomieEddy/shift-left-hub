@@ -84,7 +84,7 @@ public class AgentTicketService {
             .author(agent)
             .content(content)
             .build();
-        note = workNoteRepository.save(note);
+        note = workNoteRepository.saveAndFlush(note);
         log.info("Work note added to ticket {} by {}", ticket.getTicketNumber(), agentEmail);
         return WorkNoteResponse.from(note);
     }
