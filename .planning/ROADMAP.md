@@ -146,11 +146,18 @@ Plans:
 3. Duplicate detection prevents creating articles that already exist in the KB
 4. Admin can view article drafts, edit content, and approve or reject them
 
-**Plans:**
-1. Implement event-driven KCS pipeline with Spring ApplicationEventPublisher
-2. Build AI synthesis service: ticket timeline → LLM prompt → markdown draft → dedup check
-3. Build Angular admin draft queue: pending drafts list with source ticket link
-4. Build article editor UI for reviewing/editing/publishing drafts
+**Plans:** 3 plans in 3 waves
+
+| Wave | Plans | Objective |
+|------|-------|-----------|
+| 1 | 06-01 | Backend Foundation — sourceTicketId, @EnableAsync, TicketResolvedEvent, event wiring |
+| 2 | 06-02 | KCS Drafting Engine + Admin API — AI synthesis, dedup, async listener, controller |
+| 3 | 06-03 | Frontend Admin KCS UI — draft queue table, approve/reject, nav badge, routes |
+
+Plans:
+- [ ] 06-01 — Backend Foundation: Article entity sourceTicketId field, AsyncConfig, TicketResolvedEvent event record, AgentTicketService event publishing
+- [ ] 06-02 — KCS Core Backend: KcsDraftingService (AI synthesis + dedup + article creation), KcsEventListener (async listener with 3x retry), AdminKcsController (list/approve/reject/pending-count), work note auto-generation
+- [ ] 06-03 — Frontend Admin UI: KcsDraftListComponent with table + approve/reject actions, KcsDraftService, nav link with pending count badge, route wiring, EN/FR translations
 
 ---
 

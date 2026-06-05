@@ -7,11 +7,11 @@ last_updated: "2026-06-04T21:30:00.000Z"
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 24
+  total_plans: 27
   completed_plans: 24
-  current_phase: 5
-  current_phase_name: "Agent Dashboard"
-  current_focus: "Phase 5 complete — Agent Dashboard executed"
+  current_phase: 6
+  current_phase_name: "KCS Auto-Drafting & Admin Review"
+  current_focus: "Phase 6 planned — 3 plans in 3 waves ready for execution"
 ---
 
 # Project State
@@ -29,19 +29,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 ## Current Phase
 
-- **Phase:** 5 — Agent Dashboard
-- **Status:** ✓ Complete (4 plans, 3 waves)
+- **Phase:** 6 — KCS Auto-Drafting & Admin Review
+- **Status:** ○ Planned (3 plans, 3 waves)
 
-## Completed Plans
+## Phase 6 Plans
 
-### Phase 5: Agent Dashboard
-
-| Plan | Name | Summary | Commits |
-|------|------|---------|---------|
-| 05-01 | Backend Entity Extensions | ROLE_AGENT enum, Ticket fields (assignedTo, resolvedBy, resolutionNotes, isKnowledgeGap), WorkNote entity+repo, SecurityConfig route protection | `56bc085`, `93a4167`, `f06ec3e` |
-| 05-02 | Backend Agent API | AgentTicketController (6 endpoints), AgentTicketService, DTOs for list/detail/claim/work-notes/resolve | `2b17ad3` |
-| 05-03 | Frontend Agent Dashboard | AgentTicketListComponent with status tabs, category/urgency dropdowns, debounced search, claim action, routing, nav link, auth signals | `ddd9a0c` |
-| 05-04 | Frontend Ticket Detail | AgentTicketDetailComponent with shift-left context, work notes timeline, resolution form, KCS flag, confirmation modal | `ddd9a0c` |
+| Plan | Name | Objective | Wave |
+|------|------|-----------|------|
+| 06-01 | Backend Foundation | Article entity sourceTicketId, @EnableAsync, TicketResolvedEvent, event wiring | 1 |
+| 06-02 | KCS Drafting Engine + Admin API | AI synthesis, dedup, async listener with retry, admin controller (list/approve/reject) | 2 |
+| 06-03 | Frontend Admin KCS UI | Draft queue table, approve/reject actions, nav badge, routes, EN/FR translations | 3 |
 
 ### Phase 4: Escalation & Ticketing
 
@@ -88,7 +85,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 3 | AI Self-Service Portal | ✓ Complete (4/4 plans) |
 | 4 | Escalation & Ticketing | ✓ Complete (4/4 plans) |
 | 5 | Agent Dashboard | ✓ Complete (4/4 plans) |
-| 6 | KCS Auto-Drafting & Admin Review | ○ Pending |
+| 6 | KCS Auto-Drafting & Admin Review | ○ Planned (3 plans) |
 | 7 | Quality, Polish & DevOps | ○ Pending |
 
 ## Key Decisions
@@ -140,9 +137,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 ## Next Steps
 
 1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves) ✓ Shipped (PR #5)
-2. Phase 6 (KCS Auto-Drafting & Admin Review) — next to plan/execute
-3. Phase 7 (Quality, Polish & DevOps) — final phase
+2. ✅ **Phase 6 planned** — 3 plans in 3 waves (Backend Foundation → Drafting Engine → Frontend UI)
+3. **Next: `/gsd-execute-phase 06-kcs-auto-drafting-admin-review`**
+4. Phase 7 (Quality, Polish & DevOps) — final phase
 
 ---
 
-*Last updated: 2026-06-05 after Phase 5 shipped (PR #5)*
+*Last updated: 2026-06-05 after Phase 6 planning*
