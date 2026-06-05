@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KcsDraftService } from '../kcs-draft.service';
 import { KcsDraft } from '../kcs-draft.model';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 
 @Component({
   selector: 'app-kcs-draft-list',
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, RouterLink],
+  imports: [NgFor, NgIf, DatePipe, RouterLink, ModalComponent],
   templateUrl: './kcs-draft-list.component.html',
 })
 export class KcsDraftListComponent implements OnInit {
@@ -22,6 +23,8 @@ export class KcsDraftListComponent implements OnInit {
   currentPage = signal(0);
   totalPages = signal(0);
   actionLoading = signal<string | null>(null); // tracks which draft ID is being processed
+  confirmModalOpen = signal(false);
+  pendingAction = signal<{ type: 'approve' | 'reject'; id: string; title: string } | null>(null);
 
   ngOnInit(): void {
     this.loadDrafts();
@@ -45,48 +48,46 @@ export class KcsDraftListComponent implements OnInit {
     });
   }
 
-  approveDraft(id: string): void {
-    if (!confirm('Approve this draft? It will be published immediately.')) {
-      return;
-    }
-    this.actionLoading.set(id);
+  requestApprove(draft: KcsDraft): void {
+    this.pendingAction.set({ type: 'approve', id: draft.id, title: draft.titleEn });
+    this.confirmModalOpen.set(true);
+  }
+
+  requestReject(draft: KcsDraft): void {
+    this.pendingAction.set({ type: 'reject', id: draft.id, title: draft.titleEn });
+    this.confirmModalOpen.set(true);
+  }
+
+  executePendingAction(): void {
+    const action = this.pendingAction();
+    if (!action) return;
+    this.confirmModalOpen.set(false);
+    this.actionLoading.set(action.id);
     this.errorMessage.set('');
     this.successMessage.set('');
-    this.kcsDraftService.approveDraft(id).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
+    const request$ = action.type === 'approve'
+      ? this.kcsDraftService.approveDraft(action.id)
+      : this.kcsDraftService.rejectDraft(action.id);
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.successMessage.set('Draft approved and published.');
+        this.successMessage.set(action.type === 'approve'
+          ? 'Draft approved and published.' : 'Draft rejected and archived.');
         this.actionLoading.set(null);
+        this.pendingAction.set(null);
         this.loadDrafts();
       },
       error: () => {
-        this.errorMessage.set('Failed to approve draft.');
+        this.errorMessage.set(action.type === 'approve'
+          ? 'Failed to approve draft.' : 'Failed to reject draft.');
         this.actionLoading.set(null);
+        this.pendingAction.set(null);
       },
     });
   }
 
-  rejectDraft(id: string): void {
-    if (!confirm('Reject this draft? It will be archived.')) {
-      return;
-    }
-    this.actionLoading.set(id);
-    this.errorMessage.set('');
-    this.successMessage.set('');
-    this.kcsDraftService.rejectDraft(id).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: () => {
-        this.successMessage.set('Draft rejected and archived.');
-        this.actionLoading.set(null);
-        this.loadDrafts();
-      },
-      error: () => {
-        this.errorMessage.set('Failed to reject draft.');
-        this.actionLoading.set(null);
-      },
-    });
+  cancelAction(): void {
+    this.confirmModalOpen.set(false);
+    this.pendingAction.set(null);
   }
 
   changePage(page: number): void {
