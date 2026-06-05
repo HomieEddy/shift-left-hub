@@ -45,8 +45,8 @@ export class UserListComponent implements OnInit {
 
   get sortedUsers(): UserDto[] {
     const sorted = [...this.users()].sort((a, b) => {
-      let aVal: any = (a as any)[this.sortField];
-      let bVal: any = (b as any)[this.sortField];
+      let aVal = a[this.sortField];
+      let bVal = b[this.sortField];
       if (typeof aVal === 'string') aVal = aVal.toLowerCase();
       if (typeof bVal === 'string') bVal = bVal.toLowerCase();
       if (aVal < bVal) return this.sortDir === 'asc' ? -1 : 1;
