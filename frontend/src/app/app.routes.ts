@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
 
+/** Application route configuration with lazy-loaded feature modules. */
 export const routes: Routes = [
   {
     path: '',
@@ -42,6 +43,16 @@ export const routes: Routes = [
   {
     path: 'admin/settings/llm',
     loadComponent: () => import('./features/admin/llm-settings/llm-settings.component').then(m => m.LlmSettingsComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'agent/tickets',
+    loadComponent: () => import('./features/agent/agent-ticket-list/agent-ticket-list.component').then(m => m.AgentTicketListComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'agent/tickets/:id',
+    loadComponent: () => import('./features/agent/agent-ticket-detail/agent-ticket-detail.component').then(m => m.AgentTicketDetailComponent),
     canActivate: [authGuard],
   },
   {

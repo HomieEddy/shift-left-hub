@@ -10,7 +10,7 @@
 | 2 | Knowledge Base | Article CRUD + FTS + tags + bilingual EN/FR | KB-01-05, ADM-04 | ✓ 4 |
 | 3 | AI Self-Service Portal | Conversational chat + RAG + SSE streaming | AI-01-06, INF-04 | ✓ 4 |
 | 4 | Escalation & Ticketing | Contextual ticket creation | TKT-01-04 | 3 |
-| 5 | Agent Dashboard | Prioritized ticket queue + resolution + KCS flag | AGT-01-05 | 4 |
+| 5 | Agent Dashboard | ✓ Prioritized ticket queue + resolution + KCS flag | AGT-01-05 | 4/4 |
 | 6 | KCS Auto-Drafting & Admin Review | Event-driven drafting + dedup + review queue | KCS-01-04, ADM-01-02 | 4 |
 | 7 | Quality, Polish & DevOps | Healthchecks + i18n verify + testing | (polish phase) | 3 |
 
@@ -127,10 +127,10 @@ Plans:
 4. Agent can add resolution notes, flag as Knowledge Gap, and close the ticket
 
 **Plans:**
-1. Build Angular Agent Dashboard: prioritized ticket list with filtering, list animation reordering
-2. Build ticket detail view with shift-left context display
-3. Implement resolution form with Knowledge Gap checkbox
-4. Implement ticket resolution API endpoint
+1. ✅ Build Angular Agent Dashboard: prioritized ticket list with filtering, server-side search
+2. ✅ Build ticket detail view with shift-left context display, work notes timeline
+3. ✅ Implement resolution form with Knowledge Gap checkbox
+4. ✅ Implement ticket resolution API endpoint
 
 ---
 

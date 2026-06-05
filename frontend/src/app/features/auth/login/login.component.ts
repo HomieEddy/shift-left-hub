@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { NgIf } from '@angular/common';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
+/** Login form with email/password authentication. */
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -27,7 +28,7 @@ export class LoginComponent {
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
-        this.router.navigate(['/admin/users']);
+        this.router.navigate(['/articles']);
       },
       error: (err) => {
         this.isLoading = false;

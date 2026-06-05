@@ -3,36 +3,45 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-04T06:35:00.000Z"
+last_updated: "2026-06-04T21:30:00.000Z"
 progress:
   total_phases: 7
-  completed_phases: 4
-  total_plans: 20
-  completed_plans: 20
+  completed_phases: 5
+  total_plans: 24
+  completed_plans: 24
   current_phase: 5
   current_phase_name: "Agent Dashboard"
-  current_focus: "Phase 5 planned — 4 plans ready for execution"
+  current_focus: "Phase 5 complete — Agent Dashboard executed"
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** Phase 5 Planning Complete
+**Status:** Phase 5 Execution Complete
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
-**Current focus:** Phase 5 planned — 4 plans across 3 waves, ready for execution
+**Current focus:** Phase 5 complete — Agent Dashboard executed
 
 ## Current Phase
 
 - **Phase:** 5 — Agent Dashboard
-- **Status:** ⏳ Planned (4 plans, 3 waves — not yet started)
+- **Status:** ✓ Complete (4 plans, 3 waves)
 
 ## Completed Plans
+
+### Phase 5: Agent Dashboard
+
+| Plan | Name | Summary | Commits |
+|------|------|---------|---------|
+| 05-01 | Backend Entity Extensions | ROLE_AGENT enum, Ticket fields (assignedTo, resolvedBy, resolutionNotes, isKnowledgeGap), WorkNote entity+repo, SecurityConfig route protection | `56bc085`, `93a4167`, `f06ec3e` |
+| 05-02 | Backend Agent API | AgentTicketController (6 endpoints), AgentTicketService, DTOs for list/detail/claim/work-notes/resolve | `2b17ad3` |
+| 05-03 | Frontend Agent Dashboard | AgentTicketListComponent with status tabs, category/urgency dropdowns, debounced search, claim action, routing, nav link, auth signals | `ddd9a0c` |
+| 05-04 | Frontend Ticket Detail | AgentTicketDetailComponent with shift-left context, work notes timeline, resolution form, KCS flag, confirmation modal | `ddd9a0c` |
 
 ### Phase 4: Escalation & Ticketing
 
@@ -78,7 +87,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 2 | Knowledge Base | ✓ Complete (4/4 plans) |
 | 3 | AI Self-Service Portal | ✓ Complete (4/4 plans) |
 | 4 | Escalation & Ticketing | ✓ Complete (4/4 plans) |
-| 5 | Agent Dashboard | ○ Pending |
+| 5 | Agent Dashboard | ✓ Complete (4/4 plans) |
 | 6 | KCS Auto-Drafting & Admin Review | ○ Pending |
 | 7 | Quality, Polish & DevOps | ○ Pending |
 
@@ -122,13 +131,18 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 - **TKT-02**: Escalation creates a ticket pre-filled with the user's issue and full AI chat transcript ✓
 - **TKT-03**: User selects category and urgency ✓
 - **TKT-04**: Ticket status tracks through NEW → IN_PROGRESS → RESOLVED ✓
+- **AGT-01**: IT agent can view a prioritized list of all tickets ✓
+- **AGT-02**: Agent can filter tickets by status, category, and urgency ✓
+- **AGT-03**: Agent can view full ticket detail including shift-left deflection context ✓
+- **AGT-04**: Agent can add resolution notes and mark ticket as resolved ✓
+- **AGT-05**: Agent can flag a resolved ticket as a "Knowledge Gap" for KCS drafting ✓
 
 ## Next Steps
 
-1. **Phase 5 planned** — Agent Dashboard ready for execution
-2. Execute Phase 5 via `/gsd-execute-phase 5`
-3. After Phase 5: Phase 6 (KCS Auto-Drafting & Admin Review)
+1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves) ✓ Shipped (PR #5)
+2. Phase 6 (KCS Auto-Drafting & Admin Review) — next to plan/execute
+3. Phase 7 (Quality, Polish & DevOps) — final phase
 
 ---
 
-*Last updated: 2026-06-04 after Phase 4 execution*
+*Last updated: 2026-06-05 after Phase 5 shipped (PR #5)*

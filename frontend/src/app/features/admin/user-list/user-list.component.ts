@@ -6,6 +6,7 @@ import { UserDto } from '../../../core/auth/auth.models';
 type SortField = 'displayName' | 'email' | 'role' | 'enabled' | 'createdAt';
 type SortDir = 'asc' | 'desc';
 
+/** Admin user management: list, sort, edit roles, and toggle status. */
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -27,6 +28,7 @@ export class UserListComponent implements OnInit {
     this.loadUsers();
   }
 
+  /** Fetch all users from the API. */
   loadUsers(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -43,10 +45,11 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  /** Users sorted by the current field and direction. */
   get sortedUsers(): UserDto[] {
     const sorted = [...this.users()].sort((a, b) => {
-      let aVal: any = (a as any)[this.sortField];
-      let bVal: any = (b as any)[this.sortField];
+      let aVal = a[this.sortField];
+      let bVal = b[this.sortField];
       if (typeof aVal === 'string') aVal = aVal.toLowerCase();
       if (typeof bVal === 'string') bVal = bVal.toLowerCase();
       if (aVal < bVal) return this.sortDir === 'asc' ? -1 : 1;
@@ -56,6 +59,7 @@ export class UserListComponent implements OnInit {
     return sorted;
   }
 
+  /** Set or toggle a sort field. */
   setSort(field: SortField): void {
     if (this.sortField === field) {
       this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
@@ -65,21 +69,25 @@ export class UserListComponent implements OnInit {
     }
   }
 
+  /** Return sort arrow indicator for the given field. */
   sortIndicator(field: SortField): string {
     if (this.sortField !== field) return '';
     return this.sortDir === 'asc' ? ' ▲' : ' ▼';
   }
 
+  /** Open the role-editing dialog for a user. */
   openRoleDialog(user: UserDto): void {
     this.editingUser.set(user);
     this.showRoleDialog.set(true);
   }
 
+  /** Close the role-editing dialog. */
   closeRoleDialog(): void {
     this.showRoleDialog.set(false);
     this.editingUser.set(null);
   }
 
+  /** Update the selected user's role via the API. */
   updateRole(newRole: string): void {
     const user = this.editingUser();
     if (!user) return;
@@ -96,6 +104,7 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  /** Toggle a user's enabled/disabled status via the API. */
   toggleStatus(user: UserDto): void {
     this.authService.toggleUserStatus(user.id).subscribe({
       next: (updated) => {
@@ -107,6 +116,7 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  /** Format an ISO date string for display. */
   formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString();
   }

@@ -39,6 +39,14 @@
             AI Settings
           </a>
           <a
+            *ngIf="authService.isAuthenticated() && (authService.isAdmin() || authService.isAgent())"
+            routerLink="/agent/tickets"
+            routerLinkActive="text-blue-600 font-medium"
+            class="text-slate-600 hover:text-slate-800 transition-colors"
+          >
+            Ticket Queue
+          </a>
+          <a
             *ngIf="authService.isAuthenticated()"
             routerLink="/chat"
             routerLinkActive="text-blue-600 font-medium"

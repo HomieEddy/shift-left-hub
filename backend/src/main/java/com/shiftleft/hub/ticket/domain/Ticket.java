@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,6 +25,13 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * JPA entity representing a support ticket.
+ * <p>Tickets track end-user issues through their lifecycle from
+ * creation ({@code NEW}) through agent assignment ({@code IN_PROGRESS})
+ * to resolution ({@code RESOLVED}) or cancellation ({@code CANCELLED}).
+ * Each ticket is associated with a user and may be assigned to an agent.</p>
+ */
 @Entity
 @Table(name = "ticket")
 @Getter
@@ -62,6 +70,21 @@ public class Ticket {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "shift_left_context", columnDefinition = "JSONB")
     private String shiftLeftContext;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to_id")
+    private User assignedTo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resolved_by_id")
+    private User resolvedBy;
+
+    @Column(name = "resolution_notes", columnDefinition = "TEXT")
+    private String resolutionNotes;
+
+    @Column(name = "is_knowledge_gap", columnDefinition = "boolean default false")
+    @Builder.Default
+    private boolean isKnowledgeGap = false;
 
     @Column(name = "resolved_at")
     private LocalDateTime resolvedAt;
