@@ -139,6 +139,29 @@ public class AdminKcsController {
         }
         // Simple check: find published articles with overlapping title keywords
         // This is intentionally lightweight — full vector dedup already ran at drafting time
-        return Set.of();
+        String keywords = article.getTitleEn().toLowerCase()
+            .replaceAll("[^a-zA-Z0-9\\s]", " ")
+            .replaceAll("\\s+", " ")
+            .trim();
+        if (keywords.isEmpty()) {
+            return Set.of();
+        }
+        try {
+            var results = articleRepository.searchByText(keywords,
+                PageRequest.of(0, 5));
+            return results.getContent().stream()
+                .map(row -> (Object[]) row)
+                .filter(row -> {
+                    UUID id = (UUID) row[0];
+                    return !id.equals(article.getId());
+                })
+                .map(row -> (String) row[1]) // title_en
+                .filter(Objects::nonNull)
+                .limit(3)
+                .collect(Collectors.toSet());
+        } catch (Exception e) {
+            log.warn("Similar article check failed: {}", e.getMessage());
+            return Set.of();
+        }
     }
 }
