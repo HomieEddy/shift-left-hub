@@ -38,7 +38,7 @@ key-files:
     - backend/src/main/java/com/shiftleft/hub/article/domain/Article.java
     - backend/src/main/java/com/shiftleft/hub/agent/service/AgentTicketService.java
 decisions:
-  - "SourcTicketId is a plain UUID column, not a @ManyToOne JPA relationship — keeps Article decoupled from Ticket module (per D-15)"
+  - "sourceTicketId is a plain UUID column, not a @ManyToOne JPA relationship — keeps Article decoupled from Ticket module (per D-15)"
   - "TicketResolvedEvent carries full ticket data to avoid extra DB queries in the async listener (per D-03)"
   - "Event publication wrapped in try-catch per T-06-01 — KCS event failure must not roll back ticket resolution"
   - "No @Builder.Default on sourceTicketId — nullable UUID should default to null (Lombok requires explicit default value for @Builder.Default)"
