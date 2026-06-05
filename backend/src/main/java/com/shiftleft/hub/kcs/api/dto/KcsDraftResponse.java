@@ -1,12 +1,10 @@
 package com.shiftleft.hub.kcs.api.dto;
 
-import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.tag.api.dto.TagResponse;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * DTO for a KCS-drafted article in the admin review queue.
@@ -37,20 +35,4 @@ public record KcsDraftResponse(
     Set<String> similarityWarnings,
     Set<TagResponse> tags,
     LocalDateTime createdAt
-) {
-    public static KcsDraftResponse from(Article article) {
-        return new KcsDraftResponse(
-            article.getId(),
-            article.getTitleEn(),
-            article.getTitleFr(),
-            article.getSlug(),
-            article.getExcerpt(),
-            article.getStatus(),
-            article.getSourceTicketId(),
-            null, // Source ticket number is resolved separately
-            Set.of(), // Similarity warnings resolved separately
-            article.getTags().stream().map(TagResponse::from).collect(Collectors.toSet()),
-            article.getCreatedAt()
-        );
-    }
-}
+) {}
