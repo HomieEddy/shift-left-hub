@@ -106,6 +106,11 @@ public class AgentTicketService {
                 "Cannot resolve ticket " + ticket.getTicketNumber() + ": status is " + ticket.getStatus());
         }
 
+        if (ticket.getAssignedTo() == null || !ticket.getAssignedTo().getId().equals(agent.getId())) {
+            throw new IllegalStateException(
+                "Ticket " + ticket.getTicketNumber() + " is assigned to another agent");
+        }
+
         ticket.setResolvedBy(agent);
         ticket.setResolutionNotes(resolutionNotes);
         ticket.setKnowledgeGap(isKnowledgeGap);
