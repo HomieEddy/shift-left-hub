@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
 
+/** Application route configuration with lazy-loaded feature modules. */
 export const routes: Routes = [
   {
     path: '',

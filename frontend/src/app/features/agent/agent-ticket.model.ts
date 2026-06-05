@@ -1,3 +1,4 @@
+/** Represents a support ticket from the agent's perspective. */
 export interface AgentTicket {
   id: string;
   ticketNumber: string;
@@ -22,6 +23,7 @@ export interface AgentTicket {
   updatedAt: string;
 }
 
+/** Represents a work note attached to a ticket. */
 export interface WorkNote {
   id: string;
   authorDisplayName: string;
@@ -29,11 +31,13 @@ export interface WorkNote {
   createdAt: string;
 }
 
+/** Request payload for resolving a ticket. */
 export interface ResolveTicketRequest {
   resolutionNotes: string;
   isKnowledgeGap: boolean;
 }
 
+/** Filters for querying the agent ticket list. */
 export interface AgentTicketFilters {
   status?: string;
   category?: string;

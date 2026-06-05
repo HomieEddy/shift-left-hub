@@ -131,13 +131,18 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 - **TKT-02**: Escalation creates a ticket pre-filled with the user's issue and full AI chat transcript ✓
 - **TKT-03**: User selects category and urgency ✓
 - **TKT-04**: Ticket status tracks through NEW → IN_PROGRESS → RESOLVED ✓
+- **AGT-01**: IT agent can view a prioritized list of all tickets ✓
+- **AGT-02**: Agent can filter tickets by status, category, and urgency ✓
+- **AGT-03**: Agent can view full ticket detail including shift-left deflection context ✓
+- **AGT-04**: Agent can add resolution notes and mark ticket as resolved ✓
+- **AGT-05**: Agent can flag a resolved ticket as a "Knowledge Gap" for KCS drafting ✓
 
 ## Next Steps
 
-1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves)
+1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves) ✓ Shipped (PR #5)
 2. Phase 6 (KCS Auto-Drafting & Admin Review) — next to plan/execute
 3. Phase 7 (Quality, Polish & DevOps) — final phase
 
 ---
 
-*Last updated: 2026-06-04 after Phase 4 execution*
+*Last updated: 2026-06-05 after Phase 5 shipped (PR #5)*

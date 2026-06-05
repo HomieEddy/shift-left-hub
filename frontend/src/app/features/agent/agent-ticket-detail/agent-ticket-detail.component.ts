@@ -12,6 +12,10 @@ import { AgentTicket, WorkNote } from '../agent-ticket.model';
   imports: [NgIf, NgFor, DatePipe, NgClass, RouterLink, FormsModule],
   templateUrl: './agent-ticket-detail.component.html',
 })
+/**
+ * Smart component that displays the detail view of a single agent ticket,
+ * including work notes, context sections, and claim/resolve actions.
+ */
 export class AgentTicketDetailComponent implements OnInit {
   private agentTicketService = inject(AgentTicketService);
   private route = inject(ActivatedRoute);
@@ -44,6 +48,7 @@ export class AgentTicketDetailComponent implements OnInit {
     }
   }
 
+  /** Loads the full ticket detail from the API. */
   loadTicket(id: string): void {
     this.isLoading.set(true);
     this.isError.set(false);
@@ -59,6 +64,7 @@ export class AgentTicketDetailComponent implements OnInit {
     });
   }
 
+  /** Loads work notes for the ticket from the API. */
   loadWorkNotes(id: string): void {
     this.agentTicketService.getWorkNotes(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (notes) => this.workNotes.set(notes),
@@ -66,6 +72,7 @@ export class AgentTicketDetailComponent implements OnInit {
     });
   }
 
+  /** Submits a new work note and refreshes the work notes list. */
   addWorkNote(): void {
     const content = this.newWorkNote().trim();
     if (!content) return;
@@ -86,6 +93,7 @@ export class AgentTicketDetailComponent implements OnInit {
     });
   }
 
+  /** Claims the current ticket for the authenticated agent. */
   claimTicket(): void {
     const ticketId = this.ticket()?.id;
     if (!ticketId) return;
@@ -103,10 +111,12 @@ export class AgentTicketDetailComponent implements OnInit {
     });
   }
 
+  /** Opens the resolve confirmation dialog. */
   openResolveConfirm(): void {
     this.resolveConfirmOpen.set(true);
   }
 
+  /** Confirms ticket resolution and submits to the API. */
   confirmResolve(): void {
     const ticketId = this.ticket()?.id;
     if (!ticketId || !this.resolutionNotes().trim()) return;
@@ -128,6 +138,7 @@ export class AgentTicketDetailComponent implements OnInit {
     });
   }
 
+  /** Cancels the resolve confirmation dialog. */
   cancelResolveConfirm(): void {
     this.resolveConfirmOpen.set(false);
   }
@@ -153,6 +164,7 @@ export class AgentTicketDetailComponent implements OnInit {
     'PERIPHERALS': 'Peripherals',
   };
 
+  /** Returns the appropriate Tailwind badge classes for a ticket status. */
   statusBadgeClass(status: string): string {
     switch (status) {
       case 'NEW': return 'bg-blue-100 text-blue-700';
@@ -163,6 +175,7 @@ export class AgentTicketDetailComponent implements OnInit {
     }
   }
 
+  /** Returns the appropriate Tailwind badge classes for an urgency level. */
   urgencyBadgeClass(urgency: string): string {
     switch (urgency) {
       case 'HIGH': return 'bg-red-100 text-red-700';
@@ -172,6 +185,7 @@ export class AgentTicketDetailComponent implements OnInit {
     }
   }
 
+  /** Returns the appropriate Tailwind badge classes for a ticket category. */
   categoryBadgeClass(category: string): string {
     switch (category) {
       case 'NETWORK': return 'bg-purple-100 text-purple-700';

@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { NgIf } from '@angular/common';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
+/** Registration form with client-side password validation. */
 @Component({
   selector: 'app-register',
   standalone: true,

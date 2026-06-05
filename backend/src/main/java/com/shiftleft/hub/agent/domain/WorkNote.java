@@ -19,6 +19,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * JPA entity representing a work note attached to a ticket.
+ * <p>Work notes are timestamped entries written by agents during ticket
+ * resolution. They are stored in the {@code work_note} table and linked
+ * to both a ticket and an author (agent).</p>
+ */
 @Entity
 @Table(name = "work_note")
 @Getter

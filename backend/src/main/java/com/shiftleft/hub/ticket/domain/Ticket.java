@@ -25,6 +25,13 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * JPA entity representing a support ticket.
+ * <p>Tickets track end-user issues through their lifecycle from
+ * creation ({@code NEW}) through agent assignment ({@code IN_PROGRESS})
+ * to resolution ({@code RESOLVED}) or cancellation ({@code CANCELLED}).
+ * Each ticket is associated with a user and may be assigned to an agent.</p>
+ */
 @Entity
 @Table(name = "ticket")
 @Getter

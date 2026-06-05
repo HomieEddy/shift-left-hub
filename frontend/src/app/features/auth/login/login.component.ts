@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { NgIf } from '@angular/common';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
+/** Login form with email/password authentication. */
 @Component({
   selector: 'app-login',
   standalone: true,

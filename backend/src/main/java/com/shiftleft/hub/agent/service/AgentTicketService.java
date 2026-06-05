@@ -22,6 +22,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service layer for agent ticket operations.
+ * <p>Handles ticket listing, claiming, work notes, and resolution workflows.
+ * All public mutating methods are {@code @Transactional} to ensure data
+ * consistency. Read operations use {@code readOnly = true} at the class level.</p>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,6 +38,15 @@ public class AgentTicketService {
     private final UserRepository userRepository;
     private final WorkNoteRepository workNoteRepository;
 
+    /**
+     * Lists tickets with optional server-side filtering.
+     *
+     * @param status   filter by ticket status (nullable)
+     * @param category filter by ticket category (nullable)
+     * @param urgency  filter by ticket urgency (nullable)
+     * @param search   full-text search on ticket number or user display name (nullable)
+     * @return sorted list of agent ticket responses
+     */
     public List<AgentTicketResponse> listTickets(
             TicketStatus status, TicketCategory category, TicketUrgency urgency, String search) {
 
@@ -47,12 +62,29 @@ public class AgentTicketService {
             .toList();
     }
 
+    /**
+     * Retrieves full ticket detail by id.
+     *
+     * @param ticketId the ticket UUID
+     * @return agent ticket response with assignment and resolution fields
+     * @throws TicketNotFoundException if ticket does not exist
+     */
     public AgentTicketResponse getTicketDetail(UUID ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId)
             .orElseThrow(() -> new TicketNotFoundException(ticketId));
         return AgentTicketResponse.from(ticket);
     }
 
+    /**
+     * Claims a NEW ticket for the given agent.
+     * <p>Transitions status from NEW to IN_PROGRESS and assigns the agent.
+     * Uses pessimistic write locking to prevent concurrent claims.</p>
+     *
+     * @param ticketId   the ticket UUID
+     * @param agentEmail email of the claiming agent
+     * @return updated ticket response
+     * @throws IllegalStateException if ticket is not in NEW status
+     */
     @Transactional
     public AgentTicketResponse claimTicket(UUID ticketId, String agentEmail) {
         User agent = getUserByEmail(agentEmail);
@@ -71,6 +103,14 @@ public class AgentTicketService {
         return AgentTicketResponse.from(ticket);
     }
 
+    /**
+     * Adds a work note to a ticket.
+     *
+     * @param ticketId   the ticket UUID
+     * @param agentEmail email of the agent adding the note
+     * @param content    the note content
+     * @return created work note response
+     */
     @Transactional
     public WorkNoteResponse addWorkNote(UUID ticketId, String agentEmail, String content) {
         User agent = getUserByEmail(agentEmail);
@@ -87,6 +127,12 @@ public class AgentTicketService {
         return WorkNoteResponse.from(note);
     }
 
+    /**
+     * Retrieves work notes for a ticket in reverse chronological order.
+     *
+     * @param ticketId the ticket UUID
+     * @return list of work note responses, newest first
+     */
     public List<WorkNoteResponse> getWorkNotes(UUID ticketId) {
         return workNoteRepository.findByTicketIdOrderByCreatedAtDesc(ticketId)
             .stream()
@@ -94,6 +140,18 @@ public class AgentTicketService {
             .toList();
     }
 
+    /**
+     * Resolves an IN_PROGRESS ticket with resolution notes.
+     * <p>Validates that the resolving agent is the one who claimed the ticket.
+     * Transitions status to RESOLVED and records the resolution timestamp.</p>
+     *
+     * @param ticketId        the ticket UUID
+     * @param agentEmail      email of the resolving agent
+     * @param resolutionNotes description of resolution steps
+     * @param isKnowledgeGap  whether this should be flagged for KCS drafting
+     * @return updated ticket response
+     * @throws IllegalStateException if ticket is not IN_PROGRESS or assigned to another agent
+     */
     @Transactional
     public AgentTicketResponse resolveTicket(UUID ticketId, String agentEmail,
             String resolutionNotes, boolean isKnowledgeGap) {

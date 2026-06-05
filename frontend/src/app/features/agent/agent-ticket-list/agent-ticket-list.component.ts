@@ -13,6 +13,10 @@ import { AgentTicket } from '../agent-ticket.model';
   imports: [NgIf, NgFor, DatePipe, NgClass, RouterLink, FormsModule],
   templateUrl: './agent-ticket-list.component.html',
 })
+/**
+ * Smart component that displays the agent ticket list with filtering,
+ * search, and claim capabilities.
+ */
 export class AgentTicketListComponent implements OnInit {
   private agentTicketService = inject(AgentTicketService);
   private router = inject(Router);
@@ -49,6 +53,7 @@ export class AgentTicketListComponent implements OnInit {
     this.loadTickets();
   }
 
+  /** Loads the ticket list from the API with current filter values. */
   loadTickets(): void {
     this.isLoading.set(true);
     this.isError.set(false);
@@ -70,28 +75,34 @@ export class AgentTicketListComponent implements OnInit {
     });
   }
 
+  /** Handles debounced search input from the search field. */
   onSearchInput(value: string): void {
     this.searchSubject.next(value);
   }
 
+  /** Changes the active status filter tab and reloads tickets. */
   changeStatusTab(status: string): void {
     this.activeStatus.set(status);
     this.loadTickets();
   }
 
+  /** Handles category filter change and reloads tickets. */
   onCategoryChange(): void {
     this.loadTickets();
   }
 
+  /** Handles urgency filter change and reloads tickets. */
   onUrgencyChange(): void {
     this.loadTickets();
   }
 
+  /** Opens the claim confirmation dialog for a ticket. */
   openClaimConfirm(id: string): void {
     this.claimingTicketId.set(id);
     this.claimConfirmOpen.set(true);
   }
 
+  /** Confirms claim and navigates to the ticket detail page. */
   confirmClaim(): void {
     const id = this.claimingTicketId();
     if (!id) return;
@@ -103,6 +114,7 @@ export class AgentTicketListComponent implements OnInit {
     });
   }
 
+  /** Cancels the claim confirmation dialog. */
   cancelClaim(): void {
     this.claimConfirmOpen.set(false);
     this.claimingTicketId.set(null);
@@ -129,6 +141,7 @@ export class AgentTicketListComponent implements OnInit {
     'PERIPHERALS': 'Peripherals',
   };
 
+  /** Returns the appropriate Tailwind badge classes for a ticket status. */
   statusBadgeClass(status: string): string {
     switch (status) {
       case 'NEW': return 'bg-blue-100 text-blue-700';
@@ -139,6 +152,7 @@ export class AgentTicketListComponent implements OnInit {
     }
   }
 
+  /** Returns the appropriate Tailwind badge classes for a ticket category. */
   categoryBadgeClass(category: string): string {
     switch (category) {
       case 'NETWORK': return 'bg-purple-100 text-purple-700';
@@ -150,6 +164,7 @@ export class AgentTicketListComponent implements OnInit {
     }
   }
 
+  /** Returns the appropriate Tailwind badge classes for an urgency level. */
   urgencyBadgeClass(urgency: string): string {
     switch (urgency) {
       case 'HIGH': return 'bg-red-100 text-red-700';

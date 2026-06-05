@@ -40,11 +40,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Agent Dashboard
 
-- [ ] **AGT-01**: IT agent can view a prioritized list of all tickets
-- [ ] **AGT-02**: Agent can filter tickets by status, category, and urgency
-- [ ] **AGT-03**: Agent can view full ticket detail including shift-left deflection context
-- [ ] **AGT-04**: Agent can add resolution notes and mark ticket as resolved
-- [ ] **AGT-05**: Agent can flag a resolved ticket as a "Knowledge Gap" for KCS drafting
+- [x] **AGT-01**: IT agent can view a prioritized list of all tickets
+- [x] **AGT-02**: Agent can filter tickets by status, category, and urgency
+- [x] **AGT-03**: Agent can view full ticket detail including shift-left deflection context
+- [x] **AGT-04**: Agent can add resolution notes and mark ticket as resolved
+- [x] **AGT-05**: Agent can flag a resolved ticket as a "Knowledge Gap" for KCS drafting
 
 ### KCS Auto-Drafting
 
