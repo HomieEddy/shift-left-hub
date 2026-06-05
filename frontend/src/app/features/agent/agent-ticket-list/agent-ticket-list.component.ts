@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe, NgClass } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -15,6 +15,7 @@ import { AgentTicket } from '../agent-ticket.model';
 })
 export class AgentTicketListComponent implements OnInit {
   private agentTicketService = inject(AgentTicketService);
+  private router = inject(Router);
   private destroyRef = inject(DestroyRef);
 
   tickets = signal<AgentTicket[]>([]);
@@ -97,7 +98,7 @@ export class AgentTicketListComponent implements OnInit {
     this.claimConfirmOpen.set(false);
     this.claimingTicketId.set(null);
     this.agentTicketService.claimTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => this.loadTickets(),
+      next: () => this.router.navigate(['/agent/tickets', id]),
       error: () => alert('Failed to claim ticket.'),
     });
   }

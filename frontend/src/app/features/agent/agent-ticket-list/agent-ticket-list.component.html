@@ -106,7 +106,14 @@
               Claim
             </button>
             <a
-              *ngIf="ticket.status !== 'NEW'"
+              *ngIf="ticket.status === 'IN_PROGRESS'"
+              [routerLink]="['/agent/tickets', ticket.id]"
+              class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+            >
+              Resolve
+            </a>
+            <a
+              *ngIf="ticket.status === 'RESOLVED' || ticket.status === 'CANCELLED'"
               [routerLink]="['/agent/tickets', ticket.id]"
               class="text-xs text-blue-600 hover:underline"
             >
