@@ -143,6 +143,10 @@ public class DataSeeder implements CommandLineRunner {
                     embedding vector(768)
                 )
             """);
+            jdbcTemplate.execute("""
+                CREATE INDEX IF NOT EXISTS idx_article_embedding
+                ON article USING ivfflat (embedding vector_cosine_ops)
+            """);
             log.info("Vector search setup complete.");
         } catch (Exception e) {
             log.warn("Vector extension is not available on this PostgreSQL instance. Skipping vector setup.");
