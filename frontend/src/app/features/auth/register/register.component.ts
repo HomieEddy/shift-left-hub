@@ -48,7 +48,7 @@ export class RegisterComponent {
     }).subscribe({
       next: () => {
         // Auto-login per D-18 — AuthService already set session via tap()
-        this.router.navigate(['/admin/users']);
+        this.router.navigate(['/articles']);
       },
       error: (err) => {
         this.isLoading = false;
