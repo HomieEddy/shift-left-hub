@@ -1,0 +1,122 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-slate-800" i18n="@@kcs.drafts.title">KCS Drafts</h1>
+    <p class="text-sm text-slate-500 mt-1" i18n="@@kcs.drafts.description">Review and manage AI-drafted knowledge base articles</p>
+  </div>
+
+  <!-- Success message -->
+  <div *ngIf="successMessage()"
+       class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
+    {{ successMessage() }}
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage()"
+       class="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500" i18n="@@kcs.drafts.loading">Loading drafts...</div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading() && drafts().length === 0"
+       class="text-center py-8 text-slate-500" i18n="@@kcs.drafts.empty">
+    No KCS drafts pending review
+  </div>
+
+  <!-- Draft table -->
+  <div *ngIf="!isLoading() && drafts().length > 0"
+       class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 border-b border-slate-200">
+        <tr>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.title">Title</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.ticket">Source Ticket</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.status">Status</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.date">Created</th>
+          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <tr *ngFor="let draft of drafts()" class="hover:bg-slate-50">
+          <!-- Title -->
+          <td class="px-4 py-3">
+            <div class="text-sm font-medium text-slate-800">{{ draft.titleEn }}</div>
+            <div *ngIf="draft.titleFr" class="text-xs text-slate-500 mt-0.5">{{ draft.titleFr }}</div>
+            <div *ngIf="draft.similarityWarnings.length > 0"
+                 class="mt-1 text-xs text-amber-600">
+              ⚠ <span i18n="@@kcs.drafts.similarityWarning">Potential duplicate</span>
+            </div>
+          </td>
+          <!-- Ticket -->
+          <td class="px-4 py-3">
+            <span class="text-sm text-slate-600 font-mono">
+              {{ draft.sourceTicketNumber || '—' }}
+            </span>
+          </td>
+          <!-- Status -->
+          <td class="px-4 py-3">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                  [class.bg-yellow-100]="draft.status === 'DRAFT'"
+                  [class.text-yellow-700]="draft.status === 'DRAFT'"
+                  [class.bg-green-100]="draft.status === 'PUBLISHED'"
+                  [class.text-green-700]="draft.status === 'PUBLISHED'"
+                  [class.bg-red-100]="draft.status === 'ARCHIVED'"
+                  [class.text-red-700]="draft.status === 'ARCHIVED'">
+              {{ draft.status }}
+            </span>
+          </td>
+          <!-- Date -->
+          <td class="px-4 py-3 text-xs text-slate-500">
+            {{ draft.createdAt | date:'shortDate' }}
+          </td>
+          <!-- Actions -->
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-2">
+              <!-- Edit link → reuses ArticleEditorComponent -->
+              <a [routerLink]="['/admin/kcs-drafts', draft.id, 'edit']"
+                 class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" i18n="@@kcs.drafts.edit">
+                Edit
+              </a>
+
+              <!-- Approve button (visible for DRAFT only) -->
+              <button *ngIf="draft.status === 'DRAFT'"
+                      (click)="approveDraft(draft.id)"
+                      [disabled]="actionLoading() === draft.id"
+                      class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50 disabled:opacity-50" i18n="@@kcs.drafts.approve">
+                Approve
+              </button>
+
+              <!-- Reject button (visible for DRAFT only) -->
+              <button *ngIf="draft.status === 'DRAFT'"
+                      (click)="rejectDraft(draft.id)"
+                      [disabled]="actionLoading() === draft.id"
+                      class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50" i18n="@@kcs.drafts.reject">
+                Reject
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages() > 1" class="flex items-center justify-center gap-2 mt-6">
+    <button (click)="changePage(currentPage() - 1)"
+            [disabled]="currentPage() === 0"
+            class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+            i18n="@@pagination.previous">
+      Previous
+    </button>
+    <span class="text-sm text-slate-600" i18n="@@kcs.drafts.pageIndicator">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+    <button (click)="changePage(currentPage() + 1)"
+            [disabled]="currentPage() >= totalPages() - 1"
+            class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+            i18n="@@pagination.next">
+      Next
+    </button>
+  </div>
+</div>
