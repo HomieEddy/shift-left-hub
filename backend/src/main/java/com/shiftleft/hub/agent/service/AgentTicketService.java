@@ -190,8 +190,8 @@ public class AgentTicketService {
                     ticket.getCategory(),
                     ticket.getUrgency(),
                     ticket.getResolutionNotes(),
-                    ticket.getUser().getDisplayName(),
-                    ticket.getUser().getEmail(),
+                    ticket.getUser() != null ? ticket.getUser().getDisplayName() : "unknown",
+                    ticket.getUser() != null ? ticket.getUser().getEmail() : "",
                     agent.getDisplayName(),
                     ticket.getResolvedAt()
                 ));
