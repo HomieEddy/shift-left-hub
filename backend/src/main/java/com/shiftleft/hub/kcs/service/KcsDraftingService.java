@@ -11,18 +11,12 @@ import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagRepository;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.api.OllamaApi;
-import org.springframework.ai.ollama.api.OllamaChatOptions;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
@@ -48,10 +42,6 @@ public class KcsDraftingService {
 
     private static final double DEDUP_SIMILARITY_THRESHOLD = 0.85;
     private static final int DEDUP_TOP_K = 5;
-
-    // ChatClient cache — rebuilt only when AI config changes (IN-04)
-    private volatile ChatClient cachedChatClient;
-    private volatile int cachedConfigHash;
 
     /**
      * Synthesizes a bilingual KB article from a resolved ticket and saves it as DRAFT.
@@ -223,61 +213,12 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     /** Calls the LLM using the same provider/config as the chat service. (D-08, D-09) */
     private String callLlm(String prompt) {
         AiConfig config = aiConfigService.getConfigEntity();
-        ChatClient chatClient = getOrBuildChatClient(config);
+        ChatClient chatClient = aiConfigService.buildChatClient(config);
 
         return chatClient.prompt()
             .user(prompt)
             .call()
             .content();
-    }
-
-    /**
-     * Returns a cached ChatClient if the config hasn't changed, otherwise rebuilds.
-     * This avoids creating a new HTTP connection pool on every draft request (IN-04).
-     */
-    private ChatClient getOrBuildChatClient(AiConfig config) {
-        int currentHash = configHash(config);
-        if (cachedChatClient == null || currentHash != cachedConfigHash) {
-            cachedChatClient = buildChatClient(config);
-            cachedConfigHash = currentHash;
-        }
-        return cachedChatClient;
-    }
-
-    /** Computes a hash of the config values that affect the ChatClient. */
-    private static int configHash(AiConfig config) {
-        return Objects.hash(
-            config.getLlmProvider(),
-            config.getChatModelName(),
-            config.getOpenaiApiKey(),
-            config.getOllamaEndpointUrl()
-        );
-    }
-
-    /** Builds a ChatClient from AiConfig — mirrors AiChatService.buildChatClient() pattern (D-08). */
-    private ChatClient buildChatClient(AiConfig config) {
-        String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2:3b";
-        org.springframework.ai.chat.model.ChatModel chatModel;
-
-        if ("OPENAI".equals(config.getLlmProvider())
-                && config.getOpenaiApiKey() != null
-                && !config.getOpenaiApiKey().isEmpty()) {
-            String decryptedKey = aiConfigService.decrypt(config.getOpenaiApiKey());
-            chatModel = OpenAiChatModel.builder()
-                .openAiClient(OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
-                .options(OpenAiChatOptions.builder().model(modelName).build())
-                .build();
-        } else {
-            String baseUrl = config.getOllamaEndpointUrl() != null
-                ? config.getOllamaEndpointUrl()
-                : "http://host.docker.internal:11434";
-            chatModel = OllamaChatModel.builder()
-                .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
-                .defaultOptions(OllamaChatOptions.builder().model(modelName).build())
-                .build();
-        }
-
-        return ChatClient.builder(chatModel).build();
     }
 
     /** Parses the LLM response into structured fields. */
