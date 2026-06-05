@@ -1,8 +1,6 @@
 package com.shiftleft.hub.agent.service;
 
-import com.shiftleft.hub.agent.api.dto.AddWorkNoteRequest;
 import com.shiftleft.hub.agent.api.dto.AgentTicketResponse;
-import com.shiftleft.hub.agent.api.dto.ResolveTicketRequest;
 import com.shiftleft.hub.agent.api.dto.WorkNoteResponse;
 import com.shiftleft.hub.agent.domain.WorkNote;
 import com.shiftleft.hub.agent.domain.WorkNoteRepository;
