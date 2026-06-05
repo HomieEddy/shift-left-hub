@@ -56,7 +56,7 @@ public class AgentTicketService {
     @Transactional
     public AgentTicketResponse claimTicket(UUID ticketId, String agentEmail) {
         User agent = getUserByEmail(agentEmail);
-        Ticket ticket = ticketRepository.findById(ticketId)
+        Ticket ticket = ticketRepository.findByIdForUpdate(ticketId)
             .orElseThrow(() -> new TicketNotFoundException(ticketId));
 
         if (ticket.getStatus() != TicketStatus.NEW) {
