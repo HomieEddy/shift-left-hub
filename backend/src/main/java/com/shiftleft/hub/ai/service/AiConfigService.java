@@ -141,7 +141,7 @@ public class AiConfigService {
         }
     }
 
-    String decrypt(String ciphertext) {
+    public String decrypt(String ciphertext) {
         try {
             byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(
                 encryptionKey.getBytes("UTF-8"));

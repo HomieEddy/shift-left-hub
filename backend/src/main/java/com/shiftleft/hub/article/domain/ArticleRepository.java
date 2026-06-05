@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
@@ -122,4 +123,12 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
         ORDER BY t.name_en
         """, nativeQuery = true)
     List<Object[]> findPublishedTagFacets();
+
+    // === KCS Draft Query Methods ===
+
+    Page<Article> findBySourceTicketIdIsNotNullOrderByCreatedAtDesc(Pageable pageable);
+
+    Optional<Article> findBySourceTicketId(UUID sourceTicketId);
+
+    long countBySourceTicketIdIsNotNullAndStatus(ArticleStatus status);
 }
