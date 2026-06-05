@@ -49,6 +49,10 @@ public class KcsDraftingService {
     private static final double DEDUP_SIMILARITY_THRESHOLD = 0.85;
     private static final int DEDUP_TOP_K = 5;
 
+    // ChatClient cache — rebuilt only when AI config changes (IN-04)
+    private volatile ChatClient cachedChatClient;
+    private volatile int cachedConfigHash;
+
     /**
      * Synthesizes a bilingual KB article from a resolved ticket and saves it as DRAFT.
      *
@@ -215,12 +219,35 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     /** Calls the LLM using the same provider/config as the chat service. (D-08, D-09) */
     private String callLlm(String prompt) {
         AiConfig config = aiConfigService.getConfigEntity();
-        ChatClient chatClient = buildChatClient(config);
+        ChatClient chatClient = getOrBuildChatClient(config);
 
         return chatClient.prompt()
             .user(prompt)
             .call()
             .content();
+    }
+
+    /**
+     * Returns a cached ChatClient if the config hasn't changed, otherwise rebuilds.
+     * This avoids creating a new HTTP connection pool on every draft request (IN-04).
+     */
+    private ChatClient getOrBuildChatClient(AiConfig config) {
+        int currentHash = configHash(config);
+        if (cachedChatClient == null || currentHash != cachedConfigHash) {
+            cachedChatClient = buildChatClient(config);
+            cachedConfigHash = currentHash;
+        }
+        return cachedChatClient;
+    }
+
+    /** Computes a hash of the config values that affect the ChatClient. */
+    private static int configHash(AiConfig config) {
+        return Objects.hash(
+            config.getLlmProvider(),
+            config.getChatModelName(),
+            config.getOpenaiApiKey(),
+            config.getOllamaEndpointUrl()
+        );
     }
 
     /** Builds a ChatClient from AiConfig — mirrors AiChatService.buildChatClient() pattern (D-08). */
