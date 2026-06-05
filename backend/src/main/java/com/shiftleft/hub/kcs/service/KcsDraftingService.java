@@ -132,9 +132,13 @@ public class KcsDraftingService {
         var ftsResults = articleRepository.searchByText(searchText,
             org.springframework.data.domain.PageRequest.of(0, 5));
 
-        if (ftsResults.isEmpty()) {
-            // Nothing found even by FTS — unlikely to be duplicates
-            return duplicates;
+        if (!ftsResults.isEmpty()) {
+            // Use FTS result IDs as preliminary duplicates (IN-05)
+            for (Object[] row : ftsResults.getContent()) {
+                if (row[0] instanceof UUID id) {
+                    duplicates.add(id);
+                }
+            }
         }
 
         // Semantic search via pgvector — query with combined text (D-10)
