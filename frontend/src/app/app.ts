@@ -31,7 +31,7 @@ export class App {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (response) => this.pendingKcsCount.set(response.pendingCount),
-      error: () => {}, // Silently fail — badge just won't show
+      error: (err) => console.warn('KCS pending-count poll failed:', err),
     });
   }
 
