@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
 import { adminGuard } from './core/auth/admin.guard';
 import { agentGuard } from './core/auth/agent.guard';
+import { redirectIfAuthenticatedGuard } from './core/auth/redirect-if-authenticated.guard';
 
 /** Application route configuration with lazy-loaded feature modules. */
 export const routes: Routes = [
@@ -12,10 +13,12 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
+    canActivate: [redirectIfAuthenticatedGuard],
   },
   {
     path: 'register',
     loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent),
+    canActivate: [redirectIfAuthenticatedGuard],
   },
   {
     path: 'admin/users',
