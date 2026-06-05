@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
+import { adminGuard } from './core/auth/admin.guard';
+import { agentGuard } from './core/auth/agent.guard';
+import { redirectIfAuthenticatedGuard } from './core/auth/redirect-if-authenticated.guard';
 
 /** Application route configuration with lazy-loaded feature modules. */
 export const routes: Routes = [
@@ -10,50 +13,62 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
+    canActivate: [redirectIfAuthenticatedGuard],
   },
   {
     path: 'register',
     loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent),
+    canActivate: [redirectIfAuthenticatedGuard],
   },
   {
     path: 'admin/users',
     loadComponent: () => import('./features/admin/user-list/user-list.component').then(m => m.UserListComponent),
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/articles',
     loadComponent: () => import('./features/kb/admin/article-list/article-list.component').then(m => m.ArticleListComponent),
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/articles/new',
     loadComponent: () => import('./features/kb/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent),
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/articles/:id/edit',
     loadComponent: () => import('./features/kb/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent),
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/kcs-drafts',
+    loadComponent: () => import('./features/admin/kcs-draft-list/kcs-draft-list.component').then(m => m.KcsDraftListComponent),
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/kcs-drafts/:id/edit',
+    loadComponent: () => import('./features/kb/admin/article-editor/article-editor.component').then(m => m.ArticleEditorComponent),
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/tags',
     loadComponent: () => import('./features/kb/admin/tag-manager/tag-manager.component').then(m => m.TagManagerComponent),
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/settings/llm',
     loadComponent: () => import('./features/admin/llm-settings/llm-settings.component').then(m => m.LlmSettingsComponent),
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'agent/tickets',
     loadComponent: () => import('./features/agent/agent-ticket-list/agent-ticket-list.component').then(m => m.AgentTicketListComponent),
-    canActivate: [authGuard],
+    canActivate: [agentGuard],
   },
   {
     path: 'agent/tickets/:id',
     loadComponent: () => import('./features/agent/agent-ticket-detail/agent-ticket-detail.component').then(m => m.AgentTicketDetailComponent),
-    canActivate: [authGuard],
+    canActivate: [agentGuard],
   },
   {
     path: 'tickets',

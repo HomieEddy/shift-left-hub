@@ -36,24 +36,37 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (adminEmail == null || adminPassword == null) {
-            log.info("Admin seeder skipped — set APP_ADMIN_EMAIL and APP_ADMIN_PASSWORD to seed an admin user");
-        } else if (!userRepository.existsByEmail(adminEmail)) {
-            User admin = User.builder()
-                .email(adminEmail)
-                .password(passwordEncoder.encode(adminPassword))
-                .displayName("System Admin")
-                .role(UserRole.ROLE_ADMIN)
-                .enabled(true)
-                .build();
-            userRepository.save(admin);
-            log.info("Created default admin user with email: {}", adminEmail);
-            log.warn("Change the default admin password on first login for security.");
+            log.info("Admin seeder skipped — set APP_ADMIN_EMAIL and APP_ADMIN_PASSWORD to seed admin user");
         } else {
-            log.info("Admin user {} already exists — skipping re-seed", adminEmail);
+            seedUser(adminEmail, "System Admin", UserRole.ROLE_ADMIN);
+            seedUser(deriveEmail("user"), "Regular User", UserRole.ROLE_USER);
+            seedUser(deriveEmail("tech"), "Tech Agent", UserRole.ROLE_AGENT);
         }
         setupFullTextSearch();
         setupVectorSearch();
         seedAiConfig();
+    }
+
+    private void seedUser(String email, String displayName, UserRole role) {
+        if (!userRepository.existsByEmail(email)) {
+            userRepository.save(User.builder()
+                .email(email)
+                .password(passwordEncoder.encode(adminPassword))
+                .displayName(displayName)
+                .role(role)
+                .enabled(true)
+                .build()
+            );
+            log.info("Created {} user with email: {}", role, email);
+        } else {
+            log.info("{} user {} already exists — skipping", role, email);
+        }
+    }
+
+    private String deriveEmail(String prefix) {
+        int at = adminEmail.indexOf('@');
+        if (at == -1) return prefix + "@shiftleft.com";
+        return prefix + adminEmail.substring(at);
     }
 
     private void setupFullTextSearch() {
@@ -122,6 +135,18 @@ public class DataSeeder implements CommandLineRunner {
         log.info("Setting up vector search...");
         try {
             jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS vector");
+            jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS vector_store (
+                    id UUID PRIMARY KEY,
+                    content TEXT,
+                    metadata JSONB,
+                    embedding vector(768)
+                )
+            """);
+            jdbcTemplate.execute("""
+                CREATE INDEX IF NOT EXISTS idx_article_embedding
+                ON article USING ivfflat (embedding vector_cosine_ops)
+            """);
             log.info("Vector search setup complete.");
         } catch (Exception e) {
             log.warn("Vector extension is not available on this PostgreSQL instance. Skipping vector setup.");

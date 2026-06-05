@@ -1,13 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
 import { AuthService } from './core/auth/auth.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
+import { KcsDraftService } from './features/admin/kcs-draft.service';
+import { interval, startWith, switchMap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf, NgFor],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -15,6 +18,22 @@ export class App {
   protected authService = inject(AuthService);
   protected translationService = inject(TranslationService);
   private router = inject(Router);
+  private kcsDraftService = inject(KcsDraftService);
+  private destroyRef = inject(DestroyRef);
+
+  pendingKcsCount = signal(0);
+
+  constructor() {
+    // Poll pending KCS draft count every 60 seconds for nav badge
+    interval(60000).pipe(
+      startWith(0),
+      switchMap(() => this.kcsDraftService.getPendingCount()),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (response) => this.pendingKcsCount.set(response.pendingCount),
+      error: (err) => console.warn('KCS pending-count poll failed:', err),
+    });
+  }
 
   switchLanguage(lang: SupportedLanguage): void {
     this.translationService.switchLanguage(lang);

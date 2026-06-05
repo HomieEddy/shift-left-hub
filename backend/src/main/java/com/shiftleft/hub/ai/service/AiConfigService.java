@@ -121,6 +121,31 @@ public class AiConfigService {
         }
     }
 
+    public ChatClient buildChatClient(AiConfig config) {
+        String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2:3b";
+
+        ChatModel chatModel;
+        if ("OPENAI".equals(config.getLlmProvider())
+                && config.getOpenaiApiKey() != null
+                && !config.getOpenaiApiKey().isEmpty()) {
+            String decryptedKey = decrypt(config.getOpenaiApiKey());
+            chatModel = OpenAiChatModel.builder()
+                .openAiClient(com.openai.client.okhttp.OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
+                .options(OpenAiChatOptions.builder().model(modelName).build())
+                .build();
+        } else {
+            String baseUrl = config.getOllamaEndpointUrl() != null
+                ? config.getOllamaEndpointUrl()
+                : "http://host.docker.internal:11434";
+            chatModel = OllamaChatModel.builder()
+                .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
+                .defaultOptions(OllamaChatOptions.builder().model(modelName).build())
+                .build();
+        }
+
+        return ChatClient.builder(chatModel).build();
+    }
+
     String encrypt(String plaintext) {
         try {
             byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(
@@ -141,7 +166,7 @@ public class AiConfigService {
         }
     }
 
-    String decrypt(String ciphertext) {
+    public String decrypt(String ciphertext) {
         try {
             byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(
                 encryptionKey.getBytes("UTF-8"));

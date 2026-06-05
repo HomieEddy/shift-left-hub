@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { redirectIfAuthenticatedGuard } from '../../../core/auth/redirect-if-authenticated.guard';
 import { NgIf } from '@angular/common';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
