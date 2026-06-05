@@ -61,7 +61,7 @@ public class Article {
     @Column(name = "featured_image")
     private String featuredImage;
 
-    @Column(name = "source_ticket_id")
+    @Column(name = "source_ticket_id", unique = true)
     private UUID sourceTicketId;
 
     @Enumerated(EnumType.STRING)
