@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+import java.util.UUID;
 
 /**
  * Async event listener for the KCS drafting pipeline.
@@ -134,7 +135,7 @@ public class KcsEventListener {
                 User sysUser = User.builder()
                     .email("system@shiftleft.local")
                     .displayName("KCS System")
-                    .password("")  // No login possible
+                    .password(UUID.randomUUID().toString())  // Unguessable — no login possible
                     .role(com.shiftleft.hub.user.domain.UserRole.ROLE_ADMIN)
                     .enabled(false)
                     .build();
