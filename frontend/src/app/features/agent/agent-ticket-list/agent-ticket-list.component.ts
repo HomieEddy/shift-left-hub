@@ -27,6 +27,9 @@ export class AgentTicketListComponent implements OnInit {
   searchQuery = signal('');
   searchSubject = new Subject<string>();
 
+  claimConfirmOpen = signal(false);
+  claimingTicketId = signal<string | null>(null);
+
   readonly categories = ['', 'NETWORK', 'HARDWARE', 'SOFTWARE', 'ACCESS', 'PERIPHERALS'];
   readonly urgencies = ['', 'LOW', 'MEDIUM', 'HIGH'];
 
@@ -83,13 +86,25 @@ export class AgentTicketListComponent implements OnInit {
     this.loadTickets();
   }
 
-  claimTicket(id: string): void {
-    const confirmed = confirm('Claim this ticket?');
-    if (!confirmed) return;
+  openClaimConfirm(id: string): void {
+    this.claimingTicketId.set(id);
+    this.claimConfirmOpen.set(true);
+  }
+
+  confirmClaim(): void {
+    const id = this.claimingTicketId();
+    if (!id) return;
+    this.claimConfirmOpen.set(false);
+    this.claimingTicketId.set(null);
     this.agentTicketService.claimTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.loadTickets(),
       error: () => alert('Failed to claim ticket.'),
     });
+  }
+
+  cancelClaim(): void {
+    this.claimConfirmOpen.set(false);
+    this.claimingTicketId.set(null);
   }
 
   statusLabels: Record<string, string> = {
