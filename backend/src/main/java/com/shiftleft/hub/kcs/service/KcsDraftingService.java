@@ -5,10 +5,13 @@ import com.shiftleft.hub.ai.service.AiConfigService;
 import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
+import com.shiftleft.hub.tag.api.dto.TagResponse;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagRepository;
+import com.shiftleft.hub.ticket.domain.TicketRepository;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import java.util.*;
@@ -19,6 +22,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +41,7 @@ public class KcsDraftingService {
     private final AiConfigService aiConfigService;
     private final ArticleRepository articleRepository;
     private final TagRepository tagRepository;
+    private final TicketRepository ticketRepository;
     private final VectorStore vectorStore;
     private final UserRepository userRepository;
 
@@ -305,6 +310,66 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         if (tagNames == null || tagNames.isEmpty()) return new HashSet<>();
         List<Tag> found = tagRepository.findByNameEnIn(tagNames.stream().limit(5).collect(Collectors.toList()));
         return new HashSet<>(found);
+    }
+
+    /**
+     * Enriches a KcsDraftResponse with the source ticket number and similarity warnings.
+     */
+    public KcsDraftResponse enrichDraftResponse(Article article) {
+        String ticketNumber = null;
+        if (article.getSourceTicketId() != null) {
+            ticketNumber = ticketRepository.findById(article.getSourceTicketId())
+                .map(t -> t.getTicketNumber())
+                .orElse(null);
+        }
+        Set<String> similarityWarnings = findSimilarArticles(article);
+        return new KcsDraftResponse(
+            article.getId(),
+            article.getTitleEn(),
+            article.getTitleFr(),
+            article.getSlug(),
+            article.getExcerpt(),
+            article.getStatus(),
+            article.getSourceTicketId(),
+            ticketNumber,
+            similarityWarnings,
+            article.getTags().stream()
+                .map(TagResponse::from)
+                .collect(Collectors.toSet()),
+            article.getCreatedAt()
+        );
+    }
+
+    /**
+     * Finds potentially duplicate articles by checking title keyword overlap.
+     */
+    private Set<String> findSimilarArticles(Article article) {
+        if (article.getTitleEn() == null || article.getTitleEn().isBlank()) {
+            return Set.of();
+        }
+        String keywords = article.getTitleEn().toLowerCase()
+            .replaceAll("[^a-zA-Z0-9\\s]", " ")
+            .replaceAll("\\s+", " ")
+            .trim();
+        if (keywords.isEmpty()) {
+            return Set.of();
+        }
+        try {
+            var results = articleRepository.searchByText(keywords, PageRequest.of(0, 5));
+            return results.getContent().stream()
+                .map(row -> (Object[]) row)
+                .filter(row -> {
+                    UUID id = (UUID) row[0];
+                    return !id.equals(article.getId());
+                })
+                .map(row -> (String) row[1])
+                .filter(Objects::nonNull)
+                .limit(3)
+                .collect(Collectors.toSet());
+        } catch (Exception e) {
+            log.warn("Similar article check failed: {}", e.getMessage());
+            return Set.of();
+        }
     }
 
     /** Internal record for parsed LLM output. */

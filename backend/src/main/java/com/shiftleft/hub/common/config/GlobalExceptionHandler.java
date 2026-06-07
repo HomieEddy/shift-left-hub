@@ -3,108 +3,162 @@ package com.shiftleft.hub.common.config;
 import com.shiftleft.hub.common.DuplicateEmailException;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.user.domain.UserNotFoundException;
-import java.time.LocalDateTime;
+import jakarta.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
+    private final Environment environment;
+
+    public GlobalExceptionHandler(Environment environment) {
+        this.environment = environment;
+    }
+
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<Map<String, Object>> handleDuplicateEmail(
-            DuplicateEmailException ex) {
-        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    public ProblemDetail handleDuplicateEmail(DuplicateEmailException ex, HttpServletRequest request) {
+        log.warn("Duplicate email: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.CONFLICT, "Duplicate Entity", ex.getMessage(),
+            "urn:shiftleft:problem:duplicate-entity", request);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUserNotFound(
-            UserNotFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ProblemDetail handleUserNotFound(UserNotFoundException ex, HttpServletRequest request) {
+        log.warn("User not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
+            "urn:shiftleft:problem:entity-not-found", request);
     }
 
     @ExceptionHandler(com.shiftleft.hub.article.domain.ArticleNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleArticleNotFound(
-            com.shiftleft.hub.article.domain.ArticleNotFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ProblemDetail handleArticleNotFound(
+            com.shiftleft.hub.article.domain.ArticleNotFoundException ex, HttpServletRequest request) {
+        log.warn("Article not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
+            "urn:shiftleft:problem:entity-not-found", request);
     }
 
     @ExceptionHandler(com.shiftleft.hub.tag.domain.TagNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleTagNotFound(
-            com.shiftleft.hub.tag.domain.TagNotFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ProblemDetail handleTagNotFound(
+            com.shiftleft.hub.tag.domain.TagNotFoundException ex, HttpServletRequest request) {
+        log.warn("Tag not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
+            "urn:shiftleft:problem:entity-not-found", request);
     }
 
     @ExceptionHandler(com.shiftleft.hub.tag.domain.TagInUseException.class)
-    public ResponseEntity<Map<String, Object>> handleTagInUse(
-            com.shiftleft.hub.tag.domain.TagInUseException ex) {
-        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+    public ProblemDetail handleTagInUse(
+            com.shiftleft.hub.tag.domain.TagInUseException ex, HttpServletRequest request) {
+        log.warn("Tag in use: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.CONFLICT, "Entity In Use", ex.getMessage(),
+            "urn:shiftleft:problem:duplicate-entity", request);
     }
 
     @ExceptionHandler(com.shiftleft.hub.ticket.domain.TicketNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleTicketNotFound(
-            com.shiftleft.hub.ticket.domain.TicketNotFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ProblemDetail handleTicketNotFound(
+            com.shiftleft.hub.ticket.domain.TicketNotFoundException ex, HttpServletRequest request) {
+        log.warn("Ticket not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
+            "urn:shiftleft:problem:entity-not-found", request);
     }
 
     @ExceptionHandler(KcsDraftingException.class)
-    public ResponseEntity<Map<String, Object>> handleKcsDraftingError(
-            KcsDraftingException ex) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    public ProblemDetail handleKcsDraftingError(KcsDraftingException ex, HttpServletRequest request) {
+        log.error("KCS drafting error: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "Drafting Error", ex.getMessage(),
+            "urn:shiftleft:problem:internal-error", request);
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, Object>> handleIllegalState(
-            IllegalStateException ex) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ProblemDetail handleIllegalState(IllegalStateException ex, HttpServletRequest request) {
+        log.warn("Illegal state: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.BAD_REQUEST, "Bad Request", ex.getMessage(),
+            "urn:shiftleft:problem:validation-error", request);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Map<String, Object>> handleBadCredentials(
-            BadCredentialsException ex) {
-        return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    public ProblemDetail handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
+        log.warn("Bad credentials: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.UNAUTHORIZED, "Authentication Error", ex.getMessage(),
+            "urn:shiftleft:problem:auth-error", request);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUsernameNotFound(
-            UsernameNotFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ProblemDetail handleUsernameNotFound(UsernameNotFoundException ex, HttpServletRequest request) {
+        log.warn("Username not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
+            "urn:shiftleft:problem:entity-not-found", request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+        log.warn("Access denied: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.FORBIDDEN, "Access Denied", ex.getMessage(),
+            "urn:shiftleft:problem:access-denied", request);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ProblemDetail handleNoResource(NoResourceFoundException ex, HttpServletRequest request) {
+        log.warn("Resource not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.NOT_FOUND, "Resource Not Found", ex.getMessage(),
+            "urn:shiftleft:problem:entity-not-found", request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationErrors(
-            MethodArgumentNotValidException ex) {
+    public ProblemDetail handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        log.warn("Validation error: {} — {}", request.getRequestURI(), ex.getMessage());
+        ProblemDetail pd = buildProblem(HttpStatus.BAD_REQUEST, "Validation Failed",
+            "Validation failed for request parameters",
+            "urn:shiftleft:problem:validation-error", request);
         Map<String, String> fieldErrors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             fieldErrors.put(error.getField(), error.getDefaultMessage());
         }
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Validation failed");
-        body.put("fieldErrors", fieldErrors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+        pd.setProperty("fieldErrors", fieldErrors);
+        return pd;
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
-        return buildErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+    public ProblemDetail handleGeneral(Exception ex, HttpServletRequest request) {
+        log.error("Unhandled exception: {} — {}", request.getRequestURI(), ex.getMessage(), ex);
+        String detail = environment.acceptsProfiles(Profiles.of("dev"))
+            ? ex.getMessage() + " — " + ex.getClass().getSimpleName()
+            : "Internal server error";
+        ProblemDetail pd = buildProblem(HttpStatus.INTERNAL_SERVER_ERROR,
+            "Internal Server Error", detail,
+            "urn:shiftleft:problem:internal-error", request);
+        if (environment.acceptsProfiles(Profiles.of("dev"))) {
+            StackTraceElement[] stack = ex.getStackTrace();
+            if (stack.length > 0) {
+                pd.setProperty("stackTrace", stack[0].toString());
+            }
+        }
+        return pd;
     }
 
-    private ResponseEntity<Map<String, Object>> buildErrorResponse(
-            HttpStatus status, String message) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("status", status.value());
-        body.put("error", message);
-        return ResponseEntity.status(status).body(body);
+    private ProblemDetail buildProblem(HttpStatus status, String title, String detail,
+            String typeUri, HttpServletRequest request) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(status, detail);
+        pd.setTitle(title);
+        pd.setType(URI.create(typeUri));
+        pd.setInstance(URI.create(request.getRequestURI()));
+        pd.setProperty("timestamp", Instant.now().toString());
+        return pd;
     }
 }

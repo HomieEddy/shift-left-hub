@@ -11,10 +11,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.crypto.SecretKey;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class JwtService {
 
     private final String secretKey;
@@ -69,6 +71,7 @@ public class JwtService {
             parseToken(token);
             return true;
         } catch (JwtException e) {
+            log.warn("Token validation failed: {}", e.getMessage());
             return false;
         }
     }
@@ -78,12 +81,14 @@ public class JwtService {
             Claims claims = parseToken(token);
             return "refresh".equals(claims.get("type"));
         } catch (JwtException e) {
+            log.warn("Token validation failed: not a refresh token — {}", e.getMessage());
             return false;
         }
     }
 
     public void validateRefreshRotation(String tokenId, String userId) {
         if (usedRefreshTokens.containsKey(tokenId)) {
+            log.warn("Refresh token reuse detected for tokenId: {}", tokenId);
             throw new JwtException("Refresh token reuse detected for tokenId: " + tokenId);
         }
         usedRefreshTokens.put(tokenId, userId);

@@ -5,9 +5,8 @@ import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.article.service.ArticleService;
 import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
-import com.shiftleft.hub.ticket.domain.TicketRepository;
+import com.shiftleft.hub.kcs.service.KcsDraftingService;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,7 +30,7 @@ public class AdminKcsController {
 
     private final ArticleRepository articleRepository;
     private final ArticleService articleService;
-    private final TicketRepository ticketRepository;
+    private final KcsDraftingService kcsDraftingService;
 
     /**
      * Lists all KCS-drafted articles with pagination.
@@ -43,7 +42,7 @@ public class AdminKcsController {
             @RequestParam(defaultValue = "20") int size) {
         return articleRepository
             .findBySourceTicketIdIsNotNullOrderByCreatedAtDesc(PageRequest.of(page, size))
-            .map(this::enrichDraftResponse);
+            .map(kcsDraftingService::enrichDraftResponse);
     }
 
     /**
@@ -56,7 +55,7 @@ public class AdminKcsController {
         if (article.getSourceTicketId() == null) {
             throw new com.shiftleft.hub.article.domain.ArticleNotFoundException(id);
         }
-        return enrichDraftResponse(article);
+        return kcsDraftingService.enrichDraftResponse(article);
     }
 
     /**
@@ -69,7 +68,7 @@ public class AdminKcsController {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new com.shiftleft.hub.article.domain.ArticleNotFoundException(id));
         log.info("KCS draft {} approved and published", id);
-        return enrichDraftResponse(article);
+        return kcsDraftingService.enrichDraftResponse(article);
     }
 
     /**
@@ -81,7 +80,7 @@ public class AdminKcsController {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new com.shiftleft.hub.article.domain.ArticleNotFoundException(id));
         log.info("KCS draft {} rejected and archived", id);
-        return enrichDraftResponse(article);
+        return kcsDraftingService.enrichDraftResponse(article);
     }
 
     /**
@@ -94,73 +93,4 @@ public class AdminKcsController {
         return Map.of("pendingCount", count);
     }
 
-    /**
-     * Enriches a KcsDraftResponse with the source ticket number and similarity warnings.
-     */
-    private KcsDraftResponse enrichDraftResponse(Article article) {
-        String ticketNumber = null;
-        if (article.getSourceTicketId() != null) {
-            ticketNumber = ticketRepository.findById(article.getSourceTicketId())
-                .map(t -> t.getTicketNumber())
-                .orElse(null);
-        }
-
-        // Find potential duplicates: other articles with similar content
-        // (In a full implementation, this would query the vector store.
-        // For now, check for articles with same tags or title keyword overlap.)
-        Set<String> similarityWarnings = findSimilarArticles(article);
-
-        return new KcsDraftResponse(
-            article.getId(),
-            article.getTitleEn(),
-            article.getTitleFr(),
-            article.getSlug(),
-            article.getExcerpt(),
-            article.getStatus(),
-            article.getSourceTicketId(),
-            ticketNumber,
-            similarityWarnings,
-            article.getTags().stream()
-                .map(com.shiftleft.hub.tag.api.dto.TagResponse::from)
-                .collect(Collectors.toSet()),
-            article.getCreatedAt()
-        );
-    }
-
-    /**
-     * Finds potentially duplicate articles by checking title keyword overlap
-     * among published articles. This is a lightweight check — the heavy
-     * dedup happens during drafting time (KcsDraftingService).
-     */
-    private Set<String> findSimilarArticles(Article article) {
-        if (article.getTitleEn() == null || article.getTitleEn().isBlank()) {
-            return Set.of();
-        }
-        // Simple check: find published articles with overlapping title keywords
-        // This is intentionally lightweight — full vector dedup already ran at drafting time
-        String keywords = article.getTitleEn().toLowerCase()
-            .replaceAll("[^a-zA-Z0-9\\s]", " ")
-            .replaceAll("\\s+", " ")
-            .trim();
-        if (keywords.isEmpty()) {
-            return Set.of();
-        }
-        try {
-            var results = articleRepository.searchByText(keywords,
-                PageRequest.of(0, 5));
-            return results.getContent().stream()
-                .map(row -> (Object[]) row)
-                .filter(row -> {
-                    UUID id = (UUID) row[0];
-                    return !id.equals(article.getId());
-                })
-                .map(row -> (String) row[1]) // title_en
-                .filter(Objects::nonNull)
-                .limit(3)
-                .collect(Collectors.toSet());
-        } catch (Exception e) {
-            log.warn("Similar article check failed: {}", e.getMessage());
-            return Set.of();
-        }
-    }
 }

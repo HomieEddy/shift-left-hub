@@ -3,6 +3,7 @@ package com.shiftleft.hub.config;
 import com.shiftleft.hub.user.domain.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import lombok.extern.slf4j.Slf4j;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +34,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class SecurityConfig {
 
     private final UserRepository userRepository;
@@ -125,7 +127,7 @@ public class SecurityConfig {
                                     .setAuthentication(authentication);
                             }
                         } catch (Exception e) {
-                            // Token valid but user not found or other error
+                            log.warn("JWT validation failed: {}", e.getMessage());
                             SecurityContextHolder.clearContext();
                         }
                     }

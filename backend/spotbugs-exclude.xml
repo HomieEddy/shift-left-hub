@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- EI_EXPOSE_REP/EI_EXPOSE_REP2: DTO records intentionally expose internal arrays -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+        <Or>
+            <Package name="~.*\.dto"/>
+            <Package name="~.*\.api\.dto"/>
+        </Or>
+    </Match>
+    <!-- SE_BAD_FIELD: JPA entities are not serialized through Java serialization -->
+    <Match>
+        <Bug pattern="SE_BAD_FIELD,SE_BAD_FIELD_STORE,SE_NO_SERIALVERSIONID"/>
+        <Package name="~.*\.domain"/>
+    </Match>
+</FindBugsFilter>
