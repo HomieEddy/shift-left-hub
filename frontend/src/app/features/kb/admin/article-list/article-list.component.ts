@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize';
 import { ArticleService } from '../../services/article.service';
 import { ArticleDto, ArticleStatus } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -68,9 +69,9 @@ export class ArticleListComponent implements OnInit {
 
   deleteArticle(id: string): void {
     this.confirmationDialog.confirm({
-      titleKey: 'confirm.title.delete',
-      messageKey: 'Delete this article? This action cannot be undone.',
-      confirmLabelKey: 'confirm.label.delete',
+      title: $localize`:@@confirm.title.delete:Delete Confirmation`,
+      message: $localize`:@@confirm.message.delete-article:Delete this article? This action cannot be undone.`,
+      confirmLabel: $localize`:@@confirm.label.delete:Delete`,
     }).subscribe((confirmed) => {
       if (confirmed) {
         this.articleService.deleteArticle(id).pipe(

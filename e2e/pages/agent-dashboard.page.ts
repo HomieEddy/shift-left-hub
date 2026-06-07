@@ -52,7 +52,7 @@ export class AgentDashboardPage {
     const confirmModal = this.page.locator('.fixed.inset-0 .bg-white');
     await confirmModal.locator('button').last().click();
     // Wait for navigation to ticket detail page (/agent/tickets/:id)
-    await this.page.waitForURL(/\/agent\/tickets\/\d+/);
+    await this.page.waitForURL(/\/agent\/tickets\/[0-9a-f-]+/);
     await this.page.waitForLoadState('networkidle');
   }
 

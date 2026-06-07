@@ -2,7 +2,9 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-RUN useradd --create-home --home-dir /home/app --shell /bin/bash app \
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& useradd --create-home --home-dir /home/app --shell /bin/bash app \
 	&& mkdir -p /home/app/.m2 \
 	&& chown -R app:app /app /home/app
 

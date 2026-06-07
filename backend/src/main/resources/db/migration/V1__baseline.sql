@@ -153,7 +153,7 @@ CREATE INDEX IF NOT EXISTS idx_article_tsv_en ON article USING GIN (tsv_en);
 CREATE INDEX IF NOT EXISTS idx_article_tsv_fr ON article USING GIN (tsv_fr);
 
 -- ivfflat index for vector search
-CREATE INDEX IF NOT EXISTS idx_article_embedding ON article USING ivfflat (embedding vector_cosine_ops);
+CREATE INDEX IF NOT EXISTS idx_vector_store_embedding ON vector_store USING ivfflat (embedding vector_cosine_ops);
 
 -- Additional query performance indexes
 CREATE INDEX IF NOT EXISTS idx_ticket_status_category_urgency ON ticket(status, category, urgency);

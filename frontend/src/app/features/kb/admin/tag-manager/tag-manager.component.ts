@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize';
 import { TagService } from '../../services/tag.service';
 import { TagDto, CreateTagRequest } from '../../models/tag.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -93,9 +94,9 @@ export class TagManagerComponent implements OnInit {
 
   deleteTag(id: string, nameEn: string): void {
     this.confirmationDialog.confirm({
-      titleKey: 'confirm.title.delete',
-      messageKey: 'Delete tag "' + nameEn + '"?',
-      confirmLabelKey: 'confirm.label.delete',
+      title: $localize`:@@confirm.title.delete:Delete Confirmation`,
+      message: $localize`:@@confirm.message.delete-tag:Delete tag "${nameEn}"?`,
+      confirmLabel: $localize`:@@confirm.label.delete:Delete`,
     }).subscribe((confirmed) => {
       if (confirmed) {
         this.tagService.deleteTag(id).pipe(
