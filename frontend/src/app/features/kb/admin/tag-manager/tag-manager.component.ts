@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TagService } from '../../services/tag.service';
 import { TagDto, CreateTagRequest } from '../../models/tag.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
+import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-tag-manager',
@@ -15,6 +16,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 export class TagManagerComponent implements OnInit {
   private tagService = inject(TagService);
   private destroyRef = inject(DestroyRef);
+  private confirmationDialog = inject(ConfirmationDialogService);
   protected translationService = inject(TranslationService);
 
   tags = signal<TagDto[]>([]);
@@ -90,15 +92,21 @@ export class TagManagerComponent implements OnInit {
   }
 
   deleteTag(id: string, nameEn: string): void {
-    if (confirm(`Delete tag "${nameEn}"? This cannot be undone if the tag is unused.`)) {
-      this.tagService.deleteTag(id).pipe(
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: () => this.loadTags(),
-        error: (err) => {
-          this.errorMessage.set(err.error?.error || 'Cannot delete tag: it is used by articles.');
-        },
-      });
-    }
+    this.confirmationDialog.confirm({
+      titleKey: 'confirm.title.delete',
+      messageKey: 'Delete tag "' + nameEn + '"?',
+      confirmLabelKey: 'confirm.label.delete',
+    }).subscribe((confirmed) => {
+      if (confirmed) {
+        this.tagService.deleteTag(id).pipe(
+          takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+          next: () => this.loadTags(),
+          error: (err) => {
+            this.errorMessage.set(err.error?.error || 'Cannot delete tag: it is used by articles.');
+          },
+        });
+      }
+    });
   }
 }

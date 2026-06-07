@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleService } from '../../services/article.service';
 import { ArticleDto, ArticleStatus } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
+import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-article-list',
@@ -15,6 +16,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 export class ArticleListComponent implements OnInit {
   private articleService = inject(ArticleService);
   private destroyRef = inject(DestroyRef);
+  private confirmationDialog = inject(ConfirmationDialogService);
   protected translationService = inject(TranslationService);
 
   articles = signal<ArticleDto[]>([]);
@@ -65,14 +67,20 @@ export class ArticleListComponent implements OnInit {
   }
 
   deleteArticle(id: string): void {
-    if (confirm('Delete this article? This action cannot be undone.')) {
-      this.articleService.deleteArticle(id).pipe(
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: () => this.loadArticles(),
-        error: () => this.errorMessage.set('Failed to delete article.'),
-      });
-    }
+    this.confirmationDialog.confirm({
+      titleKey: 'confirm.title.delete',
+      messageKey: 'Delete this article? This action cannot be undone.',
+      confirmLabelKey: 'confirm.label.delete',
+    }).subscribe((confirmed) => {
+      if (confirmed) {
+        this.articleService.deleteArticle(id).pipe(
+          takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+          next: () => this.loadArticles(),
+          error: () => this.errorMessage.set('Failed to delete article.'),
+        });
+      }
+    });
   }
 
   statusBadgeVariant(status: ArticleStatus): string {
