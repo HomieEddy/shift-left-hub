@@ -1,6 +1,9 @@
 # Planning artifacts
 .planning/
 
+# Playwright E2E
+e2e/.auth/
+
 # Java / Maven
 **/target/
 *.class
