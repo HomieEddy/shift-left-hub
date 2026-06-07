@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NgIf } from '@angular/common';
 import { ConfirmationData } from './confirmation-dialog.model';
-import { from, catchError, of, switchMap } from 'rxjs';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -54,18 +54,12 @@ export class ConfirmDialogComponent {
     if (this.data.onConfirm) {
       this.loading.set(true);
       this.errorMessage.set(null);
-      const result$ = from(this.data.onConfirm()).pipe(
-        switchMap(() => of(true)),
-        catchError((err) => {
+      from(this.data.onConfirm()).subscribe({
+        next: () => this.dialogRef.close(true),
+        error: () => {
           this.loading.set(false);
           this.errorMessage.set($localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.`);
-          return of(undefined);
-        })
-      );
-      result$.subscribe((val) => {
-        if (val) {
-          this.dialogRef.close(true);
-        }
+        },
       });
     } else {
       this.dialogRef.close(true);
