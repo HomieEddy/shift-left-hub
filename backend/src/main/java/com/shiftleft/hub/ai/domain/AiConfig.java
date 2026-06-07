@@ -1,5 +1,6 @@
 package com.shiftleft.hub.ai.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,17 +26,23 @@ public class AiConfig {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String llmProvider;
 
+    @Column(nullable = false)
     private String ollamaEndpointUrl;
 
     private String openaiApiKey;
 
+    @Column(nullable = false)
     private String chatModelName;
 
+    @Column(nullable = false)
     private String embeddingModelName;
 
+    @Column(nullable = false)
     private double similarityThreshold;
 
+    @Column(nullable = false)
     private int embeddingDimension;
 }
