@@ -69,7 +69,7 @@ export class AgentTicketDetailComponent implements OnInit {
   loadWorkNotes(id: string): void {
     this.agentTicketService.getWorkNotes(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (notes) => this.workNotes.set(notes),
-      error: () => {},
+      error: (err) => console.error('Failed to load work notes:', err),
     });
   }
 
@@ -89,7 +89,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isSubmittingNote.set(false);
-        alert(this.addNoteErrorLabel);
+        console.error('Failed to add work note');
       },
     });
   }
@@ -107,7 +107,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isClaiming.set(false);
-        alert(this.claimErrorLabel);
+        console.error('Failed to claim ticket');
       },
     });
   }
@@ -134,7 +134,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isResolving.set(false);
-        alert(this.resolveErrorLabel);
+        console.error('Failed to resolve ticket');
       },
     });
   }
