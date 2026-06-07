@@ -128,7 +128,7 @@ export class AgentTicketListComponent implements OnInit {
     this.claimingTicketId.set(null);
     this.agentTicketService.claimTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.router.navigate(['/agent/tickets', id]),
-      error: () => alert(this.claimFailedAlert),
+      error: () => console.error('Failed to claim ticket'),
     });
   }
 

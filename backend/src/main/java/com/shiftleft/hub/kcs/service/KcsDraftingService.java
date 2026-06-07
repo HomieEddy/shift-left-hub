@@ -308,6 +308,10 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     /** Resolves tag names to existing Tag entities — only matches exact name_en. */
     private Set<Tag> resolveSuggestedTags(List<String> tagNames) {
         if (tagNames == null || tagNames.isEmpty()) return new HashSet<>();
+        int total = tagNames.size();
+        if (total > 5) {
+            log.warn("Tag suggestions truncated to 5 — {} tags suggested", total);
+        }
         List<Tag> found = tagRepository.findByNameEnIn(tagNames.stream().limit(5).collect(Collectors.toList()));
         return new HashSet<>(found);
     }
