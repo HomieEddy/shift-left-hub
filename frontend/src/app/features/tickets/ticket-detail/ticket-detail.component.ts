@@ -2,6 +2,7 @@ import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angula
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize/init';
 import { TicketService } from '../ticket.service';
 import { Ticket, ShiftLeftContext } from '../ticket.model';
 
@@ -53,7 +54,7 @@ export class TicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set('Failed to load ticket.');
+        this.errorMessage.set($localize`:@@tickets.detail.error.load:Failed to load ticket.`);
       },
     });
   }
@@ -67,7 +68,7 @@ export class TicketDetailComponent implements OnInit {
         this.router.navigate(['/tickets']);
       },
       error: () => {
-        this.errorMessage.set('Failed to cancel ticket.');
+        this.errorMessage.set($localize`:@@tickets.detail.error.cancel:Failed to cancel ticket.`);
       },
     });
   }

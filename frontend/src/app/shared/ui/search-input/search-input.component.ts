@@ -9,7 +9,9 @@ import { FormsModule } from '@angular/forms';
     <div class="relative">
       <input
         type="text"
+        [attr.aria-label]="placeholder()"
         [placeholder]="placeholder()"
+        i18n-placeholder="@@shared.search.placeholder"
         [ngModel]="query()"
         (ngModelChange)="onInput($event)"
         class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"

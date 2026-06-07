@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe, NgClass } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { $localize } from '@angular/localize/init';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket, WorkNote } from '../agent-ticket.model';
@@ -88,7 +89,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isSubmittingNote.set(false);
-        alert('Failed to add work note.');
+        alert(this.addNoteErrorLabel);
       },
     });
   }
@@ -106,7 +107,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isClaiming.set(false);
-        alert('Failed to claim ticket.');
+        alert(this.claimErrorLabel);
       },
     });
   }
@@ -133,7 +134,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isResolving.set(false);
-        alert('Failed to resolve ticket.');
+        alert(this.resolveErrorLabel);
       },
     });
   }
@@ -144,25 +145,60 @@ export class AgentTicketDetailComponent implements OnInit {
   }
 
   statusLabels: Record<string, string> = {
-    'NEW': 'New',
-    'IN_PROGRESS': 'In Progress',
-    'RESOLVED': 'Resolved',
-    'CANCELLED': 'Cancelled',
+    'NEW': $localize`:@@tickets.status.new:New`,
+    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
+    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
+    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
   };
 
   urgencyLabels: Record<string, string> = {
-    'LOW': 'Low',
-    'MEDIUM': 'Medium',
-    'HIGH': 'High',
+    'LOW': $localize`:@@agent.urgency.low:Low`,
+    'MEDIUM': $localize`:@@agent.urgency.medium:Medium`,
+    'HIGH': $localize`:@@agent.urgency.high:High`,
   };
 
   categoryLabels: Record<string, string> = {
-    'NETWORK': 'Network',
-    'HARDWARE': 'Hardware',
-    'SOFTWARE': 'Software',
-    'ACCESS': 'Access',
-    'PERIPHERALS': 'Peripherals',
+    'NETWORK': $localize`:@@tickets.category.network:Network`,
+    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
+    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
+    'ACCESS': $localize`:@@tickets.category.access:Access`,
+    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
   };
+
+  loadingLabel = $localize`:@@agent.detail.loading:Loading ticket details...`;
+  errorLabel = $localize`:@@agent.detail.error:Failed to load ticket details.`;
+  retryLabel = $localize`:@@agent.detail.retry:Retry`;
+  backToQueueLabel = $localize`:@@agent.detail.backToQueue:\u2190 Back to Queue`;
+  shiftLeftContextLabel = $localize`:@@agent.detail.shiftLeftContext:Shift-Left Context`;
+  issueLabel = $localize`:@@agent.detail.issue:Issue`;
+  chatTranscriptLabel = $localize`:@@agent.detail.chatTranscript:Chat Transcript`;
+  unclaimedLabel = $localize`:@@agent.detail.unclaimed:This ticket has not been claimed yet.`;
+  claimingLabel = $localize`:@@agent.detail.claiming:Claiming...`;
+  claimTicketLabel = $localize`:@@agent.detail.claimTicket:Claim Ticket`;
+  workNotesLabel = $localize`:@@agent.detail.workNotes:Work Notes`;
+  noWorkNotesLabel = $localize`:@@agent.detail.noWorkNotes:No work notes yet.`;
+  addNotePlaceholder = $localize`:@@agent.detail.addNotePlaceholder:Add a work note...`;
+  addingLabel = $localize`:@@agent.detail.adding:Adding...`;
+  addNoteLabel = $localize`:@@agent.detail.addNote:Add Note`;
+  resolutionLabel = $localize`:@@agent.detail.resolution:Resolution`;
+  resolutionPlaceholder = $localize`:@@agent.detail.resolutionPlaceholder:Describe the resolution steps...`;
+  flagKnowledgeGapLabel = $localize`:@@agent.detail.flagKnowledgeGap:Flag as Knowledge Gap`;
+  resolvingLabel = $localize`:@@agent.detail.resolving:Resolving...`;
+  resolveTicketLabel = $localize`:@@agent.detail.resolveTicket:Resolve Ticket`;
+  resolvedByLabel = $localize`:@@agent.detail.resolvedBy:Resolved by`;
+  unknownLabel = $localize`:@@agent.detail.unknown:Unknown`;
+  flaggedKnowledgeGapLabel = $localize`:@@agent.detail.flaggedKnowledgeGap:Flagged as Knowledge Gap`;
+  cancelledByUserLabel = $localize`:@@agent.detail.cancelledByUser:Cancelled by user`;
+  unassignedLabel = $localize`:@@agent.detail.unassigned:Unassigned`;
+  confirmResolutionLabel = $localize`:@@agent.detail.confirmResolution:Confirm resolution for`;
+  cancelLabel = $localize`:@@agent.detail.cancel:Cancel`;
+  confirmLabel = $localize`:@@agent.detail.confirm:Confirm`;
+  assignedToLabel = $localize`:@@agent.detail.assignedTo:Assigned to`;
+  openedByLabel = $localize`:@@agent.detail.openedBy:Opened by`;
+
+  addNoteErrorLabel = $localize`:@@agent.detail.addNoteError:Failed to add work note.`;
+  claimErrorLabel = $localize`:@@agent.detail.claimError:Failed to claim ticket.`;
+  resolveErrorLabel = $localize`:@@agent.detail.resolveError:Failed to resolve ticket.`;
 
   /** Returns the appropriate Tailwind badge classes for a ticket status. */
   statusBadgeClass(status: string): string {

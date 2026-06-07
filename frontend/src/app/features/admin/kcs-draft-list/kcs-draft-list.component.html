@@ -104,18 +104,19 @@
   </div>
 
   <!-- Confirmation modal -->
-  <app-modal [open]="confirmModalOpen()" [title]="'Confirm Action'" (close)="cancelAction()">
+  <app-modal [open]="confirmModalOpen()" [title]="confirmActionTitle" (close)="cancelAction()">
     <p class="text-sm text-slate-600 mb-6">
-      <ng-container *ngIf="pendingAction()?.type === 'approve'">
+      <ng-container *ngIf="pendingAction()?.type === 'approve'" i18n="@@kcs.drafts.confirm.approve">
         Approve this draft? It will be published immediately.
       </ng-container>
-      <ng-container *ngIf="pendingAction()?.type === 'reject'">
+      <ng-container *ngIf="pendingAction()?.type === 'reject'" i18n="@@kcs.drafts.confirm.reject">
         Reject this draft? It will be archived.
       </ng-container>
     </p>
     <div class="flex justify-end gap-3">
       <button (click)="cancelAction()"
-              class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
+              class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50"
+              i18n="@@kcs.drafts.confirm.cancel">
         Cancel
       </button>
       <button (click)="executePendingAction()"
@@ -123,7 +124,8 @@
               [class.hover:bg-green-700]="pendingAction()?.type === 'approve'"
               [class.bg-red-600]="pendingAction()?.type === 'reject'"
               [class.hover:bg-red-700]="pendingAction()?.type === 'reject'"
-              class="px-4 py-2 text-sm rounded-lg text-white">
+              class="px-4 py-2 text-sm rounded-lg text-white"
+              i18n="@@kcs.drafts.confirm.confirm">
         Confirm
       </button>
     </div>

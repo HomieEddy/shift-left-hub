@@ -5,7 +5,7 @@
 
   <div *ngIf="errorMessage()" class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 mb-4">
     {{ errorMessage() }}
-    <button (click)="loadTickets()" class="ml-2 underline">Retry</button>
+    <button (click)="loadTickets()" class="ml-2 underline" i18n="@@tickets.retry">Retry</button>
   </div>
 
   <ng-container *ngIf="!isLoading() && !errorMessage()">
@@ -20,7 +20,7 @@
         [class.text-slate-600]="activeFilter() !== filter"
         [class.hover:bg-slate-200]="activeFilter() !== filter"
       >
-        {{ filter === 'ALL' ? 'All' : statusLabels[filter] }}
+        {{ filter === 'ALL' ? allLabel : statusLabels[filter] }}
       </button>
     </div>
 

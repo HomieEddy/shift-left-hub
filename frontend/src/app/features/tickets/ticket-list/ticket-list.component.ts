@@ -37,7 +37,7 @@ export class TicketListComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set('Failed to load tickets.');
+        this.errorMessage.set($localize`:@@tickets.error.load:Failed to load tickets.`);
       },
     });
   }
@@ -50,6 +50,8 @@ export class TicketListComponent implements OnInit {
       this.filteredTickets.set(this.tickets().filter(t => t.status === status));
     }
   }
+
+  allLabel: string = $localize`:@@tickets.filter.all:All`;
 
   statusLabels: Record<string, string> = {
     'NEW': $localize`:@@tickets.status.new:New`,

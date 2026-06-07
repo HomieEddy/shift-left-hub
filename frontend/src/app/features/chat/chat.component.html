@@ -1,7 +1,7 @@
 <div class="max-w-4xl mx-auto h-[calc(100vh-3.5rem)] flex flex-col">
   <div class="border-b border-slate-200 px-4 py-3">
-    <h1 class="text-lg font-semibold text-slate-800">AI Assistant</h1>
-    <p class="text-sm text-slate-500">Ask me anything about IT issues</p>
+    <h1 class="text-lg font-semibold text-slate-800" i18n="@@chat.title">AI Assistant</h1>
+    <p class="text-sm text-slate-500" i18n="@@chat.subtitle">Ask me anything about IT issues</p>
   </div>
 
   <div #chatContainer aria-live="polite" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
@@ -28,24 +28,24 @@
 
     <div *ngIf="showFeedback()" class="flex justify-start ml-2">
       <div class="flex items-center gap-3 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-4 py-2">
-        <span>Did this solve your problem?</span>
-        <button (click)="handleFeedback(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium">Yes</button>
-        <button (click)="handleFeedback(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium">No</button>
+        <span i18n="@@chat.did-this-solve">Did this solve your problem?</span>
+        <button (click)="handleFeedback(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium" i18n="@@chat.yes">Yes</button>
+        <button (click)="handleFeedback(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.no">No</button>
       </div>
     </div>
 
     <div *ngIf="showFollowUp()" class="flex justify-start ml-2">
       <div class="flex items-center gap-3 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-4 py-2">
-        <span i18n="@@followUpPrompt">Is there anything else I can help you with?</span>
-        <button (click)="handleFollowUp(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium">Yes</button>
-        <button (click)="handleFollowUp(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium">No</button>
+        <span i18n="@@chat.followUp">Is there anything else I can help you with?</span>
+        <button (click)="handleFollowUp(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium" i18n="@@chat.yes">Yes</button>
+        <button (click)="handleFollowUp(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.no">No</button>
       </div>
     </div>
 
     <div *ngIf="showFallback()" class="flex justify-start ml-2">
       <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 max-w-md">
-        <p class="mb-2">I couldn't find a resolution in the knowledge base.</p>
-        <button (click)="escalateToHumanAgent()" class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium">
+        <p class="mb-2" i18n="@@chat.fallback-message">I couldn't find a resolution in the knowledge base.</p>
+        <button (click)="escalateToHumanAgent()" class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium" i18n="@@chat.escalate">
           Escalate to Human Agent
         </button>
       </div>
@@ -62,7 +62,7 @@
     <div *ngIf="errorMessage()" class="flex justify-center">
       <div class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 max-w-md">
         <p class="mb-2">{{ errorMessage() }}</p>
-        <button (click)="retry()" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium">
+        <button (click)="retry()" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.retry">
           Retry
         </button>
       </div>
@@ -76,9 +76,9 @@
        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div class="bg-white rounded-2xl shadow-xl px-8 py-10 text-center max-w-sm mx-4">
       <div class="text-5xl mb-4" aria-hidden="true">👋</div>
-      <h2 id="modal-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@modalThankYou">Thank You</h2>
-      <p class="text-slate-500 mb-6" i18n="@@modalSeeYouSoon">See you soon!</p>
-      <button (click)="closeModal()" autofocus class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors" i18n="@@modalClose">
+      <h2 id="modal-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@chat.modal.thankYou">Thank You</h2>
+      <p class="text-slate-500 mb-6" i18n="@@chat.modal.seeYouSoon">See you soon!</p>
+      <button (click)="closeModal()" autofocus class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors" i18n="@@chat.modal.close">
         Close
       </button>
     </div>
@@ -110,7 +110,7 @@
       <input
         [(ngModel)]="currentInput"
         (keydown.enter)="sendMessage()"
-        placeholder="Describe your IT issue..."
+        i18n-placeholder="@@chat.input-placeholder" placeholder="Describe your IT issue..."
         class="flex-1 rounded-lg border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         [disabled]="isStreaming()"
       />
@@ -119,7 +119,7 @@
         [disabled]="!currentInput.trim() || isStreaming()"
         class="rounded-lg bg-blue-600 px-5 py-2.5 text-sm text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        Send
+        <ng-container i18n="@@chat.send">Send</ng-container>
       </button>
     </div>
   </div>

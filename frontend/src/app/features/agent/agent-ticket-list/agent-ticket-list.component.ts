@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { $localize } from '@angular/localize/init';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket } from '../agent-ticket.model';
 
@@ -37,6 +38,23 @@ export class AgentTicketListComponent implements OnInit {
 
   readonly categories = ['', 'NETWORK', 'HARDWARE', 'SOFTWARE', 'ACCESS', 'PERIPHERALS'];
   readonly urgencies = ['', 'LOW', 'MEDIUM', 'HIGH'];
+
+  allLabel = $localize`:@@agent.filter.all:All`;
+  allCategoriesLabel = $localize`:@@agent.filter.allCategories:All Categories`;
+  allUrgenciesLabel = $localize`:@@agent.filter.allUrgencies:All Urgencies`;
+  searchPlaceholder = $localize`:@@agent.search.placeholder:Search by ticket # or user...`;
+  loadingLabel = $localize`:@@agent.loading:Loading tickets...`;
+  errorLabel = $localize`:@@agent.error.load:Failed to load tickets.`;
+  retryLabel = $localize`:@@agent.retry:Retry`;
+  emptyLabel = $localize`:@@agent.empty:No tickets found matching your filters`;
+  claimLabel = $localize`:@@agent.claim:Claim`;
+  resolveLabel = $localize`:@@agent.resolve:Resolve`;
+  viewLabel = $localize`:@@agent.view:View`;
+  unassignedLabel = $localize`:@@agent.unassigned:Unassigned`;
+  claimConfirmLabel = $localize`:@@agent.claim.confirm:Claim this ticket?`;
+  cancelLabel = $localize`:@@agent.cancel:Cancel`;
+  confirmLabel = $localize`:@@agent.confirm:Confirm`;
+  claimFailedAlert = $localize`:@@agent.claim.error:Failed to claim ticket.`;
 
   constructor() {
     this.searchSubject.pipe(
@@ -110,7 +128,7 @@ export class AgentTicketListComponent implements OnInit {
     this.claimingTicketId.set(null);
     this.agentTicketService.claimTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.router.navigate(['/agent/tickets', id]),
-      error: () => alert('Failed to claim ticket.'),
+      error: () => alert(this.claimFailedAlert),
     });
   }
 
@@ -121,24 +139,24 @@ export class AgentTicketListComponent implements OnInit {
   }
 
   statusLabels: Record<string, string> = {
-    'NEW': 'New',
-    'IN_PROGRESS': 'In Progress',
-    'RESOLVED': 'Resolved',
-    'CANCELLED': 'Cancelled',
+    'NEW': $localize`:@@tickets.status.new:New`,
+    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
+    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
+    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
   };
 
   urgencyLabels: Record<string, string> = {
-    'LOW': 'Low',
-    'MEDIUM': 'Medium',
-    'HIGH': 'High',
+    'LOW': $localize`:@@agent.urgency.low:Low`,
+    'MEDIUM': $localize`:@@agent.urgency.medium:Medium`,
+    'HIGH': $localize`:@@agent.urgency.high:High`,
   };
 
   categoryLabels: Record<string, string> = {
-    'NETWORK': 'Network',
-    'HARDWARE': 'Hardware',
-    'SOFTWARE': 'Software',
-    'ACCESS': 'Access',
-    'PERIPHERALS': 'Peripherals',
+    'NETWORK': $localize`:@@tickets.category.network:Network`,
+    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
+    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
+    'ACCESS': $localize`:@@tickets.category.access:Access`,
+    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
   };
 
   /** Returns the appropriate Tailwind badge classes for a ticket status. */

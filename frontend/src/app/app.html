@@ -4,13 +4,14 @@
     <div class="flex items-center justify-between h-14">
       <!-- Left side: Logo + Navigation -->
       <div class="flex items-center gap-6">
-        <a routerLink="/" class="text-lg font-bold text-slate-800 no-underline">SL Knowledge Hub</a>
+        <a routerLink="/" class="text-lg font-bold text-slate-800 no-underline" i18n="@@app.title">SL Knowledge Hub</a>
         <nav class="flex items-center gap-4 text-sm">
           <a
             *ngIf="authService.isAuthenticated() && authService.isAdmin()"
             routerLink="/admin/users"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.users"
           >
             Users
           </a>
@@ -19,6 +20,7 @@
             routerLink="/admin/articles"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.articles"
           >
             Articles
           </a>
@@ -27,6 +29,7 @@
             routerLink="/admin/kcs-drafts"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors relative"
+            i18n="@@nav.kcs-drafts"
           >
             KCS Drafts
             <span *ngIf="pendingKcsCount() > 0"
@@ -39,6 +42,7 @@
             routerLink="/admin/tags"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.tags"
           >
             Tags
           </a>
@@ -47,6 +51,7 @@
             routerLink="/admin/settings/llm"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.ai-settings"
           >
             AI Settings
           </a>
@@ -55,6 +60,7 @@
             routerLink="/agent/tickets"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.ticket-queue"
           >
             Ticket Queue
           </a>
@@ -63,6 +69,7 @@
             routerLink="/chat"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.ai-assistant"
           >
             AI Assistant
           </a>
@@ -71,6 +78,7 @@
             routerLink="/tickets"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.my-tickets"
           >
             My Tickets
           </a>
@@ -79,6 +87,7 @@
             routerLink="/articles"
             routerLinkActive="text-blue-600 font-medium"
             class="text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.knowledge-base"
           >
             Knowledge Base
           </a>
@@ -96,6 +105,7 @@
             [class.text-white]="translationService.currentLang() === 'en'"
             [class.text-slate-600]="translationService.currentLang() !== 'en'"
             [class.hover:bg-slate-100]="translationService.currentLang() !== 'en'"
+            i18n="@@lang.en"
           >
             EN
           </button>
@@ -106,6 +116,7 @@
             [class.text-white]="translationService.currentLang() === 'fr'"
             [class.text-slate-600]="translationService.currentLang() !== 'fr'"
             [class.hover:bg-slate-100]="translationService.currentLang() !== 'fr'"
+            i18n="@@lang.fr"
           >
             FR
           </button>
@@ -117,13 +128,14 @@
           <button
             (click)="logout()"
             class="text-sm text-slate-500 hover:text-red-600 transition-colors"
+            i18n="@@nav.logout"
           >
             Logout
           </button>
         </ng-container>
         <ng-template #authLinks>
-          <a routerLink="/login" class="text-sm text-slate-600 hover:text-slate-800 transition-colors">Sign in</a>
-          <a routerLink="/register" class="text-sm rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 transition-colors">Register</a>
+          <a routerLink="/login" class="text-sm text-slate-600 hover:text-slate-800 transition-colors" i18n="@@nav.signin">Sign in</a>
+          <a routerLink="/register" class="text-sm rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 transition-colors" i18n="@@nav.register">Register</a>
         </ng-template>
       </div>
     </div>

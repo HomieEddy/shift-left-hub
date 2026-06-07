@@ -1,13 +1,13 @@
 <div class="min-h-screen flex items-center justify-center bg-slate-50 px-4">
   <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-    <a routerLink="/" class="inline-block text-sm text-slate-400 hover:text-slate-600 mb-4 transition-colors">&larr; Back to home</a>
-    <h1 class="text-2xl font-bold text-center text-slate-800 mb-6">Create Account</h1>
+    <a routerLink="/" class="inline-block text-sm text-slate-400 hover:text-slate-600 mb-4 transition-colors" i18n="@@register.backToHome">&larr; Back to home</a>
+    <h1 class="text-2xl font-bold text-center text-slate-800 mb-6" i18n="@@register.title">Create Account</h1>
 
     <p class="text-red-600 text-sm mb-4" *ngIf="errorMessage">{{ errorMessage }}</p>
 
     <form (ngSubmit)="onSubmit()" class="space-y-4">
       <div>
-        <label for="displayName" class="block text-sm font-medium text-slate-700 mb-1">Display Name</label>
+        <label for="displayName" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@auth.display-name.label">Display Name</label>
         <input
           id="displayName"
           type="text"
@@ -15,12 +15,12 @@
           name="displayName"
           required
           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="John Doe"
+          i18n-placeholder="@@auth.display-name.placeholder" placeholder="John Doe"
         />
       </div>
 
       <div>
-        <label for="reg-email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+        <label for="reg-email" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@auth.email.label">Email</label>
         <input
           id="reg-email"
           type="email"
@@ -28,12 +28,12 @@
           name="email"
           required
           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="you@example.com"
+          i18n-placeholder="@@auth.email.placeholder" placeholder="you@example.com"
         />
       </div>
 
       <div>
-        <label for="reg-password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+        <label for="reg-password" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@auth.password.label">Password</label>
         <input
           id="reg-password"
           type="password"
@@ -42,17 +42,17 @@
           required
           (focus)="showPasswordRules = true"
           class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="At least 8 characters"
+          i18n-placeholder="@@auth.password.placeholder.register" placeholder="At least 8 characters"
         />
         <ul class="text-xs mt-1 space-y-1" *ngIf="showPasswordRules">
           <li [class.text-green-600]="password.length >= 8" [class.text-slate-400]="password.length < 8">
-            {{ password.length >= 8 ? '✓' : '○' }} At least 8 characters
+            {{ password.length >= 8 ? '✓' : '○' }} <ng-container i18n="@@register.password.rule.length">At least 8 characters</ng-container>
           </li>
           <li [class.text-green-600]="/[A-Z]/.test(password)" [class.text-slate-400]="!/[A-Z]/.test(password)">
-            {{ /[A-Z]/.test(password) ? '✓' : '○' }} One uppercase letter
+            {{ /[A-Z]/.test(password) ? '✓' : '○' }} <ng-container i18n="@@register.password.rule.uppercase">One uppercase letter</ng-container>
           </li>
           <li [class.text-green-600]="/[0-9]/.test(password)" [class.text-slate-400]="!/[0-9]/.test(password)">
-            {{ /[0-9]/.test(password) ? '✓' : '○' }} One number
+            {{ /[0-9]/.test(password) ? '✓' : '○' }} <ng-container i18n="@@register.password.rule.number">One number</ng-container>
           </li>
         </ul>
       </div>
@@ -62,13 +62,14 @@
         [disabled]="isLoading"
         class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        {{ isLoading ? 'Creating account...' : 'Create Account' }}
+        <span *ngIf="isLoading" i18n="@@register.creating">Creating account...</span>
+        <span *ngIf="!isLoading" i18n="@@register.create">Create Account</span>
       </button>
     </form>
 
     <p class="text-center text-sm text-slate-600 mt-6">
-      Already have an account?
-      <a routerLink="/login" class="text-blue-600 hover:text-blue-800 font-medium">Sign in</a>
+      <ng-container i18n="@@register.has-account">Already have an account?</ng-container>
+      <a routerLink="/login" class="text-blue-600 hover:text-blue-800 font-medium" i18n="@@register.signinLink">Sign in</a>
     </p>
   </div>
 </div>

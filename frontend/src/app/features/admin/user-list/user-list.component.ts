@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
+import { $localize } from '@angular/localize/init';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserDto } from '../../../core/auth/auth.models';
 
@@ -39,7 +40,7 @@ export class UserListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load users. Make sure you have admin access.');
+        this.errorMessage.set($localize`:@@error.load-users:Failed to load users. Make sure you have admin access.`);
         this.isLoading.set(false);
       },
     });
@@ -98,7 +99,7 @@ export class UserListComponent implements OnInit {
         this.closeRoleDialog();
       },
       error: () => {
-        this.errorMessage.set('Failed to update role. Please try again.');
+        this.errorMessage.set($localize`:@@error.update-role:Failed to update role. Please try again.`);
         this.closeRoleDialog();
       },
     });
@@ -111,10 +112,34 @@ export class UserListComponent implements OnInit {
         this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
       },
       error: () => {
-        this.errorMessage.set('Failed to toggle user status.');
+        this.errorMessage.set($localize`:@@error.toggle-status:Failed to toggle user status.`);
       },
     });
   }
+
+  /** Translatable labels */
+  roleLabels: Record<string, string> = {
+    'ROLE_ADMIN': $localize`:@@admin.users.role.admin:Admin`,
+    'ROLE_AGENT': $localize`:@@admin.users.role.agent:Agent`,
+    'ROLE_USER': $localize`:@@admin.users.role.user:User`,
+  };
+
+  statusLabels: Record<string, string> = {
+    'active': $localize`:@@admin.users.status.active:Active`,
+    'disabled': $localize`:@@admin.users.status.disabled:Disabled`,
+  };
+
+  actionEditRole: string = $localize`:@@admin.users.edit-role:Edit Role`;
+  actionDisable: string = $localize`:@@admin.users.disable:Disable`;
+  actionEnable: string = $localize`:@@admin.users.enable:Enable`;
+
+  dialogTitle: string = $localize`:@@admin.users.dialog.title:Edit Role`;
+  dialogCancel: string = $localize`:@@admin.users.dialog.cancel:Cancel`;
+  dialogChangeRoleFor: string = $localize`:@@admin.users.dialog.changeRole:Change role for`;
+
+  dialogDescAdmin: string = $localize`:@@admin.users.role.admin.desc:Full access to all features`;
+  dialogDescAgent: string = $localize`:@@admin.users.role.agent.desc:Ticket queue and resolution access`;
+  dialogDescUser: string = $localize`:@@admin.users.role.user.desc:Standard user access`;
 
   /** Format an ISO date string for display. */
   formatDate(dateStr: string): string {
