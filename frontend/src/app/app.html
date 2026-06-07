@@ -127,6 +127,7 @@
           <span class="text-sm text-slate-600">{{ authService.user()?.displayName }}</span>
           <button
             (click)="logout()"
+            data-testid="nav-logout"
             class="text-sm text-slate-500 hover:text-red-600 transition-colors"
             i18n="@@nav.logout"
           >

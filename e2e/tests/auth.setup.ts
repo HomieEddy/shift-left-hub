@@ -38,7 +38,7 @@ setup('authenticate as test user', async ({ page }) => {
   await page.waitForLoadState('networkidle');
 
   // Verify the user is logged in by checking for the logout button
-  await expect(page.getByText('Logout')).toBeVisible();
+  await expect(page.getByTestId('nav-logout')).toBeVisible();
 
   // Save the authenticated state to the shared storage file
   await page.context().storageState({ path: AUTH_FILE });

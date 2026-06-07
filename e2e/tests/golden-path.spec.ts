@@ -51,7 +51,7 @@ test.describe('Golden Path', () => {
       // Verify by navigating to /articles and checking for the logout button.
       await userPage.goto('/articles');
       await userPage.waitForLoadState('networkidle');
-      await expect(userPage.getByText('Logout')).toBeVisible();
+      await expect(userPage.getByTestId('nav-logout')).toBeVisible();
     });
 
     // ─────────────────────────────────────────────────
@@ -126,28 +126,18 @@ test.describe('Golden Path', () => {
         // Now try escalate again
         if (await chatPage.escalateButton.isVisible().catch(() => false)) {
           await chatPage.escalate();
-        } else {
-          // Last resort: trigger escalation programmatically via URL params
-          // The app should have an escalation mechanism; verify it works
-          console.log('Escalate button not found — checking alternative paths');
         }
       }
 
       // Fill in the escalation form
       const escalationFormVisible = await ticketsPage.escalationForm.isVisible().catch(() => false);
-      if (escalationFormVisible) {
-        await ticketsPage.createEscalation(
-          'VPN login not working after upgrade',
-          'NETWORK',
-          'HIGH',
-        );
-        // Verify ticket confirmation appeared
-        await expect(userPage.getByText(/Ticket created|Ticket Submitted/)).toBeVisible();
-      } else {
-        // If escalation form is not visible, the ticket may have been created
-        // via a different flow. Check the My Tickets page.
-        console.log('Escalation form not visible — checking /tickets');
-      }
+      expect(escalationFormVisible).toBeTruthy();
+      await ticketsPage.createEscalation(
+        'VPN login not working after upgrade',
+        'NETWORK',
+        'HIGH',
+      );
+      await expect(userPage.getByText(/Ticket created|Ticket Submitted/)).toBeVisible();
     });
 
     // ─────────────────────────────────────────────────
@@ -188,7 +178,7 @@ test.describe('Golden Path', () => {
         true, // Flag as knowledge gap for KCS
       );
       // Verify the resolved state is visible
-      await expect(agentPage.locator('.bg-green-50')).toBeVisible({ timeout: 10000 });
+      await expect(agentPage.getByTestId('ticket-resolved')).toBeVisible({ timeout: 10000 });
       // Verify the knowledge gap flag is shown
       await expect(agentPage.getByText(/Knowledge Gap|flagged/)).toBeVisible();
     });
