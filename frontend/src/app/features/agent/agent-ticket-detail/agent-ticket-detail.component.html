@@ -66,6 +66,7 @@
         <button
           (click)="claimTicket()"
           [disabled]="isClaiming()"
+          data-testid="agent-claim"
           class="bg-blue-600 text-white px-6 py-2 text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
           {{ isClaiming() ? claimingLabel : claimTicketLabel }}
@@ -117,16 +118,18 @@
         <textarea
           [(ngModel)]="resolutionNotes"
           [placeholder]="resolutionPlaceholder"
+          data-testid="agent-resolution-notes"
           rows="3"
           class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 resize-none"
         ></textarea>
         <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-          <input type="checkbox" [(ngModel)]="isKnowledgeGap" class="rounded border-slate-300" />
+          <input type="checkbox" [(ngModel)]="isKnowledgeGap" data-testid="agent-knowledge-gap" class="rounded border-slate-300" />
           {{ flagKnowledgeGapLabel }}
         </label>
         <button
           (click)="openResolveConfirm()"
           [disabled]="isResolving() || !resolutionNotes().trim()"
+          data-testid="agent-resolve"
           class="bg-blue-600 text-white px-4 py-1.5 text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
           {{ isResolving() ? resolvingLabel : resolveTicketLabel }}
@@ -182,6 +185,7 @@
           </button>
           <button
             (click)="confirmResolve()"
+            data-testid="agent-confirm-resolve"
             class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             {{ confirmLabel }}

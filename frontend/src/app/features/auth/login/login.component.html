@@ -11,6 +11,7 @@
         <input
           id="email"
           type="email"
+          data-testid="login-email"
           [(ngModel)]="email"
           name="email"
           required
@@ -24,6 +25,7 @@
         <input
           id="password"
           type="password"
+          data-testid="login-password"
           [(ngModel)]="password"
           name="password"
           required
@@ -36,6 +38,7 @@
       <button
         type="submit"
         [disabled]="isLoading"
+        data-testid="login-submit"
         class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         <span *ngIf="isLoading" i18n="@@login.signing-in">Signing in...</span>

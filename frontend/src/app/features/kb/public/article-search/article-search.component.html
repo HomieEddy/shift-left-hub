@@ -7,6 +7,7 @@
       type="text"
       [ngModel]="query()"
       (ngModelChange)="onSearchInput($event)"
+      data-testid="kb-search-input"
       placeholder="Search articles..." i18n-placeholder="@@kb.search.placeholder"
       class="w-full pl-12 pr-4 py-3 text-lg border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
     />
@@ -55,6 +56,7 @@
     <div class="space-y-4">
       <div
         *ngFor="let result of results()"
+        data-testid="kb-search-result"
         class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow"
       >
         <a [routerLink]="['/articles', result.id]" class="no-underline">

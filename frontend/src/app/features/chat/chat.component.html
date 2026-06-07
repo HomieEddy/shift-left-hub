@@ -4,7 +4,7 @@
     <p class="text-sm text-slate-500" i18n="@@chat.subtitle">Ask me anything about IT issues</p>
   </div>
 
-  <div #chatContainer aria-live="polite" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+  <div #chatContainer aria-live="polite" data-testid="chat-messages" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
     <ng-container *ngFor="let msg of messages(); trackBy: trackByFn">
       <div *ngIf="msg.role === 'user'" class="flex justify-end">
         <div class="max-w-[75%] bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm">
@@ -45,7 +45,7 @@
     <div *ngIf="showFallback()" class="flex justify-start ml-2">
       <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 max-w-md">
         <p class="mb-2" i18n="@@chat.fallback-message">I couldn't find a resolution in the knowledge base.</p>
-        <button (click)="escalateToHumanAgent()" class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium" i18n="@@chat.escalate">
+        <button (click)="escalateToHumanAgent()" data-testid="chat-escalate" class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium" i18n="@@chat.escalate">
           Escalate to Human Agent
         </button>
       </div>
@@ -110,6 +110,7 @@
       <input
         [(ngModel)]="currentInput"
         (keydown.enter)="sendMessage()"
+        data-testid="chat-input"
         i18n-placeholder="@@chat.input-placeholder" placeholder="Describe your IT issue..."
         class="flex-1 rounded-lg border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         [disabled]="isStreaming()"
@@ -117,6 +118,7 @@
       <button
         (click)="sendMessage()"
         [disabled]="!currentInput.trim() || isStreaming()"
+        data-testid="chat-send"
         class="rounded-lg bg-blue-600 px-5 py-2.5 text-sm text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         <ng-container i18n="@@chat.send">Send</ng-container>
