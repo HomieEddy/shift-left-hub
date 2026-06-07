@@ -44,7 +44,7 @@ export class TagManagerComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load tags.');
+        this.errorMessage.set($localize`:@@kb.tags.error.load:Failed to load tags.`);
         this.isLoading.set(false);
       },
     });
@@ -104,7 +104,7 @@ export class TagManagerComponent implements OnInit {
         ).subscribe({
           next: () => this.loadTags(),
           error: (err) => {
-            this.errorMessage.set(err.error?.error || 'Cannot delete tag: it is used by articles.');
+            this.errorMessage.set(err.error?.error || $localize`:@@kb.tags.error.delete:This tag is in use and cannot be deleted.`);
           },
         });
       }

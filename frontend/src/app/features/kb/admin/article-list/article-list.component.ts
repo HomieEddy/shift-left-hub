@@ -43,7 +43,7 @@ export class ArticleListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load articles.');
+        this.errorMessage.set($localize`:@@kb.articles.error.load:Failed to load articles.`);
         this.isLoading.set(false);
       },
     });
@@ -54,7 +54,7 @@ export class ArticleListComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => this.loadArticles(),
-      error: () => this.errorMessage.set('Failed to publish article.'),
+      error: () => this.errorMessage.set($localize`:@@kb.articles.error.publish:Failed to publish article.`),
     });
   }
 
@@ -63,7 +63,7 @@ export class ArticleListComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => this.loadArticles(),
-      error: () => this.errorMessage.set('Failed to archive article.'),
+      error: () => this.errorMessage.set($localize`:@@kb.articles.error.archive:Failed to archive article.`),
     });
   }
 
@@ -78,7 +78,7 @@ export class ArticleListComponent implements OnInit {
           takeUntilDestroyed(this.destroyRef)
         ).subscribe({
           next: () => this.loadArticles(),
-          error: () => this.errorMessage.set('Failed to delete article.'),
+          error: () => this.errorMessage.set($localize`:@@kb.articles.error.delete:Failed to delete article.`),
         });
       }
     });
