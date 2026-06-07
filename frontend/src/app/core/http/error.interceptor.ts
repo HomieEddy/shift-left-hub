@@ -22,7 +22,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         message = $localize`:@@http.error.serverError:Server error. Please try again later.`;
       }
 
-      // TODO: Replace with toast/snackbar notification in shared components
+      // TODO: Replace with shared notification service (toast/snackbar) — planned for post-v1.0
       console.error(`[HTTP Error ${error.status}]:`, message);
 
       return throwError(() => error);

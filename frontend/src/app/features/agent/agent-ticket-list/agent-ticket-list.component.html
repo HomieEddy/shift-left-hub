@@ -38,7 +38,7 @@
       <input
         type="text"
         [placeholder]="searchPlaceholder"
-        (input)="onSearchInput($any($event.target).value)"
+        (input)="onSearchInput(($event.target as HTMLInputElement).value)"
         class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700 flex-1 min-w-[200px]"
       />
   </div>
