@@ -1,11 +1,14 @@
 package com.shiftleft.hub.config;
 
+import com.shiftleft.hub.auth.domain.UsedRefreshToken;
+import com.shiftleft.hub.auth.domain.UsedRefreshTokenRepository;
 import com.shiftleft.hub.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,13 +29,17 @@ public class JwtService {
 
     private final Map<String, String> usedRefreshTokens = new ConcurrentHashMap<>();
 
+    private final UsedRefreshTokenRepository usedRefreshTokenRepository;
+
     public JwtService(
             @Value("${app.jwt.secret}") String secretKey,
             @Value("${app.jwt.access-token-expiration}") long accessExpiration,
-            @Value("${app.jwt.refresh-token-expiration}") long refreshExpiration) {
+            @Value("${app.jwt.refresh-token-expiration}") long refreshExpiration,
+            UsedRefreshTokenRepository usedRefreshTokenRepository) {
         this.secretKey = secretKey;
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;
+        this.usedRefreshTokenRepository = usedRefreshTokenRepository;
     }
 
     private SecretKey getSigningKey() {
@@ -91,11 +99,25 @@ public class JwtService {
             log.warn("Refresh token reuse detected for tokenId: {}", tokenId);
             throw new JwtException("Refresh token reuse detected for tokenId: " + tokenId);
         }
+        if (usedRefreshTokenRepository.findByTokenId(tokenId).isPresent()) {
+            log.warn("Refresh token reuse detected in DB for tokenId: {}", tokenId);
+            usedRefreshTokens.put(tokenId, userId);
+            throw new JwtException("Refresh token reuse detected for tokenId: " + tokenId);
+        }
         usedRefreshTokens.put(tokenId, userId);
+        usedRefreshTokenRepository.save(new UsedRefreshToken(
+            tokenId, UUID.fromString(userId),
+            Instant.now().plusSeconds(refreshExpiration / 1000)));
     }
 
     public void invalidateRefreshToken(String tokenId) {
         usedRefreshTokens.remove(tokenId);
+        usedRefreshTokenRepository.findByTokenId(tokenId).ifPresent(usedRefreshTokenRepository::delete);
+    }
+
+    @Scheduled(fixedRate = 300_000)
+    public void evictExpiredRefreshTokens() {
+        usedRefreshTokenRepository.deleteByExpiresAtBefore(Instant.now());
     }
 
     public String extractTokenId(String token) {
