@@ -62,7 +62,7 @@ describe('TicketListComponent', () => {
   });
 
   it('should set loading state during ticket load', () => {
-    const pendingSubject = new Subject<any>();
+    const pendingSubject = new Subject<unknown>();
     ticketService.getTickets.mockReturnValue(pendingSubject.asObservable());
 
     component.loadTickets();
@@ -71,7 +71,7 @@ describe('TicketListComponent', () => {
   });
 
   it('should handle error state gracefully', () => {
-    const errorSubject = new Subject<any>();
+    const errorSubject = new Subject<unknown>();
     ticketService.getTickets.mockReturnValue(errorSubject.asObservable());
 
     component.loadTickets();

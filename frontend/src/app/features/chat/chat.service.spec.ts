@@ -17,7 +17,7 @@ describe('ChatService', () => {
   function mockFetchStream(chunks: string[], status = 200) {
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
-      async start(controller) {
+      start(controller) {
         for (const chunk of chunks) {
           controller.enqueue(encoder.encode(chunk));
         }
@@ -30,7 +30,7 @@ describe('ChatService', () => {
       status,
       statusText: status === 500 ? 'Internal Server Error' : 'OK',
       body: stream,
-    } as Response);
+    });
   }
 
   function mockFetchError(error: Error) {
@@ -185,7 +185,7 @@ describe('ChatService', () => {
   });
 
   describe('request payload', () => {
-    it('should include message and history in request body', async () => {
+    it('should include message and history in request body', () => {
       mockFetchStream(['data: {"type":"done","content":""}\n\n']);
       const history = [{ role: 'user' as const, content: 'Hi' }];
 
@@ -198,7 +198,7 @@ describe('ChatService', () => {
       expect(options.method).toBe('POST');
       expect(options.credentials).toBe('include');
 
-      const body = JSON.parse(options.body as string);
+      const body = JSON.parse(options.body as string) as { message: string; history: typeof history };
       expect(body.message).toBe('test-message');
       expect(body.history).toEqual(history);
     });
@@ -232,7 +232,7 @@ describe('ChatService', () => {
         ok: true,
         status: 200,
         body: null,
-      } as unknown as Response);
+      });
 
       const { events } = service.sendMessage('test', []);
       const received: StreamEvent[] = [];

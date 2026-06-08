@@ -36,6 +36,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Fix Maven wrapper permissions
+        run: chmod +x mvnw
+        working-directory: backend
+
       - name: Run backend verify (Checkstyle + SpotBugs + Unit + Integration Tests + JaCoCo)
         # Testcontainers starts its own pgvector container on GitHub Actions runners (Docker available)
         run: ./mvnw verify -B

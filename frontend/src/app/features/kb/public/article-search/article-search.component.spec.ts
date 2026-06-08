@@ -92,7 +92,7 @@ describe('ArticleSearchComponent', () => {
   });
 
   it('should set error state on search failure', () => {
-    const errorSubject = new Subject<any>();
+    const errorSubject = new Subject<unknown>();
     publicArticleService.search.mockReturnValue(errorSubject.asObservable());
 
     component.doSearch('test', 0, []);
@@ -104,7 +104,7 @@ describe('ArticleSearchComponent', () => {
   });
 
   it('should set loading state during search', () => {
-    const pendingSubject = new Subject<any>();
+    const pendingSubject = new Subject<unknown>();
     publicArticleService.search.mockReturnValue(pendingSubject.asObservable());
 
     component.doSearch('test', 0, []);
