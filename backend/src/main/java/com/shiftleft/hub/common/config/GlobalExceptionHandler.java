@@ -235,6 +235,40 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles malformed JSON request bodies.
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return a bad request problem detail
+     */
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ProblemDetail handleMalformedBody(
+            org.springframework.http.converter.HttpMessageNotReadableException ex,
+            HttpServletRequest request) {
+        log.warn("Malformed request body: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.BAD_REQUEST, "Malformed Request Body",
+            "The request body could not be read. Check JSON syntax.",
+            "urn:shiftleft:problem:validation-error", request);
+    }
+
+    /**
+     * Handles HTTP method not supported errors.
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return a method not allowed problem detail
+     */
+    @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+    public ProblemDetail handleMethodNotAllowed(
+            org.springframework.web.HttpRequestMethodNotSupportedException ex,
+            HttpServletRequest request) {
+        log.warn("Method not allowed: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.METHOD_NOT_ALLOWED, "Method Not Allowed",
+            ex.getMessage(),
+            "urn:shiftleft:problem:method-not-allowed", request);
+    }
+
+    /**
      * Handles all unhandled exceptions as a generic internal error.
      *
      * @param ex      the exception
