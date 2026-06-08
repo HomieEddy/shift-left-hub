@@ -49,7 +49,7 @@ export class ChatPage {
         () => {
           const container = document.querySelector('[data-testid="chat-messages"]');
           if (!container) return false;
-          const assistantBubbles = container.querySelectorAll('.bg-slate-100');
+          const assistantBubbles = container.querySelectorAll('[data-testid="assistant-message"]');
           return assistantBubbles.length > 0;
         },
         { timeout },

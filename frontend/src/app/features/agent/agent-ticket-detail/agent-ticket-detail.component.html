@@ -201,6 +201,7 @@
     <!-- Resolve confirmation modal -->
     @if (resolveConfirmOpen()) {
       <div
+        data-testid="resolve-confirm-modal"
         class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
         (click)="cancelResolveConfirm()"
         (keydown.enter)="cancelResolveConfirm()"

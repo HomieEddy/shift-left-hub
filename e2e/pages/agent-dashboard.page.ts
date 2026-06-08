@@ -62,10 +62,9 @@ export class AgentDashboardPage {
     // Click the first visible Claim button to open the confirmation modal
     await this.page.locator('table tbody tr').locator('button').first().click();
     // Wait for the confirmation modal
-    await this.page.waitForSelector('.fixed.inset-0', { timeout: 5000 });
-    // Click the "Confirm" button in the modal (second button in the modal)
-    const confirmModal = this.page.locator('.fixed.inset-0 .bg-white');
-    await confirmModal.locator('button').last().click();
+    await this.page.waitForSelector('[data-testid="claim-modal"]', { timeout: 5000 });
+    // Click the "Confirm" button in the modal
+    await this.page.locator('[data-testid="claim-modal"] [data-testid="claim-modal-content"]').locator('button').last().click();
     // Wait for navigation to ticket detail page (/agent/tickets/:id)
     await this.page.waitForURL(/\/agent\/tickets\/[0-9a-f-]+/);
     await this.page.waitForLoadState('networkidle');
@@ -90,12 +89,12 @@ export class AgentDashboardPage {
   async clickResolve(): Promise<void> {
     await this.resolveButton.click();
     // Wait for confirmation modal
-    await this.page.waitForSelector('.fixed.inset-0', { timeout: 5000 });
+    await this.page.waitForSelector('[data-testid="resolve-confirm-modal"]', { timeout: 5000 });
     // Click confirm
     await this.confirmResolveButton.click();
     // Wait for the page to reflect the RESOLVED state
     await this.page.waitForFunction(
-      () => document.querySelector('.bg-green-50') !== null,
+      () => document.querySelector('[data-testid="ticket-resolved"]') !== null,
       { timeout: 10000 },
     );
   }
