@@ -15,11 +15,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +23,15 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
+/**
+ * JPA entity representing a knowledge base article.
+ */
 @Entity
 @Table(name = "article")
 @Getter
@@ -104,8 +108,12 @@ public class Article {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Article article)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Article article)) {
+            return false;
+        }
         return id != null && id.equals(article.id);
     }
 

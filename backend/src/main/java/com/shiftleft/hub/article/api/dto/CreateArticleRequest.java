@@ -1,9 +1,13 @@
 package com.shiftleft.hub.article.api.dto;
 
 import jakarta.validation.constraints.NotBlank;
+
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Request payload for creating a new article.
+ */
 public record CreateArticleRequest(
     @NotBlank String titleEn,
     @NotBlank String contentEn,
@@ -12,4 +16,5 @@ public record CreateArticleRequest(
     String excerpt,
     String featuredImage,
     Set<UUID> tagIds
-) {}
+) {
+}
