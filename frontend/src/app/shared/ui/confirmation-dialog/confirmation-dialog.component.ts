@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ConfirmationData } from './confirmation-dialog.model';
-import { from } from 'rxjs';
+import { from, of } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -55,14 +55,26 @@ export class ConfirmDialogComponent {
     if (this.data.onConfirm) {
       this.loading.set(true);
       this.errorMessage.set(null);
-      from(this.data.onConfirm()).subscribe({
-        next: () => this.dialogRef.close(true),
-        error: (err: unknown) => {
-          this.loading.set(false);
-          const fallbackMsg: string = $localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.`;
-          this.errorMessage.set(err instanceof Error ? err.message : fallbackMsg);
-        },
-      });
+
+      try {
+        const result = this.data.onConfirm();
+        // Handle both Promise and synchronous returns
+        const observable$ = result instanceof Promise
+          ? from(result)
+          : of(result);
+
+        observable$.subscribe({
+          next: () => this.dialogRef.close(true),
+          error: (err: unknown) => {
+            this.loading.set(false);
+            const fallbackMsg: string = $localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.`;
+            this.errorMessage.set(err instanceof Error ? err.message : fallbackMsg);
+          },
+        });
+      } catch (err) {
+        this.loading.set(false);
+        this.errorMessage.set(err instanceof Error ? err.message : 'Unexpected error');
+      }
     } else {
       this.dialogRef.close(true);
     }
