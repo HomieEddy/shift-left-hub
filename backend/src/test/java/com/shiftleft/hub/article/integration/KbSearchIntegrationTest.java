@@ -17,13 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.springframework.test.context.jdbc.Sql;
 
 /**
  * Integration test for KB full-text search using real tsvector/GIN indexes.
@@ -33,7 +33,6 @@ import org.springframework.test.context.jdbc.Sql;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Sql(scripts = "/create-tsv-trigger.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class KbSearchIntegrationTest extends AbstractIntegrationTest {
 
     @LocalServerPort
@@ -44,6 +43,9 @@ class KbSearchIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private WebTestClient webTestClient;
     private String adminAccessToken;
@@ -198,5 +200,7 @@ class KbSearchIntegrationTest extends AbstractIntegrationTest {
                 .returnResult().getResponseBody();
         assertThat(response).isNotNull();
         assertThat(response.status().name()).isEqualTo("PUBLISHED");
+        // Populate tsvector columns (trigger not available in test profile)
+        jdbcTemplate.update("UPDATE article SET tsv_en = to_tsvector('english', coalesce(title_en,'') || ' ' || coalesce(content_en,'')), tsv_fr = to_tsvector('french', coalesce(title_fr,'') || ' ' || coalesce(content_fr,'')) WHERE id = ?", articleId);
     }
 }
