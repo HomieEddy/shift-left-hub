@@ -1,12 +1,11 @@
 import { Component, input, output } from '@angular/core';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-pagination',
   standalone: true,
-  imports: [NgIf],
   template: `
-    <div *ngIf="totalPages() > 1" class="flex items-center justify-center gap-2 mt-6">
+    @if (totalPages() > 1) {
+      <div class="flex items-center justify-center gap-2 mt-6">
       <button
         (click)="goToPage(currentPage() - 1)"
         [disabled]="currentPage() === 0"
@@ -26,7 +25,8 @@ import { NgIf } from '@angular/common';
       >
         Next
       </button>
-    </div>
+      </div>
+    }
   `,
 })
 export class PaginationComponent {
