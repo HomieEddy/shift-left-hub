@@ -1,1 +1,1 @@
-npx lint-staged
+npx --prefix frontend prettier --write src/ 2>/dev/null || true

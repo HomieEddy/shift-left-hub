@@ -4,7 +4,9 @@
     <div class="flex items-center justify-between h-14">
       <!-- Left side: Logo + Navigation -->
       <div class="flex items-center gap-6">
-        <a routerLink="/" class="text-lg font-bold text-slate-800 no-underline" i18n="@@app.title">SL Knowledge Hub</a>
+        <a routerLink="/" class="text-lg font-bold text-slate-800 no-underline" i18n="@@app.title"
+          >SL Knowledge Hub</a
+        >
         <nav class="flex items-center gap-4 text-sm">
           @if (authService.isAuthenticated() && authService.isAdmin()) {
             <a
@@ -32,7 +34,9 @@
               KCS Drafts
               @if (pendingKcsCount() > 0) {
                 <span
-                  class="absolute -top-1.5 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full min-w-[18px]">
+                  data-testid="kcs-pending-badge"
+                  class="absolute -top-1.5 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full min-w-[18px]"
+                >
                   {{ pendingKcsCount() }}
                 </span>
               }
@@ -133,8 +137,18 @@
             Logout
           </button>
         } @else {
-          <a routerLink="/login" class="text-sm text-slate-600 hover:text-slate-800 transition-colors" i18n="@@nav.signin">Sign in</a>
-          <a routerLink="/register" class="text-sm rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 transition-colors" i18n="@@nav.register">Register</a>
+          <a
+            routerLink="/login"
+            class="text-sm text-slate-600 hover:text-slate-800 transition-colors"
+            i18n="@@nav.signin"
+            >Sign in</a
+          >
+          <a
+            routerLink="/register"
+            class="text-sm rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 transition-colors"
+            i18n="@@nav.register"
+            >Register</a
+          >
         }
       </div>
     </div>

@@ -5,9 +5,6 @@
 .auth/
 e2e/.auth/
 frontend/.auth/
-
-# Root auth dir
-.auth/
 frontend/test-results/
 frontend/playwright-report/
 playwright-report/

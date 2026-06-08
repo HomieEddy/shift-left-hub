@@ -1,9 +1,9 @@
 {
   "frontend/src/**/*.{ts,html}": [
-    "cd frontend && prettier --write",
-    "cd frontend && eslint --fix"
+    "npx --prefix frontend prettier --write",
+    "npx --prefix frontend eslint --config frontend/eslint.config.js --fix"
   ],
   "frontend/src/**/*.{json,css}": [
-    "cd frontend && prettier --write"
+    "npx --prefix frontend prettier --write"
   ]
 }
