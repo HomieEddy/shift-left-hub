@@ -86,8 +86,8 @@ jobs:
         run: pnpm lint
         working-directory: frontend
 
-          - name: Run unit tests with coverage
-            run: pnpm test -- --run --coverage
+      - name: Run unit tests with coverage
+        run: pnpm test -- --run --coverage
         working-directory: frontend
 
       - name: Build
