@@ -91,7 +91,7 @@ jobs:
         working-directory: frontend
 
       - name: Run unit tests with coverage
-        run: pnpm test -- --watch=false
+        run: pnpm test
         working-directory: frontend
 
       - name: Build
