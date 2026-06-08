@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { provideRouter } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { vi } from 'vitest';
@@ -47,6 +47,16 @@ describe('LoginComponent', () => {
       password: 'password',
     });
     expect(navigateSpy).toHaveBeenCalledWith(['/articles']);
+  });
+
+  it('should set isLoading to true during submit', () => {
+    authService.login.mockReturnValue(new Subject<any>().asObservable());
+
+    component.email = 'test@example.com';
+    component.password = 'password';
+    component.onSubmit();
+
+    expect(component.isLoading).toBe(true);
   });
 
   it('should set errorMessage on 401 response', () => {
