@@ -33,7 +33,12 @@ export class ChatService {
         return;
       }
 
-      const reader = response.body!.getReader();
+      if (!response.body) {
+        subject.next({ type: 'error', content: 'Empty response from server' });
+        subject.complete();
+        return;
+      }
+      const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
 
