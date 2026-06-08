@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master, main]
+  push:
+    branches: [master, main]
+
+env:
+  SONAR_PROJECT_KEY: shiftleft-knowledge-hub
+  SONAR_ORG: shiftleft
+  SONAR_HOST_URL: https://sonarcloud.io
+
+jobs:
+  backend:
+    name: Backend (Checkstyle + SpotBugs + Tests + Coverage)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # SonarQube needs full git history
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('backend/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run backend verify (Checkstyle + SpotBugs + Unit + Integration Tests + JaCoCo)
+        # Testcontainers starts its own pgvector container on GitHub Actions runners (Docker available)
+        run: ./mvnw verify -B
+        working-directory: backend
+
+      - name: SonarQube Cloud Scan
+        if: always()  # Runs even if tests fail (informational per D-02)
+        run: >
+          ./mvnw sonar:sonar -B
+          -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+          -Dsonar.organization=${{ env.SONAR_ORG }}
+          -Dsonar.host.url=${{ env.SONAR_HOST_URL }}
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+        working-directory: backend
+        continue-on-error: true  # Non-blocking per D-02
+
+  frontend:
+    name: Frontend (Lint + Test + Build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: frontend
+
+      - name: Run ESLint
+        run: pnpm lint
+        working-directory: frontend
+
+          - name: Run unit tests with coverage
+            run: pnpm test -- --run --coverage
+        working-directory: frontend
+
+      - name: Build
+        run: pnpm build
+        working-directory: frontend

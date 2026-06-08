@@ -146,12 +146,13 @@
   <!-- Claim confirmation modal -->
   @if (claimConfirmOpen()) {
     <div
+      data-testid="claim-modal"
       class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
       (click)="cancelClaim()"
       (keydown.enter)="cancelClaim()"
       tabindex="0"
     >
-      <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
+      <div data-testid="claim-modal-content" class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
         <p class="text-sm text-slate-700 mb-4">{{ claimConfirmLabel }}</p>
         <div class="flex gap-2 justify-end">
           <button

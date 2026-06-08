@@ -1,0 +1,15 @@
+{
+  "name": "shiftleft-hub",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "lint:frontend": "cd frontend && pnpm lint",
+    "test:frontend": "cd frontend && pnpm test -- --watch=false --browsers=ChromeHeadless",
+    "test:backend": "cd backend && ./mvnw verify -B",
+    "format:check": "cd frontend && prettier --check \"src/**/*.{ts,html,json,css}\""
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2"
+  }
+}

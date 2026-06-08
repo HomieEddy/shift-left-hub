@@ -15,6 +15,7 @@ export class TicketsPage {
   readonly submitButton: Locator;
 
   /* ---- My Tickets page ---- */
+  readonly ticketTable: Locator;
   readonly ticketList: Locator;
 
   constructor(private readonly page: Page) {
@@ -23,6 +24,7 @@ export class TicketsPage {
     this.categorySelect = this.page.getByTestId('escalation-category');
     this.urgencySelect = this.page.getByTestId('escalation-urgency');
     this.submitButton = this.page.getByTestId('escalation-submit');
+    this.ticketTable = this.page.locator('table tbody');
     this.ticketList = this.page.locator('table tbody tr');
   }
 
@@ -54,5 +56,14 @@ export class TicketsPage {
   /** Get the number of ticket rows in the table. */
   async ticketCount(): Promise<number> {
     return this.ticketList.count();
+  }
+
+  /** Get the first ticket number from the tickets table. */
+  async getFirstTicketNumber(): Promise<string | null> {
+    const firstRow = this.ticketList.first();
+    if (!(await firstRow.isVisible().catch(() => false))) return null;
+    const text = await firstRow.textContent();
+    const match = text?.match(/TKT-\d{4}/);
+    return match ? match[0] : null;
   }
 }

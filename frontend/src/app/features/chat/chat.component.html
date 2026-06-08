@@ -16,7 +16,7 @@
 
       @if (msg.role === 'assistant') {
         <div class="flex justify-start">
-          <div class="max-w-[75%] bg-slate-100 text-slate-800 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm prose prose-sm">
+          <div data-testid="assistant-message" class="max-w-[75%] bg-slate-100 text-slate-800 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm prose prose-sm">
             @if (msg.content) {
               <markdown class="markdown-content" [data]="msg.content"></markdown>
             } @else {

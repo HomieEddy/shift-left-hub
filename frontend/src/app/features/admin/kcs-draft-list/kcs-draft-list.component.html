@@ -2,7 +2,9 @@
   <!-- Header -->
   <div class="mb-6">
     <h1 class="text-2xl font-bold text-slate-800" i18n="@@kcs.drafts.title">KCS Drafts</h1>
-    <p class="text-sm text-slate-500 mt-1" i18n="@@kcs.drafts.description">Review and manage AI-drafted knowledge base articles</p>
+    <p class="text-sm text-slate-500 mt-1" i18n="@@kcs.drafts.description">
+      Review and manage AI-drafted knowledge base articles
+    </p>
   </div>
 
   <!-- Success message -->
@@ -21,7 +23,9 @@
 
   <!-- Loading state -->
   @if (isLoading()) {
-    <div class="text-center py-12 text-slate-500" i18n="@@kcs.drafts.loading">Loading drafts...</div>
+    <div class="text-center py-12 text-slate-500" i18n="@@kcs.drafts.loading">
+      Loading drafts...
+    </div>
   }
 
   <!-- Empty state -->
@@ -37,19 +41,43 @@
       <table class="w-full text-sm">
         <thead class="bg-slate-50 border-b border-slate-200">
           <tr>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.title">Title</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.ticket">Source Ticket</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.status">Status</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.date">Created</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.actions">Actions</th>
+            <th
+              class="text-left px-4 py-3 font-medium text-slate-600"
+              i18n="@@kcs.drafts.col.title"
+            >
+              Title
+            </th>
+            <th
+              class="text-left px-4 py-3 font-medium text-slate-600"
+              i18n="@@kcs.drafts.col.ticket"
+            >
+              Source Ticket
+            </th>
+            <th
+              class="text-left px-4 py-3 font-medium text-slate-600"
+              i18n="@@kcs.drafts.col.status"
+            >
+              Status
+            </th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.date">
+              Created
+            </th>
+            <th
+              class="text-left px-4 py-3 font-medium text-slate-600"
+              i18n="@@kcs.drafts.col.actions"
+            >
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
           @for (draft of drafts(); track draft.id) {
-            <tr class="hover:bg-slate-50">
+            <tr class="hover:bg-slate-50" data-testid="draft-row">
               <!-- Title -->
               <td class="px-4 py-3">
-                <div class="text-sm font-medium text-slate-800">{{ draft.titleEn }}</div>
+                <div class="text-sm font-medium text-slate-800" data-testid="draft-title">
+                  {{ draft.titleEn }}
+                </div>
                 @if (draft.titleFr !== null) {
                   <div class="text-xs text-slate-500 mt-0.5">{{ draft.titleFr }}</div>
                 }
@@ -67,43 +95,56 @@
               </td>
               <!-- Status -->
               <td class="px-4 py-3">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                      [class.bg-yellow-100]="draft.status === 'DRAFT'"
-                      [class.text-yellow-700]="draft.status === 'DRAFT'"
-                      [class.bg-green-100]="draft.status === 'PUBLISHED'"
-                      [class.text-green-700]="draft.status === 'PUBLISHED'"
-                      [class.bg-red-100]="draft.status === 'ARCHIVED'"
-                      [class.text-red-700]="draft.status === 'ARCHIVED'">
+                <span
+                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                  [class.bg-yellow-100]="draft.status === 'DRAFT'"
+                  [class.text-yellow-700]="draft.status === 'DRAFT'"
+                  [class.bg-green-100]="draft.status === 'PUBLISHED'"
+                  [class.text-green-700]="draft.status === 'PUBLISHED'"
+                  [class.bg-red-100]="draft.status === 'ARCHIVED'"
+                  [class.text-red-700]="draft.status === 'ARCHIVED'"
+                >
                   {{ draft.status }}
                 </span>
               </td>
               <!-- Date -->
               <td class="px-4 py-3 text-xs text-slate-500">
-                {{ draft.createdAt | date:'shortDate' }}
+                {{ draft.createdAt | date: 'shortDate' }}
               </td>
               <!-- Actions -->
               <td class="px-4 py-3">
                 <div class="flex items-center gap-2">
                   <!-- Edit link → reuses ArticleEditorComponent -->
-                  <a [routerLink]="['/admin/kcs-drafts', draft.id, 'edit']"
-                     class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" i18n="@@kcs.drafts.edit">
+                  <a
+                    [routerLink]="['/admin/kcs-drafts', draft.id, 'edit']"
+                    class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100"
+                    i18n="@@kcs.drafts.edit"
+                  >
                     Edit
                   </a>
 
                   <!-- Approve button (visible for DRAFT only) -->
                   @if (draft.status === 'DRAFT') {
-                    <button (click)="requestApprove(draft)"
-                            [disabled]="actionLoading() === draft.id"
-                            class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50 disabled:opacity-50" i18n="@@kcs.drafts.approve">
+                    <button
+                      (click)="requestApprove(draft)"
+                      [disabled]="actionLoading() === draft.id"
+                      data-testid="approve-draft-btn"
+                      class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50 disabled:opacity-50"
+                      i18n="@@kcs.drafts.approve"
+                    >
                       Approve
                     </button>
                   }
 
                   <!-- Reject button (visible for DRAFT only) -->
                   @if (draft.status === 'DRAFT') {
-                    <button (click)="requestReject(draft)"
-                            [disabled]="actionLoading() === draft.id"
-                            class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50" i18n="@@kcs.drafts.reject">
+                    <button
+                      (click)="requestReject(draft)"
+                      [disabled]="actionLoading() === draft.id"
+                      data-testid="reject-draft-btn"
+                      class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50"
+                      i18n="@@kcs.drafts.reject"
+                    >
                       Reject
                     </button>
                   }
@@ -131,18 +172,23 @@
       }
     </p>
     <div class="flex justify-end gap-3">
-      <button (click)="cancelAction()"
-              class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50"
-              i18n="@@kcs.drafts.confirm.cancel">
+      <button
+        (click)="cancelAction()"
+        class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50"
+        i18n="@@kcs.drafts.confirm.cancel"
+      >
         Cancel
       </button>
-      <button (click)="executePendingAction()"
-              [class.bg-green-600]="pendingAction()?.type === 'approve'"
-              [class.hover:bg-green-700]="pendingAction()?.type === 'approve'"
-              [class.bg-red-600]="pendingAction()?.type === 'reject'"
-              [class.hover:bg-red-700]="pendingAction()?.type === 'reject'"
-              class="px-4 py-2 text-sm rounded-lg text-white"
-              i18n="@@kcs.drafts.confirm.confirm">
+      <button
+        (click)="executePendingAction()"
+        data-testid="modal-confirm-btn"
+        [class.bg-green-600]="pendingAction()?.type === 'approve'"
+        [class.hover:bg-green-700]="pendingAction()?.type === 'approve'"
+        [class.bg-red-600]="pendingAction()?.type === 'reject'"
+        [class.hover:bg-red-700]="pendingAction()?.type === 'reject'"
+        class="px-4 py-2 text-sm rounded-lg text-white"
+        i18n="@@kcs.drafts.confirm.confirm"
+      >
         Confirm
       </button>
     </div>
@@ -151,17 +197,23 @@
   <!-- Pagination -->
   @if (totalPages() > 1) {
     <div class="flex items-center justify-center gap-2 mt-6">
-      <button (click)="changePage(currentPage() - 1)"
-              [disabled]="currentPage() === 0"
-              class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-              i18n="@@pagination.previous">
+      <button
+        (click)="changePage(currentPage() - 1)"
+        [disabled]="currentPage() === 0"
+        class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+        i18n="@@pagination.previous"
+      >
         Previous
       </button>
-      <span class="text-sm text-slate-600" i18n="@@kcs.drafts.pageIndicator">Page {{ displayPage() }} of {{ totalPages() }}</span>
-      <button (click)="changePage(currentPage() + 1)"
-              [disabled]="currentPage() >= totalPages() - 1"
-              class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-              i18n="@@pagination.next">
+      <span class="text-sm text-slate-600" i18n="@@kcs.drafts.pageIndicator"
+        >Page {{ displayPage() }} of {{ totalPages() }}</span
+      >
+      <button
+        (click)="changePage(currentPage() + 1)"
+        [disabled]="currentPage() >= totalPages() - 1"
+        class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+        i18n="@@pagination.next"
+      >
         Next
       </button>
     </div>

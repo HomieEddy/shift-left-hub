@@ -44,5 +44,21 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
+    {
+      name: 'agent-chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/agent.json',
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'admin-chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/admin.json',
+      },
+      dependencies: ['setup'],
+    },
   ],
 });
