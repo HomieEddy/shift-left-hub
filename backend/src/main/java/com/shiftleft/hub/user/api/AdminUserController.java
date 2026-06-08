@@ -22,16 +22,34 @@ public class AdminUserController {
 
     private final AdminUserService adminUserService;
 
+    /**
+     * Get all users, sorted by creation date descending.
+     *
+     * @return list of all users
+     */
     @GetMapping
     public List<UserResponse> getAllUsers() {
         return adminUserService.getAllUsers();
     }
 
+    /**
+     * Get a user by their ID.
+     *
+     * @param id the user UUID
+     * @return the user response
+     */
     @GetMapping("/{id}")
     public UserResponse getUserById(@PathVariable UUID id) {
         return adminUserService.getUserById(id);
     }
 
+    /**
+     * Update a user's role.
+     *
+     * @param id      the user UUID
+     * @param request the role update payload
+     * @return the updated user response
+     */
     @PutMapping("/{id}/role")
     public UserResponse updateUserRole(
             @PathVariable UUID id,
@@ -39,6 +57,12 @@ public class AdminUserController {
         return adminUserService.updateUserRole(id, request.role());
     }
 
+    /**
+     * Toggle a user's enabled status.
+     *
+     * @param id the user UUID
+     * @return the updated user response
+     */
     @PutMapping("/{id}/status")
     public UserResponse toggleUserStatus(@PathVariable UUID id) {
         return adminUserService.toggleUserStatus(id);
