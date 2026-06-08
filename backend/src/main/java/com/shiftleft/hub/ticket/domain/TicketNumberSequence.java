@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** Database sequence entity for generating ticket numbers. */
 @Entity
 @Table(name = "ticket_number_sequence")
 @Getter
