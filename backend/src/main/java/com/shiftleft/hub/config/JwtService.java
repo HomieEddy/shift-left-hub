@@ -171,6 +171,11 @@ public class JwtService {
     @Scheduled(fixedRate = 300_000, initialDelay = 60_000)
     public void evictExpiredRefreshTokens() {
         try {
+            int before = usedRefreshTokens.size();
+            usedRefreshTokens.keySet().removeIf(tokenId ->
+                usedRefreshTokenRepository.findByTokenId(tokenId).isEmpty());
+            log.debug("Evicted {} expired in-memory refresh tokens", before - usedRefreshTokens.size());
+
             usedRefreshTokenRepository.deleteByExpiresAtBefore(Instant.now());
         } catch (Exception e) {
             log.warn("Failed to evict expired refresh tokens (tables may not be ready yet): {}", e.getMessage());
