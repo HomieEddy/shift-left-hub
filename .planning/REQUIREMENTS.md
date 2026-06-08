@@ -69,7 +69,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ## v2 Requirements
 
-Deferred to future release. Tracked but not in current roadmap.
+### Testing & CI/CD (Phase 8)
+
+- [ ] **TST-01**: Backend service layer has unit tests covering all core services — *Phase 8*
+- [ ] **TST-02**: Backend integration tests verify real database interactions via Testcontainers — *Phase 8*
+- [ ] **TST-03**: Frontend service and smart component tests validate HTTP calls and behaviour — *Phase 8*
+- [ ] **TST-04**: Playwright E2E golden path covers the full user+agent happy path — *Phase 8*
+- [ ] **TST-05**: GitHub Actions CI runs lint → test → build on every PR, gating deploys — *Phase 8*
 
 ### Notifications
 
@@ -144,10 +150,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INF-02 | Phase 1 | Complete |
 | INF-03 | Phase 1 | Complete |
 | INF-04 | Phase 3 | Complete |
+| TST-01 | Phase 8 (Plan 08-02) | Pending |
+| TST-02 | Phase 8 (Plan 08-01, 08-03) | Pending |
+| TST-03 | Phase 8 (Plan 08-04, 08-05) | Pending |
+| TST-04 | Phase 8 (Plan 08-06) | Pending |
+| TST-05 | Phase 8 (Plan 08-07) | Pending |
 
 **Coverage:**
 - v1 requirements: 36 total
-- Mapped to phases: 36
+- v2 requirements (Phase 8): 5 total
+- Mapped to phases: 41
 - Unmapped: 0 ✓
 
 | Phase | Requirement Count | Requirements |
@@ -159,7 +171,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Phase 5: Agent Dashboard | 5 | AGT-01, AGT-02, AGT-03, AGT-04, AGT-05 |
 | Phase 6: KCS Auto-Drafting & Admin Review | 6 | KCS-01, KCS-02, KCS-03, KCS-04, ADM-01, ADM-02 |
 | Phase 7: Quality, Polish & DevOps | 0 | (polish phase — no v1 requirements) |
+| Phase 8: Testing & CI/CD | 5 | TST-01, TST-02, TST-03, TST-04, TST-05 |
 
 ---
 *Requirements defined: 2026-05-31*
-*Last updated: 2026-06-01 after Phase 2 execution*
+*Last updated: 2026-06-08 — Phase 8 added with TST requirements*

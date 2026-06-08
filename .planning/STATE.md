@@ -1,24 +1,24 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-last_updated: "2026-06-07T15:00:00.000Z"
+milestone: v2.0
+milestone_name: v2.0
+status: active
+last_updated: "2026-06-08T10:30:00.000Z"
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 7
-  total_plans: 36
+  total_plans: 44
   completed_plans: 36
-   current_phase: 7
-   current_phase_name: "Quality, Polish & DevOps"
-   current_focus: "Phase 7 complete — 9 plans across 5 waves"
+  current_phase: 8
+  current_phase_name: "Testing & CI/CD"
+  current_focus: "Phase 8 planned — 8 plans across 3 waves"
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** Milestone v1.0 Complete — All 7 phases executed
+**Status:** Milestone v2.0 — Phase 8 (Testing & CI/CD) planned, ready to execute
 
 ## Project Reference
 
@@ -96,6 +96,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 5 | Agent Dashboard | ✓ Complete (4/4 plans) |
 | 6 | KCS Auto-Drafting & Admin Review | ✓ Complete (3/3 plans) |
 | 7 | Quality, Polish & DevOps | ✓ Complete (9/9 plans) |
+| 8 | Testing & CI/CD | ▸ Planned (0/8 plans) |
 
 ## Key Decisions
 
@@ -148,8 +149,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves) ✓ Shipped (PR #5)
 2. ✅ **Phase 6 complete** — KCS Auto-Drafting & Admin Review executed (3/3 plans, 3 waves)
 3. ✅ **Phase 7 complete** — Quality, Polish & DevOps executed (9/9 plans, 5 waves)
-   - Done: Flyway migration, RFC 7807 error handling, Checkstyle/SpotBugs, CDK dialogs, i18n extraction, ESLint, Docker healthchecks, Playwright E2E, bilingual audit + demo walkthrough
+   - Done: Flyway migration, RFC 7807 error handling, Checkstyle/SpotBugs, CDK dialogs, i18n extraction, ESLint fix, Docker healthchecks, Playwright E2E, bilingual audit + demo walkthrough
+4. ▸ **Phase 8: Testing & CI/CD** — Planned, ready to execute (8 plans in 3 waves)
+   - Run `/gsd-plan-phase 8` to begin
 
 ---
 
-*Milestone v1.0 complete — All 7 phases shipped*
+*Milestone v2.0 — Phase 8 planned*
