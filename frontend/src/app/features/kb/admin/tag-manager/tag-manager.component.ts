@@ -1,9 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { $localize as _localize } from '@angular/localize';
-
-const $localize = _localize as unknown as (messageParts: TemplateStringsArray, ...args: unknown[]) => string;
+import { $localize } from '@angular/localize/init';
 import { TagService } from '../../services/tag.service';
 import { TagDto } from '../../models/tag.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -89,10 +87,10 @@ export class TagManagerComponent implements OnInit {
       },
       error: (err: unknown) => {
         const serverError = err !== null && typeof err === 'object'
-          ? (err as Record<string, unknown>).error
+          ? (err as Record<string, unknown>)['error']
           : undefined;
         const detail = serverError !== null && typeof serverError === 'object'
-          ? (serverError as Record<string, unknown>).error
+          ? (serverError as Record<string, unknown>)['error']
           : undefined;
         this.errorMessage.set(typeof detail === 'string' ? detail : 'Failed to save tag.');
       },
@@ -112,10 +110,10 @@ export class TagManagerComponent implements OnInit {
           next: () => this.loadTags(),
           error: (err: unknown) => {
             const serverError = err !== null && typeof err === 'object'
-              ? (err as Record<string, unknown>).error
+              ? (err as Record<string, unknown>)['error']
               : undefined;
             const detail = serverError !== null && typeof serverError === 'object'
-              ? (serverError as Record<string, unknown>).error
+              ? (serverError as Record<string, unknown>)['error']
               : undefined;
             this.errorMessage.set(typeof detail === 'string' ? detail : $localize`:@@kb.tags.error.delete:This tag is in use and cannot be deleted.`);
           },

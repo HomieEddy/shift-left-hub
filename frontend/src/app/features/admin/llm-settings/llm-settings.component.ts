@@ -32,7 +32,7 @@ export class LlmSettingsComponent implements OnInit {
       next: (config) => {
         this.config = config;
         this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
-        if (!this.providers.some(p => p.value === this.config.llmProvider)) {
+        if (!this.providers.some(p => p.value === this.config!.llmProvider)) {
           this.config.llmProvider = 'OLLAMA';
         }
       },

@@ -1,6 +1,4 @@
-import { $localize } from '@angular/localize';
 import { Component, inject, signal } from '@angular/core';
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ConfirmationData } from './confirmation-dialog.model';
 import { from } from 'rxjs';
@@ -45,8 +43,8 @@ import { from } from 'rxjs';
   `,
 })
 export class ConfirmDialogComponent {
-  protected cancelLabel: string = $localize`:@@confirm.action.cancel:Cancel` as string;
-  protected savingLabel: string = $localize`:@@confirm.state.saving:Saving...` as string;
+  protected cancelLabel: string = $localize`:@@confirm.action.cancel:Cancel`;
+  protected savingLabel: string = $localize`:@@confirm.state.saving:Saving...`;
   dialogRef = inject(DialogRef<boolean>);
   data: ConfirmationData = inject<ConfirmationData>(DIALOG_DATA);
 
@@ -61,7 +59,7 @@ export class ConfirmDialogComponent {
         next: () => this.dialogRef.close(true),
         error: (err: unknown) => {
           this.loading.set(false);
-          const fallbackMsg: string = $localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.` as string;
+          const fallbackMsg: string = $localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.`;
           this.errorMessage.set(err instanceof Error ? err.message : fallbackMsg);
         },
       });
