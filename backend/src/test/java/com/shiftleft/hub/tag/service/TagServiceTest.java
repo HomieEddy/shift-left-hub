@@ -4,7 +4,6 @@ import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.tag.api.dto.CreateTagRequest;
 import com.shiftleft.hub.tag.api.dto.TagResponse;
 import com.shiftleft.hub.tag.api.dto.UpdateTagRequest;
-import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagInUseException;
 import com.shiftleft.hub.tag.domain.TagNotFoundException;
