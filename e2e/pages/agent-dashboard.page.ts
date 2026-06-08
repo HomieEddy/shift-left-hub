@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 /**
  * Page object for the Agent Dashboard (/agent/tickets and /agent/tickets/:id).
@@ -37,10 +37,25 @@ export class AgentDashboardPage {
     await this.page.waitForLoadState('networkidle');
   }
 
+  /** Alias: navigate to the agent dashboard (ticket queue). */
+  async goto(): Promise<void> {
+    return this.gotoQueue();
+  }
+
+  /** Wait for the ticket queue to have at least one row. */
+  async waitForTickets(timeout = 15000): Promise<void> {
+    await expect(this.ticketQueue.first()).toBeVisible({ timeout });
+  }
+
+  /** Get the number of tickets in the queue. */
+  async getTicketCount(): Promise<number> {
+    return this.ticketQueue.count();
+  }
+
   /**
    * Claim the first NEW ticket in the queue.
    * 1. Clicks the "Claim" button on the first NEW row
-   * 2. Confirms in the claim modal (the button text is "Claim")
+   * 2. Confirms in the claim modal.
    * After claiming, the page should redirect to the ticket detail.
    */
   async claimTicket(): Promise<void> {
@@ -56,22 +71,23 @@ export class AgentDashboardPage {
     await this.page.waitForLoadState('networkidle');
   }
 
-  /**
-   * Resolve the ticket with the given notes.
-   *
-   * @param notes         Resolution notes text
-   * @param isKnowledgeGap Whether to flag as a knowledge gap for KCS
-   */
-  async resolveTicket(notes: string, isKnowledgeGap = false): Promise<void> {
-    // Fill resolution notes
-    await this.resolutionNotes.fill(notes);
+  /** Claim the first ticket in the queue. Alias for claimTicket(). */
+  async claimFirstTicket(): Promise<void> {
+    return this.claimTicket();
+  }
 
-    // Check knowledge gap if needed
-    if (isKnowledgeGap) {
-      await this.knowledgeGapCheckbox.check();
-    }
+  /** Fill resolution notes textarea. */
+  async fillResolutionNotes(text: string): Promise<void> {
+    await this.resolutionNotes.fill(text);
+  }
 
-    // Click resolve button to open confirmation modal
+  /** Check (or uncheck) the knowledge gap checkbox. */
+  async clickKnowledgeGapCheckbox(): Promise<void> {
+    await this.knowledgeGapCheckbox.check();
+  }
+
+  /** Click the resolve button and confirm in the modal. */
+  async clickResolve(): Promise<void> {
     await this.resolveButton.click();
     // Wait for confirmation modal
     await this.page.waitForSelector('.fixed.inset-0', { timeout: 5000 });
@@ -82,5 +98,26 @@ export class AgentDashboardPage {
       () => document.querySelector('.bg-green-50') !== null,
       { timeout: 10000 },
     );
+  }
+
+  /** Get the current ticket status text (e.g., "Resolved"). */
+  async getTicketStatus(): Promise<string> {
+    const statusEl = this.page.getByTestId('ticket-resolved');
+    await expect(statusEl).toBeVisible({ timeout: 10000 });
+    return statusEl.textContent() ?? '';
+  }
+
+  /**
+   * Resolve the ticket with the given notes.
+   *
+   * @param notes         Resolution notes text
+   * @param isKnowledgeGap Whether to flag as a knowledge gap for KCS
+   */
+  async resolveTicket(notes: string, isKnowledgeGap = false): Promise<void> {
+    await this.fillResolutionNotes(notes);
+    if (isKnowledgeGap) {
+      await this.clickKnowledgeGapCheckbox();
+    }
+    await this.clickResolve();
   }
 }

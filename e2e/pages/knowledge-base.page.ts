@@ -23,8 +23,11 @@ export class KnowledgeBasePage {
     await this.page.goto('/articles');
     await this.page.waitForLoadState('networkidle');
     // Click the "Search Articles" link to reach the search page
-    await this.page.getByText('Search Articles').click();
-    await this.page.waitForLoadState('networkidle');
+    const searchLink = this.page.getByText('Search Articles');
+    if (await searchLink.isVisible().catch(() => false)) {
+      await searchLink.click();
+      await this.page.waitForLoadState('networkidle');
+    }
   }
 
   /**
@@ -39,6 +42,18 @@ export class KnowledgeBasePage {
       (resp) =>
         resp.url().includes('/api/articles/search') && resp.status() === 200,
     );
+    // Ensure results are rendered
+    await this.page.waitForTimeout(500);
+  }
+
+  /** Wait for search results to be visible. */
+  async waitForResults(timeout = 10000): Promise<void> {
+    await expect(this.searchResults.first()).toBeVisible({ timeout });
+  }
+
+  /** Get the titles of all visible search results. */
+  async getResultTitles(): Promise<string[]> {
+    return this.searchResults.locator('a, h3, .result-title').allTextContents();
   }
 
   /**
