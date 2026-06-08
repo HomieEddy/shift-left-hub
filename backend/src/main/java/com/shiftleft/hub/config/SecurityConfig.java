@@ -30,8 +30,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Configuration
 @EnableWebSecurity
@@ -51,16 +49,6 @@ public class SecurityConfig {
     public SecurityConfig(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
-    }
-
-    /**
-     * Provides a virtual-thread-backed executor for AI chat requests.
-     *
-     * @return the chat executor service
-     */
-    @Bean("chatExecutor")
-    public ExecutorService chatExecutor() {
-        return Executors.newVirtualThreadPerTaskExecutor();
     }
 
     /**

@@ -6,6 +6,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Async execution configuration for fire-and-forget event processing.
@@ -16,6 +18,16 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAsync
 public class AsyncConfig {
+
+    /**
+     * Provides a virtual-thread-backed executor for AI chat requests.
+     *
+     * @return the chat executor service
+     */
+    @Bean("chatExecutor")
+    public ExecutorService chatExecutor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
+    }
 
     /**
      * Dedicated executor for async event listeners.
