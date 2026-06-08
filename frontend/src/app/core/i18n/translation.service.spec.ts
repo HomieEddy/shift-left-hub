@@ -5,6 +5,11 @@ describe('TranslationService', () => {
   let service: TranslationService;
   const STORAGE_KEY = 'shiftleft_language';
 
+  // Save original navigator.language descriptor to restore in afterEach
+  const originalLanguageDescriptor = Object.getOwnPropertyDescriptor(
+    Object.getPrototypeOf(navigator), 'language'
+  );
+
   beforeEach(() => {
     localStorage.clear();
     // Default browser language is English
@@ -16,6 +21,10 @@ describe('TranslationService', () => {
 
   afterEach(() => {
     localStorage.clear();
+    // Restore the original navigator.language to prevent test pollution
+    if (originalLanguageDescriptor) {
+      Object.defineProperty(navigator, 'language', originalLanguageDescriptor);
+    }
   });
 
   describe('initialization', () => {
