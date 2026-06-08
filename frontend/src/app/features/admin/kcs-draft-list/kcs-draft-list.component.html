@@ -181,6 +181,7 @@
       </button>
       <button
         (click)="executePendingAction()"
+        data-testid="modal-confirm-btn"
         [class.bg-green-600]="pendingAction()?.type === 'approve'"
         [class.hover:bg-green-700]="pendingAction()?.type === 'approve'"
         [class.bg-red-600]="pendingAction()?.type === 'reject'"

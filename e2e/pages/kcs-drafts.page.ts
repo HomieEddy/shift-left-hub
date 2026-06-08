@@ -32,7 +32,7 @@ export class KcsDraftsPage {
     await this.page.locator('[data-testid="approve-draft-btn"]').first().click();
     // Wait for the confirmation modal and confirm
     await this.page.waitForTimeout(500);
-    await this.page.locator('app-modal button:has-text("Confirm")').click();
+    await this.page.locator('[data-testid="modal-confirm-btn"]').click();
     await this.page.waitForLoadState('networkidle');
   }
 
@@ -41,7 +41,7 @@ export class KcsDraftsPage {
     await this.page.locator('[data-testid="reject-draft-btn"]').first().click();
     // Wait for the confirmation modal and confirm
     await this.page.waitForTimeout(500);
-    await this.page.locator('app-modal button:has-text("Confirm")').click();
+    await this.page.locator('[data-testid="modal-confirm-btn"]').click();
     await this.page.waitForLoadState('networkidle');
   }
 
