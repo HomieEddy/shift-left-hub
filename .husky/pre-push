@@ -27,7 +27,7 @@ fi
 
 # Frontend: Tests
 echo "--- Frontend: Unit Tests ---"
-pnpm test -- --watch=false --browsers=ChromeHeadless
+pnpm test -- --watch=false --code-coverage --browsers=ChromeHeadless
 FRONTEND_TEST_EXIT=$?
 cd ..
 
