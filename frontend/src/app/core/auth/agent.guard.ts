@@ -12,18 +12,18 @@ export const agentGuard: CanActivateFn = () => {
   }
 
   if (authService.isAuthenticated()) {
-    router.navigate(['/']);
+    void router.navigate(['/']);
     return false;
   }
 
   return authService.refresh().pipe(
     map(() => {
       if (authService.isAgent()) return true;
-      router.navigate(['/']);
+      void router.navigate(['/']);
       return false;
     }),
     catchError(() => {
-      router.navigate(['/login']);
+      void router.navigate(['/login']);
       return of(false);
     }),
   );

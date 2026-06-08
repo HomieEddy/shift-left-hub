@@ -14,7 +14,7 @@ export const authGuard: CanActivateFn = () => {
   return authService.refresh().pipe(
     map(() => true),
     catchError(() => {
-      router.navigate(['/login']);
+      void router.navigate(['/login']);
       return of(false);
     }),
   );
