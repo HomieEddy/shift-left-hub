@@ -153,7 +153,7 @@ public class SecurityConfig {
                                     .setAuthentication(authentication);
                             }
                         } catch (Exception e) {
-                            log.warn("JWT validation failed: {}", e.getMessage());
+                            log.warn("JWT validation failed", e);
                             SecurityContextHolder.clearContext();
                         }
                     }
