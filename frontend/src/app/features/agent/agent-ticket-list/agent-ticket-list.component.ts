@@ -35,6 +35,7 @@ export class AgentTicketListComponent implements OnInit {
 
   claimConfirmOpen = signal(false);
   claimingTicketId = signal<string | null>(null);
+  claimError = signal<string | null>(null);
 
   readonly categories = ['', 'NETWORK', 'HARDWARE', 'SOFTWARE', 'ACCESS', 'PERIPHERALS'];
   readonly urgencies = ['', 'LOW', 'MEDIUM', 'HIGH'];
@@ -128,7 +129,10 @@ export class AgentTicketListComponent implements OnInit {
     this.claimingTicketId.set(null);
     this.agentTicketService.claimTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => { void this.router.navigate(['/agent/tickets', id]); },
-      error: () => console.error('Failed to claim ticket'),
+      error: () => {
+        console.error('Failed to claim ticket');
+        this.claimError.set('Failed to claim ticket. Please try again.');
+      },
     });
   }
 
