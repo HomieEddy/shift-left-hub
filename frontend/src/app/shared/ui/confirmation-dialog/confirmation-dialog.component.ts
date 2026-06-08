@@ -1,22 +1,23 @@
 import { $localize } from '@angular/localize';
 import { Component, inject, signal } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { NgIf } from '@angular/common';
 import { ConfirmationData } from './confirmation-dialog.model';
 import { from } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [NgIf],
   template: `
     <div class="bg-white rounded-xl shadow-xl p-6 w-[420px]">
       <h2 class="text-lg font-semibold text-slate-800 mb-2">{{ data.title }}</h2>
       <p class="text-slate-600 text-sm mb-6">{{ data.message }}</p>
 
-      <div *ngIf="errorMessage()" class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
-        {{ errorMessage() }}
-      </div>
+      @if (errorMessage()) {
+        <div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
+          {{ errorMessage() }}
+        </div>
+      }
 
       <div class="flex justify-end gap-3">
         <button
@@ -34,7 +35,9 @@ import { from } from 'rxjs';
           [disabled]="loading()"
           class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
         >
-          <span *ngIf="loading()" class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          @if (loading()) {
+            <span class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          }
           {{ loading() ? savingLabel : data.confirmLabel }}
         </button>
       </div>
@@ -42,10 +45,10 @@ import { from } from 'rxjs';
   `,
 })
 export class ConfirmDialogComponent {
-  protected cancelLabel = $localize`:@@confirm.action.cancel:Cancel`;
-  protected savingLabel = $localize`:@@confirm.state.saving:Saving...`;
+  protected cancelLabel: string = $localize`:@@confirm.action.cancel:Cancel` as string;
+  protected savingLabel: string = $localize`:@@confirm.state.saving:Saving...` as string;
   dialogRef = inject(DialogRef<boolean>);
-  data: ConfirmationData = inject(DIALOG_DATA);
+  data: ConfirmationData = inject<ConfirmationData>(DIALOG_DATA);
 
   loading = signal(false);
   errorMessage = signal<string | null>(null);
@@ -56,9 +59,10 @@ export class ConfirmDialogComponent {
       this.errorMessage.set(null);
       from(this.data.onConfirm()).subscribe({
         next: () => this.dialogRef.close(true),
-        error: () => {
+        error: (err: unknown) => {
           this.loading.set(false);
-          this.errorMessage.set($localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.`);
+          const fallbackMsg: string = $localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.` as string;
+          this.errorMessage.set(err instanceof Error ? err.message : fallbackMsg);
         },
       });
     } else {

@@ -1,17 +1,19 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
+import { NgClass, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { $localize } from '@angular/localize';
+import { $localize as _localize } from '@angular/localize';
 import { ArticleService } from '../../services/article.service';
 import { ArticleDto, ArticleStatus } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
 import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-dialog/confirmation-dialog.service';
 
+const $localize = _localize as unknown as (messageParts: TemplateStringsArray, ...args: unknown[]) => string;
+
 @Component({
   selector: 'app-article-list',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, DatePipe, RouterLink],
+  imports: [NgClass, DatePipe, RouterLink],
   templateUrl: './article-list.component.html',
 })
 export class ArticleListComponent implements OnInit {

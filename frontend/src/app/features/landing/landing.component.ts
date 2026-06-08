@@ -1,20 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [RouterLink, NgIf],
+  imports: [RouterLink],
   template: `
-    <div *ngIf="authService.isAuthenticated(); else guestView" class="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center">
-      <p class="text-lg text-slate-600 mb-4" i18n="@@landing.signedInAs">You're signed in as <strong>{{ authService.user()?.displayName }}</strong></p>
-      <a routerLink="/chat" class="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors" i18n="@@landing.goToAiAssistant">
-        Go to AI Assistant
-      </a>
-    </div>
-    <ng-template #guestView>
+    @if (authService.isAuthenticated()) {
+      <div class="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center">
+        <p class="text-lg text-slate-600 mb-4" i18n="@@landing.signedInAs">You're signed in as <strong>{{ authService.user()?.displayName }}</strong></p>
+        <a routerLink="/chat" class="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors" i18n="@@landing.goToAiAssistant">
+          Go to AI Assistant
+        </a>
+      </div>
+    } @else {
       <div class="min-h-[calc(100vh-3.5rem)] flex flex-col">
         <!-- Hero -->
         <section class="flex-1 flex items-center justify-center px-4 py-16">
@@ -60,7 +60,7 @@ import { NgIf } from '@angular/common';
           </div>
         </section>
       </div>
-    </ng-template>
+    }
   `,
 })
 export class LandingComponent {

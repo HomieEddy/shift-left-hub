@@ -28,7 +28,7 @@ export class SearchInputComponent {
   placeholder = input('Search...');
   debounceMs = input(300);
   query = input('');
-  search = output<string>();
+  searchChange = output<string>();
 
   private searchSubject = new Subject<string>();
   private destroyRef = inject(DestroyRef);
@@ -38,7 +38,7 @@ export class SearchInputComponent {
       debounceTime(this.debounceMs()),
       distinctUntilChanged(),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(value => this.search.emit(value));
+    ).subscribe(value => this.searchChange.emit(value));
   }
 
   onInput(value: string): void {

@@ -5,105 +5,118 @@
   </div>
 
   <div #chatContainer aria-live="polite" data-testid="chat-messages" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-    <ng-container *ngFor="let msg of messages(); trackBy: trackByFn">
-      <div *ngIf="msg.role === 'user'" class="flex justify-end">
-        <div class="max-w-[75%] bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm">
-          {{ msg.content }}
+    @for (msg of messages(); track $index) {
+      @if (msg.role === 'user') {
+        <div class="flex justify-end">
+          <div class="max-w-[75%] bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm">
+            {{ msg.content }}
+          </div>
+        </div>
+      }
+
+      @if (msg.role === 'assistant') {
+        <div class="flex justify-start">
+          <div class="max-w-[75%] bg-slate-100 text-slate-800 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm prose prose-sm">
+            @if (msg.content) {
+              <markdown class="markdown-content" [data]="msg.content"></markdown>
+            } @else {
+              @if (isStreaming()) {
+                <span class="inline-flex items-center gap-1">
+                  <span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                  <span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                  <span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                </span>
+              }
+            }
+          </div>
+        </div>
+      }
+    }
+
+    @if (showFeedback()) {
+      <div class="flex justify-start ml-2">
+        <div class="flex items-center gap-3 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-4 py-2">
+          <span i18n="@@chat.did-this-solve">Did this solve your problem?</span>
+          <button (click)="handleFeedback(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium" i18n="@@chat.yes">Yes</button>
+          <button (click)="handleFeedback(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.no">No</button>
         </div>
       </div>
+    }
 
-      <div *ngIf="msg.role === 'assistant'" class="flex justify-start">
-        <div class="max-w-[75%] bg-slate-100 text-slate-800 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm prose prose-sm">
-          <markdown *ngIf="msg.content; else typingIndicator" class="markdown-content" [data]="msg.content"></markdown>
-          <ng-template #typingIndicator>
-            <span class="inline-flex items-center gap-1" *ngIf="isStreaming()">
-              <span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
-              <span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
-              <span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
-            </span>
-          </ng-template>
+    @if (showFollowUp()) {
+      <div class="flex justify-start ml-2">
+        <div class="flex items-center gap-3 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-4 py-2">
+          <span i18n="@@chat.followUp">Is there anything else I can help you with?</span>
+          <button (click)="handleFollowUp(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium" i18n="@@chat.yes">Yes</button>
+          <button (click)="handleFollowUp(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.no">No</button>
         </div>
       </div>
-    </ng-container>
+    }
 
-    <div *ngIf="showFeedback()" class="flex justify-start ml-2">
-      <div class="flex items-center gap-3 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-4 py-2">
-        <span i18n="@@chat.did-this-solve">Did this solve your problem?</span>
-        <button (click)="handleFeedback(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium" i18n="@@chat.yes">Yes</button>
-        <button (click)="handleFeedback(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.no">No</button>
+    @if (showFallback()) {
+      <div class="flex justify-start ml-2">
+        <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 max-w-md">
+          <p class="mb-2" i18n="@@chat.fallback-message">I couldn't find a resolution in the knowledge base.</p>
+          <button (click)="escalateToHumanAgent()" data-testid="chat-escalate" class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium" i18n="@@chat.escalate">
+            Escalate to Human Agent
+          </button>
+        </div>
       </div>
-    </div>
+    }
 
-    <div *ngIf="showFollowUp()" class="flex justify-start ml-2">
-      <div class="flex items-center gap-3 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg px-4 py-2">
-        <span i18n="@@chat.followUp">Is there anything else I can help you with?</span>
-        <button (click)="handleFollowUp(true)" class="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 text-xs font-medium" i18n="@@chat.yes">Yes</button>
-        <button (click)="handleFollowUp(false)" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.no">No</button>
+    @if (showEscalationForm() && escalationPayload()) {
+      <div class="w-4/5 ml-2">
+        <app-escalation-form
+          [escalationPayload]="escalationPayload()"
+          (ticketCreated)="onTicketCreated($event)"
+          (cancelled)="closeEscalationForm()"
+        />
       </div>
-    </div>
+    }
 
-    <div *ngIf="showFallback()" class="flex justify-start ml-2">
-      <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 max-w-md">
-        <p class="mb-2" i18n="@@chat.fallback-message">I couldn't find a resolution in the knowledge base.</p>
-        <button (click)="escalateToHumanAgent()" data-testid="chat-escalate" class="px-4 py-1.5 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-xs font-medium" i18n="@@chat.escalate">
-          Escalate to Human Agent
+    @if (errorMessage()) {
+      <div class="flex justify-center">
+        <div class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 max-w-md">
+          <p class="mb-2">{{ errorMessage() }}</p>
+          <button (click)="retry()" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.retry">
+            Retry
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (showCloseModal()) {
+    <div role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-2xl shadow-xl px-8 py-10 text-center max-w-sm mx-4">
+        <div class="text-5xl mb-4" aria-hidden="true">👋</div>
+        <h2 id="modal-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@chat.modal.thankYou">Thank You</h2>
+        <p class="text-slate-500 mb-6" i18n="@@chat.modal.seeYouSoon">See you soon!</p>
+        <button (click)="closeModal()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors" i18n="@@chat.modal.close">
+          Close
         </button>
       </div>
     </div>
+  }
 
-    <div *ngIf="showEscalationForm() && escalationPayload()" class="w-4/5 ml-2">
-      <app-escalation-form
-        [escalationPayload]="escalationPayload()"
-        (ticketCreated)="onTicketCreated($event)"
-        (cancelled)="closeEscalationForm()"
-      />
-    </div>
-
-    <div *ngIf="errorMessage()" class="flex justify-center">
-      <div class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 max-w-md">
-        <p class="mb-2">{{ errorMessage() }}</p>
-        <button (click)="retry()" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-xs font-medium" i18n="@@chat.retry">
-          Retry
-        </button>
+  @if (showTicketConfirmation()) {
+    <div role="dialog" aria-modal="true" aria-labelledby="ticket-confirm-title" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-2xl shadow-xl px-8 py-10 text-center max-w-sm mx-4">
+        <div class="text-5xl mb-4" aria-hidden="true">🎫</div>
+        <h2 id="ticket-confirm-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@tickets.modal.title">Ticket Submitted</h2>
+        <p class="text-slate-500 mb-1 text-sm" i18n="@@tickets.modal.ticketNumber">Ticket Number</p>
+        <p class="text-lg font-mono font-bold text-blue-600 mb-6">{{ createdTicketNumber() }}</p>
+        <div class="flex flex-col gap-2">
+          <a routerLink="/tickets" class="block w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors text-center" i18n="@@tickets.modal.myTickets">
+            My Tickets
+          </a>
+          <button (click)="startNewChat()" class="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-sm font-medium transition-colors" i18n="@@tickets.modal.newChat">
+            Start New Chat
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="showCloseModal()"
-       role="dialog"
-       aria-modal="true"
-       aria-labelledby="modal-title"
-       class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-    <div class="bg-white rounded-2xl shadow-xl px-8 py-10 text-center max-w-sm mx-4">
-      <div class="text-5xl mb-4" aria-hidden="true">👋</div>
-      <h2 id="modal-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@chat.modal.thankYou">Thank You</h2>
-      <p class="text-slate-500 mb-6" i18n="@@chat.modal.seeYouSoon">See you soon!</p>
-      <button (click)="closeModal()" autofocus class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors" i18n="@@chat.modal.close">
-        Close
-      </button>
-    </div>
-  </div>
-
-  <div *ngIf="showTicketConfirmation()"
-       role="dialog"
-       aria-modal="true"
-       aria-labelledby="ticket-confirm-title"
-       class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-    <div class="bg-white rounded-2xl shadow-xl px-8 py-10 text-center max-w-sm mx-4">
-      <div class="text-5xl mb-4" aria-hidden="true">🎫</div>
-      <h2 id="ticket-confirm-title" class="text-xl font-semibold text-slate-800 mb-2" i18n="@@tickets.modal.title">Ticket Submitted</h2>
-      <p class="text-slate-500 mb-1 text-sm" i18n="@@tickets.modal.ticketNumber">Ticket Number</p>
-      <p class="text-lg font-mono font-bold text-blue-600 mb-6">{{ createdTicketNumber() }}</p>
-      <div class="flex flex-col gap-2">
-        <a routerLink="/tickets" class="block w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors text-center" i18n="@@tickets.modal.myTickets">
-          My Tickets
-        </a>
-        <button (click)="startNewChat()" autofocus class="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 text-sm font-medium transition-colors" i18n="@@tickets.modal.newChat">
-          Start New Chat
-        </button>
-      </div>
-    </div>
-  </div>
+  }
 
   <div class="border-t border-slate-200 px-4 py-3">
     <div class="flex gap-2">

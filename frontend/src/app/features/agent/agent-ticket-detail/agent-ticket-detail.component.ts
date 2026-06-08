@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgIf, NgFor, DatePipe, NgClass } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { $localize } from '@angular/localize/init';
@@ -10,7 +10,7 @@ import { AgentTicket, WorkNote } from '../agent-ticket.model';
 @Component({
   selector: 'app-agent-ticket-detail',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, NgClass, RouterLink, FormsModule],
+  imports: [DatePipe, RouterLink, FormsModule],
   templateUrl: './agent-ticket-detail.component.html',
 })
 /**
@@ -43,7 +43,7 @@ export class AgentTicketDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    if (id != null) {
       this.loadTicket(id);
       this.loadWorkNotes(id);
     }
@@ -78,7 +78,7 @@ export class AgentTicketDetailComponent implements OnInit {
     const content = this.newWorkNote().trim();
     if (!content) return;
     const ticketId = this.ticket()?.id;
-    if (!ticketId) return;
+    if (ticketId == null) return;
 
     this.isSubmittingNote.set(true);
     this.agentTicketService.addWorkNote(ticketId, content).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -97,7 +97,7 @@ export class AgentTicketDetailComponent implements OnInit {
   /** Claims the current ticket for the authenticated agent. */
   claimTicket(): void {
     const ticketId = this.ticket()?.id;
-    if (!ticketId) return;
+    if (ticketId == null) return;
 
     this.isClaiming.set(true);
     this.agentTicketService.claimTicket(ticketId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -120,7 +120,8 @@ export class AgentTicketDetailComponent implements OnInit {
   /** Confirms ticket resolution and submits to the API. */
   confirmResolve(): void {
     const ticketId = this.ticket()?.id;
-    if (!ticketId || !this.resolutionNotes().trim()) return;
+    if (ticketId == null) return;
+    if (this.resolutionNotes().trim() === '') return;
 
     this.isResolving.set(true);
     this.resolveConfirmOpen.set(false);

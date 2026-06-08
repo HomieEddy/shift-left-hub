@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { $localize } from '@angular/localize/init';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,7 +10,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 @Component({
   selector: 'app-kcs-draft-list',
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, RouterLink, ModalComponent],
+  imports: [DatePipe, RouterLink, ModalComponent],
   templateUrl: './kcs-draft-list.component.html',
 })
 export class KcsDraftListComponent implements OnInit {
@@ -63,7 +63,7 @@ export class KcsDraftListComponent implements OnInit {
 
   executePendingAction(): void {
     const action = this.pendingAction();
-    if (!action) return;
+    if (action == null) return;
     this.confirmModalOpen.set(false);
     this.actionLoading.set(action.id);
     this.errorMessage.set('');

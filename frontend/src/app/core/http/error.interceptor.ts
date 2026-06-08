@@ -13,11 +13,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       if (error.status === 401) {
         message = $localize`:@@http.error.sessionExpired:Your session has expired. Please log in again.`;
-        router.navigate(['/login']);
+        void router.navigate(['/login']);
       } else if (error.status === 403) {
         message = $localize`:@@http.error.forbidden:You do not have permission to perform this action.`;
       } else if (error.status >= 400 && error.status < 500) {
-        message = error.error?.message || error.error?.error || $localize`:@@http.error.invalidRequest:Invalid request`;
+        const body = error.error as { message?: string; error?: string } | null;
+        message = body?.message ?? body?.error ?? $localize`:@@http.error.invalidRequest:Invalid request`;
       } else if (error.status >= 500) {
         message = $localize`:@@http.error.serverError:Server error. Please try again later.`;
       }

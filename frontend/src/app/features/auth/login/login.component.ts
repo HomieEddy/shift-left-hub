@@ -2,15 +2,14 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { redirectIfAuthenticatedGuard } from '../../../core/auth/redirect-if-authenticated.guard';
-import { NgIf } from '@angular/common';
 import { TranslationService } from '../../../core/i18n/translation.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /** Login form with email/password authentication. */
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink, NgIf],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -29,9 +28,9 @@ export class LoginComponent {
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
-        this.router.navigate(['/articles']);
+        void this.router.navigate(['/articles']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         if (err.status === 401) {
           this.errorMessage = 'Invalid email or password.';

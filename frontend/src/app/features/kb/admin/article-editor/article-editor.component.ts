@@ -1,6 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ArticleService } from '../../services/article.service';
@@ -13,7 +12,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 @Component({
   selector: 'app-article-editor',
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor, MarkdownModule],
+  imports: [FormsModule, MarkdownModule],
   templateUrl: './article-editor.component.html',
 })
 export class ArticleEditorComponent implements OnInit {
@@ -44,7 +43,7 @@ export class ArticleEditorComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    if (id !== null) {
       this.isEdit.set(true);
       this.articleId.set(id);
       this.loadArticle(id);
@@ -99,7 +98,7 @@ export class ArticleEditorComponent implements OnInit {
     this.isSaving.set(true);
     this.errorMessage.set('');
 
-    const request: CreateArticleRequest | UpdateArticleRequest = {
+    const request = {
       titleEn: this.titleEn,
       contentEn: this.contentEn,
       titleFr: this.titleFr || undefined,
@@ -107,18 +106,19 @@ export class ArticleEditorComponent implements OnInit {
       excerpt: this.excerpt || undefined,
       featuredImage: this.featuredImage || undefined,
       tagIds: Array.from(this.selectedTagIds()),
-    };
+    } satisfies CreateArticleRequest | UpdateArticleRequest;
 
-    const action = this.isEdit() && this.articleId()
-      ? this.articleService.updateArticle(this.articleId()!, request as UpdateArticleRequest)
-      : this.articleService.createArticle(request as CreateArticleRequest);
+    const id = this.articleId();
+    const action = this.isEdit() && id !== null
+      ? this.articleService.updateArticle(id, request)
+      : this.articleService.createArticle(request);
 
     action.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
-      next: (article) => {
+      next: () => {
         this.isSaving.set(false);
-        this.router.navigate(['/admin/articles']);
+        void this.router.navigate(['/admin/articles']);
       },
       error: () => {
         this.errorMessage.set('Failed to save article. Please try again.');
@@ -128,6 +128,6 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/admin/articles']);
+    void this.router.navigate(['/admin/articles']);
   }
 }
