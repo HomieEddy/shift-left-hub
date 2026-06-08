@@ -59,8 +59,8 @@ export class AgentDashboardPage {
    * After claiming, the page should redirect to the ticket detail.
    */
   async claimTicket(): Promise<void> {
-    // Click the first visible Claim button to open the confirmation modal
-    await this.page.locator('table tbody tr').locator('button').first().click();
+    // Click the first visible Claim button using the data-testid locator
+    await this.claimButton.first().click();
     // Wait for the confirmation modal
     await this.page.waitForSelector('[data-testid="claim-modal"]', { timeout: 5000 });
     // Click the "Confirm" button in the modal
