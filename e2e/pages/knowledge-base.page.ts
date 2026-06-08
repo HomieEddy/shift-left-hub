@@ -43,7 +43,7 @@ export class KnowledgeBasePage {
         resp.url().includes('/api/articles/search') && resp.status() === 200,
     );
     // Ensure results are rendered
-    await this.page.waitForTimeout(500);
+    await this.waitForResults(10000);
   }
 
   /** Wait for search results to be visible. */

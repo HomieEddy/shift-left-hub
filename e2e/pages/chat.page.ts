@@ -85,8 +85,7 @@ export class ChatPage {
    */
   async clickDidNotSolve(): Promise<void> {
     await this.feedbackNoButton.click();
-    // Wait a moment for the escalate option to appear
-    await this.page.waitForTimeout(500);
+    await this.page.waitForSelector('[data-testid="chat-escalate"]', { timeout: 5000 });
   }
 
   /**

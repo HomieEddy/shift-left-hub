@@ -61,8 +61,8 @@ test.describe('Golden Path', () => {
       } else {
         // Click "Did this solve?" → No → triggers escalate option
         await chatPage.clickDidNotSolve();
-        // Wait a moment for the escalation flow to appear
-        await page.waitForTimeout(1000);
+        // Wait for the escalation button to appear
+        await page.waitForSelector('[data-testid="chat-escalate"]', { timeout: 5000 });
         if (await chatPage.isFallbackVisible()) {
           await chatPage.clickEscalate();
         }
