@@ -21,7 +21,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -105,6 +107,14 @@ public class Article {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "tsv_en", columnDefinition = "tsvector", insertable = false, updatable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private String tsvEn;
+
+    @Column(name = "tsv_fr", columnDefinition = "tsvector", insertable = false, updatable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private String tsvFr;
 
     @Override
     public boolean equals(Object o) {
