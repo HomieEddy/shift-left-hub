@@ -147,8 +147,8 @@ test.describe('Golden Path', () => {
     const agentDashboard = new AgentDashboardPage(agentPage);
 
     await test.step('Agent logs in', async () => {
-      const agentEmail = process.env.E2E_AGENT_EMAIL ?? 'admin@shiftleft.local';
-      const agentPassword = process.env.E2E_AGENT_PASSWORD ?? 'admin123';
+      const agentEmail = process.env.E2E_AGENT_EMAIL ?? 'admin@shiftleft.com';
+      const agentPassword = process.env.E2E_AGENT_PASSWORD ?? 'ShiftLeft!2026';
       await agentLogin.goto();
       await agentLogin.login(agentEmail, agentPassword);
       // Verify agent is on a role-restricted page
