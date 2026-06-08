@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
 import java.util.UUID;
 
 /**
@@ -42,6 +43,8 @@ public class KcsEventListener {
      * Processes a TicketResolvedEvent asynchronously.
      * Uses @TransactionalEventListener to ensure the event fires AFTER
      * the resolve transaction commits, preventing race conditions.
+     *
+     * @param event the resolved ticket event
      */
     @Async("kcsTaskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -59,12 +62,11 @@ public class KcsEventListener {
             // On success: add auto-generated work note to source ticket (D-23)
             Ticket ticket = ticketRepository.findById(event.ticketId()).orElse(null);
             if (ticket != null) {
-                WorkNote note = WorkNote.builder()
+                workNoteRepository.save(WorkNote.builder()
                     .ticket(ticket)
                     .author(systemUser)
                     .content("KCS draft article created: " + article.getTitleEn())
-                    .build();
-                workNoteRepository.save(note);
+                    .build());
                 log.info("KCS work note added to ticket {}", event.ticketNumber());
             }
 
@@ -88,15 +90,12 @@ public class KcsEventListener {
      */
     private com.shiftleft.hub.article.domain.Article draftWithRetry(
             TicketResolvedEvent event, User systemUser) {
-        Exception lastException = null;
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
                 return draftingService.draftArticle(event, systemUser);
             } catch (Exception e) {
-                lastException = e;
                 boolean isRetryable = isLikelyLlmError(e);
                 if (!isRetryable) {
-                    // Non-retryable (D-27)
                     throw new KcsDraftingException(
                         "Non-retryable KCS drafting error: " + e.getMessage(), e);
                 }
@@ -110,12 +109,14 @@ public class KcsEventListener {
                         Thread.currentThread().interrupt();
                         throw new KcsDraftingException("Retry interrupted", ie);
                     }
+                } else {
+                    throw new RuntimeException(
+                        "KCS drafting failed after " + MAX_RETRIES + " attempts", e);
                 }
             }
         }
-        // Exhausted retries (D-26)
         throw new RuntimeException(
-            "KCS drafting failed after " + MAX_RETRIES + " attempts", lastException);
+            "KCS drafting failed after " + MAX_RETRIES + " attempts");
     }
 
     /** Determines if an exception is likely LLM-related and retryable. */

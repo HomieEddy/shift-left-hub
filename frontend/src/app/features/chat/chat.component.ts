@@ -1,7 +1,6 @@
 import { Component, inject, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
@@ -11,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, RouterLink, MarkdownModule, EscalationFormComponent],
+  imports: [FormsModule, RouterLink, MarkdownModule, EscalationFormComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
@@ -87,7 +86,12 @@ export class ChatComponent {
           this.setEscalationPayload(event);
         } else if (event.type === 'fallback') {
           this.isStreaming.set(false);
-          assistantMsg.content = event.content;
+          this.messages.update(m => {
+            const updated = [...m];
+            const lastIdx = updated.length - 1;
+            updated[lastIdx] = { ...updated[lastIdx], content: event.content };
+            return updated;
+          });
           this.showFallback.set(true);
           this.setEscalationPayload(event);
         } else if (event.type === 'error') {
@@ -99,6 +103,8 @@ export class ChatComponent {
       error: () => {
         this.isStreaming.set(false);
         this.errorMessage.set('Connection error. Please try again.');
+        this.showFallback.set(true);
+        this.setEscalationPayloadOnError();
       },
       complete: () => {
         this.isStreaming.set(false);
@@ -115,6 +121,18 @@ export class ChatComponent {
       issue: lastUserContent,
       transcript: this.messages(),
       sources: event.sources || [],
+    });
+  }
+
+  private setEscalationPayloadOnError() {
+    const userMessages = this.messages().filter(m => m.role === 'user');
+    const lastUserContent = userMessages.length > 0
+      ? userMessages[userMessages.length - 1].content
+      : '';
+    this.escalationPayload.set({
+      issue: lastUserContent,
+      transcript: this.messages(),
+      sources: [],
     });
   }
 
@@ -195,16 +213,19 @@ export class ChatComponent {
 
   private scrollToBottom() {
     try {
-      this.chatContainer?.nativeElement.scrollTo({
-        top: this.chatContainer.nativeElement.scrollHeight,
-        behavior: 'smooth',
-      });
+      const el = this.chatContainer?.nativeElement as HTMLElement | undefined;
+      if (el != null) {
+        el.scrollTo({
+          top: el.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
     } catch (e) {
         console.warn('Scroll failed:', e);
       }
   }
 
   trackByFn(_index: number, msg: ChatMessage) {
-    return msg.id || _index;
+    return msg.id ?? _index;
   }
 }

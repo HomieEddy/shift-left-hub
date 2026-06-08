@@ -5,22 +5,27 @@ import com.shiftleft.hub.ai.service.AiConfigService;
 import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
+import com.shiftleft.hub.tag.api.dto.TagResponse;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagRepository;
+import com.shiftleft.hub.ticket.domain.TicketRepository;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Core KCS drafting orchestration service.
@@ -37,6 +42,7 @@ public class KcsDraftingService {
     private final AiConfigService aiConfigService;
     private final ArticleRepository articleRepository;
     private final TagRepository tagRepository;
+    private final TicketRepository ticketRepository;
     private final VectorStore vectorStore;
     private final UserRepository userRepository;
 
@@ -61,28 +67,25 @@ public class KcsDraftingService {
             return existing.get();
         }
 
-        // 1. Check for duplicates (lightweight FTS first, then semantic)
-        Set<UUID> duplicateIds = checkDuplicates(event);
-
-        // 2. Build LLM prompt from ticket timeline
+        // 1. Build LLM prompt from ticket timeline
         String prompt = buildDraftingPrompt(event);
 
-        // 3. Call LLM to generate bilingual article content
+        // 2. Call LLM to generate bilingual article content
         String llmResponse = callLlm(prompt);
 
-        // 4. Parse LLM response into structured fields
+        // 3. Parse LLM response into structured fields
         KcsParsedArticle parsed = parseLlmResponse(llmResponse, event);
 
-        // 5. Generate slug
+        // 4. Generate slug
         String slug = slugify(parsed.titleEn());
         if (articleRepository.findBySlug(slug).isPresent()) {
             slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
         }
 
-        // 6. Resolve suggested tags (find existing tags by name, or skip if none match)
+        // 5. Resolve suggested tags (find existing tags by name, or skip if none match)
         Set<Tag> tags = resolveSuggestedTags(parsed.suggestedTags());
 
-        // 7. Create and save the article
+        // 6. Create and save the article
         Article article = Article.builder()
             .titleEn(parsed.titleEn())
             .contentEn(parsed.contentEn())
@@ -100,7 +103,8 @@ public class KcsDraftingService {
         article = articleRepository.save(article);
         log.info("KCS draft created: article {} from ticket {}", article.getId(), event.ticketNumber());
 
-        // 8. Store duplicate warnings if any (logged for observability)
+        // 7. Check for duplicates (logged for observability)
+        Set<UUID> duplicateIds = checkDuplicates(event);
         if (!duplicateIds.isEmpty()) {
             log.info("KCS draft {} flagged with {} potential duplicate(s): {}",
                 article.getId(), duplicateIds.size(), duplicateIds);
@@ -114,14 +118,13 @@ public class KcsDraftingService {
      * Returns IDs of published articles with similarity > 0.85 threshold. (D-10, D-12)
      */
     private Set<UUID> checkDuplicates(TicketResolvedEvent event) {
-        Set<UUID> duplicates = new HashSet<>();
-
         // FTS fast-path — check if similar articles exist by keyword overlap (D-12)
         String searchText = extractKeywords(
             Objects.toString(event.issue(), "") + " " + Objects.toString(event.resolutionNotes(), ""));
         var ftsResults = articleRepository.searchByText(searchText,
             org.springframework.data.domain.PageRequest.of(0, 5));
 
+        Set<UUID> duplicates = new HashSet<>();
         if (!ftsResults.isEmpty()) {
             // Use FTS result IDs as preliminary duplicates (IN-05)
             for (Object[] row : ftsResults.getContent()) {
@@ -163,7 +166,8 @@ public class KcsDraftingService {
     /** Builds the LLM prompt with full ticket timeline context. (D-05, D-06, D-07) */
     private String buildDraftingPrompt(TicketResolvedEvent event) {
         return """
-You are a Knowledge-Centered Service (KCS) content specialist. Create a knowledge base article from a resolved IT support ticket.
+You are a Knowledge-Centered Service (KCS) content specialist. \
+Create a knowledge base article from a resolved IT support ticket.
 
 ## Source Ticket Information
 - Ticket Number: %s
@@ -224,13 +228,9 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     /** Parses the LLM response into structured fields. */
     private KcsParsedArticle parseLlmResponse(String response, TicketResolvedEvent event) {
         String titleEn = extractField(response, "title_en");
-        String titleFr = extractField(response, "title_fr");
         String excerpt = extractField(response, "excerpt");
         String contentEn = extractField(response, "content_en");
-        String contentFr = extractField(response, "content_fr");
-        String tagsStr = extractField(response, "suggested_tags");
 
-        // Fallbacks for missing fields
         if (titleEn == null || titleEn.isBlank()) {
             titleEn = event.issue();
         }
@@ -244,6 +244,7 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
                 : notes;
         }
 
+        String tagsStr = extractField(response, "suggested_tags");
         List<String> tags = tagsStr != null && !tagsStr.isBlank()
             ? Arrays.stream(tagsStr.split(","))
                 .map(String::trim)
@@ -252,6 +253,8 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
                 .toList()
             : List.of();
 
+        String titleFr = extractField(response, "title_fr");
+        String contentFr = extractField(response, "content_fr");
         return new KcsParsedArticle(titleEn, titleFr != null ? titleFr : titleEn,
             contentEn, contentFr != null ? contentFr : contentEn,
             excerpt, tags);
@@ -262,7 +265,9 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         String normalized = response.replace("\r\n", "\n");
         String prefix = fieldName + ":";
         int start = normalized.indexOf(prefix);
-        if (start == -1) return null;
+        if (start == -1) {
+            return null;
+        }
         start += prefix.length();
         // Skip past the newline after the field name prefix to get content start
         if (start < normalized.length() && normalized.charAt(start) == '\n') {
@@ -273,9 +278,13 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         int end = normalized.length();
         String[] markers = {"title_en:", "title_fr:", "excerpt:", "content_en:", "content_fr:", "suggested_tags:"};
         for (String marker : markers) {
-            if (marker.equals(fieldName + ":")) continue;
+            if (marker.equals(fieldName + ":")) {
+                continue;
+            }
             int idx = normalized.indexOf("\n" + marker, start);
-            if (idx != -1 && idx < end) end = idx;
+            if (idx != -1 && idx < end) {
+                end = idx;
+            }
         }
 
         String value = normalized.substring(start, end).trim();
@@ -302,9 +311,77 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
 
     /** Resolves tag names to existing Tag entities — only matches exact name_en. */
     private Set<Tag> resolveSuggestedTags(List<String> tagNames) {
-        if (tagNames == null || tagNames.isEmpty()) return new HashSet<>();
+        if (tagNames == null || tagNames.isEmpty()) {
+            return new HashSet<>();
+        }
+        int total = tagNames.size();
+        if (total > 5) {
+            log.warn("Tag suggestions truncated to 5 — {} tags suggested", total);
+        }
         List<Tag> found = tagRepository.findByNameEnIn(tagNames.stream().limit(5).collect(Collectors.toList()));
         return new HashSet<>(found);
+    }
+
+    /**
+     * Enriches a KcsDraftResponse with the source ticket number and similarity warnings.
+     *
+     * @param article the KCS draft article
+     * @return the enriched draft response
+     */
+    public KcsDraftResponse enrichDraftResponse(Article article) {
+        String ticketNumber = article.getSourceTicketId() != null
+            ? ticketRepository.findById(article.getSourceTicketId())
+                .map(t -> t.getTicketNumber())
+                .orElse(null)
+            : null;
+        Set<String> similarityWarnings = findSimilarArticles(article);
+        return new KcsDraftResponse(
+            article.getId(),
+            article.getTitleEn(),
+            article.getTitleFr(),
+            article.getSlug(),
+            article.getExcerpt(),
+            article.getStatus(),
+            article.getSourceTicketId(),
+            ticketNumber,
+            similarityWarnings,
+            article.getTags().stream()
+                .map(TagResponse::from)
+                .collect(Collectors.toSet()),
+            article.getCreatedAt()
+        );
+    }
+
+    /**
+     * Finds potentially duplicate articles by checking title keyword overlap.
+     */
+    private Set<String> findSimilarArticles(Article article) {
+        if (article.getTitleEn() == null || article.getTitleEn().isBlank()) {
+            return Set.of();
+        }
+        String keywords = article.getTitleEn().toLowerCase()
+            .replaceAll("[^a-zA-Z0-9\\s]", " ")
+            .replaceAll("\\s+", " ")
+            .trim();
+        if (keywords.isEmpty()) {
+            return Set.of();
+        }
+        try {
+            var results = articleRepository.searchByText(keywords, PageRequest.of(0, 5));
+            return results.getContent().stream()
+                .map(row -> (Object[]) row)
+                .filter(row -> {
+                    UUID id = (UUID) row[0];
+                    return !id.equals(article.getId());
+                })
+                .map(row -> (String) row[1])
+                .filter(Objects::nonNull)
+                .limit(3)
+                .collect(Collectors.toSet());
+        } catch (Exception e) {
+            log.warn("Similar article check failed: {}", e.getMessage());
+            return Set.of();
+        }
     }
 
     /** Internal record for parsed LLM output. */
@@ -312,5 +389,6 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         String titleEn, String titleFr,
         String contentEn, String contentFr,
         String excerpt, List<String> suggestedTags
-    ) {}
+    ) {
+    }
 }

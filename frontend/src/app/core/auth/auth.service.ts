@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest, UserDto } from './auth.models';
@@ -12,7 +12,9 @@ export class AuthService {
   readonly isAdmin = signal(false);
   readonly isAgent = signal(false);
 
-  constructor(private http: HttpClient) {
+  private readonly http = inject(HttpClient);
+
+  constructor() {
     this.tryRefreshToken();
   }
 
@@ -35,8 +37,8 @@ export class AuthService {
   }
 
   /** Log out and clear the session on the server. */
-  logout(): Observable<any> {
-    return this.http.post('/api/auth/logout', {}, { withCredentials: true })
+  logout(): Observable<void> {
+    return this.http.post<void>('/api/auth/logout', {}, { withCredentials: true })
       .pipe(tap(() => this.clearSession()));
   }
 

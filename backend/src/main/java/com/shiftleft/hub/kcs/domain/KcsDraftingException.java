@@ -6,9 +6,22 @@ package com.shiftleft.hub.kcs.domain;
  * LLM failures are retried — see {@link com.shiftleft.hub.kcs.service.KcsEventListener}.</p>
  */
 public class KcsDraftingException extends RuntimeException {
+
+    /**
+     * Creates a new exception with a message.
+     *
+     * @param message the error description
+     */
     public KcsDraftingException(String message) {
         super(message);
     }
+
+    /**
+     * Creates a new exception with a message and cause.
+     *
+     * @param message the error description
+     * @param cause   the root cause
+     */
     public KcsDraftingException(String message, Throwable cause) {
         super(message, cause);
     }

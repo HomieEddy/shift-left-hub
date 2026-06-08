@@ -1,20 +1,22 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize/init';
 import { TagService } from '../../services/tag.service';
-import { TagDto, CreateTagRequest } from '../../models/tag.models';
+import { TagDto } from '../../models/tag.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
+import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-tag-manager',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf],
+  imports: [FormsModule],
   templateUrl: './tag-manager.component.html',
 })
 export class TagManagerComponent implements OnInit {
   private tagService = inject(TagService);
   private destroyRef = inject(DestroyRef);
+  private confirmationDialog = inject(ConfirmationDialogService);
   protected translationService = inject(TranslationService);
 
   tags = signal<TagDto[]>([]);
@@ -41,7 +43,7 @@ export class TagManagerComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load tags.');
+        this.errorMessage.set($localize`:@@kb.tags.error.load:Failed to load tags.`);
         this.isLoading.set(false);
       },
     });
@@ -72,7 +74,7 @@ export class TagManagerComponent implements OnInit {
     const editing = this.editingTag();
     const request = { nameEn: this.formNameEn, nameFr: this.formNameFr, color: this.formColor };
 
-    const action = editing
+    const action = editing !== null
       ? this.tagService.updateTag(editing.id, request)
       : this.tagService.createTag(request);
 
@@ -83,22 +85,40 @@ export class TagManagerComponent implements OnInit {
         this.loadTags();
         this.cancelForm();
       },
-      error: (err) => {
-        this.errorMessage.set(err.error?.error || 'Failed to save tag.');
+      error: (err: unknown) => {
+        const serverError = err !== null && typeof err === 'object'
+          ? (err as Record<string, unknown>)['error']
+          : undefined;
+        const detail = serverError !== null && typeof serverError === 'object'
+          ? (serverError as Record<string, unknown>)['error']
+          : undefined;
+        this.errorMessage.set(typeof detail === 'string' ? detail : 'Failed to save tag.');
       },
     });
   }
 
   deleteTag(id: string, nameEn: string): void {
-    if (confirm(`Delete tag "${nameEn}"? This cannot be undone if the tag is unused.`)) {
-      this.tagService.deleteTag(id).pipe(
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: () => this.loadTags(),
-        error: (err) => {
-          this.errorMessage.set(err.error?.error || 'Cannot delete tag: it is used by articles.');
-        },
-      });
-    }
+    this.confirmationDialog.confirm({
+      title: $localize`:@@confirm.title.delete:Delete Confirmation`,
+      message: $localize`:@@confirm.message.delete-tag:Delete tag "${nameEn}"?`,
+      confirmLabel: $localize`:@@confirm.label.delete:Delete`,
+    }).subscribe((confirmed) => {
+      if (confirmed === true) {
+        this.tagService.deleteTag(id).pipe(
+          takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+          next: () => this.loadTags(),
+          error: (err: unknown) => {
+            const serverError = err !== null && typeof err === 'object'
+              ? (err as Record<string, unknown>)['error']
+              : undefined;
+            const detail = serverError !== null && typeof serverError === 'object'
+              ? (serverError as Record<string, unknown>)['error']
+              : undefined;
+            this.errorMessage.set(typeof detail === 'string' ? detail : $localize`:@@kb.tags.error.delete:This tag is in use and cannot be deleted.`);
+          },
+        });
+      }
+    });
   }
 }

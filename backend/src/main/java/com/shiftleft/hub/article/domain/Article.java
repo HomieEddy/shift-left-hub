@@ -14,11 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +23,15 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
+/**
+ * JPA entity representing a knowledge base article.
+ */
 @Entity
 @Table(name = "article")
 @Getter
@@ -87,7 +92,8 @@ public class Article {
     @JoinTable(
         name = "article_tag",
         joinColumns = @JoinColumn(name = "article_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
+        inverseJoinColumns = @JoinColumn(name = "tag_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"article_id", "tag_id"})
     )
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
@@ -102,8 +108,12 @@ public class Article {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Article article)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Article article)) {
+            return false;
+        }
         return id != null && id.equals(article.id);
     }
 

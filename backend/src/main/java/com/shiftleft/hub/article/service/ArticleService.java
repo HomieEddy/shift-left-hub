@@ -37,24 +37,52 @@ public class ArticleService {
     private final TagRepository tagRepository;
     private final EmbeddingService embeddingService;
 
+    /**
+     * Retrieves an article by its ID.
+     *
+     * @param id the article UUID
+     * @return the article response
+     */
     public ArticleResponse getArticleById(UUID id) {
         return articleRepository.findById(id)
             .map(ArticleResponse::from)
             .orElseThrow(() -> new ArticleNotFoundException(id));
     }
 
+    /**
+     * Retrieves all articles with pagination.
+     *
+     * @param page the page index (zero-based)
+     * @param size the page size
+     * @return a page of article responses
+     */
     public Page<ArticleResponse> getAllArticles(int page, int size) {
         return articleRepository.findAll(
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")))
             .map(ArticleResponse::from);
     }
 
+    /**
+     * Retrieves articles filtered by their status.
+     *
+     * @param status the article status to filter by
+     * @param page   the page index (zero-based)
+     * @param size   the page size
+     * @return a page of article responses
+     */
     public Page<ArticleResponse> getArticlesByStatus(ArticleStatus status, int page, int size) {
         return articleRepository.findByStatus(status,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")))
             .map(ArticleResponse::from);
     }
 
+    /**
+     * Creates a new article.
+     *
+     * @param request the create article request
+     * @param author  the authoring user
+     * @return the created article response
+     */
     @Transactional
     public ArticleResponse createArticle(CreateArticleRequest request, User author) {
         Set<Tag> tags = resolveTags(request.tagIds());
@@ -82,6 +110,14 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
+    /**
+     * Updates an existing article.
+     *
+     * @param id      the article UUID
+     * @param request the update article request
+     * @param editor  the editing user
+     * @return the updated article response
+     */
     @Transactional
     public ArticleResponse updateArticle(UUID id, UpdateArticleRequest request, User editor) {
         Article article = articleRepository.findById(id)
@@ -105,6 +141,12 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
+    /**
+     * Publishes an article by its ID.
+     *
+     * @param id the article UUID
+     * @return the published article response
+     */
     @Transactional
     public ArticleResponse publishArticle(UUID id) {
         Article article = articleRepository.findById(id)
@@ -124,6 +166,12 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
+    /**
+     * Archives an article by its ID.
+     *
+     * @param id the article UUID
+     * @return the archived article response
+     */
     @Transactional
     public ArticleResponse archiveArticle(UUID id) {
         Article article = articleRepository.findById(id)
@@ -136,6 +184,11 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
+    /**
+     * Deletes an article by its ID.
+     *
+     * @param id the article UUID
+     */
     @Transactional
     public void deleteArticle(UUID id) {
         if (!articleRepository.existsById(id)) {

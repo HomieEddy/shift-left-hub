@@ -1,10 +1,10 @@
 package com.shiftleft.hub.ai.service;
 
+import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.shiftleft.hub.ai.api.dto.ChatRequest;
 import com.shiftleft.hub.ai.api.dto.StreamEvent;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.article.domain.ArticleRepository;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -20,6 +20,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +42,17 @@ public class AiChatService {
     private static final int MAX_HISTORY = 10;
     private static final int TOP_K = 10;
 
-    record HybridSearchResult(UUID articleId, String titleEn, String titleFr, String slug, String excerpt, double score) {}
+    record HybridSearchResult(UUID articleId, String titleEn, String titleFr,
+        String slug, String excerpt, double score) {
+    }
 
+    /**
+     * Processes a chat request and streams the response to the SSE emitter.
+     *
+     * @param request the chat request with message and optional history
+     * @param emitter the SSE emitter for streaming the response
+     * @param userId  the authenticated user identifier
+     */
     public void processChat(ChatRequest request, SseEmitter emitter, String userId) {
         try {
             AiConfig config = aiConfigService.getConfigEntity();
@@ -83,7 +93,11 @@ public class AiChatService {
                 .doOnComplete(() -> {
                     try {
                         List<StreamEvent.SourceRef> sourceRefs = topResults.stream()
-                            .map(r -> new StreamEvent.SourceRef(r.articleId(), r.titleEn() != null ? r.titleEn() : r.titleFr(), r.slug(), r.score()))
+                            .map(r -> new StreamEvent.SourceRef(
+                            r.articleId(),
+                            r.titleEn() != null ? r.titleEn() : r.titleFr(),
+                            r.slug(),
+                            r.score()))
                             .toList();
                         emitter.send(SseEmitter.event().name("message")
                             .data(new StreamEvent("done", fullResponse.get(), sourceRefs)));
@@ -148,7 +162,9 @@ public class AiChatService {
             .sorted(Map.Entry.<UUID, Double>comparingByValue().reversed())
             .map(e -> {
                 HybridSearchResult r = resultMap.get(e.getKey());
-                return new HybridSearchResult(r.articleId(), r.titleEn(), r.titleFr(), r.slug(), r.excerpt(), e.getValue());
+                return new HybridSearchResult(
+                    r.articleId(), r.titleEn(), r.titleFr(),
+                    r.slug(), r.excerpt(), e.getValue());
             })
             .toList();
     }
@@ -157,7 +173,9 @@ public class AiChatService {
         String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2:3b";
         ChatModel chatModel;
 
-        if ("OPENAI".equals(config.getLlmProvider()) && config.getOpenaiApiKey() != null && !config.getOpenaiApiKey().isEmpty()) {
+        if ("OPENAI".equals(config.getLlmProvider())
+            && config.getOpenaiApiKey() != null
+            && !config.getOpenaiApiKey().isEmpty()) {
             String decryptedKey = aiConfigService.decrypt(config.getOpenaiApiKey());
             chatModel = OpenAiChatModel.builder()
                 .openAiClient(OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
@@ -219,7 +237,9 @@ public class AiChatService {
     }
 
     private String formatHistory(List<ChatRequest.ChatMessage> history) {
-        if (history == null || history.isEmpty()) return "";
+        if (history == null || history.isEmpty()) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         List<ChatRequest.ChatMessage> recent = history.size() > MAX_HISTORY
             ? history.subList(history.size() - MAX_HISTORY, history.size())

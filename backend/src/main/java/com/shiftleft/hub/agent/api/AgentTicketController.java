@@ -9,8 +9,6 @@ import com.shiftleft.hub.ticket.domain.TicketCategory;
 import com.shiftleft.hub.ticket.domain.TicketStatus;
 import com.shiftleft.hub.ticket.domain.TicketUrgency;
 import jakarta.validation.Valid;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -22,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * REST controller for agent ticket operations.

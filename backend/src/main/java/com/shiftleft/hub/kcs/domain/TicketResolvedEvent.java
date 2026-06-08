@@ -2,6 +2,7 @@ package com.shiftleft.hub.kcs.domain;
 
 import com.shiftleft.hub.ticket.domain.TicketCategory;
 import com.shiftleft.hub.ticket.domain.TicketUrgency;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -34,4 +35,5 @@ public record TicketResolvedEvent(
     String userEmail,
     String agentDisplayName,
     LocalDateTime resolvedAt
-) {}
+) {
+}

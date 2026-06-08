@@ -24,6 +24,13 @@ public class PublicArticleController {
 
     private final PublicArticleService publicArticleService;
 
+    /**
+     * Lists published articles with pagination.
+     *
+     * @param page the page index (zero-based)
+     * @param size the page size
+     * @return a page of article responses
+     */
     @GetMapping
     public Page<ArticleResponse> listArticles(
             @RequestParam(defaultValue = "0") int page,
@@ -33,6 +40,15 @@ public class PublicArticleController {
         return publicArticleService.getPublishedArticles(safePage, safeSize);
     }
 
+    /**
+     * Full-text search across published articles.
+     *
+     * @param q    the search query
+     * @param tags optional tag names to filter by
+     * @param page the page index (zero-based)
+     * @param size the page size
+     * @return a page of search results
+     */
     @GetMapping("/search")
     public Page<ArticleSearchResult> searchArticles(
             @RequestParam String q,
@@ -44,11 +60,22 @@ public class PublicArticleController {
         return publicArticleService.search(q, safePage, safeSize, tags);
     }
 
+    /**
+     * Retrieves tag facets for use in search filtering.
+     *
+     * @return the list of available search tags
+     */
     @GetMapping("/search/tags")
     public List<ArticleSearchTag> searchTags() {
         return publicArticleService.getSearchTags();
     }
 
+    /**
+     * Retrieves a published article by its ID.
+     *
+     * @param id the article UUID
+     * @return the article response
+     */
     @GetMapping("/{id}")
     public ArticleResponse getArticle(@PathVariable UUID id) {
         return publicArticleService.getPublishedArticleById(id);

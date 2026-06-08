@@ -1,31 +1,31 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: executing
-last_updated: "2026-06-05T12:00:00.000Z"
+milestone: v2.0
+milestone_name: v2.0
+status: active
+last_updated: "2026-06-08T10:30:00.000Z"
 progress:
-  total_phases: 7
-  completed_phases: 6
-  total_plans: 27
-  completed_plans: 27
-  current_phase: 7
-  current_phase_name: "Quality, Polish & DevOps"
-  current_focus: "Phase 6 complete — KCS Auto-Drafting & Admin Review executed (3/3 plans)"
+  total_phases: 8
+  completed_phases: 7
+  total_plans: 44
+  completed_plans: 36
+  current_phase: 8
+  current_phase_name: "Testing & CI/CD"
+  current_focus: "Phase 8 planned — 8 plans across 3 waves"
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** Phase 6 Execution Complete
+**Status:** Milestone v2.0 — Phase 8 (Testing & CI/CD) planned, ready to execute
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
-**Current focus:** Phase 6 complete — KCS Auto-Drafting & Admin Review executed
+**Current focus:** All 7 phases complete — Milestone v1.0 shipped
 
 ### Phase 6: KCS Auto-Drafting & Admin Review
 
@@ -34,6 +34,20 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 06-01 | Backend Foundation | Article entity sourceTicketId, @EnableAsync, TicketResolvedEvent, event wiring | ✓ Complete | `7f7afd8`, `94d38ce`, `3cb4661` |
 | 06-02 | KCS Drafting Engine + Admin API | AI synthesis, dedup, async listener with retry, admin controller (list/approve/reject) | ✓ Complete | `1c96bed`, `89ad3c5`, `1e016e0` |
 | 06-03 | Frontend Admin KCS UI | Draft queue table, approve/reject actions, nav badge, routes, EN/FR translations | ✓ Complete | `b994562`, `cb588b5` |
+
+### Phase 7: Quality, Polish & DevOps
+
+| Plan | Name | Summary | Commits |
+|------|------|---------|---------|
+| 07-01 | Database — Flyway, HikariCP, Indexing, Constraints | Flyway V1 baseline, HikariCP pool config, additional DB indexes, column constraints | — |
+| 07-02 | Backend — RFC 7807, Architectural Boundaries, Logging | ProblemDetail exception handling, service-layer extraction, SLF4J logging gaps | — |
+| 07-03 | Backend Static Analysis — Checkstyle + SpotBugs | Static analysis toolchain with fail-on-violation | — |
+| 07-04 | Frontend — CDK ConfirmationDialogService | Angular CDK dialog service replacing inline confirm() | — |
+| 07-05 | Frontend — i18n Batch Extraction | Comprehensive i18n extraction across all templates | — |
+| 07-06 | Frontend Static Analysis — ESLint + Prettier | ESLint strict type-checked rules, Prettier format pipeline | — |
+| 07-07 | DevOps — Docker Healthchecks + SPA Deep-Linking | Healthcheck blocks, actuator probes, SpaForwardingController | — |
+| 07-08 | Playwright E2E Golden Path | Page objects, auth setup, golden path test, data-testid selectors | `707afde`, `8b4b1be` |
+| 07-09 | Bilingual Layout Audit + Demo Walkthrough | French layout audit, demo walkthrough script | — |
 
 ### Phase 4: Escalation & Ticketing
 
@@ -81,7 +95,8 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 4 | Escalation & Ticketing | ✓ Complete (4/4 plans) |
 | 5 | Agent Dashboard | ✓ Complete (4/4 plans) |
 | 6 | KCS Auto-Drafting & Admin Review | ✓ Complete (3/3 plans) |
-| 7 | Quality, Polish & DevOps | ○ Pending |
+| 7 | Quality, Polish & DevOps | ✓ Complete (9/9 plans) |
+| 8 | Testing & CI/CD | ▸ Planned (0/8 plans) |
 
 ## Key Decisions
 
@@ -133,9 +148,11 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves) ✓ Shipped (PR #5)
 2. ✅ **Phase 6 complete** — KCS Auto-Drafting & Admin Review executed (3/3 plans, 3 waves)
-3. **Next: Phase 7 (Quality, Polish & DevOps)** — final phase
-   - `/gsd-plan-phase 07-quality-polish-devops` to plan
+3. ✅ **Phase 7 complete** — Quality, Polish & DevOps executed (9/9 plans, 5 waves)
+   - Done: Flyway migration, RFC 7807 error handling, Checkstyle/SpotBugs, CDK dialogs, i18n extraction, ESLint fix, Docker healthchecks, Playwright E2E, bilingual audit + demo walkthrough
+4. ▸ **Phase 8: Testing & CI/CD** — Planned, ready to execute (8 plans in 3 waves)
+   - Run `/gsd-plan-phase 8` to begin
 
 ---
 
-*Last updated: 2026-06-05 after Phase 6 planning*
+*Milestone v2.0 — Phase 8 planned*

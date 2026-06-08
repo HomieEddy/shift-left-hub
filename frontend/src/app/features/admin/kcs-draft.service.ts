@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { KcsDraft, PendingCountResponse, PaginatedResponse } from './kcs-draft.model';
@@ -7,15 +7,15 @@ import { KcsDraft, PendingCountResponse, PaginatedResponse } from './kcs-draft.m
 @Injectable({ providedIn: 'root' })
 export class KcsDraftService {
 
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   /**
    * Lists all KCS drafts with pagination.
    * @param page zero-indexed page number
    * @param size page size (default 20)
    */
-  getDrafts(page: number = 0, size: number = 20): Observable<PaginatedResponse<KcsDraft>> {
-    let params = new HttpParams()
+  getDrafts(page = 0, size = 20): Observable<PaginatedResponse<KcsDraft>> {
+    const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
     return this.http.get<PaginatedResponse<KcsDraft>>('/api/admin/kcs/drafts', { params, withCredentials: true });

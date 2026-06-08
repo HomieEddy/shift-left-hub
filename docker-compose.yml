@@ -12,9 +12,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U shiftleft -d shiftleft"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     restart: unless-stopped
 
   backend:
@@ -26,6 +27,10 @@ services:
       - "8082:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_FLYWAY_ENABLED: "false"
+      # Note: Flyway auto-configuration is not activating in this setup.
+      # Hibernate DDL update handles schema for dev. Flyway is the production strategy.
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shiftleft
       SPRING_DATASOURCE_USERNAME: shiftleft
       SPRING_DATASOURCE_PASSWORD: shiftleft
@@ -33,9 +38,6 @@ services:
       APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL:-admin@shiftleft.com}
       APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-ShiftLeft!2026}
       APP_AI_ENCRYPTION_KEY: ${APP_AI_ENCRYPTION_KEY:-local-dev-placeholder-key-2026}
-      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
-      SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: 1s
-      SPRING_DEVTOOLS_RESTART_QUIET_PERIOD: 400ms
     volumes:
       - ./backend:/app
       - maven_cache:/home/app/.m2
@@ -43,6 +45,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   frontend:
@@ -59,7 +67,8 @@ services:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
     depends_on:
-      - backend
+      backend:
+        condition: service_started
     restart: unless-stopped
 
 volumes:

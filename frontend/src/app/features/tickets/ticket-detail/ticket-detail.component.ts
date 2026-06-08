@@ -1,14 +1,15 @@
 import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize/init';
 import { TicketService } from '../ticket.service';
 import { Ticket, ShiftLeftContext } from '../ticket.model';
 
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink],
   templateUrl: './ticket-detail.component.html',
 })
 export class TicketDetailComponent implements OnInit {
@@ -26,7 +27,7 @@ export class TicketDetailComponent implements OnInit {
 
   parsedContext = computed(() => {
     const raw = this.ticket()?.shiftLeftContext;
-    if (!raw) return null;
+    if (raw == null) return null;
     try {
       return JSON.parse(raw) as ShiftLeftContext;
     } catch {
@@ -39,7 +40,7 @@ export class TicketDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    if (id != null) {
       this.loadTicket(id);
     }
   }
@@ -53,7 +54,7 @@ export class TicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set('Failed to load ticket.');
+        this.errorMessage.set($localize`:@@tickets.detail.error.load:Failed to load ticket.`);
       },
     });
   }
@@ -64,10 +65,10 @@ export class TicketDetailComponent implements OnInit {
 
     this.ticketService.cancelTicket(t.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.router.navigate(['/tickets']);
+        void this.router.navigate(['/tickets']);
       },
       error: () => {
-        this.errorMessage.set('Failed to cancel ticket.');
+        this.errorMessage.set($localize`:@@tickets.detail.error.cancel:Failed to cancel ticket.`);
       },
     });
   }

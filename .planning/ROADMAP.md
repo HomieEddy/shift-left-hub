@@ -1,6 +1,6 @@
 # Roadmap: Shift-Left Knowledge Hub
 
-**7 phases** | **36 requirements** | All v1 covered ✓
+**8 phases** | **36 v1 + 5 v2 requirements** | All v1 covered ✓
 
 ## Phase Overview
 
@@ -12,7 +12,8 @@
 | 4 | Escalation & Ticketing | Contextual ticket creation | TKT-01-04 | 3 |
 | 5 | Agent Dashboard | ✓ Prioritized ticket queue + resolution + KCS flag | AGT-01-05 | 4/4 |
 | 6 | KCS Auto-Drafting & Admin Review | Event-driven drafting + dedup + review queue | KCS-01-04, ADM-01-02 | 4 |
-| 7 | Quality, Polish & DevOps | Healthchecks + i18n verify + testing | (polish phase) | 3 |
+| 7 | Quality, Polish & DevOps | Static analysis, healthchecks, i18n verify, testing | (polish phase) | 7 |
+| 8 | Testing & CI/CD | Test coverage pyramid + GitHub Actions CI/CD pipeline | TST-01-05 | 5 |
 
 ---
 
@@ -183,6 +184,39 @@ Plans:
 
 ---
 
+### Phase 8: Testing & CI/CD
+
+**Goal:** Production-quality test coverage + automated CI/CD pipeline that gates every merge.
+
+**Requirements:** TST-01, TST-02, TST-03, TST-04, TST-05
+
+**Success criteria:**
+1. All backend service tests pass with `mvn test` (unit + integration)
+2. All frontend tests pass with `npm test -- --watch=false`
+3. Playwright E2E golden path runs against the live Docker stack
+4. GitHub Actions CI runs lint → test → build on every PR to master
+5. Railway/Vercel deploy gates on CI passing
+
+**Plans:** 8 plans in 3 waves
+
+| Wave | Plans | Objective |
+|------|-------|-----------|
+| 1 | 08-01, 08-02, 08-03 | Backend: Testcontainers base, Service layer unit tests, Integration tests |
+| 2 | 08-04, 08-05 | Frontend: Service tests, Smart component tests |
+| 3 | 08-06, 08-07, 08-08 | E2E Playwright, GitHub Actions CI, Pre-commit hooks |
+
+Plans:
+- [ ] 08-01 — Test Dependencies & Base Configuration: Testcontainers, `application-test.properties`, `AbstractIntegrationTest`
+- [ ] 08-02 — Backend Service-Layer Unit Tests: AuthService, TicketService, AgentTicketService, ArticleService, KcsDraftingService, TagService
+- [ ] 08-03 — Backend Integration Tests (Testcontainers): Auth flow, Ticket CRUD, KB search, Agent resolve, KCS draft
+- [ ] 08-04 — Frontend Service & RxJS Tests: AuthService, TicketService, ChatService, ArticleService, KcsDraftService, TranslationService
+- [ ] 08-05 — Frontend Smart Component Tests: LoginComponent, ChatComponent, ArticleSearchComponent, TicketListComponent, ArticleEditorComponent
+- [ ] 08-06 — Playwright E2E Golden Path: login → AI query → escalate → agent resolves → flag KCS gap
+- [ ] 08-07 — GitHub Actions CI: `ci.yml` with backend, frontend, E2E jobs; Railway/Vercel deploy gating
+- [ ] 08-08 — Pre-commit Hooks: Husky + lint-staged for Prettier + ESLint on staged files
+
+---
+
 ## Phase Dependency Graph
 
 ```
@@ -193,6 +227,7 @@ Phase 1 (Foundation)
                             └──► Phase 5 (Agent Dashboard)
                                     └──► Phase 6 (KCS Drafting)
                                             └──► Phase 7 (Polish)
+                                                    └──► Phase 8 (Testing & CI/CD)
 ```
 
 Each phase depends on all previous phases. Strict sequential execution.
@@ -200,9 +235,12 @@ Each phase depends on all previous phases. Strict sequential execution.
 ## Coverage Validation
 
 - v1 requirements: 36 total
-- Mapped to phases: 36
+- v2 requirements: 5 (TST-01 through TST-05)
+- Mapped to phases: 41 (36 v1 + 5 v2)
 - Unmapped: 0 ✓
 
 ---
+
 *Created: 2026-05-31*
-*Next: `/gsd-plan-phase 7`*
+*Last updated: 2026-06-08 — Phase 8 added*
+*Next: `/gsd-plan-phase 8`*

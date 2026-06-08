@@ -36,6 +36,14 @@ public class AdminArticleController {
     private final ArticleService articleService;
     private final UserRepository userRepository;
 
+    /**
+     * Retrieves all articles with optional status filtering and pagination.
+     *
+     * @param page   the page index (zero-based)
+     * @param size   the page size
+     * @param status optional status filter
+     * @return a page of article responses
+     */
     @GetMapping
     public Page<ArticleResponse> getAllArticles(
             @RequestParam(defaultValue = "0") int page,
@@ -49,11 +57,24 @@ public class AdminArticleController {
         return articleService.getAllArticles(safePage, safeSize);
     }
 
+    /**
+     * Retrieves an article by its ID.
+     *
+     * @param id the article UUID
+     * @return the article response
+     */
     @GetMapping("/{id}")
     public ArticleResponse getArticle(@PathVariable UUID id) {
         return articleService.getArticleById(id);
     }
 
+    /**
+     * Creates a new article.
+     *
+     * @param request the create article request
+     * @param auth    the current authentication
+     * @return the created article response
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ArticleResponse createArticle(
@@ -63,6 +84,14 @@ public class AdminArticleController {
         return articleService.createArticle(request, author);
     }
 
+    /**
+     * Updates an existing article.
+     *
+     * @param id      the article UUID
+     * @param request the update article request
+     * @param auth    the current authentication
+     * @return the updated article response
+     */
     @PutMapping("/{id}")
     public ArticleResponse updateArticle(
             @PathVariable UUID id,
@@ -72,16 +101,33 @@ public class AdminArticleController {
         return articleService.updateArticle(id, request, editor);
     }
 
+    /**
+     * Publishes an article by its ID.
+     *
+     * @param id the article UUID
+     * @return the published article response
+     */
     @PutMapping("/{id}/publish")
     public ArticleResponse publishArticle(@PathVariable UUID id) {
         return articleService.publishArticle(id);
     }
 
+    /**
+     * Archives an article by its ID.
+     *
+     * @param id the article UUID
+     * @return the archived article response
+     */
     @PutMapping("/{id}/archive")
     public ArticleResponse archiveArticle(@PathVariable UUID id) {
         return articleService.archiveArticle(id);
     }
 
+    /**
+     * Deletes an article by its ID.
+     *
+     * @param id the article UUID
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteArticle(@PathVariable UUID id) {

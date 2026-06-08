@@ -4,84 +4,92 @@
     <div class="flex items-center justify-between h-14">
       <!-- Left side: Logo + Navigation -->
       <div class="flex items-center gap-6">
-        <a routerLink="/" class="text-lg font-bold text-slate-800 no-underline">SL Knowledge Hub</a>
+        <a routerLink="/" class="text-lg font-bold text-slate-800 no-underline" i18n="@@app.title">SL Knowledge Hub</a>
         <nav class="flex items-center gap-4 text-sm">
-          <a
-            *ngIf="authService.isAuthenticated() && authService.isAdmin()"
-            routerLink="/admin/users"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            Users
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated() && authService.isAdmin()"
-            routerLink="/admin/articles"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            Articles
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated() && authService.isAdmin()"
-            routerLink="/admin/kcs-drafts"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors relative"
-          >
-            KCS Drafts
-            <span *ngIf="pendingKcsCount() > 0"
+          @if (authService.isAuthenticated() && authService.isAdmin()) {
+            <a
+              routerLink="/admin/users"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.users"
+            >
+              Users
+            </a>
+            <a
+              routerLink="/admin/articles"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.articles"
+            >
+              Articles
+            </a>
+            <a
+              routerLink="/admin/kcs-drafts"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors relative"
+              i18n="@@nav.kcs-drafts"
+            >
+              KCS Drafts
+              @if (pendingKcsCount() > 0) {
+                <span
                   class="absolute -top-1.5 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full min-w-[18px]">
-              {{ pendingKcsCount() }}
-            </span>
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated() && authService.isAdmin()"
-            routerLink="/admin/tags"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            Tags
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated() && authService.isAdmin()"
-            routerLink="/admin/settings/llm"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            AI Settings
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated() && (authService.isAdmin() || authService.isAgent())"
-            routerLink="/agent/tickets"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            Ticket Queue
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated()"
-            routerLink="/chat"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            AI Assistant
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated()"
-            routerLink="/tickets"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            My Tickets
-          </a>
-          <a
-            *ngIf="authService.isAuthenticated()"
-            routerLink="/articles"
-            routerLinkActive="text-blue-600 font-medium"
-            class="text-slate-600 hover:text-slate-800 transition-colors"
-          >
-            Knowledge Base
-          </a>
+                  {{ pendingKcsCount() }}
+                </span>
+              }
+            </a>
+            <a
+              routerLink="/admin/tags"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.tags"
+            >
+              Tags
+            </a>
+            <a
+              routerLink="/admin/settings/llm"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.ai-settings"
+            >
+              AI Settings
+            </a>
+          }
+          @if (authService.isAuthenticated() && (authService.isAdmin() || authService.isAgent())) {
+            <a
+              routerLink="/agent/tickets"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.ticket-queue"
+            >
+              Ticket Queue
+            </a>
+          }
+          @if (authService.isAuthenticated()) {
+            <a
+              routerLink="/chat"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.ai-assistant"
+            >
+              AI Assistant
+            </a>
+            <a
+              routerLink="/tickets"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.my-tickets"
+            >
+              My Tickets
+            </a>
+            <a
+              routerLink="/articles"
+              routerLinkActive="text-blue-600 font-medium"
+              class="text-slate-600 hover:text-slate-800 transition-colors"
+              i18n="@@nav.knowledge-base"
+            >
+              Knowledge Base
+            </a>
+          }
         </nav>
       </div>
 
@@ -96,6 +104,7 @@
             [class.text-white]="translationService.currentLang() === 'en'"
             [class.text-slate-600]="translationService.currentLang() !== 'en'"
             [class.hover:bg-slate-100]="translationService.currentLang() !== 'en'"
+            i18n="@@lang.en"
           >
             EN
           </button>
@@ -106,25 +115,27 @@
             [class.text-white]="translationService.currentLang() === 'fr'"
             [class.text-slate-600]="translationService.currentLang() !== 'fr'"
             [class.hover:bg-slate-100]="translationService.currentLang() !== 'fr'"
+            i18n="@@lang.fr"
           >
             FR
           </button>
         </div>
 
         <!-- Auth: show user info when logged in, login/register links when not -->
-        <ng-container *ngIf="authService.isAuthenticated(); else authLinks">
+        @if (authService.isAuthenticated()) {
           <span class="text-sm text-slate-600">{{ authService.user()?.displayName }}</span>
           <button
             (click)="logout()"
+            data-testid="nav-logout"
             class="text-sm text-slate-500 hover:text-red-600 transition-colors"
+            i18n="@@nav.logout"
           >
             Logout
           </button>
-        </ng-container>
-        <ng-template #authLinks>
-          <a routerLink="/login" class="text-sm text-slate-600 hover:text-slate-800 transition-colors">Sign in</a>
-          <a routerLink="/register" class="text-sm rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 transition-colors">Register</a>
-        </ng-template>
+        } @else {
+          <a routerLink="/login" class="text-sm text-slate-600 hover:text-slate-800 transition-colors" i18n="@@nav.signin">Sign in</a>
+          <a routerLink="/register" class="text-sm rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 transition-colors" i18n="@@nav.register">Register</a>
+        }
       </div>
     </div>
   </div>

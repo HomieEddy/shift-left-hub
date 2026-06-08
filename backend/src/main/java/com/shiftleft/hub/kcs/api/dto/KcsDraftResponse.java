@@ -2,6 +2,7 @@ package com.shiftleft.hub.kcs.api.dto;
 
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.tag.api.dto.TagResponse;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -35,4 +36,5 @@ public record KcsDraftResponse(
     Set<String> similarityWarnings,
     Set<TagResponse> tags,
     LocalDateTime createdAt
-) {}
+) {
+}

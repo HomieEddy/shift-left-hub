@@ -29,6 +29,13 @@ public class PublicArticleService {
 
     private final ArticleRepository articleRepository;
 
+    /**
+     * Retrieves published articles with pagination.
+     *
+     * @param page the page index (zero-based)
+     * @param size the page size
+     * @return a page of published article responses
+     */
     public Page<ArticleResponse> getPublishedArticles(int page, int size) {
         return articleRepository.findByStatus(
                 ArticleStatus.PUBLISHED,
@@ -36,6 +43,12 @@ public class PublicArticleService {
             .map(ArticleResponse::from);
     }
 
+    /**
+     * Retrieves a published article by its ID.
+     *
+     * @param id the article UUID
+     * @return the published article response
+     */
     public ArticleResponse getPublishedArticleById(UUID id) {
         var article = articleRepository.findById(id)
             .orElseThrow(() -> new ArticleNotFoundException(id));
@@ -45,6 +58,15 @@ public class PublicArticleService {
         return ArticleResponse.from(article);
     }
 
+    /**
+     * Full-text search across published articles, optionally filtered by tags.
+     *
+     * @param query    the search query
+     * @param page     the page index (zero-based)
+     * @param size     the page size
+     * @param tagNames optional tag names to filter by
+     * @return a page of search results
+     */
     public Page<ArticleSearchResult> search(String query, int page, int size, List<String> tagNames) {
         var pageRequest = PageRequest.of(page, size);
         var normalizedTags = tagNames == null
@@ -90,6 +112,11 @@ public class PublicArticleService {
         return new PageImpl<>(items, pageRequest, results.getTotalElements());
     }
 
+    /**
+     * Retrieves tag facets for published articles.
+     *
+     * @return the list of tag search facets
+     */
     public List<ArticleSearchTag> getSearchTags() {
         return articleRepository.findPublishedTagFacets().stream()
             .map(row -> new ArticleSearchTag(

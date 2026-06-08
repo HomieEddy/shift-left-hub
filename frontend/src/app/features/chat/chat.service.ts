@@ -33,7 +33,12 @@ export class ChatService {
         return;
       }
 
-      const reader = response.body!.getReader();
+      if (!response.body) {
+        subject.next({ type: 'error', content: 'Empty response from server' });
+        subject.complete();
+        return;
+      }
+      const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
 
@@ -42,7 +47,7 @@ export class ChatService {
       const tryParseAndEmit = (data: string): boolean => {
         if (!data) return false;
         try {
-          const event: StreamEvent = JSON.parse(data);
+          const event = JSON.parse(data) as StreamEvent;
           subject.next(event);
           if (event.type === 'done' || event.type === 'fallback' || event.type === 'error') {
             subject.complete();
@@ -60,7 +65,7 @@ export class ChatService {
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+        buffer = lines.pop() ?? '';
 
         for (const line of lines) {
           if (line.startsWith('data:')) {
@@ -84,7 +89,7 @@ export class ChatService {
       if (tryParseAndEmit(currentData)) return;
       subject.complete();
     }).catch(err => {
-      if (err.name !== 'AbortError') {
+      if ((err as Error).name !== 'AbortError') {
         subject.next({ type: 'error', content: 'Network error. Please check your connection.' });
         subject.complete();
       }

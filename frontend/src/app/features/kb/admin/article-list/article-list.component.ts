@@ -1,20 +1,23 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
+import { NgClass, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize/init';
 import { ArticleService } from '../../services/article.service';
 import { ArticleDto, ArticleStatus } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
+import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-article-list',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, DatePipe, RouterLink],
+  imports: [NgClass, DatePipe, RouterLink],
   templateUrl: './article-list.component.html',
 })
 export class ArticleListComponent implements OnInit {
   private articleService = inject(ArticleService);
   private destroyRef = inject(DestroyRef);
+  private confirmationDialog = inject(ConfirmationDialogService);
   protected translationService = inject(TranslationService);
 
   articles = signal<ArticleDto[]>([]);
@@ -40,7 +43,7 @@ export class ArticleListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load articles.');
+        this.errorMessage.set($localize`:@@kb.articles.error.load:Failed to load articles.`);
         this.isLoading.set(false);
       },
     });
@@ -51,7 +54,7 @@ export class ArticleListComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => this.loadArticles(),
-      error: () => this.errorMessage.set('Failed to publish article.'),
+      error: () => this.errorMessage.set($localize`:@@kb.articles.error.publish:Failed to publish article.`),
     });
   }
 
@@ -60,19 +63,25 @@ export class ArticleListComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => this.loadArticles(),
-      error: () => this.errorMessage.set('Failed to archive article.'),
+      error: () => this.errorMessage.set($localize`:@@kb.articles.error.archive:Failed to archive article.`),
     });
   }
 
   deleteArticle(id: string): void {
-    if (confirm('Delete this article? This action cannot be undone.')) {
-      this.articleService.deleteArticle(id).pipe(
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: () => this.loadArticles(),
-        error: () => this.errorMessage.set('Failed to delete article.'),
-      });
-    }
+    this.confirmationDialog.confirm({
+      title: $localize`:@@confirm.title.delete:Delete Confirmation`,
+      message: $localize`:@@confirm.message.delete-article:Delete this article? This action cannot be undone.`,
+      confirmLabel: $localize`:@@confirm.label.delete:Delete`,
+    }).subscribe((confirmed) => {
+      if (confirmed) {
+        this.articleService.deleteArticle(id).pipe(
+          takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+          next: () => this.loadArticles(),
+          error: () => this.errorMessage.set($localize`:@@kb.articles.error.delete:Failed to delete article.`),
+        });
+      }
+    });
   }
 
   statusBadgeVariant(status: ArticleStatus): string {

@@ -10,11 +10,16 @@
     "prebuild": "pnpm tailwind:css",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "lint": "ng lint",
+    "format": "prettier --write \"src/**/*.{ts,html,json,css}\"",
+    "test": "ng test",
+    "e2e": "npx playwright test --config ../playwright.config.ts",
+    "e2e:ui": "npx playwright test --config ../playwright.config.ts --ui"
   },
   "private": true,
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
+    "@angular/cdk": "^21.2.0",
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",
@@ -28,17 +33,27 @@
     "zone.js": "^0.16.2"
   },
   "devDependencies": {
+    "@angular-eslint/builder": "^21.2.0",
+    "@angular-eslint/eslint-plugin": "^21.2.0",
+    "@angular-eslint/eslint-plugin-template": "^21.2.0",
+    "@angular-eslint/template-parser": "^21.2.0",
     "@angular/build": "^21.2.13",
     "@angular/cli": "^21.2.13",
     "@angular/compiler-cli": "^21.2.0",
+    "@eslint/js": "^9.25.0",
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/postcss": "^4.3.0",
     "@tailwindcss/vite": "^4.3.0",
+    "angular-eslint": "^21.4.0",
+    "eslint": "^9.25.0",
+    "eslint-config-prettier": "^10.1.0",
     "jsdom": "^28.0.0",
     "postcss": "^8.5.15",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.3.0",
     "typescript": "~5.9.2",
+    "typescript-eslint": "^8.30.0",
     "vitest": "^4.0.8"
   }
 }

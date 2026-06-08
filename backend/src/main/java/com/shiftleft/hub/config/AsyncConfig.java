@@ -1,10 +1,13 @@
 package com.shiftleft.hub.config;
 
-import java.util.concurrent.Executor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Async execution configuration for fire-and-forget event processing.
@@ -17,8 +20,20 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class AsyncConfig {
 
     /**
+     * Provides a virtual-thread-backed executor for AI chat requests.
+     *
+     * @return the chat executor service
+     */
+    @Bean("chatExecutor")
+    public ExecutorService chatExecutor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
+    }
+
+    /**
      * Dedicated executor for async event listeners.
      * Core pool of 2 threads, max 4, with a small queue for burst handling.
+     *
+     * @return the configured task executor
      */
     @Bean(name = "kcsTaskExecutor")
     public Executor kcsTaskExecutor() {

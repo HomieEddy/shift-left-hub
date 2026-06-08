@@ -1,5 +1,7 @@
-import { Component, input, output, signal, effect } from '@angular/core';
+import { Component, DestroyRef, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-search-input',
@@ -9,7 +11,9 @@ import { FormsModule } from '@angular/forms';
     <div class="relative">
       <input
         type="text"
+        [attr.aria-label]="placeholder()"
         [placeholder]="placeholder()"
+        i18n-placeholder="@@shared.search.placeholder"
         [ngModel]="query()"
         (ngModelChange)="onInput($event)"
         class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -24,14 +28,20 @@ export class SearchInputComponent {
   placeholder = input('Search...');
   debounceMs = input(300);
   query = input('');
-  search = output<string>();
+  searchChange = output<string>();
 
-  private debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private searchSubject = new Subject<string>();
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
+    this.searchSubject.pipe(
+      debounceTime(this.debounceMs()),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(value => this.searchChange.emit(value));
+  }
 
   onInput(value: string): void {
-    if (this.debounceTimer) clearTimeout(this.debounceTimer);
-    this.debounceTimer = setTimeout(() => {
-      this.search.emit(value);
-    }, this.debounceMs());
+    this.searchSubject.next(value);
   }
 }

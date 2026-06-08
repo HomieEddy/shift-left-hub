@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
@@ -24,11 +25,24 @@ public class ChatController {
     private final AiChatService aiChatService;
     private final ExecutorService chatExecutor;
 
+    /**
+     * Constructs a ChatController with the given chat service and executor.
+     *
+     * @param aiChatService the AI chat service
+     * @param chatExecutor  the executor for async chat processing
+     */
     public ChatController(AiChatService aiChatService, @Qualifier("chatExecutor") ExecutorService chatExecutor) {
         this.aiChatService = aiChatService;
         this.chatExecutor = chatExecutor;
     }
 
+    /**
+     * Processes a chat request and streams the response as SSE events.
+     *
+     * @param request the chat request with message and optional history
+     * @param auth    the authenticated principal
+     * @return SSE emitter for streaming the response
+     */
     @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter chat(@Valid @RequestBody ChatRequest request, Authentication auth) {
         SseEmitter emitter = new SseEmitter(30_000L);

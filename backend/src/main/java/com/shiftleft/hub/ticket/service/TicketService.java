@@ -10,15 +10,16 @@ import com.shiftleft.hub.ticket.domain.TicketRepository;
 import com.shiftleft.hub.ticket.domain.TicketStatus;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,13 @@ public class TicketService {
     private final UserRepository userRepository;
     private final TicketNumberSequenceRepository sequenceRepository;
 
+    /**
+     * Creates a new ticket for the given user.
+     *
+     * @param request the creation payload
+     * @param email   the user's email
+     * @return the created ticket response
+     */
     @Transactional
     public TicketResponse createTicket(CreateTicketRequest request, String email) {
         User user = getUserByEmail(email);
@@ -51,6 +59,12 @@ public class TicketService {
         return TicketResponse.from(ticket);
     }
 
+    /**
+     * Lists all tickets for the given user.
+     *
+     * @param email the user's email
+     * @return list of ticket responses
+     */
     public List<TicketResponse> getTicketsByUser(String email) {
         User user = getUserByEmail(email);
         return ticketRepository.findByUserIdOrderByCreatedAtDesc(user.getId())
@@ -59,6 +73,14 @@ public class TicketService {
             .toList();
     }
 
+    /**
+     * Gets a single ticket by ID, scoped to the given user.
+     *
+     * @param id    the ticket UUID
+     * @param email the user's email
+     * @return the matching ticket response
+     * @throws TicketNotFoundException if not found or not owned by user
+     */
     public TicketResponse getTicketById(UUID id, String email) {
         User user = getUserByEmail(email);
         Ticket ticket = ticketRepository.findById(id)
@@ -69,6 +91,14 @@ public class TicketService {
         return TicketResponse.from(ticket);
     }
 
+    /**
+     * Cancels a ticket that is in NEW status.
+     *
+     * @param id     the ticket UUID
+     * @param email  the user's email
+     * @param reason optional cancellation reason
+     * @return the cancelled ticket response
+     */
     @Transactional
     public TicketResponse cancelTicket(UUID id, String email, String reason) {
         User user = getUserByEmail(email);
@@ -89,6 +119,12 @@ public class TicketService {
         return TicketResponse.from(ticket);
     }
 
+    /**
+     * Generates the next sequential ticket number (e.g. TKT-0001).
+     * Runs in a new transaction with pessimistic locking.
+     *
+     * @return the formatted ticket number
+     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String generateTicketNumber() {
         TicketNumberSequence seq = sequenceRepository.findByIdWithLock(1L)

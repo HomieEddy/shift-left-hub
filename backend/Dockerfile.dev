@@ -2,7 +2,9 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-RUN useradd --create-home --home-dir /home/app --shell /bin/bash app \
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& useradd --create-home --home-dir /home/app --shell /bin/bash app \
 	&& mkdir -p /home/app/.m2 \
 	&& chown -R app:app /app /home/app
 
@@ -11,14 +13,12 @@ ENV HOME=/home/app
 # Prime Maven dependency cache for faster container startup.
 COPY .mvn .mvn
 COPY mvnw mvnw.cmd pom.xml ./
-RUN chmod +x mvnw
+RUN chmod +x mvnw && mkdir -p /app/target && chown -R app:app /app/target
 
 USER app
 
-RUN ./mvnw -q -DskipTests dependency:go-offline
+RUN ./mvnw -Pdocker -q -DskipTests dependency:go-offline
 
 EXPOSE 8080
 
-USER root
-
-CMD ["sh", "-c", "chown -R app:app /app/target 2>/dev/null; chmod +x mvnw && ./mvnw -DskipTests spring-boot:run"]
+CMD ["./mvnw", "-Pdocker", "-DskipTests", "spring-boot:run"]

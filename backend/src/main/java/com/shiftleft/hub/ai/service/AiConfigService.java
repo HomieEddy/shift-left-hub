@@ -1,13 +1,11 @@
 package com.shiftleft.hub.ai.service;
 
+import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.shiftleft.hub.ai.api.dto.AiConfigRequest;
 import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.api.dto.TestConnectionResult;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
-import javax.crypto.Cipher;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -20,11 +18,14 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
+
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
+import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 @Service
 @RequiredArgsConstructor
@@ -38,11 +39,21 @@ public class AiConfigService {
     @Value("${app.ai.encryption-key}")
     private String encryptionKey;
 
+    /**
+     * Returns the current AI configuration as a response DTO.
+     *
+     * @return current AI configuration response
+     */
     public AiConfigResponse getConfig() {
         AiConfig config = getConfigEntity();
         return AiConfigResponse.from(config);
     }
 
+    /**
+     * Returns the current AI configuration entity, creating a default if none exists.
+     *
+     * @return the AI configuration entity
+     */
     public AiConfig getConfigEntity() {
         return aiConfigRepository.findSingleConfig()
             .orElseGet(() -> {
@@ -58,6 +69,12 @@ public class AiConfigService {
             });
     }
 
+    /**
+     * Updates the AI configuration with non-null fields from the request.
+     *
+     * @param request the configuration update request
+     * @return updated AI configuration response
+     */
     @Transactional
     public AiConfigResponse updateConfig(AiConfigRequest request) {
         AiConfig config = getConfigEntity();
@@ -85,6 +102,12 @@ public class AiConfigService {
         return AiConfigResponse.from(config);
     }
 
+    /**
+     * Tests a connection to the AI provider with the given configuration.
+     *
+     * @param request the configuration to test
+     * @return connection test result with success flag and message
+     */
     @Transactional
     public TestConnectionResult testConnection(AiConfigRequest request) {
         try {
@@ -121,6 +144,12 @@ public class AiConfigService {
         }
     }
 
+    /**
+     * Builds a ChatClient for the given AI configuration.
+     *
+     * @param config the AI configuration
+     * @return a configured ChatClient
+     */
     public ChatClient buildChatClient(AiConfig config) {
         String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2:3b";
 
@@ -166,6 +195,12 @@ public class AiConfigService {
         }
     }
 
+    /**
+     * Decrypts a ciphertext string using AES/GCM/NoPadding.
+     *
+     * @param ciphertext the Base64-encoded ciphertext with IV prepended
+     * @return the decrypted plaintext
+     */
     public String decrypt(String ciphertext) {
         try {
             byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(

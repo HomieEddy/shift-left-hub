@@ -4,9 +4,11 @@ import com.shiftleft.hub.ticket.domain.Ticket;
 import com.shiftleft.hub.ticket.domain.TicketCategory;
 import com.shiftleft.hub.ticket.domain.TicketStatus;
 import com.shiftleft.hub.ticket.domain.TicketUrgency;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/** DTO for ticket data returned by the API. */
 public record TicketResponse(
     UUID id,
     String ticketNumber,
@@ -23,6 +25,12 @@ public record TicketResponse(
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
+    /**
+     * Maps a Ticket entity to a TicketResponse DTO.
+     *
+     * @param ticket the ticket entity
+     * @return the response DTO
+     */
     public static TicketResponse from(Ticket ticket) {
         return new TicketResponse(
             ticket.getId(),

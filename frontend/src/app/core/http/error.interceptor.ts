@@ -1,6 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { $localize } from '@angular/localize/init';
 import { catchError, throwError } from 'rxjs';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
@@ -8,20 +9,21 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let message = 'An unexpected error occurred';
+      let message = $localize`:@@http.error.unexpected:An unexpected error occurred`;
 
       if (error.status === 401) {
-        message = 'Your session has expired. Please log in again.';
-        router.navigate(['/login']);
+        message = $localize`:@@http.error.sessionExpired:Your session has expired. Please log in again.`;
+        void router.navigate(['/login']);
       } else if (error.status === 403) {
-        message = 'You do not have permission to perform this action.';
+        message = $localize`:@@http.error.forbidden:You do not have permission to perform this action.`;
       } else if (error.status >= 400 && error.status < 500) {
-        message = error.error?.message || error.error?.error || 'Invalid request';
+        const body = error.error as { message?: string; error?: string } | null;
+        message = body?.message ?? body?.error ?? $localize`:@@http.error.invalidRequest:Invalid request`;
       } else if (error.status >= 500) {
-        message = 'Server error. Please try again later.';
+        message = $localize`:@@http.error.serverError:Server error. Please try again later.`;
       }
 
-      // TODO: Replace with toast/snackbar notification in shared components
+      // TODO: Replace with shared notification service (toast/snackbar) — planned for post-v1.0
       console.error(`[HTTP Error ${error.status}]:`, message);
 
       return throwError(() => error);

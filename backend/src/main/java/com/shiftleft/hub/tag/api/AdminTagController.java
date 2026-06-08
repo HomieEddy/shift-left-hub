@@ -27,22 +27,46 @@ public class AdminTagController {
 
     private final TagService tagService;
 
+    /**
+     * Retrieves all tags.
+     *
+     * @return the list of all tag responses
+     */
     @GetMapping
     public List<TagResponse> getAllTags() {
         return tagService.getAllTags();
     }
 
+    /**
+     * Retrieves a tag by its ID.
+     *
+     * @param id the tag UUID
+     * @return the tag response
+     */
     @GetMapping("/{id}")
     public TagResponse getTag(@PathVariable UUID id) {
         return tagService.getTagById(id);
     }
 
+    /**
+     * Creates a new tag.
+     *
+     * @param request the create tag request
+     * @return the created tag response
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TagResponse createTag(@Valid @RequestBody CreateTagRequest request) {
         return tagService.createTag(request);
     }
 
+    /**
+     * Updates an existing tag.
+     *
+     * @param id      the tag UUID
+     * @param request the update tag request
+     * @return the updated tag response
+     */
     @PutMapping("/{id}")
     public TagResponse updateTag(
             @PathVariable UUID id,
@@ -50,6 +74,11 @@ public class AdminTagController {
         return tagService.updateTag(id, request);
     }
 
+    /**
+     * Deletes a tag by its ID.
+     *
+     * @param id the tag UUID
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTag(@PathVariable UUID id) {

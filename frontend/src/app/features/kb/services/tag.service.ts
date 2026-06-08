@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TagDto, CreateTagRequest, UpdateTagRequest } from '../models/tag.models';
@@ -6,7 +6,7 @@ import { TagDto, CreateTagRequest, UpdateTagRequest } from '../models/tag.models
 @Injectable({ providedIn: 'root' })
 export class TagService {
 
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getTags(): Observable<TagDto[]> {
     return this.http.get<TagDto[]>('/api/admin/tags', { withCredentials: true });

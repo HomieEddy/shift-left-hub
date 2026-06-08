@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- EI_EXPOSE_REP/EI_EXPOSE_REP2: DTO records intentionally expose internal arrays -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+        <Or>
+            <Package name="~.*\.dto"/>
+            <Package name="~.*\.api\.dto"/>
+        </Or>
+    </Match>
+    <!-- SE_BAD_FIELD: JPA entities are not serialized through Java serialization -->
+    <Match>
+        <Bug pattern="SE_BAD_FIELD,SE_BAD_FIELD_STORE,SE_NO_SERIALVERSIONID"/>
+        <Package name="~.*\.domain"/>
+    </Match>
+    <!-- EI_EXPOSE_REP2: Constructor injection of Spring beans (proxies, not externally mutable) -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+        <Or>
+            <Package name="~.*\.config"/>
+            <Package name="~.*\.service"/>
+        </Or>
+    </Match>
+    <!-- VA_FORMAT_STRING_USES_NEWLINE: Text blocks with .formatted() — Java text blocks normalize to \n -->
+    <Match>
+        <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
+    </Match>
+</FindBugsFilter>

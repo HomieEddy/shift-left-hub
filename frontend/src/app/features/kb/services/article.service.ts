@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ArticleDto, CreateArticleRequest, UpdateArticleRequest, PaginatedResponse } from '../models/article.models';
@@ -6,9 +6,9 @@ import { ArticleDto, CreateArticleRequest, UpdateArticleRequest, PaginatedRespon
 @Injectable({ providedIn: 'root' })
 export class ArticleService {
 
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
-  getArticles(page: number = 0, size: number = 20): Observable<PaginatedResponse<ArticleDto>> {
+  getArticles(page = 0, size = 20): Observable<PaginatedResponse<ArticleDto>> {
     return this.http.get<PaginatedResponse<ArticleDto>>('/api/admin/articles', {
       params: { page, size },
       withCredentials: true,

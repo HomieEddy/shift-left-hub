@@ -22,6 +22,12 @@
     background-color: #f8fafc;
     color: #1e293b;
   }
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+  th, td {
+    overflow-wrap: break-word;
+  }
 }
 
 @layer components {

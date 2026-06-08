@@ -1,20 +1,27 @@
 package com.shiftleft.hub.config;
 
+import com.shiftleft.hub.auth.domain.UsedRefreshToken;
+import com.shiftleft.hub.auth.domain.UsedRefreshTokenRepository;
 import com.shiftleft.hub.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class JwtService {
 
     private final String secretKey;
@@ -23,19 +30,37 @@ public class JwtService {
 
     private final Map<String, String> usedRefreshTokens = new ConcurrentHashMap<>();
 
+    private final UsedRefreshTokenRepository usedRefreshTokenRepository;
+
+    /**
+     * Creates a new JwtService.
+     *
+     * @param secretKey                 the JWT signing secret
+     * @param accessExpiration          access token TTL in milliseconds
+     * @param refreshExpiration         refresh token TTL in milliseconds
+     * @param usedRefreshTokenRepository repository for tracking used refresh tokens
+     */
     public JwtService(
             @Value("${app.jwt.secret}") String secretKey,
             @Value("${app.jwt.access-token-expiration}") long accessExpiration,
-            @Value("${app.jwt.refresh-token-expiration}") long refreshExpiration) {
+            @Value("${app.jwt.refresh-token-expiration}") long refreshExpiration,
+            UsedRefreshTokenRepository usedRefreshTokenRepository) {
         this.secretKey = secretKey;
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;
+        this.usedRefreshTokenRepository = usedRefreshTokenRepository;
     }
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * Generates a signed JWT access token for the given user.
+     *
+     * @param user the authenticated user
+     * @return the signed access token string
+     */
     public String generateAccessToken(User user) {
         return Jwts.builder()
                 .subject(user.getId().toString())
@@ -48,6 +73,12 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     * Generates a signed JWT refresh token for the given user.
+     *
+     * @param user the authenticated user
+     * @return the signed refresh token string
+     */
     public String generateRefreshToken(User user) {
         return Jwts.builder()
                 .subject(user.getId().toString())
@@ -59,40 +90,104 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     * Extracts the user ID from a JWT token.
+     *
+     * @param token the JWT token
+     * @return the extracted user UUID
+     */
     public UUID extractUserId(String token) {
         Claims claims = parseToken(token);
         return UUID.fromString(claims.getSubject());
     }
 
+    /**
+     * Validates whether a JWT token is correctly signed and not expired.
+     *
+     * @param token the JWT token
+     * @return true if the token is valid
+     */
     public boolean isTokenValid(String token) {
         try {
             parseToken(token);
             return true;
         } catch (JwtException e) {
+            log.warn("Token validation failed: {}", e.getMessage());
             return false;
         }
     }
 
+    /**
+     * Checks whether a token is a refresh token based on its claims.
+     *
+     * @param token the JWT token
+     * @return true if the token is a refresh token
+     */
     public boolean isRefreshToken(String token) {
         try {
             Claims claims = parseToken(token);
             return "refresh".equals(claims.get("type"));
         } catch (JwtException e) {
+            log.warn("Token validation failed: not a refresh token — {}", e.getMessage());
             return false;
         }
     }
 
+    /**
+     * Validates refresh token rotation and detects reuse.
+     *
+     * @param tokenId the token ID claim
+     * @param userId  the user ID associated with the token
+     */
     public void validateRefreshRotation(String tokenId, String userId) {
         if (usedRefreshTokens.containsKey(tokenId)) {
+            log.warn("Refresh token reuse detected for tokenId: {}", tokenId);
+            throw new JwtException("Refresh token reuse detected for tokenId: " + tokenId);
+        }
+        if (usedRefreshTokenRepository.findByTokenId(tokenId).isPresent()) {
+            log.warn("Refresh token reuse detected in DB for tokenId: {}", tokenId);
+            usedRefreshTokens.put(tokenId, userId);
             throw new JwtException("Refresh token reuse detected for tokenId: " + tokenId);
         }
         usedRefreshTokens.put(tokenId, userId);
+        usedRefreshTokenRepository.save(new UsedRefreshToken(
+            tokenId, UUID.fromString(userId),
+            Instant.now().plusSeconds(refreshExpiration / 1000)));
     }
 
+    /**
+     * Invalidates a refresh token by its token ID.
+     *
+     * @param tokenId the token ID to invalidate
+     */
     public void invalidateRefreshToken(String tokenId) {
         usedRefreshTokens.remove(tokenId);
+        usedRefreshTokenRepository.findByTokenId(tokenId).ifPresent(usedRefreshTokenRepository::delete);
     }
 
+    /**
+     * Periodically evicts expired refresh tokens from the database.
+     */
+    @Scheduled(fixedRate = 300_000, initialDelay = 60_000)
+    public void evictExpiredRefreshTokens() {
+        try {
+            int before = usedRefreshTokens.size();
+            usedRefreshTokens.keySet().removeIf(id ->
+                usedRefreshTokenRepository.findByTokenId(id).isEmpty());
+            log.debug("Evicted {} expired in-memory refresh tokens", before - usedRefreshTokens.size());
+
+            usedRefreshTokenRepository.deleteByExpiresAtBefore(Instant.now());
+        } catch (Exception e) {
+            log.warn("Failed to evict expired refresh tokens (tables may not be ready yet): {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Extracts the token ID from a JWT token.
+     *
+     * @param token the JWT token
+     * @return the token ID claim
+     */
     public String extractTokenId(String token) {
         Claims claims = parseToken(token);
         return claims.get("tokenId", String.class);

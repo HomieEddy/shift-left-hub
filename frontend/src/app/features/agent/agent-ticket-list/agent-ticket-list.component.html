@@ -1,20 +1,21 @@
 <div class="max-w-6xl mx-auto px-4 py-6">
-  <h1 class="text-2xl font-bold text-slate-800 mb-6">Ticket Queue</h1>
+  <h1 class="text-2xl font-bold text-slate-800 mb-6" i18n="@@agent.ticketQueue">Ticket Queue</h1>
 
   <!-- Status tabs -->
   <div class="flex gap-2 mb-4">
-    <button
-      *ngFor="let tab of ['ALL', 'NEW', 'IN_PROGRESS', 'RESOLVED']"
-      (click)="changeStatusTab(tab)"
-      class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
-      [class.bg-blue-600]="activeStatus() === tab"
-      [class.text-white]="activeStatus() === tab"
-      [class.bg-slate-100]="activeStatus() !== tab"
-      [class.text-slate-600]="activeStatus() !== tab"
-      [class.hover:bg-slate-200]="activeStatus() !== tab"
-    >
-      {{ tab === 'ALL' ? 'All' : statusLabels[tab] || tab }}
-    </button>
+    @for (tab of ['ALL', 'NEW', 'IN_PROGRESS', 'RESOLVED']; track tab) {
+      <button
+        (click)="changeStatusTab(tab)"
+        class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
+        [class.bg-blue-600]="activeStatus() === tab"
+        [class.text-white]="activeStatus() === tab"
+        [class.bg-slate-100]="activeStatus() !== tab"
+        [class.text-slate-600]="activeStatus() !== tab"
+        [class.hover:bg-slate-200]="activeStatus() !== tab"
+      >
+        {{ tab === 'ALL' ? allLabel : statusLabels[tab] || tab }}
+      </button>
+    }
   </div>
 
   <!-- Filter row -->
@@ -24,129 +25,149 @@
       [value]="selectedCategory()"
       class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700"
     >
-      <option value="">All Categories</option>
-      <option *ngFor="let cat of categories.slice(1)" [value]="cat">{{ categoryLabels[cat] || cat }}</option>
+      <option value="" i18n="@@agent.filter.allCategories">All Categories</option>
+      @for (cat of categories.slice(1); track cat) {
+        <option [value]="cat">{{ categoryLabels[cat] || cat }}</option>
+      }
     </select>
     <select
       (change)="onUrgencyChange()"
       [value]="selectedUrgency()"
       class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700"
     >
-      <option value="">All Urgencies</option>
-      <option *ngFor="let urg of urgencies.slice(1)" [value]="urg">{{ urgencyLabels[urg] || urg }}</option>
+      <option value="" i18n="@@agent.filter.allUrgencies">All Urgencies</option>
+      @for (urg of urgencies.slice(1); track urg) {
+        <option [value]="urg">{{ urgencyLabels[urg] || urg }}</option>
+      }
     </select>
-    <input
-      type="text"
-      placeholder="Search by ticket # or user..."
-      (input)="onSearchInput($any($event.target).value)"
-      class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700 flex-1 min-w-[200px]"
-    />
+      <input
+        type="text"
+        [placeholder]="searchPlaceholder"
+        (input)="onSearchInput($event.target.value)"
+        class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700 flex-1 min-w-[200px]"
+      />
   </div>
 
   <!-- Loading state -->
-  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500">Loading tickets...</div>
+  @if (isLoading()) {
+    <div class="text-center py-12 text-slate-500">{{ loadingLabel }}</div>
+  }
 
   <!-- Error state -->
-  <div *ngIf="isError()" class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 mb-4">
-    Failed to load tickets.
-    <button (click)="loadTickets()" class="ml-2 underline">Retry</button>
-  </div>
+  @if (isError()) {
+    <div class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 mb-4">
+      {{ errorLabel }}
+      <button (click)="loadTickets()" class="ml-2 underline">{{ retryLabel }}</button>
+    </div>
+  }
 
   <!-- Empty state -->
-  <div *ngIf="!isLoading() && !isError() && filteredTickets().length === 0" class="text-center py-12 text-slate-500">
-    No tickets found matching your filters
-  </div>
+  @if (!isLoading() && !isError() && filteredTickets().length === 0) {
+    <div class="text-center py-12 text-slate-500">
+      {{ emptyLabel }}
+    </div>
+  }
 
   <!-- Table -->
-  <div *ngIf="!isLoading() && !isError() && filteredTickets().length > 0" class="bg-white rounded-lg border border-slate-200 overflow-hidden">
-    <table class="w-full text-sm">
-      <thead class="bg-slate-50 border-b border-slate-200">
-        <tr>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Ticket #</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">User</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Category</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Urgency</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Status</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Assigned To</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Created</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ticket of filteredTickets()" class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-          <td class="px-4 py-3 font-mono text-blue-600">
-            <a [routerLink]="['/agent/tickets', ticket.id]" class="hover:underline">{{ ticket.ticketNumber }}</a>
-          </td>
-          <td class="px-4 py-3 text-slate-700">{{ ticket.userDisplayName }}</td>
-          <td class="px-4 py-3">
-            <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="categoryBadgeClass(ticket.category)">
-              {{ categoryLabels[ticket.category] || ticket.category }}
-            </span>
-          </td>
-          <td class="px-4 py-3">
-            <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="urgencyBadgeClass(ticket.urgency)">
-              {{ urgencyLabels[ticket.urgency] || ticket.urgency }}
-            </span>
-          </td>
-          <td class="px-4 py-3">
-            <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="statusBadgeClass(ticket.status)">
-              {{ statusLabels[ticket.status] || ticket.status }}
-            </span>
-          </td>
-          <td class="px-4 py-3 text-slate-500">
-            {{ ticket.assignedToDisplayName || 'Unassigned' }}
-          </td>
-          <td class="px-4 py-3 text-slate-500">{{ ticket.createdAt | date:'medium' }}</td>
-          <td class="px-4 py-3">
-            <button
-              *ngIf="ticket.status === 'NEW'"
-              (click)="openClaimConfirm(ticket.id)"
-              class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
-            >
-              Claim
-            </button>
-            <a
-              *ngIf="ticket.status === 'IN_PROGRESS'"
-              [routerLink]="['/agent/tickets', ticket.id]"
-              class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
-            >
-              Resolve
-            </a>
-            <a
-              *ngIf="ticket.status === 'RESOLVED' || ticket.status === 'CANCELLED'"
-              [routerLink]="['/agent/tickets', ticket.id]"
-              class="text-xs text-blue-600 hover:underline"
-            >
-              View
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  @if (!isLoading() && !isError() && filteredTickets().length > 0) {
+    <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200">
+          <tr>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.ticket">Ticket #</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.user">User</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.category">Category</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.urgency">Urgency</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.status">Status</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.assigned">Assigned To</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.created">Created</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ticket of filteredTickets(); track ticket.id) {
+            <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+              <td class="px-4 py-3 font-mono text-blue-600">
+                <a [routerLink]="['/agent/tickets', ticket.id]" class="hover:underline">{{ ticket.ticketNumber }}</a>
+              </td>
+              <td class="px-4 py-3 text-slate-700">{{ ticket.userDisplayName }}</td>
+              <td class="px-4 py-3">
+                <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="categoryBadgeClass(ticket.category)">
+                  {{ categoryLabels[ticket.category] || ticket.category }}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="urgencyBadgeClass(ticket.urgency)">
+                  {{ urgencyLabels[ticket.urgency] || ticket.urgency }}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" [class]="statusBadgeClass(ticket.status)">
+                  {{ statusLabels[ticket.status] || ticket.status }}
+                </span>
+              </td>
+              <td class="px-4 py-3 text-slate-500">
+                {{ ticket.assignedToDisplayName || unassignedLabel }}
+              </td>
+              <td class="px-4 py-3 text-slate-500">{{ ticket.createdAt | date:'medium' }}</td>
+              <td class="px-4 py-3">
+                @if (ticket.status === 'NEW') {
+                  <button
+                    (click)="openClaimConfirm(ticket.id)"
+                    class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                  >
+                    {{ claimLabel }}
+                  </button>
+                }
+                @if (ticket.status === 'IN_PROGRESS') {
+                  <a
+                    [routerLink]="['/agent/tickets', ticket.id]"
+                    class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                  >
+                    {{ resolveLabel }}
+                  </a>
+                }
+                @if (ticket.status === 'RESOLVED' || ticket.status === 'CANCELLED') {
+                  <a
+                    [routerLink]="['/agent/tickets', ticket.id]"
+                    class="text-xs text-blue-600 hover:underline"
+                  >
+                    {{ viewLabel }}
+                  </a>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 
   <!-- Claim confirmation modal -->
-  <div
-    *ngIf="claimConfirmOpen()"
-    class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
-    (click)="cancelClaim()"
-  >
-    <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4" (click)="$event.stopPropagation()">
-      <p class="text-sm text-slate-700 mb-4">Claim this ticket?</p>
-      <div class="flex gap-2 justify-end">
-        <button
-          (click)="cancelClaim()"
-          class="px-4 py-1.5 text-sm text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50"
-        >
-          Cancel
-        </button>
-        <button
-          (click)="confirmClaim()"
-          class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Confirm
-        </button>
+  @if (claimConfirmOpen()) {
+    <div
+      class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+      (click)="cancelClaim()"
+      (keydown.enter)="cancelClaim()"
+      tabindex="0"
+    >
+      <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
+        <p class="text-sm text-slate-700 mb-4">{{ claimConfirmLabel }}</p>
+        <div class="flex gap-2 justify-end">
+          <button
+            (click)="cancelClaim()"
+            class="px-4 py-1.5 text-sm text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50"
+          >
+            {{ cancelLabel }}
+          </button>
+          <button
+            (click)="confirmClaim()"
+            class="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            {{ confirmLabel }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>

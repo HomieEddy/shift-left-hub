@@ -1,6 +1,7 @@
 package com.shiftleft.hub.agent.api.dto;
 
 import com.shiftleft.hub.agent.domain.WorkNote;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 

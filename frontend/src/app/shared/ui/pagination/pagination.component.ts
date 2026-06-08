@@ -1,30 +1,32 @@
 import { Component, input, output } from '@angular/core';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-pagination',
   standalone: true,
-  imports: [NgIf],
   template: `
-    <div *ngIf="totalPages() > 1" class="flex items-center justify-center gap-2 mt-6">
+    @if (totalPages() > 1) {
+      <div class="flex items-center justify-center gap-2 mt-6">
       <button
         (click)="goToPage(currentPage() - 1)"
         [disabled]="currentPage() === 0"
         class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        i18n="@@pagination.previous"
       >
         Previous
       </button>
-      <span class="text-sm text-slate-600">
+      <span class="text-sm text-slate-600" i18n="@@pagination.pageOf">
         Page {{ currentPage() + 1 }} of {{ totalPages() }}
       </span>
       <button
         (click)="goToPage(currentPage() + 1)"
         [disabled]="currentPage() >= totalPages() - 1"
         class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        i18n="@@pagination.next"
       >
         Next
       </button>
-    </div>
+      </div>
+    }
   `,
 })
 export class PaginationComponent {

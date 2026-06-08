@@ -1,13 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
-import { LlmSettingsService, AiConfigResponse, AiConfigRequest } from './llm-settings.service';
+import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
 
 @Component({
   selector: 'app-llm-settings',
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor],
+  imports: [FormsModule],
   templateUrl: './llm-settings.component.html',
 })
 export class LlmSettingsComponent implements OnInit {
@@ -28,28 +27,31 @@ export class LlmSettingsComponent implements OnInit {
   modelExamples = ['llama3.2:3b', 'llama3.1:8b', 'mistral', 'mixtral'];
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
 
-  async ngOnInit() {
-    try {
-      this.config = await firstValueFrom(this.settingsService.getConfig());
-      this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
-      if (!this.providers.some(p => p.value === this.config!.llmProvider)) {
-        this.config.llmProvider = 'OLLAMA';
-      }
-    } catch {
-      this.config = {
-        llmProvider: 'OLLAMA',
-        ollamaEndpointUrl: 'http://host.docker.internal:11434',
-        hasOpenaiKey: false,
-        chatModelName: 'llama3.2:3b',
-        embeddingModelName: 'nomic-embed-text',
-        similarityThreshold: 0.65,
-        embeddingDimension: 768,
-      };
-    }
+  ngOnInit(): void {
+    this.settingsService.getConfig().subscribe({
+      next: (config) => {
+        this.config = config;
+        this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
+        if (!this.providers.some(p => p.value === this.config!.llmProvider)) {
+          this.config.llmProvider = 'OLLAMA';
+        }
+      },
+      error: () => {
+        this.config = {
+          llmProvider: 'OLLAMA',
+          ollamaEndpointUrl: 'http://host.docker.internal:11434',
+          hasOpenaiKey: false,
+          chatModelName: 'llama3.2:3b',
+          embeddingModelName: 'nomic-embed-text',
+          similarityThreshold: 0.65,
+          embeddingDimension: 768,
+        };
+      },
+    });
   }
 
-  onProviderChange() {
-    if (!this.config) return;
+  onProviderChange(): void {
+    if (this.config == null) return;
     this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
     if (this.config?.llmProvider === 'OLLAMA') {
       this.config.ollamaEndpointUrl = 'http://host.docker.internal:11434';
@@ -57,58 +59,55 @@ export class LlmSettingsComponent implements OnInit {
     }
   }
 
-  async save() {
-    if (!this.config) return;
+  save(): void {
+    if (this.config == null) return;
     this.isSaving = true;
     this.saveMessage = '';
-    try {
-      const req: AiConfigRequest = {
-        llmProvider: this.config.llmProvider,
-        ollamaEndpointUrl: this.config.ollamaEndpointUrl,
-        openaiApiKey: this.openaiApiKey || undefined,
-        chatModelName: this.config.chatModelName,
-        embeddingModelName: this.config.embeddingModelName,
-        similarityThreshold: this.config.similarityThreshold,
-      };
-      this.config = await firstValueFrom(this.settingsService.updateConfig(req));
+    firstValueFrom(this.settingsService.updateConfig({
+      llmProvider: this.config.llmProvider,
+      ollamaEndpointUrl: this.config.ollamaEndpointUrl,
+      openaiApiKey: this.openaiApiKey || undefined,
+      chatModelName: this.config.chatModelName,
+      embeddingModelName: this.config.embeddingModelName,
+      similarityThreshold: this.config.similarityThreshold,
+    })).then(config => {
+      this.config = config;
       this.openaiApiKey = '';
       this.saveMessage = 'Settings saved';
-    } catch {
+    }).catch(() => {
       this.saveMessage = 'Failed to save settings';
-    } finally {
+    }).finally(() => {
       this.isSaving = false;
-    }
+    });
   }
 
-  async testConnection() {
-    if (!this.config) return;
+  testConnection(): void {
+    if (this.config == null) return;
     this.isTesting = true;
     this.testResult = null;
-    try {
-      const req: AiConfigRequest = {
-        llmProvider: this.config.llmProvider,
-        ollamaEndpointUrl: this.config.ollamaEndpointUrl,
-        openaiApiKey: this.openaiApiKey || undefined,
-        chatModelName: this.config.chatModelName,
-        embeddingModelName: this.config.embeddingModelName,
-      };
-      this.testResult = await firstValueFrom(this.settingsService.testConnection(req));
-    } catch {
+    firstValueFrom(this.settingsService.testConnection({
+      llmProvider: this.config.llmProvider,
+      ollamaEndpointUrl: this.config.ollamaEndpointUrl,
+      openaiApiKey: this.openaiApiKey || undefined,
+      chatModelName: this.config.chatModelName,
+      embeddingModelName: this.config.embeddingModelName,
+    })).then(result => {
+      this.testResult = result;
+    }).catch(() => {
       this.testResult = { success: false, message: 'Connection test failed' };
-    } finally {
+    }).finally(() => {
       this.isTesting = false;
-    }
+    });
   }
 
-  async reindex() {
+  reindex(): void {
     this.isReindexing = true;
-    try {
-      const result = await firstValueFrom(this.settingsService.reindexEmbeddings());
+    firstValueFrom(this.settingsService.reindexEmbeddings()).then(result => {
       this.saveMessage = result.message;
-    } catch {
+    }).catch(() => {
       this.saveMessage = 'Failed to start re-embedding';
-    } finally {
+    }).finally(() => {
       this.isReindexing = false;
-    }
+    });
   }
 }

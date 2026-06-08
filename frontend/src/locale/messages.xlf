@@ -614,6 +614,546 @@
         <source>Next</source>
         <target>Next</target>
       </trans-unit>
+      <trans-unit id="admin.users.col.actions">
+        <source>Actions</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="admin.users.col.created">
+        <source>Created</source>
+        <target>Created</target>
+      </trans-unit>
+      <trans-unit id="admin.users.col.email">
+        <source>Email</source>
+        <target>Email</target>
+      </trans-unit>
+      <trans-unit id="admin.users.col.name">
+        <source>Name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="admin.users.col.role">
+        <source>Role</source>
+        <target>Role</target>
+      </trans-unit>
+      <trans-unit id="admin.users.col.status">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="admin.users.dialog.cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="admin.users.dialog.changeRole">
+        <source>Change role for</source>
+        <target>Change role for</target>
+      </trans-unit>
+      <trans-unit id="admin.users.dialog.title">
+        <source>Edit Role</source>
+        <target>Edit Role</target>
+      </trans-unit>
+      <trans-unit id="admin.users.role.admin">
+        <source>Admin</source>
+        <target>Admin</target>
+      </trans-unit>
+      <trans-unit id="admin.users.role.admin.desc">
+        <source>Full access to all features</source>
+        <target>Full access to all features</target>
+      </trans-unit>
+      <trans-unit id="admin.users.role.agent">
+        <source>Agent</source>
+        <target>Agent</target>
+      </trans-unit>
+      <trans-unit id="admin.users.role.agent.desc">
+        <source>Ticket queue and resolution access</source>
+        <target>Ticket queue and resolution access</target>
+      </trans-unit>
+      <trans-unit id="admin.users.role.user">
+        <source>User</source>
+        <target>User</target>
+      </trans-unit>
+      <trans-unit id="admin.users.role.user.desc">
+        <source>Standard user access</source>
+        <target>Standard user access</target>
+      </trans-unit>
+      <trans-unit id="admin.users.status.active">
+        <source>Active</source>
+        <target>Active</target>
+      </trans-unit>
+      <trans-unit id="admin.users.status.disabled">
+        <source>Disabled</source>
+        <target>Disabled</target>
+      </trans-unit>
+      <trans-unit id="agent.cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="agent.claim">
+        <source>Claim</source>
+        <target>Claim</target>
+      </trans-unit>
+      <trans-unit id="agent.claim.confirm">
+        <source>Claim this ticket?</source>
+        <target>Claim this ticket?</target>
+      </trans-unit>
+      <trans-unit id="agent.claim.error">
+        <source>Failed to claim ticket.</source>
+        <target>Failed to claim ticket.</target>
+      </trans-unit>
+      <trans-unit id="agent.confirm">
+        <source>Confirm</source>
+        <target>Confirm</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.addNote">
+        <source>Add Note</source>
+        <target>Add Note</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.addNoteError">
+        <source>Failed to add work note.</source>
+        <target>Failed to add work note.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.addNotePlaceholder">
+        <source>Add a work note...</source>
+        <target>Add a work note...</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.adding">
+        <source>Adding...</source>
+        <target>Adding...</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.assignedTo">
+        <source>Assigned to</source>
+        <target>Assigned to</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.backToQueue">
+        <source>&amp;larr; Back to Queue</source>
+        <target>&amp;larr; Back to Queue</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.cancelledByUser">
+        <source>Cancelled by user</source>
+        <target>Cancelled by user</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.chatTranscript">
+        <source>Chat Transcript</source>
+        <target>Chat Transcript</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.claimError">
+        <source>Failed to claim ticket.</source>
+        <target>Failed to claim ticket.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.claimTicket">
+        <source>Claim Ticket</source>
+        <target>Claim Ticket</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.claiming">
+        <source>Claiming...</source>
+        <target>Claiming...</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.confirm">
+        <source>Confirm</source>
+        <target>Confirm</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.confirmResolution">
+        <source>Confirm resolution for</source>
+        <target>Confirm resolution for</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.error">
+        <source>Failed to load ticket details.</source>
+        <target>Failed to load ticket details.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.flagKnowledgeGap">
+        <source>Flag as Knowledge Gap</source>
+        <target>Flag as Knowledge Gap</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.flaggedKnowledgeGap">
+        <source>Flagged as Knowledge Gap</source>
+        <target>Flagged as Knowledge Gap</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.issue">
+        <source>Issue</source>
+        <target>Issue</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.loading">
+        <source>Loading ticket details...</source>
+        <target>Loading ticket details...</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.noWorkNotes">
+        <source>No work notes yet.</source>
+        <target>No work notes yet.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.openedBy">
+        <source>Opened by</source>
+        <target>Opened by</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolution">
+        <source>Resolution</source>
+        <target>Resolution</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolutionPlaceholder">
+        <source>Describe the resolution steps...</source>
+        <target>Describe the resolution steps...</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolvedBy">
+        <source>Resolved by</source>
+        <target>Resolved by</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolveError">
+        <source>Failed to resolve ticket.</source>
+        <target>Failed to resolve ticket.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolveTicket">
+        <source>Resolve Ticket</source>
+        <target>Resolve Ticket</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolving">
+        <source>Resolving...</source>
+        <target>Resolving...</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.retry">
+        <source>Retry</source>
+        <target>Retry</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.shiftLeftContext">
+        <source>Shift-Left Context</source>
+        <target>Shift-Left Context</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.unassigned">
+        <source>Unassigned</source>
+        <target>Unassigned</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.unclaimed">
+        <source>This ticket has not been claimed yet.</source>
+        <target>This ticket has not been claimed yet.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.unknown">
+        <source>Unknown</source>
+        <target>Unknown</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.workNotes">
+        <source>Work Notes</source>
+        <target>Work Notes</target>
+      </trans-unit>
+      <trans-unit id="agent.empty">
+        <source>No tickets found matching your filters</source>
+        <target>No tickets found matching your filters</target>
+      </trans-unit>
+      <trans-unit id="agent.error.load">
+        <source>Failed to load tickets.</source>
+        <target>Failed to load tickets.</target>
+      </trans-unit>
+      <trans-unit id="agent.filter.all">
+        <source>All</source>
+        <target>All</target>
+      </trans-unit>
+      <trans-unit id="agent.filter.allCategories">
+        <source>All Categories</source>
+        <target>All Categories</target>
+      </trans-unit>
+      <trans-unit id="agent.filter.allUrgencies">
+        <source>All Urgencies</source>
+        <target>All Urgencies</target>
+      </trans-unit>
+      <trans-unit id="agent.loading">
+        <source>Loading tickets...</source>
+        <target>Loading tickets...</target>
+      </trans-unit>
+      <trans-unit id="agent.resolve">
+        <source>Resolve</source>
+        <target>Resolve</target>
+      </trans-unit>
+      <trans-unit id="agent.retry">
+        <source>Retry</source>
+        <target>Retry</target>
+      </trans-unit>
+      <trans-unit id="agent.search.placeholder">
+        <source>Search by ticket # or user...</source>
+        <target>Search by ticket # or user...</target>
+      </trans-unit>
+      <trans-unit id="agent.table.actions">
+        <source>Actions</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="agent.table.assigned">
+        <source>Assigned To</source>
+        <target>Assigned To</target>
+      </trans-unit>
+      <trans-unit id="agent.table.category">
+        <source>Category</source>
+        <target>Category</target>
+      </trans-unit>
+      <trans-unit id="agent.table.created">
+        <source>Created</source>
+        <target>Created</target>
+      </trans-unit>
+      <trans-unit id="agent.table.status">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="agent.table.ticket">
+        <source>Ticket #</source>
+        <target>Ticket #</target>
+      </trans-unit>
+      <trans-unit id="agent.table.urgency">
+        <source>Urgency</source>
+        <target>Urgency</target>
+      </trans-unit>
+      <trans-unit id="agent.table.user">
+        <source>User</source>
+        <target>User</target>
+      </trans-unit>
+      <trans-unit id="agent.ticketQueue">
+        <source>Ticket Queue</source>
+        <target>Ticket Queue</target>
+      </trans-unit>
+      <trans-unit id="agent.unassigned">
+        <source>Unassigned</source>
+        <target>Unassigned</target>
+      </trans-unit>
+      <trans-unit id="agent.urgency.high">
+        <source>High</source>
+        <target>High</target>
+      </trans-unit>
+      <trans-unit id="agent.urgency.low">
+        <source>Low</source>
+        <target>Low</target>
+      </trans-unit>
+      <trans-unit id="agent.urgency.medium">
+        <source>Medium</source>
+        <target>Medium</target>
+      </trans-unit>
+      <trans-unit id="agent.view">
+        <source>View</source>
+        <target>View</target>
+      </trans-unit>
+      <trans-unit id="auth.display-name.placeholder">
+        <source>John Doe</source>
+        <target>John Doe</target>
+      </trans-unit>
+      <trans-unit id="auth.email.placeholder">
+        <source>you@example.com</source>
+        <target>you@example.com</target>
+      </trans-unit>
+      <trans-unit id="auth.password.placeholder">
+        <source>Enter your password</source>
+        <target>Enter your password</target>
+      </trans-unit>
+      <trans-unit id="auth.password.placeholder.register">
+        <source>At least 8 characters</source>
+        <target>At least 8 characters</target>
+      </trans-unit>
+      <trans-unit id="chat.followUp">
+        <source>Is there anything else I can help you with?</source>
+        <target>Is there anything else I can help you with?</target>
+      </trans-unit>
+      <trans-unit id="chat.modal.close">
+        <source>Close</source>
+        <target>Close</target>
+      </trans-unit>
+      <trans-unit id="chat.modal.seeYouSoon">
+        <source>See you soon!</source>
+        <target>See you soon!</target>
+      </trans-unit>
+      <trans-unit id="chat.modal.thankYou">
+        <source>Thank You</source>
+        <target>Thank You</target>
+      </trans-unit>
+      <trans-unit id="http.error.forbidden">
+        <source>You do not have permission to perform this action.</source>
+        <target>You do not have permission to perform this action.</target>
+      </trans-unit>
+      <trans-unit id="http.error.invalidRequest">
+        <source>Invalid request</source>
+        <target>Invalid request</target>
+      </trans-unit>
+      <trans-unit id="http.error.serverError">
+        <source>Server error. Please try again later.</source>
+        <target>Server error. Please try again later.</target>
+      </trans-unit>
+      <trans-unit id="http.error.sessionExpired">
+        <source>Your session has expired. Please log in again.</source>
+        <target>Your session has expired. Please log in again.</target>
+      </trans-unit>
+      <trans-unit id="http.error.unexpected">
+        <source>An unexpected error occurred</source>
+        <target>An unexpected error occurred</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.confirm.approve">
+        <source>Approve this draft? It will be published immediately.</source>
+        <target>Approve this draft? It will be published immediately.</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.confirm.cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.confirm.confirm">
+        <source>Confirm</source>
+        <target>Confirm</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.confirm.reject">
+        <source>Reject this draft? It will be archived.</source>
+        <target>Reject this draft? It will be archived.</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.confirm.title">
+        <source>Confirm Action</source>
+        <target>Confirm Action</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.error.approve">
+        <source>Failed to approve draft.</source>
+        <target>Failed to approve draft.</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.error.load">
+        <source>Failed to load KCS drafts.</source>
+        <target>Failed to load KCS drafts.</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.error.reject">
+        <source>Failed to reject draft.</source>
+        <target>Failed to reject draft.</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.success.approved">
+        <source>Draft approved and published.</source>
+        <target>Draft approved and published.</target>
+      </trans-unit>
+      <trans-unit id="kcs.drafts.success.rejected">
+        <source>Draft rejected and archived.</source>
+        <target>Draft rejected and archived.</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.register">
+        <source>Create account</source>
+        <target>Create account</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.signin">
+        <source>Sign in</source>
+        <target>Sign in</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.aiDesc">
+        <source>Natural language queries with context-aware replies.</source>
+        <target>Natural language queries with context-aware replies.</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.aiTitle">
+        <source>AI Assistant</source>
+        <target>AI Assistant</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.docsDesc">
+        <source>Every resolution becomes a knowledge article.</source>
+        <target>Every resolution becomes a knowledge article.</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.docsTitle">
+        <source>Auto-Docs</source>
+        <target>Auto-Docs</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.searchDesc">
+        <source>Hybrid FTS + vector search finds answers instantly.</source>
+        <target>Hybrid FTS + vector search finds answers instantly.</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.searchTitle">
+        <source>Smart Search</source>
+        <target>Smart Search</target>
+      </trans-unit>
+      <trans-unit id="landing.goToAiAssistant">
+        <source>Go to AI Assistant</source>
+        <target>Go to AI Assistant</target>
+      </trans-unit>
+      <trans-unit id="landing.hero.description">
+        <source>AI-powered knowledge base that intercepts Level 0/1 tickets and eliminates the documentation burden on IT agents.</source>
+        <target>AI-powered knowledge base that intercepts Level 0/1 tickets and eliminates the documentation burden on IT agents.</target>
+      </trans-unit>
+      <trans-unit id="landing.hero.subtitle">
+        <source>Resolve issues before they reach the queue.</source>
+        <target>Resolve issues before they reach the queue.</target>
+      </trans-unit>
+      <trans-unit id="landing.hero.title">
+        <source>Shift-Left Knowledge Hub</source>
+        <target>Shift-Left Knowledge Hub</target>
+      </trans-unit>
+      <trans-unit id="landing.signedInAs">
+        <source>You're signed in as</source>
+        <target>You're signed in as</target>
+      </trans-unit>
+      <trans-unit id="lang.en">
+        <source>EN</source>
+        <target>EN</target>
+      </trans-unit>
+      <trans-unit id="lang.fr">
+        <source>FR</source>
+        <target>FR</target>
+      </trans-unit>
+      <trans-unit id="login.backToHome">
+        <source>&amp;larr; Back to home</source>
+        <target>&amp;larr; Back to home</target>
+      </trans-unit>
+      <trans-unit id="login.registerLink">
+        <source>Register</source>
+        <target>Register</target>
+      </trans-unit>
+      <trans-unit id="nav.kcs-drafts">
+        <source>KCS Drafts</source>
+        <target>KCS Drafts</target>
+      </trans-unit>
+      <trans-unit id="nav.register">
+        <source>Register</source>
+        <target>Register</target>
+      </trans-unit>
+      <trans-unit id="nav.signin">
+        <source>Sign in</source>
+        <target>Sign in</target>
+      </trans-unit>
+      <trans-unit id="nav.ticket-queue">
+        <source>Ticket Queue</source>
+        <target>Ticket Queue</target>
+      </trans-unit>
+      <trans-unit id="register.backToHome">
+        <source>&amp;larr; Back to home</source>
+        <target>&amp;larr; Back to home</target>
+      </trans-unit>
+      <trans-unit id="register.password.rule.length">
+        <source>At least 8 characters</source>
+        <target>At least 8 characters</target>
+      </trans-unit>
+      <trans-unit id="register.password.rule.number">
+        <source>One number</source>
+        <target>One number</target>
+      </trans-unit>
+      <trans-unit id="register.password.rule.uppercase">
+        <source>One uppercase letter</source>
+        <target>One uppercase letter</target>
+      </trans-unit>
+      <trans-unit id="register.signinLink">
+        <source>Sign in</source>
+        <target>Sign in</target>
+      </trans-unit>
+      <trans-unit id="shared.search.placeholder">
+        <source>Search...</source>
+        <target>Search...</target>
+      </trans-unit>
+      <trans-unit id="tickets.aiSummary">
+        <source>AI Summary</source>
+        <target>AI Summary</target>
+      </trans-unit>
+      <trans-unit id="tickets.detail.error.cancel">
+        <source>Failed to cancel ticket.</source>
+        <target>Failed to cancel ticket.</target>
+      </trans-unit>
+      <trans-unit id="tickets.detail.error.load">
+        <source>Failed to load ticket.</source>
+        <target>Failed to load ticket.</target>
+      </trans-unit>
+      <trans-unit id="tickets.error.load">
+        <source>Failed to load tickets.</source>
+        <target>Failed to load tickets.</target>
+      </trans-unit>
+      <trans-unit id="tickets.filter.all">
+        <source>All</source>
+        <target>All</target>
+      </trans-unit>
+      <trans-unit id="tickets.retry">
+        <source>Retry</source>
+        <target>Retry</target>
+      </trans-unit>
+      <trans-unit id="tickets.sources">
+        <source>Knowledge Base Sources ({INTERPOLATION})</source>
+        <target state="new">Knowledge Base Sources ({INTERPOLATION})</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

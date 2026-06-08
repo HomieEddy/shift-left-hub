@@ -5,9 +5,11 @@ import com.shiftleft.hub.ticket.domain.TicketUrgency;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/** Request to create a new support ticket. */
 public record CreateTicketRequest(
     @NotBlank String issue,
     @NotNull TicketCategory category,
     @NotNull TicketUrgency urgency,
     String shiftLeftContext
-) {}
+) {
+}

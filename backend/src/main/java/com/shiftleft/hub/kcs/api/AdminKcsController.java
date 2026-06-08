@@ -5,16 +5,22 @@ import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.article.service.ArticleService;
 import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
-import com.shiftleft.hub.ticket.domain.TicketRepository;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.shiftleft.hub.kcs.service.KcsDraftingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Admin REST controller for the KCS draft review queue.
@@ -31,11 +37,15 @@ public class AdminKcsController {
 
     private final ArticleRepository articleRepository;
     private final ArticleService articleService;
-    private final TicketRepository ticketRepository;
+    private final KcsDraftingService kcsDraftingService;
 
     /**
      * Lists all KCS-drafted articles with pagination.
      * <p>KCS drafts are identified by having a non-null sourceTicketId.</p>
+     *
+     * @param page the page index (zero-based)
+     * @param size the page size
+     * @return a page of draft responses
      */
     @GetMapping
     public Page<KcsDraftResponse> getDrafts(
@@ -43,11 +53,14 @@ public class AdminKcsController {
             @RequestParam(defaultValue = "20") int size) {
         return articleRepository
             .findBySourceTicketIdIsNotNullOrderByCreatedAtDesc(PageRequest.of(page, size))
-            .map(this::enrichDraftResponse);
+            .map(kcsDraftingService::enrichDraftResponse);
     }
 
     /**
      * Gets a single KCS draft by article ID.
+     *
+     * @param id the article UUID
+     * @return the draft response
      */
     @GetMapping("/{id}")
     public KcsDraftResponse getDraftDetail(@PathVariable UUID id) {
@@ -56,12 +69,15 @@ public class AdminKcsController {
         if (article.getSourceTicketId() == null) {
             throw new com.shiftleft.hub.article.domain.ArticleNotFoundException(id);
         }
-        return enrichDraftResponse(article);
+        return kcsDraftingService.enrichDraftResponse(article);
     }
 
     /**
      * Approves a KCS draft — publishes the article. (D-22)
      * Publishes immediately (same as manual publish).
+     *
+     * @param id the article UUID
+     * @return the published draft response
      */
     @PutMapping("/{id}/approve")
     public KcsDraftResponse approveDraft(@PathVariable UUID id) {
@@ -69,11 +85,14 @@ public class AdminKcsController {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new com.shiftleft.hub.article.domain.ArticleNotFoundException(id));
         log.info("KCS draft {} approved and published", id);
-        return enrichDraftResponse(article);
+        return kcsDraftingService.enrichDraftResponse(article);
     }
 
     /**
      * Rejects a KCS draft — archives the article. (D-22)
+     *
+     * @param id the article UUID
+     * @return the archived draft response
      */
     @PutMapping("/{id}/reject")
     public KcsDraftResponse rejectDraft(@PathVariable UUID id) {
@@ -81,12 +100,14 @@ public class AdminKcsController {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new com.shiftleft.hub.article.domain.ArticleNotFoundException(id));
         log.info("KCS draft {} rejected and archived", id);
-        return enrichDraftResponse(article);
+        return kcsDraftingService.enrichDraftResponse(article);
     }
 
     /**
      * Returns the count of pending KCS drafts (DRAFT status).
      * Used by the frontend for the nav badge. (D-19)
+     *
+     * @return map containing the pending count
      */
     @GetMapping("/pending-count")
     public Map<String, Long> getPendingCount() {
@@ -94,73 +115,4 @@ public class AdminKcsController {
         return Map.of("pendingCount", count);
     }
 
-    /**
-     * Enriches a KcsDraftResponse with the source ticket number and similarity warnings.
-     */
-    private KcsDraftResponse enrichDraftResponse(Article article) {
-        String ticketNumber = null;
-        if (article.getSourceTicketId() != null) {
-            ticketNumber = ticketRepository.findById(article.getSourceTicketId())
-                .map(t -> t.getTicketNumber())
-                .orElse(null);
-        }
-
-        // Find potential duplicates: other articles with similar content
-        // (In a full implementation, this would query the vector store.
-        // For now, check for articles with same tags or title keyword overlap.)
-        Set<String> similarityWarnings = findSimilarArticles(article);
-
-        return new KcsDraftResponse(
-            article.getId(),
-            article.getTitleEn(),
-            article.getTitleFr(),
-            article.getSlug(),
-            article.getExcerpt(),
-            article.getStatus(),
-            article.getSourceTicketId(),
-            ticketNumber,
-            similarityWarnings,
-            article.getTags().stream()
-                .map(com.shiftleft.hub.tag.api.dto.TagResponse::from)
-                .collect(Collectors.toSet()),
-            article.getCreatedAt()
-        );
-    }
-
-    /**
-     * Finds potentially duplicate articles by checking title keyword overlap
-     * among published articles. This is a lightweight check — the heavy
-     * dedup happens during drafting time (KcsDraftingService).
-     */
-    private Set<String> findSimilarArticles(Article article) {
-        if (article.getTitleEn() == null || article.getTitleEn().isBlank()) {
-            return Set.of();
-        }
-        // Simple check: find published articles with overlapping title keywords
-        // This is intentionally lightweight — full vector dedup already ran at drafting time
-        String keywords = article.getTitleEn().toLowerCase()
-            .replaceAll("[^a-zA-Z0-9\\s]", " ")
-            .replaceAll("\\s+", " ")
-            .trim();
-        if (keywords.isEmpty()) {
-            return Set.of();
-        }
-        try {
-            var results = articleRepository.searchByText(keywords,
-                PageRequest.of(0, 5));
-            return results.getContent().stream()
-                .map(row -> (Object[]) row)
-                .filter(row -> {
-                    UUID id = (UUID) row[0];
-                    return !id.equals(article.getId());
-                })
-                .map(row -> (String) row[1]) // title_en
-                .filter(Objects::nonNull)
-                .limit(3)
-                .collect(Collectors.toSet());
-        } catch (Exception e) {
-            log.warn("Similar article check failed: {}", e.getMessage());
-            return Set.of();
-        }
-    }
 }
