@@ -1,0 +1,39 @@
+#!/bin/sh
+# Pre-push hook — runs full verification suite before allowing push.
+# Blocks push on any failure.
+
+echo "--- Pre-push checks starting ---"
+
+# Backend: Checkstyle + SpotBugs + unit tests + integration tests + JaCoCo
+echo "--- Backend: mvn verify ---"
+cd backend && ./mvnw verify -B
+BACKEND_EXIT=$?
+cd ..
+
+if [ $BACKEND_EXIT -ne 0 ]; then
+  echo "FAILED: Backend checks failed. Push blocked."
+  exit 1
+fi
+
+# Frontend: ESLint
+echo "--- Frontend: ESLint ---"
+cd frontend && pnpm lint
+FRONTEND_LINT_EXIT=$?
+
+if [ $FRONTEND_LINT_EXIT -ne 0 ]; then
+  echo "FAILED: Frontend lint failed. Push blocked."
+  exit 1
+fi
+
+# Frontend: Tests
+echo "--- Frontend: Unit Tests ---"
+pnpm test -- --watch=false --browsers=ChromeHeadless
+FRONTEND_TEST_EXIT=$?
+cd ..
+
+if [ $FRONTEND_TEST_EXIT -ne 0 ]; then
+  echo "FAILED: Frontend tests failed. Push blocked."
+  exit 1
+fi
+
+echo "All pre-push checks passed!"
