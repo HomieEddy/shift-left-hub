@@ -1,11 +1,12 @@
 <div class="bg-white border border-slate-200 rounded-lg p-4 text-sm">
-  <ng-container *ngIf="!successTicketNumber(); else successState">
+  @if (!successTicketNumber()) {
     <h3 class="font-semibold text-slate-800 mb-3" i18n="@@escalation.title">Escalate to Human Agent</h3>
 
     <div class="space-y-3">
       <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.issue">Issue Description</label>
+        <label for="escalation-issue" class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.issue">Issue Description</label>
         <textarea
+          id="escalation-issue"
           [(ngModel)]="issue"
           data-testid="escalation-issue"
           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -16,30 +17,38 @@
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.category">Category</label>
+          <label for="escalation-category" class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.category">Category</label>
           <select
+            id="escalation-category"
             [(ngModel)]="category"
             data-testid="escalation-category"
             class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [disabled]="isSubmitting()"
           >
-            <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.label }}</option>
+            @for (cat of categories; track cat.value) {
+              <option [value]="cat.value">{{ cat.label }}</option>
+            }
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.urgency">Urgency</label>
+          <label for="escalation-urgency" class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.urgency">Urgency</label>
           <select
+            id="escalation-urgency"
             [(ngModel)]="urgency"
             data-testid="escalation-urgency"
             class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [disabled]="isSubmitting()"
           >
-            <option *ngFor="let urg of urgencies" [value]="urg.value">{{ urg.label }}</option>
+            @for (urg of urgencies; track urg.value) {
+              <option [value]="urg.value">{{ urg.label }}</option>
+            }
           </select>
         </div>
       </div>
 
-      <div *ngIf="errorMessage()" class="text-red-600 text-xs">{{ errorMessage() }}</div>
+      @if (errorMessage()) {
+        <div class="text-red-600 text-xs">{{ errorMessage() }}</div>
+      }
 
       <div class="flex gap-2">
         <button
@@ -48,8 +57,11 @@
           data-testid="escalation-submit"
           class="rounded-lg bg-amber-600 px-4 py-2 text-sm text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          <span *ngIf="isSubmitting()" i18n="@@escalation.submitting">Submitting...</span>
-          <span *ngIf="!isSubmitting()" i18n="@@escalation.submit">Submit Ticket</span>
+          @if (isSubmitting()) {
+            <span i18n="@@escalation.submitting">Submitting...</span>
+          } @else {
+            <span i18n="@@escalation.submit">Submit Ticket</span>
+          }
         </button>
         <button
           (click)="dismiss()"
@@ -61,9 +73,7 @@
         </button>
       </div>
     </div>
-  </ng-container>
-
-  <ng-template #successState>
+  } @else {
     <div class="text-center py-4">
       <div class="text-green-600 font-semibold mb-1">
         <ng-container i18n="@@escalation.success">Ticket created!</ng-container>
@@ -75,5 +85,5 @@
         View Tickets
       </a>
     </div>
-  </ng-template>
+  }
 </div>

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { $localize } from '@angular/localize/init';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserDto } from '../../../core/auth/auth.models';
@@ -11,7 +11,7 @@ type SortDir = 'asc' | 'desc';
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass],
+  imports: [NgClass],
   templateUrl: './user-list.component.html',
 })
 export class UserListComponent implements OnInit {
@@ -91,7 +91,7 @@ export class UserListComponent implements OnInit {
   /** Update the selected user's role via the API. */
   updateRole(newRole: string): void {
     const user = this.editingUser();
-    if (!user) return;
+    if (user == null) return;
 
     this.authService.updateUserRole(user.id, newRole).subscribe({
       next: (updated) => {

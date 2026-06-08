@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ticket, CreateTicketRequest } from './ticket.model';
 
 @Injectable({ providedIn: 'root' })
 export class TicketService {
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   createTicket(request: CreateTicketRequest): Observable<Ticket> {
     return this.http.post<Ticket>('/api/tickets', request);
@@ -21,6 +20,6 @@ export class TicketService {
   }
 
   cancelTicket(id: string, cancelReason?: string): Observable<Ticket> {
-    return this.http.post<Ticket>(`/api/tickets/${id}/cancel`, cancelReason ? { cancelReason } : {});
+    return this.http.post<Ticket>(`/api/tickets/${id}/cancel`, cancelReason != null ? { cancelReason } : {});
   }
 }

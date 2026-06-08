@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgIf, NgFor, DatePipe, NgClass } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,7 +11,7 @@ import { AgentTicket } from '../agent-ticket.model';
 @Component({
   selector: 'app-agent-ticket-list',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, NgClass, RouterLink, FormsModule],
+  imports: [DatePipe, RouterLink, FormsModule],
   templateUrl: './agent-ticket-list.component.html',
 })
 /**
@@ -123,11 +123,11 @@ export class AgentTicketListComponent implements OnInit {
   /** Confirms claim and navigates to the ticket detail page. */
   confirmClaim(): void {
     const id = this.claimingTicketId();
-    if (!id) return;
+    if (id == null) return;
     this.claimConfirmOpen.set(false);
     this.claimingTicketId.set(null);
     this.agentTicketService.claimTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => this.router.navigate(['/agent/tickets', id]),
+      next: () => { void this.router.navigate(['/agent/tickets', id]); },
       error: () => console.error('Failed to claim ticket'),
     });
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AgentTicket, AgentTicketFilters, ResolveTicketRequest, WorkNote } from './agent-ticket.model';
@@ -6,8 +6,7 @@ import { AgentTicket, AgentTicketFilters, ResolveTicketRequest, WorkNote } from 
 /** Service for interacting with the agent ticket API endpoints. */
 @Injectable({ providedIn: 'root' })
 export class AgentTicketService {
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   /**
    * Retrieves the list of agent tickets with optional filters.
@@ -15,10 +14,10 @@ export class AgentTicketService {
    */
   getTickets(filters?: AgentTicketFilters): Observable<AgentTicket[]> {
     let params = new HttpParams();
-    if (filters?.status) params = params.set('status', filters.status);
-    if (filters?.category) params = params.set('category', filters.category);
-    if (filters?.urgency) params = params.set('urgency', filters.urgency);
-    if (filters?.search) params = params.set('search', filters.search);
+    if (filters?.status != null) params = params.set('status', filters.status);
+    if (filters?.category != null) params = params.set('category', filters.category);
+    if (filters?.urgency != null) params = params.set('urgency', filters.urgency);
+    if (filters?.search != null) params = params.set('search', filters.search);
     return this.http.get<AgentTicket[]>('/api/agent/tickets', { params, withCredentials: true });
   }
 
