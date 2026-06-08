@@ -1,6 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { NgIf, NgFor } from '@angular/common';
 import { AuthService } from './core/auth/auth.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
 import { KcsDraftService } from './features/admin/kcs-draft.service';
@@ -10,7 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf, NgFor],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -40,6 +39,6 @@ export class App {
   }
 
   logout(): void {
-    this.authService.logout().subscribe(() => this.router.navigate(['/']));
+    this.authService.logout().subscribe(() => { void this.router.navigate(['/']); });
   }
 }
