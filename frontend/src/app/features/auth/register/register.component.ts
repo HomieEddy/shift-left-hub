@@ -2,15 +2,14 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-import { redirectIfAuthenticatedGuard } from '../../../core/auth/redirect-if-authenticated.guard';
-import { NgIf } from '@angular/common';
 import { TranslationService } from '../../../core/i18n/translation.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /** Registration form with client-side password validation. */
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, RouterLink, NgIf],
+  imports: [FormsModule, RouterLink],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
@@ -50,9 +49,9 @@ export class RegisterComponent {
     }).subscribe({
       next: () => {
         // Auto-login per D-18 — AuthService already set session via tap()
-        this.router.navigate(['/articles']);
+        void this.router.navigate(['/articles']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         if (err.status === 409) {
           this.errorMessage = 'An account with this email already exists.';
