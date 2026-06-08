@@ -21,18 +21,35 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
+    /**
+     * Retrieves all tags with their article counts.
+     *
+     * @return the list of all tag responses
+     */
     public List<TagResponse> getAllTags() {
         return tagRepository.findAll().stream()
             .map(tag -> TagResponse.from(tag, getArticleCount(tag)))
             .toList();
     }
 
+    /**
+     * Retrieves a tag by its ID.
+     *
+     * @param id the tag UUID
+     * @return the tag response
+     */
     public TagResponse getTagById(UUID id) {
         return tagRepository.findById(id)
             .map(tag -> TagResponse.from(tag, getArticleCount(tag)))
             .orElseThrow(() -> new TagNotFoundException(id));
     }
 
+    /**
+     * Creates a new tag from the given request.
+     *
+     * @param request the create tag request
+     * @return the created tag response
+     */
     @Transactional
     public TagResponse createTag(CreateTagRequest request) {
         Tag tag = Tag.builder()
@@ -44,6 +61,13 @@ public class TagService {
         return TagResponse.from(tag, 0L);
     }
 
+    /**
+     * Updates an existing tag.
+     *
+     * @param id      the tag UUID
+     * @param request the update tag request
+     * @return the updated tag response
+     */
     @Transactional
     public TagResponse updateTag(UUID id, UpdateTagRequest request) {
         Tag tag = tagRepository.findById(id)
@@ -55,6 +79,12 @@ public class TagService {
         return TagResponse.from(tag, getArticleCount(tag));
     }
 
+    /**
+     * Deletes a tag by its ID.
+     *
+     * @param id the tag UUID
+     * @throws TagInUseException if the tag is still in use by articles
+     */
     @Transactional
     public void deleteTag(UUID id) {
         Tag tag = tagRepository.findById(id)

@@ -5,13 +5,13 @@ import com.shiftleft.hub.user.domain.UserNotFoundException;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +20,11 @@ public class AdminUserService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Get all users sorted by creation date descending.
+     *
+     * @return list of all users
+     */
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
             .map(UserResponse::from)
@@ -27,12 +32,25 @@ public class AdminUserService {
             .toList();
     }
 
+    /**
+     * Get a user by their ID.
+     *
+     * @param id the user UUID
+     * @return the user response
+     */
     public UserResponse getUserById(UUID id) {
         return userRepository.findById(id)
             .map(UserResponse::from)
             .orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    /**
+     * Update a user's role.
+     *
+     * @param id      the user UUID
+     * @param newRole the new role to assign
+     * @return the updated user response
+     */
     @Transactional
     public UserResponse updateUserRole(UUID id, UserRole newRole) {
         var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -46,6 +64,12 @@ public class AdminUserService {
         return UserResponse.from(user);
     }
 
+    /**
+     * Toggle a user's enabled status.
+     *
+     * @param id the user UUID
+     * @return the updated user response
+     */
     @Transactional
     public UserResponse toggleUserStatus(UUID id) {
         var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();

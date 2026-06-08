@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SpaForwardingController {
 
+    /**
+     * Forwards all frontend routes to the Angular index.html for SPA routing.
+     *
+     * @return the forward path to index.html
+     */
     @GetMapping(value = {
         "/chat/**", "/knowledge-base/**", "/tickets/**",
         "/agent/**", "/admin/**", "/login", "/register",

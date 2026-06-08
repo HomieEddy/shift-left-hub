@@ -11,12 +11,35 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Repository for managing {@link Article} entities.
+ */
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
-    java.util.Optional<Article> findBySlug(String slug);
+    /**
+     * Finds an article by its slug.
+     *
+     * @param slug the article slug
+     * @return an Optional containing the article if found
+     */
+    Optional<Article> findBySlug(String slug);
 
+    /**
+     * Finds articles by their status.
+     *
+     * @param status   the article status to filter by
+     * @param pageable the pagination information
+     * @return a page of articles with the given status
+     */
     Page<Article> findByStatus(ArticleStatus status, Pageable pageable);
 
+    /**
+     * Full-text search across published articles.
+     *
+     * @param query    the search query
+     * @param pageable the pagination information
+     * @return a page of raw search result rows
+     */
     @Query(value = """
         WITH q AS (
           SELECT plainto_tsquery('english', :query) AS en_query,
@@ -58,6 +81,14 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
         nativeQuery = true)
     Page<Object[]> searchByText(@Param("query") String query, Pageable pageable);
 
+    /**
+     * Full-text search across published articles filtered by tag names.
+     *
+     * @param query    the search query
+     * @param tagNames the tag names to filter by
+     * @param pageable the pagination information
+     * @return a page of raw search result rows
+     */
     @Query(value = """
         WITH q AS (
           SELECT plainto_tsquery('english', :query) AS en_query,
@@ -111,8 +142,16 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
           )
         """,
         nativeQuery = true)
-    Page<Object[]> searchByTextAndTagNames(@Param("query") String query, @Param("tagNames") Collection<String> tagNames, Pageable pageable);
+    Page<Object[]> searchByTextAndTagNames(
+            @Param("query") String query,
+            @Param("tagNames") Collection<String> tagNames,
+            Pageable pageable);
 
+    /**
+     * Finds tag facet counts for published articles.
+     *
+     * @return a list of raw tag facet rows
+     */
     @Query(value = """
         SELECT t.name_en, t.name_fr, t.color, COUNT(*)
         FROM article a
@@ -126,9 +165,27 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     // === KCS Draft Query Methods ===
 
+    /**
+     * Finds articles that originated from tickets, ordered by creation date descending.
+     *
+     * @param pageable the pagination information
+     * @return a page of KCS draft articles
+     */
     Page<Article> findBySourceTicketIdIsNotNullOrderByCreatedAtDesc(Pageable pageable);
 
+    /**
+     * Finds an article by its source ticket ID.
+     *
+     * @param sourceTicketId the source ticket UUID
+     * @return an Optional containing the article if found
+     */
     Optional<Article> findBySourceTicketId(UUID sourceTicketId);
 
+    /**
+     * Counts articles that originated from tickets by their status.
+     *
+     * @param status the article status to count
+     * @return the count of matching articles
+     */
     long countBySourceTicketIdIsNotNullAndStatus(ArticleStatus status);
 }

@@ -23,6 +23,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    /**
+     * Register a new user with the given request.
+     *
+     * @param request the registration details
+     * @return the auth response with tokens and user info
+     */
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new DuplicateEmailException(
@@ -45,6 +51,12 @@ public class AuthService {
         return buildAuthResponse(user, accessToken, refreshToken);
     }
 
+    /**
+     * Authenticate a user with email and password.
+     *
+     * @param request the login credentials
+     * @return the auth response with tokens and user info
+     */
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
             .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
@@ -64,6 +76,12 @@ public class AuthService {
         return buildAuthResponse(user, accessToken, refreshToken);
     }
 
+    /**
+     * Refresh an access token using a valid refresh token.
+     *
+     * @param refreshTokenValue the refresh token value
+     * @return the auth response with new tokens
+     */
     public AuthResponse refresh(String refreshTokenValue) {
         if (!jwtService.isTokenValid(refreshTokenValue)
                 || !jwtService.isRefreshToken(refreshTokenValue)) {
@@ -83,6 +101,11 @@ public class AuthService {
         return buildAuthResponse(user, newAccessToken, newRefreshToken);
     }
 
+    /**
+     * Log out a user by invalidating their refresh token.
+     *
+     * @param refreshTokenValue the refresh token value to invalidate
+     */
     public void logout(String refreshTokenValue) {
         if (refreshTokenValue != null
                 && jwtService.isTokenValid(refreshTokenValue)) {

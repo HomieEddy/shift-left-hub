@@ -14,8 +14,6 @@ import com.shiftleft.hub.tag.domain.TagRepository;
 import com.shiftleft.hub.ticket.domain.TicketRepository;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -25,6 +23,9 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Core KCS drafting orchestration service.
@@ -66,28 +67,25 @@ public class KcsDraftingService {
             return existing.get();
         }
 
-        // 1. Check for duplicates (lightweight FTS first, then semantic)
-        Set<UUID> duplicateIds = checkDuplicates(event);
-
-        // 2. Build LLM prompt from ticket timeline
+        // 1. Build LLM prompt from ticket timeline
         String prompt = buildDraftingPrompt(event);
 
-        // 3. Call LLM to generate bilingual article content
+        // 2. Call LLM to generate bilingual article content
         String llmResponse = callLlm(prompt);
 
-        // 4. Parse LLM response into structured fields
+        // 3. Parse LLM response into structured fields
         KcsParsedArticle parsed = parseLlmResponse(llmResponse, event);
 
-        // 5. Generate slug
+        // 4. Generate slug
         String slug = slugify(parsed.titleEn());
         if (articleRepository.findBySlug(slug).isPresent()) {
             slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
         }
 
-        // 6. Resolve suggested tags (find existing tags by name, or skip if none match)
+        // 5. Resolve suggested tags (find existing tags by name, or skip if none match)
         Set<Tag> tags = resolveSuggestedTags(parsed.suggestedTags());
 
-        // 7. Create and save the article
+        // 6. Create and save the article
         Article article = Article.builder()
             .titleEn(parsed.titleEn())
             .contentEn(parsed.contentEn())
@@ -105,7 +103,8 @@ public class KcsDraftingService {
         article = articleRepository.save(article);
         log.info("KCS draft created: article {} from ticket {}", article.getId(), event.ticketNumber());
 
-        // 8. Store duplicate warnings if any (logged for observability)
+        // 7. Check for duplicates (logged for observability)
+        Set<UUID> duplicateIds = checkDuplicates(event);
         if (!duplicateIds.isEmpty()) {
             log.info("KCS draft {} flagged with {} potential duplicate(s): {}",
                 article.getId(), duplicateIds.size(), duplicateIds);
@@ -119,14 +118,13 @@ public class KcsDraftingService {
      * Returns IDs of published articles with similarity > 0.85 threshold. (D-10, D-12)
      */
     private Set<UUID> checkDuplicates(TicketResolvedEvent event) {
-        Set<UUID> duplicates = new HashSet<>();
-
         // FTS fast-path — check if similar articles exist by keyword overlap (D-12)
         String searchText = extractKeywords(
             Objects.toString(event.issue(), "") + " " + Objects.toString(event.resolutionNotes(), ""));
         var ftsResults = articleRepository.searchByText(searchText,
             org.springframework.data.domain.PageRequest.of(0, 5));
 
+        Set<UUID> duplicates = new HashSet<>();
         if (!ftsResults.isEmpty()) {
             // Use FTS result IDs as preliminary duplicates (IN-05)
             for (Object[] row : ftsResults.getContent()) {
@@ -168,7 +166,8 @@ public class KcsDraftingService {
     /** Builds the LLM prompt with full ticket timeline context. (D-05, D-06, D-07) */
     private String buildDraftingPrompt(TicketResolvedEvent event) {
         return """
-You are a Knowledge-Centered Service (KCS) content specialist. Create a knowledge base article from a resolved IT support ticket.
+You are a Knowledge-Centered Service (KCS) content specialist. \
+Create a knowledge base article from a resolved IT support ticket.
 
 ## Source Ticket Information
 - Ticket Number: %s
@@ -229,13 +228,9 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     /** Parses the LLM response into structured fields. */
     private KcsParsedArticle parseLlmResponse(String response, TicketResolvedEvent event) {
         String titleEn = extractField(response, "title_en");
-        String titleFr = extractField(response, "title_fr");
         String excerpt = extractField(response, "excerpt");
         String contentEn = extractField(response, "content_en");
-        String contentFr = extractField(response, "content_fr");
-        String tagsStr = extractField(response, "suggested_tags");
 
-        // Fallbacks for missing fields
         if (titleEn == null || titleEn.isBlank()) {
             titleEn = event.issue();
         }
@@ -249,6 +244,7 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
                 : notes;
         }
 
+        String tagsStr = extractField(response, "suggested_tags");
         List<String> tags = tagsStr != null && !tagsStr.isBlank()
             ? Arrays.stream(tagsStr.split(","))
                 .map(String::trim)
@@ -257,6 +253,8 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
                 .toList()
             : List.of();
 
+        String titleFr = extractField(response, "title_fr");
+        String contentFr = extractField(response, "content_fr");
         return new KcsParsedArticle(titleEn, titleFr != null ? titleFr : titleEn,
             contentEn, contentFr != null ? contentFr : contentEn,
             excerpt, tags);
@@ -267,7 +265,9 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         String normalized = response.replace("\r\n", "\n");
         String prefix = fieldName + ":";
         int start = normalized.indexOf(prefix);
-        if (start == -1) return null;
+        if (start == -1) {
+            return null;
+        }
         start += prefix.length();
         // Skip past the newline after the field name prefix to get content start
         if (start < normalized.length() && normalized.charAt(start) == '\n') {
@@ -278,9 +278,13 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         int end = normalized.length();
         String[] markers = {"title_en:", "title_fr:", "excerpt:", "content_en:", "content_fr:", "suggested_tags:"};
         for (String marker : markers) {
-            if (marker.equals(fieldName + ":")) continue;
+            if (marker.equals(fieldName + ":")) {
+                continue;
+            }
             int idx = normalized.indexOf("\n" + marker, start);
-            if (idx != -1 && idx < end) end = idx;
+            if (idx != -1 && idx < end) {
+                end = idx;
+            }
         }
 
         String value = normalized.substring(start, end).trim();
@@ -307,7 +311,9 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
 
     /** Resolves tag names to existing Tag entities — only matches exact name_en. */
     private Set<Tag> resolveSuggestedTags(List<String> tagNames) {
-        if (tagNames == null || tagNames.isEmpty()) return new HashSet<>();
+        if (tagNames == null || tagNames.isEmpty()) {
+            return new HashSet<>();
+        }
         int total = tagNames.size();
         if (total > 5) {
             log.warn("Tag suggestions truncated to 5 — {} tags suggested", total);
@@ -318,14 +324,16 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
 
     /**
      * Enriches a KcsDraftResponse with the source ticket number and similarity warnings.
+     *
+     * @param article the KCS draft article
+     * @return the enriched draft response
      */
     public KcsDraftResponse enrichDraftResponse(Article article) {
-        String ticketNumber = null;
-        if (article.getSourceTicketId() != null) {
-            ticketNumber = ticketRepository.findById(article.getSourceTicketId())
+        String ticketNumber = article.getSourceTicketId() != null
+            ? ticketRepository.findById(article.getSourceTicketId())
                 .map(t -> t.getTicketNumber())
-                .orElse(null);
-        }
+                .orElse(null)
+            : null;
         Set<String> similarityWarnings = findSimilarArticles(article);
         return new KcsDraftResponse(
             article.getId(),
@@ -381,5 +389,6 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
         String titleEn, String titleFr,
         String contentEn, String contentFr,
         String excerpt, List<String> suggestedTags
-    ) {}
+    ) {
+    }
 }

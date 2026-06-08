@@ -5,7 +5,6 @@ import com.shiftleft.hub.user.api.dto.LoginRequest;
 import com.shiftleft.hub.user.api.dto.RegisterRequest;
 import com.shiftleft.hub.user.service.AuthService;
 import jakarta.validation.Valid;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +27,12 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * Register a new user with the given request.
+     *
+     * @param request the registration details
+     * @return the auth response with tokens and user info
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
             @Valid @RequestBody RegisterRequest request) {
@@ -38,6 +45,12 @@ public class AuthController {
             .body(response);
     }
 
+    /**
+     * Authenticate a user with email and password.
+     *
+     * @param request the login credentials
+     * @return the auth response with tokens and user info
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @Valid @RequestBody LoginRequest request) {
@@ -50,6 +63,12 @@ public class AuthController {
             .body(response);
     }
 
+    /**
+     * Refresh an access token using a valid refresh token.
+     *
+     * @param refreshToken the refresh token value
+     * @return the auth response with new tokens
+     */
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(
             @CookieValue("refresh_token") String refreshToken) {
@@ -62,6 +81,12 @@ public class AuthController {
             .body(response);
     }
 
+    /**
+     * Log out a user by clearing their refresh token.
+     *
+     * @param refreshToken the refresh token value to invalidate
+     * @return a success message
+     */
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(
             @CookieValue(value = "refresh_token",

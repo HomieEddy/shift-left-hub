@@ -13,16 +13,17 @@ import com.shiftleft.hub.ticket.domain.TicketStatus;
 import com.shiftleft.hub.ticket.domain.TicketUrgency;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Service layer for agent ticket operations.

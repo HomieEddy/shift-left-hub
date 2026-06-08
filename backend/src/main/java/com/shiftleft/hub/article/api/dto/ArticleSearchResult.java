@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Search result dto for full-text article search.
+ */
 public record ArticleSearchResult(
     UUID id,
     String title,
@@ -12,4 +15,5 @@ public record ArticleSearchResult(
     String excerpt,
     LocalDateTime publishedAt,
     Set<String> tagNames
-) {}
+) {
+}

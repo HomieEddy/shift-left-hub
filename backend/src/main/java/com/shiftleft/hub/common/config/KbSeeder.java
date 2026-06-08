@@ -128,7 +128,9 @@ public class KbSeeder implements CommandLineRunner {
         int updated = 0;
         for (Resource resource : resources) {
             String fileName = resource.getFilename();
-            if (fileName == null) continue;
+            if (fileName == null) {
+                continue;
+            }
 
             var content = readFile(resource);
             var frontmatter = parseFrontmatter(content);
@@ -202,7 +204,9 @@ public class KbSeeder implements CommandLineRunner {
     }
 
     private Set<Tag> resolveTags(String tagsStr) {
-        if (tagsStr == null || tagsStr.isBlank()) return Set.of();
+        if (tagsStr == null || tagsStr.isBlank()) {
+            return Set.of();
+        }
 
         var allTags = tagRepository.findAll().stream()
             .collect(Collectors.toMap(Tag::getNameEn, t -> t));
@@ -234,15 +238,21 @@ public class KbSeeder implements CommandLineRunner {
     private Map<String, String> parseFrontmatter(String content) {
         var map = new HashMap<String, String>();
 
-        if (!content.startsWith("---\n")) return map;
+        if (!content.startsWith("---\n")) {
+            return map;
+        }
 
         int endIndex = content.indexOf("\n---\n", 4);
-        if (endIndex == -1) return map;
+        if (endIndex == -1) {
+            return map;
+        }
 
         var fmBlock = content.substring(4, endIndex);
         for (String line : fmBlock.split("\n")) {
             int colonIndex = line.indexOf(": ");
-            if (colonIndex == -1) continue;
+            if (colonIndex == -1) {
+                continue;
+            }
 
             var key = line.substring(0, colonIndex).trim();
             var value = line.substring(colonIndex + 2).trim();
@@ -257,10 +267,14 @@ public class KbSeeder implements CommandLineRunner {
     }
 
     private String extractBody(String content) {
-        if (!content.startsWith("---\n")) return content;
+        if (!content.startsWith("---\n")) {
+            return content;
+        }
 
         int endIndex = content.indexOf("\n---\n", 4);
-        if (endIndex == -1) return content;
+        if (endIndex == -1) {
+            return content;
+        }
 
         return content.substring(endIndex + 5).trim();
     }

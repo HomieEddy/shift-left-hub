@@ -1,10 +1,11 @@
 package com.shiftleft.hub.config;
 
-import java.util.concurrent.Executor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
 
 /**
  * Async execution configuration for fire-and-forget event processing.
@@ -19,6 +20,8 @@ public class AsyncConfig {
     /**
      * Dedicated executor for async event listeners.
      * Core pool of 2 threads, max 4, with a small queue for burst handling.
+     *
+     * @return the configured task executor
      */
     @Bean(name = "kcsTaskExecutor")
     public Executor kcsTaskExecutor() {
