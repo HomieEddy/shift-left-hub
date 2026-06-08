@@ -38,9 +38,6 @@ services:
       APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL:-admin@shiftleft.com}
       APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-ShiftLeft!2026}
       APP_AI_ENCRYPTION_KEY: ${APP_AI_ENCRYPTION_KEY:-local-dev-placeholder-key-2026}
-      SPRING_DEVTOOLS_RESTART_ENABLED: "false"
-      SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: 1s
-      SPRING_DEVTOOLS_RESTART_QUIET_PERIOD: 400ms
     volumes:
       - ./backend:/app
       - maven_cache:/home/app/.m2
