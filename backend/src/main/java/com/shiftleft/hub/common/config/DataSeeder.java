@@ -8,18 +8,17 @@ import com.shiftleft.hub.user.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Profile("!test")
-@Order(1)
 @Slf4j
-public class DataSeeder implements CommandLineRunner {
+public class DataSeeder {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -31,8 +30,12 @@ public class DataSeeder implements CommandLineRunner {
     @Value("${app.admin.password:#{null}}")
     private String adminPassword;
 
-    @Override
-    public void run(String... args) {
+    /**
+     * Seed admin user, regular user, tech agent, and default AI config.
+     * Runs after the application context is fully initialized (Flyway + JPA ready).
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    public void seed() {
         if (adminEmail == null || adminPassword == null) {
             log.info("Admin seeder skipped — set APP_ADMIN_EMAIL and APP_ADMIN_PASSWORD to seed admin user");
         } else {

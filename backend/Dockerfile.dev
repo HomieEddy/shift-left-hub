@@ -13,12 +13,12 @@ ENV HOME=/home/app
 # Prime Maven dependency cache for faster container startup.
 COPY .mvn .mvn
 COPY mvnw mvnw.cmd pom.xml ./
-RUN chmod +x mvnw && chown -R app:app /app/target
+RUN chmod +x mvnw && mkdir -p /app/target && chown -R app:app /app/target
 
 USER app
 
-RUN ./mvnw -q -DskipTests dependency:go-offline
+RUN ./mvnw -Pdocker -q -DskipTests dependency:go-offline
 
 EXPOSE 8080
 
-CMD ["./mvnw", "-DskipTests", "spring-boot:run"]
+CMD ["./mvnw", "-Pdocker", "-DskipTests", "spring-boot:run"]
