@@ -57,13 +57,8 @@ export class ConfirmDialogComponent {
       this.errorMessage.set(null);
 
       try {
-        const result = this.data.onConfirm();
-        // Handle both Promise and synchronous returns
-        const observable$ = result instanceof Promise
-          ? from(result)
-          : of(result);
-
-        observable$.subscribe({
+        const promise = Promise.resolve(this.data.onConfirm());
+        from(promise).subscribe({
           next: () => this.dialogRef.close(true),
           error: (err: unknown) => {
             this.loading.set(false);

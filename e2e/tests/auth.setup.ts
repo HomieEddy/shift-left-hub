@@ -11,16 +11,16 @@ const AUTH_FILE = '.auth/user.json';
  * test runs skip the login form.
  *
  * The test credentials are supplied via environment variables:
- *   E2E_USER_EMAIL    (default: user@shiftleft.local)
- *   E2E_USER_PASSWORD (default: password123)
+ *   E2E_USER_EMAIL    (default: user@shiftleft.com)
+ *   E2E_USER_PASSWORD (default: ShiftLeft!2026)
  *
  * If the environment is CI, tests that depend on the auth
  * setup will use the pre-seeded storage state from the CI
  * pipeline's test fixture.
  */
 setup('authenticate as test user', async ({ page }) => {
-  const email = process.env.E2E_USER_EMAIL ?? 'user@shiftleft.local';
-  const password = process.env.E2E_USER_PASSWORD ?? 'password123';
+  const email = process.env.E2E_USER_EMAIL ?? 'user@shiftleft.com';
+  const password = process.env.E2E_USER_PASSWORD ?? 'ShiftLeft!2026';
 
   // Navigate to the login page
   await page.goto('/login');

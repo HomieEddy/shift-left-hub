@@ -172,8 +172,8 @@ public class JwtService {
     public void evictExpiredRefreshTokens() {
         try {
             int before = usedRefreshTokens.size();
-            usedRefreshTokens.keySet().removeIf(tokenId ->
-                usedRefreshTokenRepository.findByTokenId(tokenId).isEmpty());
+            usedRefreshTokens.keySet().removeIf(id ->
+                usedRefreshTokenRepository.findByTokenId(id).isEmpty());
             log.debug("Evicted {} expired in-memory refresh tokens", before - usedRefreshTokens.size());
 
             usedRefreshTokenRepository.deleteByExpiresAtBefore(Instant.now());

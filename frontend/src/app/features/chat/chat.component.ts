@@ -103,6 +103,8 @@ export class ChatComponent {
       error: () => {
         this.isStreaming.set(false);
         this.errorMessage.set('Connection error. Please try again.');
+        this.showFallback.set(true);
+        this.setEscalationPayloadOnError();
       },
       complete: () => {
         this.isStreaming.set(false);
@@ -119,6 +121,18 @@ export class ChatComponent {
       issue: lastUserContent,
       transcript: this.messages(),
       sources: event.sources || [],
+    });
+  }
+
+  private setEscalationPayloadOnError() {
+    const userMessages = this.messages().filter(m => m.role === 'user');
+    const lastUserContent = userMessages.length > 0
+      ? userMessages[userMessages.length - 1].content
+      : '';
+    this.escalationPayload.set({
+      issue: lastUserContent,
+      transcript: this.messages(),
+      sources: [],
     });
   }
 

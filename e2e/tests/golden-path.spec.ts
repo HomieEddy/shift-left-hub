@@ -61,6 +61,7 @@ test.describe('Golden Path', () => {
     let hasResults = false;
 
     await test.step('User searches Knowledge Base', async () => {
+      await kbPage.goto();
       await kbPage.search('login');
       const resultCount = await kbPage.searchResults.count();
       hasResults = resultCount > 0;

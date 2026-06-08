@@ -20,7 +20,10 @@ export class KnowledgeBasePage {
 
   /** Navigate to the KB search page. */
   async goto(): Promise<void> {
-    await this.page.goto('/articles/search');
+    await this.page.goto('/articles');
+    await this.page.waitForLoadState('networkidle');
+    // Click the "Search Articles" link to reach the search page
+    await this.page.getByText('Search Articles').click();
     await this.page.waitForLoadState('networkidle');
   }
 
