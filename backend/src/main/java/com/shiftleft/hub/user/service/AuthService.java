@@ -8,6 +8,7 @@ import com.shiftleft.hub.user.api.dto.RegisterRequest;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -93,7 +94,11 @@ public class AuthService {
             .orElseThrow(() -> new BadCredentialsException("User not found"));
 
         String tokenId = jwtService.extractTokenId(refreshTokenValue);
-        jwtService.validateRefreshRotation(tokenId, userId.toString());
+        try {
+            jwtService.validateRefreshRotation(tokenId, userId.toString());
+        } catch (JwtException e) {
+            throw new BadCredentialsException(e.getMessage());
+        }
 
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);

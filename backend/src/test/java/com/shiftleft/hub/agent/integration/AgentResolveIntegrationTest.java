@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -60,7 +59,6 @@ class AgentResolveIntegrationTest extends AbstractIntegrationTest {
     @MockitoBean
     private ApplicationEventPublisher eventPublisher;
 
-    @Captor
     private ArgumentCaptor<TicketResolvedEvent> eventCaptor;
 
     private WebTestClient webTestClient;
@@ -183,6 +181,7 @@ class AgentResolveIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void t04_agentResolvesTicketWithKcsFlag_shouldTransitionToResolvedAndPublishEvent() {
+        eventCaptor = ArgumentCaptor.forClass(TicketResolvedEvent.class);
         var request = new ResolveTicketRequest(
                 "Restored AD group membership for the user. " +
                 "Added the user back to the 'Shared Drive Access' group. " +
