@@ -44,7 +44,10 @@ describe('AuthService', () => {
     });
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
-    // Flush the constructor's auto-refresh call
+    // Flush the constructor's auto-refresh call to clear pending requests.
+    // AuthService.tryRefreshToken() runs refresh() in the constructor as a side effect.
+    // If auto-refresh is removed from the constructor or made lazy, remove this as well
+    // and update the 'signal state after constructor auto-refresh' describe block below.
     httpMock.expectOne('/api/auth/refresh').flush(mockAuthResponse);
   });
 
