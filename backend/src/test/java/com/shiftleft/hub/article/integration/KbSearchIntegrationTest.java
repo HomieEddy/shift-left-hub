@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -42,6 +43,9 @@ class KbSearchIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private WebTestClient webTestClient;
     private String adminAccessToken;
@@ -196,5 +200,7 @@ class KbSearchIntegrationTest extends AbstractIntegrationTest {
                 .returnResult().getResponseBody();
         assertThat(response).isNotNull();
         assertThat(response.status().name()).isEqualTo("PUBLISHED");
+        // Populate tsvector columns (trigger not available in test profile)
+        jdbcTemplate.update("UPDATE article SET tsv_en = to_tsvector('english', coalesce(title_en,'') || ' ' || coalesce(content_en,'')), tsv_fr = to_tsvector('french', coalesce(title_fr,'') || ' ' || coalesce(content_fr,'')) WHERE id = ?", articleId);
     }
 }

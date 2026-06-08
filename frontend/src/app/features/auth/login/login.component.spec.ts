@@ -50,7 +50,7 @@ describe('LoginComponent', () => {
   });
 
   it('should set isLoading to true during submit', () => {
-    authService.login.mockReturnValue(new Subject<any>().asObservable());
+    authService.login.mockReturnValue(new Subject<unknown>().asObservable());
 
     component.email = 'test@example.com';
     component.password = 'password';

@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ConfirmationData } from './confirmation-dialog.model';
-import { from, of } from 'rxjs';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-dialog',

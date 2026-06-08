@@ -106,6 +106,12 @@ public class Article {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "tsv_en", columnDefinition = "tsvector", insertable = false, updatable = false)
+    private String tsvEn;
+
+    @Column(name = "tsv_fr", columnDefinition = "tsvector", insertable = false, updatable = false)
+    private String tsvFr;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

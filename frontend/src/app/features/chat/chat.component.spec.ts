@@ -20,7 +20,7 @@ describe('ChatComponent', () => {
     chatService = {
       sendMessage: vi.fn().mockReturnValue({
         events: eventsSubject.asObservable(),
-        abort: () => {},
+        abort: vi.fn(),
       }),
     };
 

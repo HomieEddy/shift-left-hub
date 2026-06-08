@@ -113,7 +113,7 @@ describe('ArticleEditorComponent', () => {
     });
 
     it('should handle save error', () => {
-      const errorSubject = new Subject<any>();
+      const errorSubject = new Subject<unknown>();
       articleService.createArticle.mockReturnValue(errorSubject.asObservable());
 
       component.titleEn = 'New Article';
@@ -169,7 +169,7 @@ describe('ArticleEditorComponent', () => {
     });
 
     it('should handle load article error', () => {
-      const errorSubject = new Subject<any>();
+      const errorSubject = new Subject<unknown>();
       articleService.getArticleById.mockReturnValue(errorSubject.asObservable());
 
       component.loadArticle('123');
