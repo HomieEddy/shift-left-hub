@@ -3,15 +3,11 @@ package com.shiftleft.hub.config;
 import com.shiftleft.hub.user.domain.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import lombok.extern.slf4j.Slf4j;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,6 +27,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -40,21 +42,44 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
+    /**
+     * Creates a new SecurityConfig.
+     *
+     * @param userRepository the user repository
+     * @param jwtService     the JWT service
+     */
     public SecurityConfig(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
 
+    /**
+     * Provides a virtual-thread-backed executor for AI chat requests.
+     *
+     * @return the chat executor service
+     */
     @Bean("chatExecutor")
     public ExecutorService chatExecutor() {
         return Executors.newVirtualThreadPerTaskExecutor();
     }
 
+    /**
+     * Provides the BCrypt password encoder.
+     *
+     * @return the password encoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the HTTP security filter chain.
+     *
+     * @param http the HttpSecurity to configure
+     * @return the built SecurityFilterChain
+     * @throws Exception on configuration error
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -80,6 +105,11 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins:http://localhost:4200}")
     private String[] allowedOrigins;
 
+    /**
+     * Configures CORS settings for the application.
+     *
+     * @return the CORS configuration source
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -95,6 +125,11 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Creates a filter that reads the JWT from a cookie and sets the security context.
+     *
+     * @return the JWT authentication filter
+     */
     @Bean
     public OncePerRequestFilter jwtAuthenticationFilter() {
         return new OncePerRequestFilter() {
