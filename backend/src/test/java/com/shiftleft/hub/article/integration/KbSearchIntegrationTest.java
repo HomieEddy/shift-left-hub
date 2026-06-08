@@ -23,6 +23,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.test.context.jdbc.Sql;
 
 /**
  * Integration test for KB full-text search using real tsvector/GIN indexes.
@@ -32,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Sql(scripts = "/create-tsv-trigger.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class KbSearchIntegrationTest extends AbstractIntegrationTest {
 
     @LocalServerPort
