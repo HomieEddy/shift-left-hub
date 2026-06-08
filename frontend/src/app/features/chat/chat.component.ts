@@ -86,7 +86,12 @@ export class ChatComponent {
           this.setEscalationPayload(event);
         } else if (event.type === 'fallback') {
           this.isStreaming.set(false);
-          assistantMsg.content = event.content;
+          this.messages.update(m => {
+            const updated = [...m];
+            const lastIdx = updated.length - 1;
+            updated[lastIdx] = { ...updated[lastIdx], content: event.content };
+            return updated;
+          });
           this.showFallback.set(true);
           this.setEscalationPayload(event);
         } else if (event.type === 'error') {
