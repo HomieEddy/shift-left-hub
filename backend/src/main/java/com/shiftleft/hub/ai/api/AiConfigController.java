@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Map;
 
 @RestController
@@ -23,23 +24,45 @@ public class AiConfigController {
     private final AiConfigService aiConfigService;
     private final EmbeddingService embeddingService;
 
+    /**
+     * Returns the current AI configuration.
+     *
+     * @return current AI configuration response
+     */
     @GetMapping
     public AiConfigResponse getConfig() {
         return aiConfigService.getConfig();
     }
 
+    /**
+     * Updates the AI configuration.
+     *
+     * @param request the configuration update request
+     * @return updated AI configuration response
+     */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     public AiConfigResponse updateConfig(@RequestBody AiConfigRequest request) {
         return aiConfigService.updateConfig(request);
     }
 
+    /**
+     * Tests a connection to the AI provider with the given configuration.
+     *
+     * @param request the configuration to test
+     * @return connection test result
+     */
     @PostMapping("/test")
     @PreAuthorize("hasRole('ADMIN')")
     public TestConnectionResult testConnection(@RequestBody AiConfigRequest request) {
         return aiConfigService.testConnection(request);
     }
 
+    /**
+     * Triggers a full re-index of all embeddings.
+     *
+     * @return status message
+     */
     @PostMapping("/embeddings/reindex")
     @PreAuthorize("hasRole('ADMIN')")
     public Map<String, String> reindexEmbeddings() {

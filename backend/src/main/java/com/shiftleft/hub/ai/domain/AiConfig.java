@@ -11,8 +11,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.UUID;
 
+/**
+ * JPA entity representing the singleton AI configuration.
+ */
 @Entity
 @Table(name = "ai_config")
 @Getter

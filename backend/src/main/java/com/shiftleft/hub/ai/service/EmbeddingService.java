@@ -9,9 +9,10 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Pageable;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,21 @@ public class EmbeddingService {
     private final ArticleRepository articleRepository;
     private final AiConfigService aiConfigService;
 
+    /**
+     * Generates an embedding vector for the given text.
+     *
+     * @param text the input text
+     * @return the embedding vector
+     */
     public float[] generateEmbedding(String text) {
         return embeddingModel.embed(text);
     }
 
+    /**
+     * Stores an embedding for the given article in the vector store.
+     *
+     * @param article the article to embed and store
+     */
     public void storeEmbedding(Article article) {
         String content = (article.getContentEn() != null ? article.getContentEn() : "")
             + "\n---\n"
@@ -44,6 +56,11 @@ public class EmbeddingService {
         vectorStore.add(List.of(document));
     }
 
+    /**
+     * Generates and stores an embedding for the given article.
+     *
+     * @param article the article to process
+     */
     public void generateAndStoreEmbedding(Article article) {
         try {
             storeEmbedding(article);
@@ -53,8 +70,12 @@ public class EmbeddingService {
         }
     }
 
+    /**
+     * Re-embeds all published articles in the vector store.
+     */
     public void reEmbedAll() {
-        List<Article> publishedArticles = articleRepository.findByStatus(ArticleStatus.PUBLISHED, Pageable.unpaged()).getContent();
+        var publishedPage = articleRepository.findByStatus(ArticleStatus.PUBLISHED, Pageable.unpaged());
+        List<Article> publishedArticles = publishedPage.getContent();
         log.info("Re-embedding {} published articles", publishedArticles.size());
 
         for (Article article : publishedArticles) {
