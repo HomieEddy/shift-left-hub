@@ -10,94 +10,111 @@
     </a>
   </div>
 
-  <p *ngIf="errorMessage()" class="bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</p>
+  @if (errorMessage()) {
+    <p class="bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</p>
+  }
 
-  <div *ngIf="isLoading()" class="text-center py-12 text-slate-500" i18n="@@admin.articles.loading">Loading articles...</div>
+  @if (isLoading()) {
+    <div class="text-center py-12 text-slate-500" i18n="@@admin.articles.loading">Loading articles...</div>
+  }
 
-  <div *ngIf="!isLoading()" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-    <table class="w-full text-sm">
-      <thead class="bg-slate-50 border-b border-slate-200">
-        <tr>
-          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.title">Title</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.status">Status</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.tags">Tags</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.author">Author</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.updated">Updated</th>
-          <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.actions">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100">
-        <tr *ngFor="let article of articles()" class="hover:bg-slate-50">
-          <td class="px-4 py-3">
-            <p class="font-medium text-slate-800">{{ translationService.currentLang() === 'fr' && article.titleFr ? article.titleFr : article.titleEn }}</p>
-            <p class="text-xs text-slate-500">{{ article.titleFr && translationService.currentLang() === 'en' ? 'FR: ' + article.titleFr : '' }}</p>
-          </td>
-          <td class="px-4 py-3">
-            <span
-              class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
-              [ngClass]="article.status === 'PUBLISHED' ? 'bg-green-100 text-green-700' :
-                       article.status === 'DRAFT' ? 'bg-yellow-100 text-yellow-700' :
-                       'bg-red-100 text-red-700'"
-            >
-              {{ article.status }}
-            </span>
-          </td>
-          <td class="px-4 py-3">
-            <div class="flex flex-wrap gap-1">
-              <span
-                *ngFor="let tag of article.tags"
-                class="inline-block px-1.5 py-0.5 rounded text-xs text-white"
-                [style.background-color]="tag.color"
-              >
-                {{ translationService.currentLang() === 'fr' ? tag.nameFr : tag.nameEn }}
-              </span>
-            </div>
-          </td>
-          <td class="px-4 py-3 text-slate-600">{{ article.authorName }}</td>
-          <td class="px-4 py-3 text-slate-500 text-xs">{{ article.updatedAt | date:'mediumDate' }}</td>
-          <td class="px-4 py-3">
-            <div class="flex items-center gap-1">
-              <a [routerLink]="['/admin/articles', article.id, 'edit']" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" i18n="@@admin.articles.edit">
-                Edit
-              </a>
-              <button *ngIf="article.status === 'DRAFT'" (click)="publish(article.id)" class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50" i18n="@@admin.articles.publish">
-                Publish
-              </button>
-              <button *ngIf="article.status === 'PUBLISHED'" (click)="archive(article.id)" class="text-xs px-2 py-1 rounded border border-yellow-300 text-yellow-600 hover:bg-yellow-50" i18n="@@admin.articles.archive">
-                Archive
-              </button>
-              <button (click)="deleteArticle(article.id)" class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50" i18n="@@admin.articles.delete">
-                Delete
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p *ngIf="articles().length === 0" class="text-center py-8 text-slate-500" i18n="@@admin.articles.no-articles">
-      No articles found.
-    </p>
-  </div>
+  @if (!isLoading()) {
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200">
+          <tr>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.title">Title</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.status">Status</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.tags">Tags</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.author">Author</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.updated">Updated</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@admin.articles.col.actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (article of articles(); track article.id) {
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-3">
+                <p class="font-medium text-slate-800">{{ translationService.currentLang() === 'fr' && article.titleFr ? article.titleFr : article.titleEn }}</p>
+                <p class="text-xs text-slate-500">{{ article.titleFr && translationService.currentLang() === 'en' ? 'FR: ' + article.titleFr : '' }}</p>
+              </td>
+              <td class="px-4 py-3">
+                <span
+                  class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+                  [ngClass]="article.status === 'PUBLISHED' ? 'bg-green-100 text-green-700' :
+                           article.status === 'DRAFT' ? 'bg-yellow-100 text-yellow-700' :
+                           'bg-red-100 text-red-700'"
+                >
+                  {{ article.status }}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex flex-wrap gap-1">
+                  @for (tag of article.tags; track tag.id) {
+                    <span
+                      class="inline-block px-1.5 py-0.5 rounded text-xs text-white"
+                      [style.background-color]="tag.color"
+                    >
+                      {{ translationService.currentLang() === 'fr' ? tag.nameFr : tag.nameEn }}
+                    </span>
+                  }
+                </div>
+              </td>
+              <td class="px-4 py-3 text-slate-600">{{ article.authorName }}</td>
+              <td class="px-4 py-3 text-slate-500 text-xs">{{ article.updatedAt | date:'mediumDate' }}</td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-1">
+                  <a [routerLink]="['/admin/articles', article.id, 'edit']" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" i18n="@@admin.articles.edit">
+                    Edit
+                  </a>
+                  @if (article.status === 'DRAFT') {
+                    <button (click)="publish(article.id)" class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50" i18n="@@admin.articles.publish">
+                      Publish
+                    </button>
+                  }
+                  @if (article.status === 'PUBLISHED') {
+                    <button (click)="archive(article.id)" class="text-xs px-2 py-1 rounded border border-yellow-300 text-yellow-600 hover:bg-yellow-50" i18n="@@admin.articles.archive">
+                      Archive
+                    </button>
+                  }
+                  <button (click)="deleteArticle(article.id)" class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50" i18n="@@admin.articles.delete">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="text-center py-8 text-slate-500" i18n="@@admin.articles.no-articles">
+                No articles found.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 
   <!-- Pagination -->
-  <div *ngIf="totalPages() > 1" class="flex items-center justify-center gap-2 mt-6">
-    <button
-      (click)="changePage(currentPage() - 1)"
-      [disabled]="currentPage() === 0"
-      class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-      i18n="@@pagination.previous"
-    >
-      Previous
-    </button>
-    <span class="text-sm text-slate-600">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
-    <button
-      (click)="changePage(currentPage() + 1)"
-      [disabled]="currentPage() >= totalPages() - 1"
-      class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-      i18n="@@pagination.next"
-    >
-      Next
-    </button>
-  </div>
+  @if (totalPages() > 1) {
+    <div class="flex items-center justify-center gap-2 mt-6">
+      <button
+        (click)="changePage(currentPage() - 1)"
+        [disabled]="currentPage() === 0"
+        class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+        i18n="@@pagination.previous"
+      >
+        Previous
+      </button>
+      <span class="text-sm text-slate-600">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+      <button
+        (click)="changePage(currentPage() + 1)"
+        [disabled]="currentPage() >= totalPages() - 1"
+        class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+        i18n="@@pagination.next"
+      >
+        Next
+      </button>
+    </div>
+  }
 </div>

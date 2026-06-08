@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PublicArticleService } from '../../services/public-article.service';
@@ -10,7 +10,7 @@ import { MarkdownModule } from 'ngx-markdown';
 @Component({
   selector: 'app-article-viewer',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, RouterLink, MarkdownModule],
+  imports: [DatePipe, RouterLink, MarkdownModule],
   templateUrl: './article-viewer.component.html',
   styleUrls: ['./article-viewer.component.css'],
 })
@@ -26,7 +26,7 @@ export class ArticleViewerComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
+    if (id != null) {
       this.loadArticle(id);
     } else {
       this.errorMessage.set($localize`:@@kb.invalid-id:Invalid article ID.`);
@@ -52,18 +52,18 @@ export class ArticleViewerComponent implements OnInit {
 
   get displayContent(): string {
     const a = this.article();
-    if (!a) return '';
+    if (a == null) return '';
     if (this.translationService.currentLang() === 'fr') {
-      return a.contentFr || a.contentEn;
+      return a.contentFr ?? a.contentEn;
     }
     return a.contentEn;
   }
 
   get isFallback(): boolean {
     const a = this.article();
-    if (!a) return false;
+    if (a == null) return false;
     if (this.translationService.currentLang() === 'fr') {
-      return !a.contentFr;
+      return a.contentFr == null;
     }
     return false;
   }

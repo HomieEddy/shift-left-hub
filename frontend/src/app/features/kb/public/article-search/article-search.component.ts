@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,7 +10,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 @Component({
   selector: 'app-article-search',
   standalone: true,
-  imports: [NgFor, NgIf, RouterLink, FormsModule, DatePipe],
+  imports: [RouterLink, FormsModule, DatePipe],
   templateUrl: './article-search.component.html',
 })
 export class ArticleSearchComponent implements OnInit {
@@ -36,7 +36,7 @@ export class ArticleSearchComponent implements OnInit {
     this.loadSearchTags();
 
     this.destroyRef.onDestroy(() => {
-      if (this.debounceTimer) {
+      if (this.debounceTimer != null) {
         clearTimeout(this.debounceTimer);
         this.debounceTimer = null;
       }
@@ -45,15 +45,15 @@ export class ArticleSearchComponent implements OnInit {
     this.route.queryParams.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(params => {
-      const q = params['q'];
+      const q = params['q'] as string | undefined;
       const tagsParam = params['tags'] as string | undefined;
-      const tags = tagsParam
+      const tags = tagsParam != null && tagsParam.length > 0
         ? tagsParam.split(',').map(t => t.trim()).filter(Boolean)
         : [];
 
       this.selectedTags.set(tags);
 
-      if (q) {
+      if (q != null && q !== '') {
         this.query.set(q);
         this.doSearch(q, 0, tags);
       } else {
@@ -78,20 +78,20 @@ export class ArticleSearchComponent implements OnInit {
 
   onSearchInput(value: string): void {
     this.query.set(value);
-    if (this.debounceTimer) {
+    if (this.debounceTimer != null) {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = null;
     }
     this.debounceTimer = setTimeout(() => {
       if (value.trim()) {
-        this.router.navigate([], {
+        void this.router.navigate([], {
           queryParams: {
             q: value.trim(),
             tags: this.selectedTags().length ? this.selectedTags().join(',') : null,
           },
         });
       } else {
-        this.router.navigate([], {
+        void this.router.navigate([], {
           queryParams: {
             q: null,
             tags: null,
@@ -101,7 +101,7 @@ export class ArticleSearchComponent implements OnInit {
     }, 300);
   }
 
-  doSearch(query: string, page: number = 0, tags: string[] = this.selectedTags()): void {
+  doSearch(query: string, page = 0, tags: string[] = this.selectedTags()): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.currentPage.set(page);
@@ -131,11 +131,11 @@ export class ArticleSearchComponent implements OnInit {
       return [...current, tagName];
     });
 
-    if (!this.query().trim()) {
+    if (this.query().trim().length === 0) {
       return;
     }
 
-    this.router.navigate([], {
+    void this.router.navigate([], {
       queryParams: {
         q: this.query().trim(),
         tags: this.selectedTags().length ? this.selectedTags().join(',') : null,
@@ -152,7 +152,7 @@ export class ArticleSearchComponent implements OnInit {
   }
 
   sanitizeHeadline(html: string): string {
-    if (!html) return '';
+    if (html === '') return '';
     // Keep only mark tags and remove any attributes from opening mark tags.
     return html
       .replace(/<(?!\/?mark(?=>|\s[^>]*>))[^>]*>/gi, '')

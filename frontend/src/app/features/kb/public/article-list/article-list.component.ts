@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PublicArticleService } from '../../services/public-article.service';
@@ -9,7 +9,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 @Component({
   selector: 'app-article-list',
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink],
   templateUrl: './article-list.component.html',
 })
 export class ArticleListComponent implements OnInit {
@@ -50,17 +50,17 @@ export class ArticleListComponent implements OnInit {
   }
 
   displayTitle(article: ArticleDto): string {
-    if (this.translationService.currentLang() === 'fr' && article.titleFr) {
+    if (this.translationService.currentLang() === 'fr' && article.titleFr != null) {
       return article.titleFr;
     }
     return article.titleEn;
   }
 
   displayExcerpt(article: ArticleDto): string {
-    if (article.excerpt) return article.excerpt;
+    if (article.excerpt != null) return article.excerpt;
     const content = this.translationService.currentLang() === 'fr'
-      ? (article.contentFr || article.contentEn)
+      ? (article.contentFr ?? article.contentEn)
       : article.contentEn;
-    return content ? content.substring(0, 150) + '...' : '';
+    return content != null && content.length > 0 ? content.substring(0, 150) + '...' : '';
   }
 }
