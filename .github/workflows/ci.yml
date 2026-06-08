@@ -47,12 +47,14 @@ jobs:
 
       - name: SonarQube Cloud Scan
         if: always()  # Runs even if tests fail (informational per D-02)
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
           ./mvnw sonar:sonar -B
           -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
           -Dsonar.organization=${{ env.SONAR_ORG }}
           -Dsonar.host.url=${{ env.SONAR_HOST_URL }}
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.token=$SONAR_TOKEN
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
         working-directory: backend
         continue-on-error: true  # Non-blocking per D-02
@@ -70,7 +72,7 @@ jobs:
           node-version: '22'
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa  # v4
         with:
           version: 10
 
