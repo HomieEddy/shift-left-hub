@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: v2.0
-status: active
-last_updated: "2026-06-08T10:30:00.000Z"
+status: complete
+last_updated: "2026-06-08T20:00:00.000Z"
 progress:
   total_phases: 8
-  completed_phases: 7
-  total_plans: 52
-  completed_plans: 36
-  current_phase: 8
-  current_phase_name: "Testing & CI/CD"
-  current_focus: "Phase 8 planned — 8 plans across 3 waves, ready to execute"
+  completed_phases: 8
+  total_plans: 60
+  completed_plans: 60
+  current_phase: null
+  current_focus: "Milestone v2.0 complete — all 8 phases shipped"
 ---
 
 # Project State
@@ -25,7 +24,7 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
-**Current focus:** All 7 phases complete — Milestone v1.0 shipped
+**Current focus:** Milestone v2.0 complete — all 8 phases shipped
 
 ### Phase 6: KCS Auto-Drafting & Admin Review
 
@@ -34,6 +33,19 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 06-01 | Backend Foundation | Article entity sourceTicketId, @EnableAsync, TicketResolvedEvent, event wiring | ✓ Complete | `7f7afd8`, `94d38ce`, `3cb4661` |
 | 06-02 | KCS Drafting Engine + Admin API | AI synthesis, dedup, async listener with retry, admin controller (list/approve/reject) | ✓ Complete | `1c96bed`, `89ad3c5`, `1e016e0` |
 | 06-03 | Frontend Admin KCS UI | Draft queue table, approve/reject actions, nav badge, routes, EN/FR translations | ✓ Complete | `b994562`, `cb588b5` |
+
+### Phase 8: Testing & CI/CD
+
+| Plan | Name | Summary | Commits |
+|------|------|---------|---------|
+| 08-01 | Test Dependencies & Base Configuration | Testcontainers + JaCoCo + SonarQube infra, AbstractIntegrationTest, KnowledgeHubApplicationTests | `ac5902e`, `935abbd`, `6e6954f` |
+| 08-02 | Backend Service-Layer Unit Tests | 81 unit tests across 6 services (Auth, Ticket, AgentTicket, Article, KCS, Tag) — all Mockito, all passing | `2cdb78a`, `40c7da2`, `b3510d1`, `a63094b`, `c836c81`, `f93b766` |
+| 08-03 | Backend Integration Tests | 5 integration test classes (AuthFlow, Ticket CRUD, KB FTS, Agent Resolve, KCS Draft) via Testcontainers | `26e3679`, `f28093b`, `c94dee5`, `bb1d34a`, `9c11da4` |
+| 08-04 | Frontend Service Tests | 64 tests across 6 services (Auth, Chat SSE, Ticket, Article, KCS, Translation) via HttpTestingController | `8f2f616`, `1743a8c`, `19f9f5b`, `524f5f1` |
+| 08-05 | Frontend Component Tests | 40 tests across 5 smart components (Login, Chat, ArticleSearch, TicketList, ArticleEditor) | `4d7260d`, `d0cbf31`, `a18adcf`, `e2ad720`, `8756fc5` |
+| 08-06 | Playwright E2E Golden Path | 3 browser contexts (user/agent/admin), KCS drafts page object, enhanced page objects | `c7f1786`, `1942754`, `94f52c8` |
+| 08-07 | GitHub Actions CI | Backend (Java 21 + mvn verify + Testcontainers + JaCoCo + SonarQube) + Frontend (Node 22 + pnpm lint/test/build) | `a2ed629`, `cad8a4c` |
+| 08-08 | Pre-commit Hooks | Husky v9 pre-commit (lint-staged) + pre-push (mvn verify + pnpm lint/test) | `751131f`, `fb26733`, `6504bc1` |
 
 ### Phase 7: Quality, Polish & DevOps
 
@@ -96,7 +108,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 | 5 | Agent Dashboard | ✓ Complete (4/4 plans) |
 | 6 | KCS Auto-Drafting & Admin Review | ✓ Complete (3/3 plans) |
 | 7 | Quality, Polish & DevOps | ✓ Complete (9/9 plans) |
-| 8 | Testing & CI/CD | ▸ Planned (8/8 plans created) |
+| 8 | Testing & CI/CD | ✓ Complete (8/8 plans) |
 
 ## Key Decisions
 
@@ -146,13 +158,13 @@ See: `.planning/PROJECT.md` (updated 2026-06-03)
 
 ## Next Steps
 
-1. ✅ **Phase 5 complete** — Agent Dashboard executed (4/4 plans, 3 waves) ✓ Shipped (PR #5)
-2. ✅ **Phase 6 complete** — KCS Auto-Drafting & Admin Review executed (3/3 plans, 3 waves)
-3. ✅ **Phase 7 complete** — Quality, Polish & DevOps executed (9/9 plans, 5 waves)
-   - Done: Flyway migration, RFC 7807 error handling, Checkstyle/SpotBugs, CDK dialogs, i18n extraction, ESLint fix, Docker healthchecks, Playwright E2E, bilingual audit + demo walkthrough
-4. ▸ **Phase 8: Testing & CI/CD** — 8 plans created across 3 waves, ready to execute
-   - Run `/gsd-execute-phase 8` to begin execution
+1. ✅ **Phase 8 complete** — Testing & CI/CD executed (8/8 plans, 3 waves)
+   - Done: Testcontainers/JaCoCo/SonarQube infra, 81 backend unit tests, 5 integration tests, 64 frontend service tests, 40 component tests, Playwright E2E golden path, GitHub Actions CI, Husky pre-commit/pre-push hooks
+2. 🎉 **Milestone v2.0 complete** — All 8 phases shipped. Project is fully functional with production-quality test coverage and CI/CD.
+3. Consider:
+   - `/gsd-code-review-fix 8` to fix code review findings
+   - `/gsd-new-milestone` to plan the next milestone
 
 ---
 
-*Milestone v2.0 — Phase 8 planned*
+*Milestone v2.0 — Complete*
