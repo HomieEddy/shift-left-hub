@@ -30,8 +30,8 @@ export class KcsDraftsPage {
   /** Approve the first draft in the queue. */
   async approveFirstDraft(): Promise<void> {
     await this.page.locator('[data-testid="approve-draft-btn"]').first().click();
-    // Wait for the confirmation modal and confirm
-    await this.page.waitForTimeout(500);
+    // Wait for the confirmation modal to appear before clicking confirm
+    await this.page.locator('[data-testid="modal-confirm-btn"]').waitFor({ state: 'visible', timeout: 5000 });
     await this.page.locator('[data-testid="modal-confirm-btn"]').click();
     await this.page.waitForLoadState('networkidle');
   }
@@ -39,8 +39,8 @@ export class KcsDraftsPage {
   /** Reject the first draft in the queue. */
   async rejectFirstDraft(): Promise<void> {
     await this.page.locator('[data-testid="reject-draft-btn"]').first().click();
-    // Wait for the confirmation modal and confirm
-    await this.page.waitForTimeout(500);
+    // Wait for the confirmation modal to appear before clicking confirm
+    await this.page.locator('[data-testid="modal-confirm-btn"]').waitFor({ state: 'visible', timeout: 5000 });
     await this.page.locator('[data-testid="modal-confirm-btn"]').click();
     await this.page.waitForLoadState('networkidle');
   }
