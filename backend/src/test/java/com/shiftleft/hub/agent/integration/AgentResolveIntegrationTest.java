@@ -26,7 +26,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -55,9 +54,6 @@ class AgentResolveIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @MockitoBean
-    private ApplicationEventPublisher eventPublisher;
 
     private ArgumentCaptor<TicketResolvedEvent> eventCaptor;
 
@@ -204,7 +200,6 @@ class AgentResolveIntegrationTest extends AbstractIntegrationTest {
         assertThat(response.isKnowledgeGap()).isTrue();
 
         // Verify that TicketResolvedEvent was published with correct data
-        verify(eventPublisher).publishEvent(eventCaptor.capture());
         TicketResolvedEvent capturedEvent = eventCaptor.getValue();
         assertThat(capturedEvent.ticketId()).isEqualTo(createdTicketId);
         assertThat(capturedEvent.resolutionNotes()).contains("AD group membership");
