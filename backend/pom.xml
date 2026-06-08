@@ -205,6 +205,7 @@
 					<consoleOutput>true</consoleOutput>
 					<includeTestSourceDirectory>false</includeTestSourceDirectory>
 					<excludes>**/generated/**/*</excludes>
+					<propertyExpansion>config_loc=${project.basedir}</propertyExpansion>
 				</configuration>
 				<executions>
 					<execution>
