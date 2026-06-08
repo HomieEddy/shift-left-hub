@@ -27,6 +27,10 @@ services:
       - "8082:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_FLYWAY_ENABLED: "false"
+      # Note: Flyway auto-configuration is not activating in this setup.
+      # Hibernate DDL update handles schema for dev. Flyway is the production strategy.
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shiftleft
       SPRING_DATASOURCE_USERNAME: shiftleft
       SPRING_DATASOURCE_PASSWORD: shiftleft

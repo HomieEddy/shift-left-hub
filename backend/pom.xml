@@ -122,12 +122,14 @@
 			<artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
 		</dependency>
 
+		<!-- spring-boot-devtools excluded — causes restart loop in Docker w/ volumes
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -240,17 +242,6 @@
 	<profiles>
 		<profile>
 			<id>docker</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<configuration>
-							<excludeDevtools>true</excludeDevtools>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 	</profiles>
 

@@ -11,7 +11,8 @@ import com.shiftleft.hub.user.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -31,9 +32,8 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Order(2)
 @Slf4j
-public class KbSeeder implements CommandLineRunner {
+public class KbSeeder {
 
     private static final String FR_BODY_SEPARATOR = "\n<!-- FR -->\n";
 
@@ -102,9 +102,13 @@ public class KbSeeder implements CommandLineRunner {
 
     private User adminUser;
 
-    @Override
+    /**
+     * Seeds KB articles from markdown files after the application is fully initialized.
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    @Order(2)
     @Transactional
-    public void run(String... args) throws Exception {
+    public void seed() {
         if (!seedEnabled) {
             log.info("KB seeding is disabled (app.kb.seed-enabled=false)");
             return;
@@ -121,68 +125,72 @@ public class KbSeeder implements CommandLineRunner {
 
         ensureTagsExist();
 
-        var resolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = resolver.getResources("classpath:data/seed/kb/*.md");
+        try {
+            var resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:data/seed/kb/*.md");
 
-        int seeded = 0;
-        int updated = 0;
-        for (Resource resource : resources) {
-            String fileName = resource.getFilename();
-            if (fileName == null) {
-                continue;
+            int seeded = 0;
+            int updated = 0;
+            for (Resource resource : resources) {
+                String fileName = resource.getFilename();
+                if (fileName == null) {
+                    continue;
+                }
+
+                var content = readFile(resource);
+                var frontmatter = parseFrontmatter(content);
+                var bilingualBody = extractBilingualBody(content);
+                var contentEn = bilingualBody.get("contentEn");
+                var contentFr = bilingualBody.get("contentFr");
+
+                String slug = frontmatter.get("slug");
+                if (slug == null || slug.isBlank()) {
+                    log.warn("Skipping {} — no slug in frontmatter", fileName);
+                    continue;
+                }
+
+                var tags = resolveTags(frontmatter.getOrDefault("tags", ""));
+
+                var existing = articleRepository.findBySlug(slug);
+                if (existing.isPresent()) {
+                    var article = existing.get();
+                    article.setTitleEn(frontmatter.get("title_en"));
+                    article.setTitleFr(frontmatter.get("title_fr"));
+                    article.setContentEn(contentEn);
+                    article.setContentFr(contentFr);
+                    article.setExcerpt(frontmatter.get("excerpt"));
+                    article.setTags(tags);
+                    articleRepository.save(article);
+                    updated++;
+                    log.info("Updated seeded KB article: {}", slug);
+                } else {
+                    var article = Article.builder()
+                        .titleEn(frontmatter.get("title_en"))
+                        .titleFr(frontmatter.get("title_fr"))
+                        .contentEn(contentEn)
+                        .contentFr(contentFr)
+                        .slug(slug)
+                        .excerpt(frontmatter.get("excerpt"))
+                        .status(ArticleStatus.PUBLISHED)
+                        .viewCount(0)
+                        .publishedAt(LocalDateTime.now())
+                        .author(adminUser)
+                        .tags(tags)
+                        .build();
+
+                    articleRepository.save(article);
+                    seeded++;
+                    log.info("Seeded KB article: {}", slug);
+                }
             }
 
-            var content = readFile(resource);
-            var frontmatter = parseFrontmatter(content);
-            var bilingualBody = extractBilingualBody(content);
-            var contentEn = bilingualBody.get("contentEn");
-            var contentFr = bilingualBody.get("contentFr");
-
-            String slug = frontmatter.get("slug");
-            if (slug == null || slug.isBlank()) {
-                log.warn("Skipping {} — no slug in frontmatter", fileName);
-                continue;
-            }
-
-            var tags = resolveTags(frontmatter.getOrDefault("tags", ""));
-
-            var existing = articleRepository.findBySlug(slug);
-            if (existing.isPresent()) {
-                var article = existing.get();
-                article.setTitleEn(frontmatter.get("title_en"));
-                article.setTitleFr(frontmatter.get("title_fr"));
-                article.setContentEn(contentEn);
-                article.setContentFr(contentFr);
-                article.setExcerpt(frontmatter.get("excerpt"));
-                article.setTags(tags);
-                articleRepository.save(article);
-                updated++;
-                log.info("Updated seeded KB article: {}", slug);
+            if (seeded > 0 || updated > 0) {
+                log.info("KB seeding complete — {} inserted, {} updated", seeded, updated);
             } else {
-                var article = Article.builder()
-                    .titleEn(frontmatter.get("title_en"))
-                    .titleFr(frontmatter.get("title_fr"))
-                    .contentEn(contentEn)
-                    .contentFr(contentFr)
-                    .slug(slug)
-                    .excerpt(frontmatter.get("excerpt"))
-                    .status(ArticleStatus.PUBLISHED)
-                    .viewCount(0)
-                    .publishedAt(LocalDateTime.now())
-                    .author(adminUser)
-                    .tags(tags)
-                    .build();
-
-                articleRepository.save(article);
-                seeded++;
-                log.info("Seeded KB article: {}", slug);
+                log.info("KB seeding skipped — no changes detected");
             }
-        }
-
-        if (seeded > 0 || updated > 0) {
-            log.info("KB seeding complete — {} inserted, {} updated", seeded, updated);
-        } else {
-            log.info("KB seeding skipped — no changes detected");
+        } catch (Exception e) {
+            log.error("Failed to seed KB articles", e);
         }
     }
 
