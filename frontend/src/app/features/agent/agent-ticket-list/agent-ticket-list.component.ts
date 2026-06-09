@@ -131,7 +131,7 @@ export class AgentTicketListComponent implements OnInit {
       next: () => { void this.router.navigate(['/agent/tickets', id]); },
       error: () => {
         console.error('Failed to claim ticket');
-        this.claimError.set('Failed to claim ticket. Please try again.');
+        this.claimError.set($localize`:@@agent.claim.error.detail:Failed to claim ticket. Please try again.`);
       },
     });
   }

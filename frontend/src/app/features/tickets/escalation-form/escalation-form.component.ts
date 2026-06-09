@@ -2,6 +2,7 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { $localize } from '@angular/localize/init';
 import { TicketService } from '../ticket.service';
 import { EscalationPayload } from '../ticket.model';
 
@@ -26,16 +27,16 @@ export class EscalationFormComponent {
   errorMessage = signal<string | null>(null);
 
   categories = [
-    { value: 'NETWORK', label: 'Network' },
-    { value: 'HARDWARE', label: 'Hardware' },
-    { value: 'SOFTWARE', label: 'Software' },
-    { value: 'ACCESS', label: 'Access' },
-    { value: 'PERIPHERALS', label: 'Peripherals' },
+    { value: 'NETWORK', label: $localize`:@@tickets.category.network:Network` },
+    { value: 'HARDWARE', label: $localize`:@@tickets.category.hardware:Hardware` },
+    { value: 'SOFTWARE', label: $localize`:@@tickets.category.software:Software` },
+    { value: 'ACCESS', label: $localize`:@@tickets.category.access:Access` },
+    { value: 'PERIPHERALS', label: $localize`:@@tickets.category.peripherals:Peripherals` },
   ];
   urgencies = [
-    { value: 'LOW', label: 'Low' },
-    { value: 'MEDIUM', label: 'Medium' },
-    { value: 'HIGH', label: 'High' },
+    { value: 'LOW', label: $localize`:@@agent.urgency.low:Low` },
+    { value: 'MEDIUM', label: $localize`:@@agent.urgency.medium:Medium` },
+    { value: 'HIGH', label: $localize`:@@agent.urgency.high:High` },
   ];
 
   submit(): void {
@@ -68,7 +69,7 @@ export class EscalationFormComponent {
       },
       error: () => {
         this.isSubmitting.set(false);
-        this.errorMessage.set('Failed to create ticket. Please try again.');
+        this.errorMessage.set($localize`:@@escalation.error.create:Failed to create ticket. Please try again.`);
       },
     });
   }

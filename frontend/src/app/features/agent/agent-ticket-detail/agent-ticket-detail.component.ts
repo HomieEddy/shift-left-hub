@@ -76,7 +76,7 @@ export class AgentTicketDetailComponent implements OnInit {
       next: (notes) => this.workNotes.set(notes),
       error: (err) => {
         console.error('Failed to load work notes:', err);
-        this.noteError.set('Failed to load work notes.');
+        this.noteError.set($localize`:@@agent.detail.loadNotesError:Failed to load work notes.`);
       },
     });
   }
@@ -98,7 +98,7 @@ export class AgentTicketDetailComponent implements OnInit {
       error: () => {
         this.isSubmittingNote.set(false);
         console.error('Failed to add work note');
-        this.workNoteError.set('Failed to add work note. Please try again.');
+        this.workNoteError.set($localize`:@@agent.detail.addNoteError.detail:Failed to add work note. Please try again.`);
       },
     });
   }
@@ -117,7 +117,7 @@ export class AgentTicketDetailComponent implements OnInit {
       error: () => {
         this.isClaiming.set(false);
         console.error('Failed to claim ticket');
-        this.claimError.set('Failed to claim ticket. Please try again.');
+        this.claimError.set($localize`:@@agent.detail.claimError.detail:Failed to claim ticket. Please try again.`);
       },
     });
   }
@@ -146,7 +146,7 @@ export class AgentTicketDetailComponent implements OnInit {
       error: () => {
         this.isResolving.set(false);
         console.error('Failed to resolve ticket');
-        this.resolveError.set('Failed to resolve ticket. Please try again.');
+        this.resolveError.set($localize`:@@agent.detail.resolveError.detail:Failed to resolve ticket. Please try again.`);
       },
     });
   }
