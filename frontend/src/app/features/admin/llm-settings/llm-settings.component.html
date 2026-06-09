@@ -1,78 +1,78 @@
 <div class="max-w-2xl mx-auto py-8 px-4">
   @if (config) {
     <div class="space-y-6">
-      <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-        <h1 class="text-xl font-semibold text-slate-800 mb-6">LLM Provider Settings</h1>
+      <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
+        <h1 class="text-xl font-semibold text-text-primary mb-6">LLM Provider Settings</h1>
 
         <div class="space-y-4">
           <div>
-            <label for="provider" class="block text-sm font-medium text-slate-700 mb-1">Provider</label>
+            <label for="provider" class="block text-sm font-medium text-text-secondary mb-1">Provider</label>
             <select
               id="provider"
               [(ngModel)]="config.llmProvider"
               (change)="onProviderChange()"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 bg-white"
+              class="w-full rounded-xl border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               @for (p of providers; track p.value) {
-                <option [value]="p.value" class="text-slate-800">{{ p.label }}</option>
+                <option [value]="p.value" class="text-text-primary">{{ p.label }}</option>
               }
             </select>
           </div>
 
           @if (config.llmProvider === 'OLLAMA') {
             <div>
-              <label for="ollamaEndpoint" class="block text-sm font-medium text-slate-700 mb-1">Ollama Endpoint URL</label>
+              <label for="ollamaEndpoint" class="block text-sm font-medium text-text-secondary mb-1">Ollama Endpoint URL</label>
               <input
                 id="ollamaEndpoint"
                 [(ngModel)]="config.ollamaEndpointUrl"
                 placeholder="http://host.docker.internal:11434"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
           }
 
           @if (config.llmProvider === 'OPENAI') {
             <div>
-              <label for="openaiKey" class="block text-sm font-medium text-slate-700 mb-1">OpenAI API Key</label>
+              <label for="openaiKey" class="block text-sm font-medium text-text-secondary mb-1">OpenAI API Key</label>
               <input
                 id="openaiKey"
                 [(ngModel)]="openaiApiKey"
                 type="password"
                 placeholder="sk-..."
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               @if (config.hasOpenaiKey) {
-                <p class="text-xs text-slate-500 mt-1">A key is currently stored. Enter a new key to replace it.</p>
+                <p class="text-xs text-text-tertiary mt-1">A key is currently stored. Enter a new key to replace it.</p>
               }
             </div>
           }
         </div>
 
         <div class="mt-6 space-y-4">
-          <h2 class="text-sm font-semibold text-slate-700">Model Configuration</h2>
+          <h2 class="text-sm font-semibold text-text-secondary">Model Configuration</h2>
 
           <div>
-            <label for="chatModel" class="block text-sm font-medium text-slate-700 mb-1">Chat Model</label>
+            <label for="chatModel" class="block text-sm font-medium text-text-secondary mb-1">Chat Model</label>
             <input
               id="chatModel"
               [(ngModel)]="config.chatModelName"
               placeholder="llama3.2"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label for="embeddingModel" class="block text-sm font-medium text-slate-700 mb-1">Embedding Model</label>
+            <label for="embeddingModel" class="block text-sm font-medium text-text-secondary mb-1">Embedding Model</label>
             <input
               id="embeddingModel"
               [(ngModel)]="config.embeddingModelName"
               placeholder="nomic-embed-text"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label for="similarityThreshold" class="block text-sm font-medium text-slate-700 mb-1">Similarity Threshold</label>
+            <label for="similarityThreshold" class="block text-sm font-medium text-text-secondary mb-1">Similarity Threshold</label>
             <input
               id="similarityThreshold"
               [(ngModel)]="config.similarityThreshold"
@@ -80,17 +80,17 @@
               step="0.05"
               min="0"
               max="1"
-              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label for="embeddingDimension" class="block text-sm font-medium text-slate-700 mb-1">Embedding Dimension</label>
+            <label for="embeddingDimension" class="block text-sm font-medium text-text-secondary mb-1">Embedding Dimension</label>
             <input
               id="embeddingDimension"
               [value]="config.embeddingDimension"
               disabled
-              class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm bg-slate-50 text-slate-500"
+              class="w-full rounded-xl border border-border-default px-3 py-2 text-sm bg-surface-secondary text-text-tertiary"
             />
           </div>
         </div>
@@ -99,45 +99,45 @@
           <button
             (click)="save()"
             [disabled]="isSaving"
-            class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
+            class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
           >
             {{ isSaving ? 'Saving...' : 'Save Settings' }}
           </button>
           <button
             (click)="testConnection()"
             [disabled]="isTesting"
-            class="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            class="rounded-lg border border-border-default px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
           >
             {{ isTesting ? 'Testing...' : 'Test Connection' }}
           </button>
         </div>
 
         @if (saveMessage) {
-          <div class="mt-3 bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm">
+          <div class="mt-3 bg-accent-success-muted border border-accent-success text-accent-success rounded-lg p-3 text-sm">
             {{ saveMessage }}
           </div>
         }
 
         @if (testResult) {
           <div class="mt-3 border rounded-lg p-3 text-sm"
-               [class.bg-green-50]="testResult.success"
-               [class.border-green-200]="testResult.success"
-               [class.text-green-700]="testResult.success"
-               [class.bg-red-50]="!testResult.success"
-               [class.border-red-200]="!testResult.success"
-               [class.text-red-700]="!testResult.success">
+               [class.bg-accent-success-muted]="testResult.success"
+               [class.border-accent-success]="testResult.success"
+               [class.text-accent-success]="testResult.success"
+               [class.bg-accent-danger-muted]="!testResult.success"
+               [class.border-accent-danger]="!testResult.success"
+               [class.text-accent-danger]="!testResult.success">
             {{ testResult.message }}
           </div>
         }
       </div>
 
-      <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-        <h2 class="text-sm font-semibold text-slate-700 mb-3">Re-Embed Articles</h2>
-        <p class="text-amber-600 text-xs mb-3">This may take a while for large knowledge bases</p>
+      <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
+        <h2 class="text-sm font-semibold text-text-secondary mb-3">Re-Embed Articles</h2>
+        <p class="text-accent-warning text-xs mb-3">This may take a while for large knowledge bases</p>
         <button
           (click)="reindex()"
           [disabled]="isReindexing"
-          class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
+          class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
         >
           {{ isReindexing ? 'Re-Embedding...' : 'Re-Embed All Articles' }}
         </button>
