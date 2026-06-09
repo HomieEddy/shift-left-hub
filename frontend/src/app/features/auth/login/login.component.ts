@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { $localize } from '@angular/localize/init';
 import { AuthService } from '../../../core/auth/auth.service';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -33,9 +34,9 @@ export class LoginComponent {
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         if (err.status === 401) {
-          this.errorMessage = 'Invalid email or password.';
+          this.errorMessage = $localize`:@@error.invalid-credentials:Invalid email or password.`;
         } else {
-          this.errorMessage = 'Login failed. Please try again.';
+          this.errorMessage = $localize`:@@error.login-failed:Login failed. Please try again.`;
         }
       },
       complete: () => {
