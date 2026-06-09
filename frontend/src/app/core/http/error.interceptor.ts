@@ -19,7 +19,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       } else if (error.status === 403) {
         message = $localize`:@@http.error.forbidden:You do not have permission to perform this action.`;
       } else if (error.status >= 400 && error.status < 500) {
-        if (req.url.includes('/api/auth/refresh')) {
+        if (req.url.includes('/auth/refresh') || (error.url?.includes('/auth/refresh') ?? false)) {
           return throwError(() => error);
         }
         const body = error.error as { message?: string; error?: string } | null;
