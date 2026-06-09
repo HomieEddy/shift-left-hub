@@ -1,6 +1,7 @@
 import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { MarkdownModule } from 'ngx-markdown';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { $localize } from '@angular/localize/init';
 import { TicketService } from '../ticket.service';
@@ -10,7 +11,7 @@ import { statusBadgeClass } from '../../../shared/ui/badge/badge-utils';
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, MarkdownModule],
   templateUrl: './ticket-detail.component.html',
 })
 export class TicketDetailComponent implements OnInit {

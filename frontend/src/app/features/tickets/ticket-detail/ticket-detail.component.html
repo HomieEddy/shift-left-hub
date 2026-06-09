@@ -67,7 +67,7 @@
                     [class.border-border-default]="msg.role !== 'user'"
                     [class.text-text-primary]="true"
                     [class.text-text-secondary]="msg.role !== 'user'">
-                    {{ msg.content }}
+                    <markdown class="markdown-content" [data]="msg.content"></markdown>
                   </div>
                 </div>
               }
