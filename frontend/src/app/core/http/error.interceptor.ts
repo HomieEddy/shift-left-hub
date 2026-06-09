@@ -3,9 +3,11 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { $localize } from '@angular/localize/init';
 import { catchError, throwError } from 'rxjs';
+import { ToastService } from '../../shared/ui/toast/toast.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const toastService = inject(ToastService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -23,7 +25,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         message = $localize`:@@http.error.serverError:Server error. Please try again later.`;
       }
 
-      // TODO: Replace with shared notification service (toast/snackbar) — planned for post-v1.0
+      toastService.error(message);
       console.error(`[HTTP Error ${error.status}]:`, message);
 
       return throwError(() => error);
