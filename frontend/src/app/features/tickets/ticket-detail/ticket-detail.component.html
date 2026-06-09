@@ -50,7 +50,7 @@
             class="text-sm font-semibold text-text-primary flex items-center gap-1 hover:text-text-secondary transition-colors"
           >
             <span [class.rotate-90]="showTranscript()" class="transition-transform inline-block">&rarr;</span>
-            <span>{{ translationService.translate('tickets.transcript') }}</span>
+            <span i18n="@@tickets.transcript">AI Chat Transcript</span>
           </button>
           @if (showTranscript()) {
             <div class="mt-2 bg-surface-secondary rounded-lg max-h-72 overflow-y-auto space-y-2 p-3">
@@ -89,7 +89,7 @@
               class="text-sm font-semibold text-text-primary flex items-center gap-1 hover:text-text-secondary transition-colors"
             >
               <span [class.rotate-90]="showSources()" class="transition-transform inline-block">&rarr;</span>
-              <span>{{ translationService.translate('tickets.sources') }}</span>
+              <span i18n="@@tickets.sources">Knowledge Base Sources ({{ kbSources().length }})</span>
             </button>
             @if (showSources()) {
               <div class="mt-2 space-y-1">
@@ -108,22 +108,22 @@
           <p><span i18n="@@tickets.created">Created:</span> {{ t.createdAt | date:'medium' }}</p>
           @if (t.updatedAt !== t.createdAt) {
             <p>
-              <span>{{ translationService.translate('tickets.updated') }}</span> {{ t.updatedAt | date:'medium' }}
+              <span i18n="@@tickets.updated">Updated:</span> {{ t.updatedAt | date:'medium' }}
             </p>
           }
           @if (t.resolvedAt) {
             <p>
-              <span>{{ translationService.translate('tickets.resolved') }}</span> {{ t.resolvedAt | date:'medium' }}
+              <span i18n="@@tickets.resolved">Resolved:</span> {{ t.resolvedAt | date:'medium' }}
             </p>
           }
           @if (t.cancelledAt) {
             <p>
-              <span>{{ translationService.translate('tickets.cancelled') }}</span> {{ t.cancelledAt | date:'medium' }}
+              <span i18n="@@tickets.cancelled">Cancelled:</span> {{ t.cancelledAt | date:'medium' }}
             </p>
           }
           @if (t.cancelReason) {
             <p>
-              <span>{{ translationService.translate('tickets.cancelReason') }}</span> {{ t.cancelReason }}
+              <span i18n="@@tickets.cancelReason">Reason:</span> {{ t.cancelReason }}
             </p>
           }
         </div>
@@ -136,7 +136,7 @@
                 class="rounded-lg border border-red-300 px-4 py-2 text-sm text-accent-danger hover:bg-accent-danger-muted transition-colors"
                 i18n="@@tickets.cancel.button"
               >
-                {{ translationService.translate('tickets.cancel.button') }}
+                Cancel Ticket
               </button>
             } @else {
               <div class="flex items-center gap-2">
@@ -146,14 +146,14 @@
                   class="rounded-lg bg-accent-danger-muted border border-red-200 px-3 py-1.5 text-xs text-accent-danger hover:bg-red-100 transition-colors"
                   i18n="@@tickets.cancel.yes"
                 >
-                  {{ translationService.translate('tickets.cancel.yes') }}
+                  Yes
                 </button>
                 <button
                   (click)="showCancelConfirm.set(false)"
                   class="rounded-lg border border-border-default px-3 py-1.5 text-xs text-text-secondary hover:bg-surface-secondary transition-colors"
                   i18n="@@tickets.cancel.no"
                 >
-                  {{ translationService.translate('tickets.cancel.no') }}
+                  No
                 </button>
               </div>
             }

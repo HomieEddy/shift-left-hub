@@ -45,19 +45,19 @@
               class="text-left px-4 py-3 font-medium text-text-secondary"
               i18n="@@kcs.drafts.col.title"
             >
-              {{ translationService.translate('kcs.drafts.col.title') }}
+              Title
             </th>
             <th
               class="text-left px-4 py-3 font-medium text-text-secondary"
               i18n="@@kcs.drafts.col.ticket"
             >
-              {{ translationService.translate('kcs.drafts.col.ticket') }}
+              Source Ticket
             </th>
             <th
               class="text-left px-4 py-3 font-medium text-text-secondary"
               i18n="@@kcs.drafts.col.status"
             >
-              {{ translationService.translate('kcs.drafts.col.status') }}
+              Status
             </th>
             <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@kcs.drafts.col.date">
               Created
@@ -66,7 +66,7 @@
               class="text-left px-4 py-3 font-medium text-text-secondary"
               i18n="@@kcs.drafts.col.actions"
             >
-              {{ translationService.translate('kcs.drafts.col.actions') }}
+              Actions
             </th>
           </tr>
         </thead>
@@ -120,7 +120,7 @@
                     class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium"
                     i18n="@@kcs.drafts.edit"
                   >
-                    {{ translationService.translate('kcs.drafts.edit') }}
+                    Edit
                   </a>
 
                   <!-- Approve button (visible for DRAFT only) -->
@@ -132,7 +132,7 @@
                       class="text-xs px-2 py-1 rounded border border-accent-success text-accent-success hover:bg-accent-success-muted disabled:opacity-50 font-medium"
                       i18n="@@kcs.drafts.approve"
                     >
-                      {{ translationService.translate('kcs.drafts.approve') }}
+                      Approve
                     </button>
                   }
 
@@ -145,7 +145,7 @@
                       class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted disabled:opacity-50 font-medium"
                       i18n="@@kcs.drafts.reject"
                     >
-                      {{ translationService.translate('kcs.drafts.reject') }}
+                      Reject
                     </button>
                   }
                 </div>
@@ -161,10 +161,14 @@
   <app-modal [open]="confirmModalOpen()" [title]="confirmActionTitle" (close)="cancelAction()">
     <p class="text-sm text-text-secondary mb-6">
       @if (pendingAction()?.type === 'approve') {
-        <ng-container>{{ translationService.translate('kcs.drafts.confirm.approve') }}</ng-container>
+        <ng-container i18n="@@kcs.drafts.confirm.approve">
+          Approve this draft? It will be published immediately.
+        </ng-container>
       }
       @if (pendingAction()?.type === 'reject') {
-        <ng-container>{{ translationService.translate('kcs.drafts.confirm.reject') }}</ng-container>
+        <ng-container i18n="@@kcs.drafts.confirm.reject">
+          Reject this draft? It will be archived.
+        </ng-container>
       }
     </p>
     <div class="flex justify-end gap-3">
@@ -173,7 +177,7 @@
         class="px-4 py-2 text-sm rounded-lg border border-border-default text-text-secondary hover:bg-surface-secondary font-medium"
         i18n="@@kcs.drafts.confirm.cancel"
       >
-        {{ translationService.translate('kcs.drafts.confirm.cancel') }}
+        Cancel
       </button>
       <button
         (click)="executePendingAction()"
@@ -185,7 +189,7 @@
         class="px-4 py-2 text-sm rounded-lg text-white font-medium"
         i18n="@@kcs.drafts.confirm.confirm"
       >
-        {{ translationService.translate('kcs.drafts.confirm.confirm') }}
+        Confirm
       </button>
     </div>
   </app-modal>
@@ -199,7 +203,7 @@
         class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium"
         i18n="@@pagination.previous"
       >
-        {{ translationService.translate('pagination.previous') }}
+        Previous
       </button>
       <span class="text-sm text-text-secondary" i18n="@@kcs.drafts.pageIndicator"
         >Page {{ displayPage() }} of {{ totalPages() }}</span
@@ -210,7 +214,7 @@
         class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium"
         i18n="@@pagination.next"
       >
-        {{ translationService.translate('pagination.next') }}
+        Next
       </button>
     </div>
   }

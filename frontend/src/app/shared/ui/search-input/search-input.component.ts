@@ -2,7 +2,6 @@ import { Component, DestroyRef, inject, input, output, signal } from '@angular/c
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-search-input',
@@ -42,7 +41,6 @@ import { TranslationService } from '../../../core/i18n/translation.service';
   `,
 })
 export class SearchInputComponent {
-  protected translationService = inject(TranslationService);
   placeholder = input('Search...');
   debounceMs = input(300);
   query = input('');

@@ -24,7 +24,7 @@
           [class.text-text-secondary]="activeFilter() !== filter"
           [class.hover:bg-surface-secondary]="activeFilter() !== filter"
         >
-          {{ filter === 'ALL' ? allLabel : statusLabel(filter) }}
+          {{ filter === 'ALL' ? allLabel : statusLabels[filter] }}
         </button>
       }
     </div>

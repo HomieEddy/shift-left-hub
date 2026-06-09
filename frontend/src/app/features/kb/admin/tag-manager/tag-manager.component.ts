@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize/init';
 import { TagService } from '../../services/tag.service';
 import { TagDto } from '../../models/tag.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -42,7 +43,7 @@ export class TagManagerComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set(this.translationService.translate('kb.tags.error.load'));
+        this.errorMessage.set($localize`:@@kb.tags.error.load:Failed to load tags.`);
         this.isLoading.set(false);
       },
     });
@@ -98,9 +99,9 @@ export class TagManagerComponent implements OnInit {
 
   deleteTag(id: string, nameEn: string): void {
     this.confirmationDialog.confirm({
-      title: this.translationService.translate('confirm.title.delete'),
-      message: `Delete tag "${nameEn}"?`,
-      confirmLabel: this.translationService.translate('confirm.label.delete'),
+      title: $localize`:@@confirm.title.delete:Delete Confirmation`,
+      message: $localize`:@@confirm.message.delete-tag:Delete tag "${nameEn}"?`,
+      confirmLabel: $localize`:@@confirm.label.delete:Delete`,
     }).subscribe((confirmed) => {
       if (confirmed === true) {
         this.tagService.deleteTag(id).pipe(
@@ -114,7 +115,7 @@ export class TagManagerComponent implements OnInit {
             const detail = serverError !== null && typeof serverError === 'object'
               ? (serverError as Record<string, unknown>)['error']
               : undefined;
-            this.errorMessage.set(typeof detail === 'string' ? detail : this.translationService.translate('kb.tags.error.delete'));
+            this.errorMessage.set(typeof detail === 'string' ? detail : $localize`:@@kb.tags.error.delete:This tag is in use and cannot be deleted.`);
           },
         });
       }

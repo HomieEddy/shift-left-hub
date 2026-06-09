@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { TranslationService } from '../../../core/i18n/translation.service';
 import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
 
 @Component({
@@ -12,7 +11,6 @@ import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
 })
 export class LlmSettingsComponent implements OnInit {
   private settingsService = inject(LlmSettingsService);
-  protected translationService = inject(TranslationService);
 
   config: AiConfigResponse | null = null;
   openaiApiKey = '';
@@ -22,12 +20,10 @@ export class LlmSettingsComponent implements OnInit {
   isSaving = false;
   saveMessage = '';
 
-  get providers() {
-    return [
-      { value: 'OLLAMA', label: this.translationService.translate('admin.settings.llm.provider.ollama') },
-      { value: 'OPENAI', label: this.translationService.translate('admin.settings.llm.provider.openai') },
-    ];
-  }
+  providers = [
+    { value: 'OLLAMA', label: 'Ollama' },
+    { value: 'OPENAI', label: 'OpenAI' },
+  ];
   modelExamples = ['llama3.2:3b', 'llama3.1:8b', 'mistral', 'mixtral'];
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
 
@@ -54,13 +50,6 @@ export class LlmSettingsComponent implements OnInit {
     });
   }
 
-  get saveLabel(): string { return this.translationService.translate('admin.settings.llm.save'); }
-  get savingLabel(): string { return this.translationService.translate('admin.settings.llm.saving'); }
-  get testLabel(): string { return this.translationService.translate('admin.settings.llm.test'); }
-  get testingLabel(): string { return this.translationService.translate('admin.settings.llm.testing'); }
-  get reindexLabel(): string { return this.translationService.translate('admin.settings.llm.reindex'); }
-  get reindexingLabel(): string { return this.translationService.translate('admin.settings.llm.reindexing'); }
-
   onProviderChange(): void {
     if (this.config == null) return;
     this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
@@ -84,9 +73,9 @@ export class LlmSettingsComponent implements OnInit {
     })).then(config => {
       this.config = config;
       this.openaiApiKey = '';
-      this.saveMessage = this.translationService.translate('admin.settings.llm.saved');
+      this.saveMessage = 'Settings saved';
     }).catch(() => {
-      this.saveMessage = this.translationService.translate('admin.settings.llm.save-error');
+      this.saveMessage = 'Failed to save settings';
     }).finally(() => {
       this.isSaving = false;
     });
@@ -105,7 +94,7 @@ export class LlmSettingsComponent implements OnInit {
     })).then(result => {
       this.testResult = result;
     }).catch(() => {
-      this.testResult = { success: false, message: this.translationService.translate('admin.settings.llm.test-failure') };
+      this.testResult = { success: false, message: 'Connection test failed' };
     }).finally(() => {
       this.isTesting = false;
     });
@@ -116,7 +105,7 @@ export class LlmSettingsComponent implements OnInit {
     firstValueFrom(this.settingsService.reindexEmbeddings()).then(result => {
       this.saveMessage = result.message;
     }).catch(() => {
-      this.saveMessage = this.translationService.translate('admin.settings.llm.reindex-error');
+      this.saveMessage = 'Failed to start re-embedding';
     }).finally(() => {
       this.isReindexing = false;
     });

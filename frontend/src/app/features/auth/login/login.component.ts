@@ -34,9 +34,9 @@ export class LoginComponent {
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         if (err.status === 401) {
-          this.errorMessage = this.translationService.translate('error.invalid-credentials');
+          this.errorMessage = 'Invalid email or password.';
         } else {
-          this.errorMessage = this.translationService.translate('error.login-failed');
+          this.errorMessage = 'Login failed. Please try again.';
         }
       },
       complete: () => {

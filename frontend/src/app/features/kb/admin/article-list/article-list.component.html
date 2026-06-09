@@ -6,7 +6,7 @@
       class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
       i18n="@@admin.articles.new"
     >
-      {{ translationService.translate('admin.articles.new') }}
+      New Article
     </a>
   </div>
 
@@ -104,7 +104,7 @@
         class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
         i18n="@@pagination.previous"
       >
-        {{ translationService.translate('pagination.previous') }}
+        Previous
       </button>
       <span class="text-sm text-text-secondary">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
       <button
@@ -113,7 +113,7 @@
         class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
         i18n="@@pagination.next"
       >
-        {{ translationService.translate('pagination.next') }}
+        Next
       </button>
     </div>
   }

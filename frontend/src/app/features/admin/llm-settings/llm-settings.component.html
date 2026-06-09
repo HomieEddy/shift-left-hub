@@ -101,14 +101,14 @@
             [disabled]="isSaving"
             class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
           >
-            {{ isSaving ? savingLabel : saveLabel }}
+            {{ isSaving ? 'Saving...' : 'Save Settings' }}
           </button>
           <button
             (click)="testConnection()"
             [disabled]="isTesting"
             class="rounded-lg border border-border-default px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
           >
-            {{ isTesting ? testingLabel : testLabel }}
+            {{ isTesting ? 'Testing...' : 'Test Connection' }}
           </button>
         </div>
 
@@ -139,7 +139,7 @@
           [disabled]="isReindexing"
           class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
         >
-          {{ isReindexing ? reindexingLabel : reindexLabel }}
+          {{ isReindexing ? 'Re-Embedding...' : 'Re-Embed All Articles' }}
         </button>
       </div>
     </div>

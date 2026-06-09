@@ -48,8 +48,6 @@ import { Component, computed, input, output } from '@angular/core';
   `,
 })
 export class PaginationComponent {
-  protected translationService = inject(TranslationService);
-
   currentPage = input(0);
   totalPages = input(0);
   pageChange = output<number>();

@@ -17,25 +17,6 @@
         <div class="mt-4 mb-1 px-2">
           <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.self-service">Self&#8209;Service</span>
         </div>
-        <nav class="p-4 flex flex-col gap-1 overflow-y-auto">
-          <a (click)="isMobileMenuOpen.set(false)" routerLink="/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
-            <svg lucideLayoutDashboard size="18"></svg>
-            <span>{{ translationService.translate('nav.home') }}</span>
-           </a>
-           @if (authService.isAuthenticated()) {
-            <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4">{{ translationService.translate('nav.section.user') }}</div>
-            <a (click)="isMobileMenuOpen.set(false)" routerLink="/articles" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
-              <svg lucideBookOpen size="18"></svg>
-              <span>{{ translationService.translate('nav.knowledge-base') }}</span>
-            </a>
-            <a (click)="isMobileMenuOpen.set(false)" routerLink="/chat" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
-              <svg lucideMessageSquare size="18"></svg>
-              <span>{{ translationService.translate('nav.ai-assistant') }}</span>
-            </a>
-            <a (click)="isMobileMenuOpen.set(false)" routerLink="/tickets" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
-              <svg lucideTicket size="18"></svg>
-              <span>{{ translationService.translate('nav.my-tickets') }}</span>
-            </a>
 
         <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link">
           <span class="sidebar-icon"><lucide-book-open /></span>

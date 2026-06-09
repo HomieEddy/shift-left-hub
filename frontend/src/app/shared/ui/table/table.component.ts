@@ -1,5 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
-import { TranslationService } from '../../../core/i18n/translation.service';
+import { Component, input, output } from '@angular/core';
 
 export interface Column {
   key: string;
@@ -58,10 +57,8 @@ export interface Column {
   `,
 })
 export class TableComponent {
-  private translationService = inject(TranslationService);
-
   columns = input<Column[]>([]);
-  emptyText = input(this.translationService.translate('shared.table.empty'));
+  emptyText = input('No data found.');
   empty = input(false);
   sortKey = input<string>('');
   sortDir = input<'asc' | 'desc'>('asc');

@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgClass, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { $localize } from '@angular/localize/init';
 import { ArticleService } from '../../services/article.service';
 import { ArticleDto, ArticleStatus } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -42,7 +43,7 @@ export class ArticleListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set(this.translationService.translate('kb.articles.error.load'));
+        this.errorMessage.set($localize`:@@kb.articles.error.load:Failed to load articles.`);
         this.isLoading.set(false);
       },
     });
@@ -53,7 +54,7 @@ export class ArticleListComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => this.loadArticles(),
-      error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.publish')),
+      error: () => this.errorMessage.set($localize`:@@kb.articles.error.publish:Failed to publish article.`),
     });
   }
 
@@ -62,22 +63,22 @@ export class ArticleListComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => this.loadArticles(),
-      error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.archive')),
+      error: () => this.errorMessage.set($localize`:@@kb.articles.error.archive:Failed to archive article.`),
     });
   }
 
   deleteArticle(id: string): void {
     this.confirmationDialog.confirm({
-      title: this.translationService.translate('confirm.title.delete'),
-      message: this.translationService.translate('confirm.message.delete-article'),
-      confirmLabel: this.translationService.translate('confirm.label.delete'),
+      title: $localize`:@@confirm.title.delete:Delete Confirmation`,
+      message: $localize`:@@confirm.message.delete-article:Delete this article? This action cannot be undone.`,
+      confirmLabel: $localize`:@@confirm.label.delete:Delete`,
     }).subscribe((confirmed) => {
       if (confirmed) {
         this.articleService.deleteArticle(id).pipe(
           takeUntilDestroyed(this.destroyRef)
         ).subscribe({
           next: () => this.loadArticles(),
-          error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.delete')),
+          error: () => this.errorMessage.set($localize`:@@kb.articles.error.delete:Failed to delete article.`),
         });
       }
     });

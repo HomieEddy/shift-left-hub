@@ -1,7 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslationService } from '../i18n/translation.service';
+import { $localize } from '@angular/localize/init';
 import { catchError, throwError } from 'rxjs';
 import { ToastService } from '../../shared/ui/toast/toast.service';
 
@@ -11,18 +11,18 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let message = translationService.translate('http.error.unexpected');
+      let message = $localize`:@@http.error.unexpected:An unexpected error occurred`;
 
       if (error.status === 401) {
-        message = translationService.translate('http.error.sessionExpired');
+        message = $localize`:@@http.error.sessionExpired:Your session has expired. Please log in again.`;
         void router.navigate(['/login']);
       } else if (error.status === 403) {
-        message = translationService.translate('http.error.forbidden');
+        message = $localize`:@@http.error.forbidden:You do not have permission to perform this action.`;
       } else if (error.status >= 400 && error.status < 500) {
         const body = error.error as { message?: string; error?: string } | null;
-        message = body?.message ?? body?.error ?? translationService.translate('http.error.invalidRequest');
+        message = body?.message ?? body?.error ?? $localize`:@@http.error.invalidRequest:Invalid request`;
       } else if (error.status >= 500) {
-        message = translationService.translate('http.error.serverError');
+        message = $localize`:@@http.error.serverError:Server error. Please try again later.`;
       }
 
       toastService.error(message);

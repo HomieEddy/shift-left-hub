@@ -4,8 +4,8 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { $localize } from '@angular/localize/init';
 import { AgentTicketService } from '../agent-ticket.service';
-import { TranslationService } from '../../../core/i18n/translation.service';
 import { AgentTicket } from '../agent-ticket.model';
 import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
 
@@ -23,7 +23,6 @@ export class AgentTicketListComponent implements OnInit {
   private agentTicketService = inject(AgentTicketService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
-  protected translationService = inject(TranslationService);
 
   tickets = signal<AgentTicket[]>([]);
   filteredTickets = signal<AgentTicket[]>([]);
@@ -137,7 +136,7 @@ export class AgentTicketListComponent implements OnInit {
       next: () => { void this.router.navigate(['/agent/tickets', id]); },
       error: () => {
         console.error('Failed to claim ticket');
-        this.claimError.set(this.translationService.translate('agent.claim.error.detail'));
+        this.claimError.set('Failed to claim ticket. Please try again.');
       },
     });
   }
@@ -148,22 +147,18 @@ export class AgentTicketListComponent implements OnInit {
     this.claimingTicketId.set(null);
   }
 
-  get statusLabels(): Record<string, string> {
-    return {
-      'NEW': this.translationService.translate('tickets.status.new'),
-      'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
-      'RESOLVED': this.translationService.translate('tickets.status.resolved'),
-      'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
-    };
-  }
+  statusLabels: Record<string, string> = {
+    'NEW': $localize`:@@tickets.status.new:New`,
+    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
+    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
+    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
+  };
 
-  get urgencyLabels(): Record<string, string> {
-    return {
-      'LOW': this.translationService.translate('agent.urgency.low'),
-      'MEDIUM': this.translationService.translate('agent.urgency.medium'),
-      'HIGH': this.translationService.translate('agent.urgency.high'),
-    };
-  }
+  urgencyLabels: Record<string, string> = {
+    'LOW': $localize`:@@agent.urgency.low:Low`,
+    'MEDIUM': $localize`:@@agent.urgency.medium:Medium`,
+    'HIGH': $localize`:@@agent.urgency.high:High`,
+  };
 
   categoryLabels: Record<string, string> = {
     'NETWORK': $localize`:@@tickets.category.network:Network`,

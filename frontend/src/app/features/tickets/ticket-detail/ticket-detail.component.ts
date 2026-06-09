@@ -1,9 +1,8 @@
 import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
-import { MarkdownModule } from 'ngx-markdown';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslationService } from '../../../core/i18n/translation.service';
+import { $localize } from '@angular/localize/init';
 import { TicketService } from '../ticket.service';
 import { Ticket, ShiftLeftContext } from '../ticket.model';
 import { statusBadgeClass } from '../../../shared/ui/badge/badge-utils';
@@ -11,7 +10,7 @@ import { statusBadgeClass } from '../../../shared/ui/badge/badge-utils';
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
-  imports: [DatePipe, RouterLink, MarkdownModule],
+  imports: [DatePipe, RouterLink],
   templateUrl: './ticket-detail.component.html',
 })
 export class TicketDetailComponent implements OnInit {
@@ -19,7 +18,6 @@ export class TicketDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
-  protected translationService = inject(TranslationService);
 
   ticket = signal<Ticket | null>(null);
   isLoading = signal(true);
@@ -59,7 +57,7 @@ export class TicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set(this.translationService.translate('tickets.detail.error.load'));
+        this.errorMessage.set($localize`:@@tickets.detail.error.load:Failed to load ticket.`);
       },
     });
   }
@@ -73,7 +71,7 @@ export class TicketDetailComponent implements OnInit {
         void this.router.navigate(['/tickets']);
       },
       error: () => {
-        this.errorMessage.set(this.translationService.translate('tickets.detail.error.cancel'));
+        this.errorMessage.set($localize`:@@tickets.detail.error.cancel:Failed to cancel ticket.`);
       },
     });
   }

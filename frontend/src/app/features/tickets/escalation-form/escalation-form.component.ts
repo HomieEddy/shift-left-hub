@@ -2,7 +2,6 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { TranslationService } from '../../../core/i18n/translation.service';
 import { TicketService } from '../ticket.service';
 import { EscalationPayload } from '../ticket.model';
 
@@ -14,7 +13,6 @@ import { EscalationPayload } from '../ticket.model';
 })
 export class EscalationFormComponent {
   private ticketService = inject(TicketService);
-  protected translationService = inject(TranslationService);
 
   escalationPayload = input<EscalationPayload | null>(null);
   ticketCreated = output<string>();
@@ -27,23 +25,18 @@ export class EscalationFormComponent {
   successTicketNumber = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  get categories() {
-    return [
-      { value: 'NETWORK', label: this.translationService.translate('tickets.category.network') },
-      { value: 'HARDWARE', label: this.translationService.translate('tickets.category.hardware') },
-      { value: 'SOFTWARE', label: this.translationService.translate('tickets.category.software') },
-      { value: 'ACCESS', label: this.translationService.translate('tickets.category.access') },
-      { value: 'PERIPHERALS', label: this.translationService.translate('tickets.category.peripherals') },
-    ];
-  }
-
-  get urgencies() {
-    return [
-      { value: 'LOW', label: this.translationService.translate('agent.urgency.low') },
-      { value: 'MEDIUM', label: this.translationService.translate('agent.urgency.medium') },
-      { value: 'HIGH', label: this.translationService.translate('agent.urgency.high') },
-    ];
-  }
+  categories = [
+    { value: 'NETWORK', label: 'Network' },
+    { value: 'HARDWARE', label: 'Hardware' },
+    { value: 'SOFTWARE', label: 'Software' },
+    { value: 'ACCESS', label: 'Access' },
+    { value: 'PERIPHERALS', label: 'Peripherals' },
+  ];
+  urgencies = [
+    { value: 'LOW', label: 'Low' },
+    { value: 'MEDIUM', label: 'Medium' },
+    { value: 'HIGH', label: 'High' },
+  ];
 
   submit(): void {
     if (this.isSubmitting() || !this.issue().trim()) return;
@@ -75,7 +68,7 @@ export class EscalationFormComponent {
       },
       error: () => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(this.translationService.translate('escalation.error.create'));
+        this.errorMessage.set('Failed to create ticket. Please try again.');
       },
     });
   }

@@ -25,7 +25,7 @@
       [value]="selectedCategory()"
       class="text-sm border border-border-default rounded-lg px-3 py-1.5 bg-surface-primary text-text-primary transition-shadow"
     >
-      <option value="">{{ translationService.translate('agent.filter.allCategories') }}</option>
+      <option value="" i18n="@@agent.filter.allCategories">All Categories</option>
       @for (cat of categories.slice(1); track cat) {
         <option [value]="cat">{{ categoryLabels[cat] || cat }}</option>
       }
@@ -35,7 +35,7 @@
       [value]="selectedUrgency()"
       class="text-sm border border-border-default rounded-lg px-3 py-1.5 bg-surface-primary text-text-primary transition-shadow"
     >
-      <option value="">{{ translationService.translate('agent.filter.allUrgencies') }}</option>
+      <option value="" i18n="@@agent.filter.allUrgencies">All Urgencies</option>
       @for (urg of urgencies.slice(1); track urg) {
         <option [value]="urg">{{ urgencyLabels[urg] || urg }}</option>
       }
