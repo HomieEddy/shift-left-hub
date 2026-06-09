@@ -190,7 +190,7 @@
           }
         } @else {
           <!-- Guest Navigation -->
-          <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Getting Started</div>
+           <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1" i18n="@@nav.section.guest">Getting Started</div>
           <a
             routerLink="/"
             routerLinkActive="bg-blue-50 text-blue-700"
@@ -198,7 +198,7 @@
             class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors group"
           >
             <svg lucideLayoutDashboard size="18"></svg>
-            <span class="text-sm font-medium">Home</span>
+            <span class="text-sm font-medium" i18n="@@nav.home">Home</span>
           </a>
         }
       </nav>
@@ -218,7 +218,7 @@
         <div class="p-4 border-b border-slate-100 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">SL</div>
-            <span class="font-bold text-slate-800">Hub</span>
+            <span class="font-bold text-slate-800" i18n="@@nav.mobile.title">Hub</span>
           </div>
           <button (click)="isMobileMenuOpen.set(false)" class="p-2 text-slate-400 hover:text-slate-600">
             <svg lucideX size="20"></svg>
@@ -227,40 +227,40 @@
         <nav class="p-4 flex flex-col gap-1 overflow-y-auto">
           <a (click)="isMobileMenuOpen.set(false)" routerLink="/" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
             <svg lucideLayoutDashboard size="18"></svg>
-            <span>Home</span>
-          </a>
+            <span i18n="@@nav.home">Home</span>
+           </a>
            @if (authService.isAuthenticated()) {
-            <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4">Self-Service</div>
+            <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4" i18n="@@nav.section.user">Self-Service</div>
             <a (click)="isMobileMenuOpen.set(false)" routerLink="/articles" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
               <svg lucideBookOpen size="18"></svg>
-              <span>Knowledge Base</span>
+              <span i18n="@@nav.knowledge-base">Knowledge Base</span>
             </a>
             <a (click)="isMobileMenuOpen.set(false)" routerLink="/chat" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
               <svg lucideMessageSquare size="18"></svg>
-              <span>AI Assistant</span>
+              <span i18n="@@nav.ai-assistant">AI Assistant</span>
             </a>
             <a (click)="isMobileMenuOpen.set(false)" routerLink="/tickets" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
               <svg lucideTicket size="18"></svg>
-              <span>My Tickets</span>
+              <span i18n="@@nav.my-tickets">My Tickets</span>
             </a>
             
             @if (authService.isAdmin() || authService.isAgent()) {
-              <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4">Agent Desk</div>
+              <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4" i18n="@@nav.section.agent">Agent Desk</div>
               <a (click)="isMobileMenuOpen.set(false)" routerLink="/agent/tickets" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
                 <svg lucideLayoutList size="18"></svg>
-                <span>Ticket Queue</span>
+                <span i18n="@@nav.ticket-queue">Ticket Queue</span>
               </a>
             }
 
             @if (authService.isAdmin()) {
-              <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4">Admin</div>
+              <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4" i18n="@@nav.section.admin">Admin</div>
               <a (click)="isMobileMenuOpen.set(false)" routerLink="/admin/users" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
                 <svg lucideUsers size="18"></svg>
-                <span>Users</span>
+                <span i18n="@@nav.users">Users</span>
               </a>
               <a (click)="isMobileMenuOpen.set(false)" routerLink="/admin/articles" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 font-medium hover:bg-slate-50 transition-colors">
                 <svg lucideFileText size="18"></svg>
-                <span>Articles</span>
+                <span i18n="@@nav.articles">Articles</span>
               </a>
             }
           }
@@ -284,6 +284,7 @@
                 class="flex-1 px-3 py-2 text-xs font-bold rounded-lg border border-slate-200"
                 [class]="translationService.currentLang() === 'en' ? 'bg-slate-100 text-blue-600 border-blue-200' : 'text-slate-500'"
                 (click)="switchLanguage('en')"
+                i18n="@@nav.mobile.lang.en"
               >
                 English
               </button>
@@ -291,6 +292,7 @@
                 class="flex-1 px-3 py-2 text-xs font-bold rounded-lg border border-slate-200"
                 [class]="translationService.currentLang() === 'fr' ? 'bg-slate-100 text-blue-600 border-blue-200' : 'text-slate-500'"
                 (click)="switchLanguage('fr')"
+                i18n="@@nav.mobile.lang.fr"
               >
                 Français
               </button>
@@ -302,7 +304,7 @@
                class="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors overflow-hidden"
              >
                <svg lucideLogOut size="18"></svg>
-               <span>Logout</span>
+               <span i18n="@@nav.logout">Logout</span>
              </button>
            }
         </div>
@@ -316,7 +318,7 @@
       </div>
       
       <!-- Footer (Subtle) -->
-      <footer class="mt-auto py-8 px-4 text-center border-t border-slate-100 text-slate-400 text-xs">
+      <footer class="mt-auto py-8 px-4 text-center border-t border-slate-100 text-slate-400 text-xs" i18n="@@app.footer">
         &copy; 2026 Shift-Left Knowledge Hub. All rights reserved.
       </footer>
     </main>
