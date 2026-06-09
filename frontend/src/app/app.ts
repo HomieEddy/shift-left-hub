@@ -5,11 +5,43 @@ import { TranslationService, SupportedLanguage } from './core/i18n/translation.s
 import { KcsDraftService } from './features/admin/kcs-draft.service';
 import { interval, startWith, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { 
+  LucideMenu, 
+  LucideLogOut, 
+  LucideBookOpen, 
+  LucideMessageSquare, 
+  LucideTicket, 
+  LucideLayoutList, 
+  LucideUsers, 
+  LucideFileText, 
+  LucideClipboardList, 
+  LucideTag, 
+  LucideSettings, 
+  LucideLayoutDashboard, 
+  LucideX 
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [
+    RouterOutlet, 
+    RouterLink, 
+    RouterLinkActive, 
+    LucideMenu, 
+    LucideLogOut, 
+    LucideBookOpen, 
+    LucideMessageSquare, 
+    LucideTicket, 
+    LucideLayoutList, 
+    LucideUsers, 
+    LucideFileText, 
+    LucideClipboardList, 
+    LucideTag, 
+    LucideSettings, 
+    LucideLayoutDashboard, 
+    LucideX
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -21,6 +53,7 @@ export class App {
   private destroyRef = inject(DestroyRef);
 
   pendingKcsCount = signal(0);
+  isMobileMenuOpen = signal(false);
 
   constructor() {
     // Poll pending KCS draft count every 60 seconds for nav badge
