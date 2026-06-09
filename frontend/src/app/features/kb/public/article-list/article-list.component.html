@@ -29,7 +29,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow overflow-hidden flex flex-col">
           <div class="p-6 flex flex-col flex-1">
             <div class="flex items-center gap-2 mb-3">
-              @for (tag of article.tags; track tag.color) {
+              @for (tag of article.tags; track tag.nameEn) {
                 <span class="inline-block px-2 py-0.5 rounded text-xs text-white" [style.background-color]="tag.color">
                   {{ translationService.currentLang() === 'fr' ? tag.nameFr : tag.nameEn }}
                 </span>
