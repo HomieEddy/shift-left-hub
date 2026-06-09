@@ -1154,6 +1154,98 @@
         <source>Knowledge Base Sources ({INTERPOLATION})</source>
         <target state="new">Sources de la base de connaissances ({INTERPOLATION})</target>
       </trans-unit>
+      <trans-unit id="nav.mobile.title">
+        <source>Hub</source>
+        <target>Hub</target>
+      </trans-unit>
+      <trans-unit id="nav.home">
+        <source>Home</source>
+        <target>Accueil</target>
+      </trans-unit>
+      <trans-unit id="nav.section.guest">
+        <source>Getting Started</source>
+        <target>Premiers pas</target>
+      </trans-unit>
+      <trans-unit id="nav.mobile.lang.en">
+        <source>English</source>
+        <target>Anglais</target>
+      </trans-unit>
+      <trans-unit id="nav.mobile.lang.fr">
+        <source>Français</source>
+        <target>Français</target>
+      </trans-unit>
+      <trans-unit id="app.footer">
+        <source>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</source>
+        <target>&amp;copy; 2026 Shift-Left Knowledge Hub. Tous droits réservés.</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.model-config">
+        <source>Model Configuration</source>
+        <target>Configuration du modèle</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.embedding-dimension">
+        <source>Embedding Dimension</source>
+        <target>Dimension d'embedding</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.provider.ollama">
+        <source>Ollama</source>
+        <target>Ollama</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.provider.openai">
+        <source>OpenAI</source>
+        <target>OpenAI</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.save-error">
+        <source>Failed to save settings</source>
+        <target>Échec de l'enregistrement des paramètres</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.test-failure">
+        <source>Connection test failed</source>
+        <target>Échec du test de connexion</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindex-error">
+        <source>Failed to start re-embedding</source>
+        <target>Échec du démarrage du ré-encodage</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.saving">
+        <source>Saving...</source>
+        <target>Enregistrement...</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.testing">
+        <source>Testing...</source>
+        <target>Test en cours...</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindexing">
+        <source>Re-Embedding...</source>
+        <target>Ré-encodage en cours...</target>
+      </trans-unit>
+      <trans-unit id="escalation.error.create">
+        <source>Failed to create ticket. Please try again.</source>
+        <target>Échec de la création du ticket. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="agent.claim.error.detail">
+        <source>Failed to claim ticket. Please try again.</source>
+        <target>Échec de la prise en charge du ticket. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.loadNotesError">
+        <source>Failed to load work notes.</source>
+        <target>Échec du chargement des notes de travail.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.addNoteError.detail">
+        <source>Failed to add work note. Please try again.</source>
+        <target>Échec de l'ajout de la note. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.claimError.detail">
+        <source>Failed to claim ticket. Please try again.</source>
+        <target>Échec de la prise en charge du ticket. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolveError.detail">
+        <source>Failed to resolve ticket. Please try again.</source>
+        <target>Échec de la résolution du ticket. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="shared.table.empty">
+        <source>No data found.</source>
+        <target>Aucune donnée trouvée.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

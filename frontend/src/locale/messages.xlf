@@ -1154,6 +1154,98 @@
         <source>Knowledge Base Sources ({INTERPOLATION})</source>
         <target state="new">Knowledge Base Sources ({INTERPOLATION})</target>
       </trans-unit>
+      <trans-unit id="nav.mobile.title">
+        <source>Hub</source>
+        <target>Hub</target>
+      </trans-unit>
+      <trans-unit id="nav.home">
+        <source>Home</source>
+        <target>Home</target>
+      </trans-unit>
+      <trans-unit id="nav.section.guest">
+        <source>Getting Started</source>
+        <target>Getting Started</target>
+      </trans-unit>
+      <trans-unit id="nav.mobile.lang.en">
+        <source>English</source>
+        <target>English</target>
+      </trans-unit>
+      <trans-unit id="nav.mobile.lang.fr">
+        <source>Français</source>
+        <target>Français</target>
+      </trans-unit>
+      <trans-unit id="app.footer">
+        <source>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</source>
+        <target>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.model-config">
+        <source>Model Configuration</source>
+        <target>Model Configuration</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.embedding-dimension">
+        <source>Embedding Dimension</source>
+        <target>Embedding Dimension</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.provider.ollama">
+        <source>Ollama</source>
+        <target>Ollama</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.provider.openai">
+        <source>OpenAI</source>
+        <target>OpenAI</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.save-error">
+        <source>Failed to save settings</source>
+        <target>Failed to save settings</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.test-failure">
+        <source>Connection test failed</source>
+        <target>Connection test failed</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindex-error">
+        <source>Failed to start re-embedding</source>
+        <target>Failed to start re-embedding</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.saving">
+        <source>Saving...</source>
+        <target>Saving...</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.testing">
+        <source>Testing...</source>
+        <target>Testing...</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindexing">
+        <source>Re-Embedding...</source>
+        <target>Re-Embedding...</target>
+      </trans-unit>
+      <trans-unit id="escalation.error.create">
+        <source>Failed to create ticket. Please try again.</source>
+        <target>Failed to create ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.claim.error.detail">
+        <source>Failed to claim ticket. Please try again.</source>
+        <target>Failed to claim ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.loadNotesError">
+        <source>Failed to load work notes.</source>
+        <target>Failed to load work notes.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.addNoteError.detail">
+        <source>Failed to add work note. Please try again.</source>
+        <target>Failed to add work note. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.claimError.detail">
+        <source>Failed to claim ticket. Please try again.</source>
+        <target>Failed to claim ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolveError.detail">
+        <source>Failed to resolve ticket. Please try again.</source>
+        <target>Failed to resolve ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="shared.table.empty">
+        <source>No data found.</source>
+        <target>No data found.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
