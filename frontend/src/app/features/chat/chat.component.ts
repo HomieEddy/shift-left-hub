@@ -3,6 +3,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
+import { LucideSend, LucideMessageCircle } from '@lucide/angular';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
@@ -10,7 +12,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, RouterLink, MarkdownModule, EscalationFormComponent],
+  imports: [FormsModule, RouterLink, MarkdownModule, LucideSend, LucideMessageCircle, ModalComponent, EscalationFormComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
