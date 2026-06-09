@@ -1246,6 +1246,14 @@
         <source>No data found.</source>
         <target>Aucune donnée trouvée.</target>
       </trans-unit>
+      <trans-unit id="admin.settings.llm.key-stored">
+        <source>A key is currently stored. Enter a new key to replace it.</source>
+        <target>Une clé est actuellement stockée. Saisissez-en une nouvelle pour la remplacer.</target>
+      </trans-unit>
+      <trans-unit id="confirm.error.generic">
+        <source>An unexpected error occurred. Please try again.</source>
+        <target>Une erreur inattendue s'est produite. Veuillez réessayer.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

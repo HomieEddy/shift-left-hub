@@ -2,7 +2,7 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { $localize } from '@angular/localize/init';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { TicketService } from '../ticket.service';
 import { EscalationPayload } from '../ticket.model';
 
@@ -14,6 +14,7 @@ import { EscalationPayload } from '../ticket.model';
 })
 export class EscalationFormComponent {
   private ticketService = inject(TicketService);
+  protected translationService = inject(TranslationService);
 
   escalationPayload = input<EscalationPayload | null>(null);
   ticketCreated = output<string>();
@@ -26,18 +27,23 @@ export class EscalationFormComponent {
   successTicketNumber = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  categories = [
-    { value: 'NETWORK', label: $localize`:@@tickets.category.network:Network` },
-    { value: 'HARDWARE', label: $localize`:@@tickets.category.hardware:Hardware` },
-    { value: 'SOFTWARE', label: $localize`:@@tickets.category.software:Software` },
-    { value: 'ACCESS', label: $localize`:@@tickets.category.access:Access` },
-    { value: 'PERIPHERALS', label: $localize`:@@tickets.category.peripherals:Peripherals` },
-  ];
-  urgencies = [
-    { value: 'LOW', label: $localize`:@@agent.urgency.low:Low` },
-    { value: 'MEDIUM', label: $localize`:@@agent.urgency.medium:Medium` },
-    { value: 'HIGH', label: $localize`:@@agent.urgency.high:High` },
-  ];
+  get categories() {
+    return [
+      { value: 'NETWORK', label: this.translationService.translate('tickets.category.network') },
+      { value: 'HARDWARE', label: this.translationService.translate('tickets.category.hardware') },
+      { value: 'SOFTWARE', label: this.translationService.translate('tickets.category.software') },
+      { value: 'ACCESS', label: this.translationService.translate('tickets.category.access') },
+      { value: 'PERIPHERALS', label: this.translationService.translate('tickets.category.peripherals') },
+    ];
+  }
+
+  get urgencies() {
+    return [
+      { value: 'LOW', label: this.translationService.translate('agent.urgency.low') },
+      { value: 'MEDIUM', label: this.translationService.translate('agent.urgency.medium') },
+      { value: 'HIGH', label: this.translationService.translate('agent.urgency.high') },
+    ];
+  }
 
   submit(): void {
     if (this.isSubmitting() || !this.issue().trim()) return;
@@ -69,7 +75,7 @@ export class EscalationFormComponent {
       },
       error: () => {
         this.isSubmitting.set(false);
-        this.errorMessage.set($localize`:@@escalation.error.create:Failed to create ticket. Please try again.`);
+        this.errorMessage.set(this.translationService.translate('escalation.error.create'));
       },
     });
   }

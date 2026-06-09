@@ -2,9 +2,9 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { $localize } from '@angular/localize/init';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentTicketService } from '../agent-ticket.service';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { AgentTicket, WorkNote } from '../agent-ticket.model';
 
 @Component({
@@ -22,6 +22,7 @@ export class AgentTicketDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   ticket = signal<AgentTicket | null>(null);
   workNotes = signal<WorkNote[]>([]);
@@ -76,7 +77,7 @@ export class AgentTicketDetailComponent implements OnInit {
       next: (notes) => this.workNotes.set(notes),
       error: (err) => {
         console.error('Failed to load work notes:', err);
-        this.noteError.set($localize`:@@agent.detail.loadNotesError:Failed to load work notes.`);
+        this.noteError.set(this.translationService.translate('agent.detail.loadNotesError'));
       },
     });
   }
@@ -98,7 +99,7 @@ export class AgentTicketDetailComponent implements OnInit {
       error: () => {
         this.isSubmittingNote.set(false);
         console.error('Failed to add work note');
-        this.workNoteError.set($localize`:@@agent.detail.addNoteError.detail:Failed to add work note. Please try again.`);
+        this.workNoteError.set(this.translationService.translate('agent.detail.addNoteError.detail'));
       },
     });
   }
@@ -117,7 +118,7 @@ export class AgentTicketDetailComponent implements OnInit {
       error: () => {
         this.isClaiming.set(false);
         console.error('Failed to claim ticket');
-        this.claimError.set($localize`:@@agent.detail.claimError.detail:Failed to claim ticket. Please try again.`);
+        this.claimError.set(this.translationService.translate('agent.detail.claimError.detail'));
       },
     });
   }
@@ -146,7 +147,7 @@ export class AgentTicketDetailComponent implements OnInit {
       error: () => {
         this.isResolving.set(false);
         console.error('Failed to resolve ticket');
-        this.resolveError.set($localize`:@@agent.detail.resolveError.detail:Failed to resolve ticket. Please try again.`);
+        this.resolveError.set(this.translationService.translate('agent.detail.resolveError.detail'));
       },
     });
   }
@@ -156,61 +157,67 @@ export class AgentTicketDetailComponent implements OnInit {
     this.resolveConfirmOpen.set(false);
   }
 
-  statusLabels: Record<string, string> = {
-    'NEW': $localize`:@@tickets.status.new:New`,
-    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
-    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
-    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
-  };
+  get statusLabels(): Record<string, string> {
+    return {
+      'NEW': this.translationService.translate('tickets.status.new'),
+      'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
+      'RESOLVED': this.translationService.translate('tickets.status.resolved'),
+      'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
+    };
+  }
 
-  urgencyLabels: Record<string, string> = {
-    'LOW': $localize`:@@agent.urgency.low:Low`,
-    'MEDIUM': $localize`:@@agent.urgency.medium:Medium`,
-    'HIGH': $localize`:@@agent.urgency.high:High`,
-  };
+  get urgencyLabels(): Record<string, string> {
+    return {
+      'LOW': this.translationService.translate('agent.urgency.low'),
+      'MEDIUM': this.translationService.translate('agent.urgency.medium'),
+      'HIGH': this.translationService.translate('agent.urgency.high'),
+    };
+  }
 
-  categoryLabels: Record<string, string> = {
-    'NETWORK': $localize`:@@tickets.category.network:Network`,
-    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
-    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
-    'ACCESS': $localize`:@@tickets.category.access:Access`,
-    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
-  };
+  get categoryLabels(): Record<string, string> {
+    return {
+      'NETWORK': this.translationService.translate('tickets.category.network'),
+      'HARDWARE': this.translationService.translate('tickets.category.hardware'),
+      'SOFTWARE': this.translationService.translate('tickets.category.software'),
+      'ACCESS': this.translationService.translate('tickets.category.access'),
+      'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
+    };
+  }
 
-  loadingLabel = $localize`:@@agent.detail.loading:Loading ticket details...`;
-  errorLabel = $localize`:@@agent.detail.error:Failed to load ticket details.`;
-  retryLabel = $localize`:@@agent.detail.retry:Retry`;
-  backToQueueLabel = $localize`:@@agent.detail.backToQueue:\u2190 Back to Queue`;
-  shiftLeftContextLabel = $localize`:@@agent.detail.shiftLeftContext:Shift-Left Context`;
-  issueLabel = $localize`:@@agent.detail.issue:Issue`;
-  chatTranscriptLabel = $localize`:@@agent.detail.chatTranscript:Chat Transcript`;
-  unclaimedLabel = $localize`:@@agent.detail.unclaimed:This ticket has not been claimed yet.`;
-  claimingLabel = $localize`:@@agent.detail.claiming:Claiming...`;
-  claimTicketLabel = $localize`:@@agent.detail.claimTicket:Claim Ticket`;
-  workNotesLabel = $localize`:@@agent.detail.workNotes:Work Notes`;
-  noWorkNotesLabel = $localize`:@@agent.detail.noWorkNotes:No work notes yet.`;
-  addNotePlaceholder = $localize`:@@agent.detail.addNotePlaceholder:Add a work note...`;
-  addingLabel = $localize`:@@agent.detail.adding:Adding...`;
-  addNoteLabel = $localize`:@@agent.detail.addNote:Add Note`;
-  resolutionLabel = $localize`:@@agent.detail.resolution:Resolution`;
-  resolutionPlaceholder = $localize`:@@agent.detail.resolutionPlaceholder:Describe the resolution steps...`;
-  flagKnowledgeGapLabel = $localize`:@@agent.detail.flagKnowledgeGap:Flag as Knowledge Gap`;
-  resolvingLabel = $localize`:@@agent.detail.resolving:Resolving...`;
-  resolveTicketLabel = $localize`:@@agent.detail.resolveTicket:Resolve Ticket`;
-  resolvedByLabel = $localize`:@@agent.detail.resolvedBy:Resolved by`;
-  unknownLabel = $localize`:@@agent.detail.unknown:Unknown`;
-  flaggedKnowledgeGapLabel = $localize`:@@agent.detail.flaggedKnowledgeGap:Flagged as Knowledge Gap`;
-  cancelledByUserLabel = $localize`:@@agent.detail.cancelledByUser:Cancelled by user`;
-  unassignedLabel = $localize`:@@agent.detail.unassigned:Unassigned`;
-  confirmResolutionLabel = $localize`:@@agent.detail.confirmResolution:Confirm resolution for`;
-  cancelLabel = $localize`:@@agent.detail.cancel:Cancel`;
-  confirmLabel = $localize`:@@agent.detail.confirm:Confirm`;
-  assignedToLabel = $localize`:@@agent.detail.assignedTo:Assigned to`;
-  openedByLabel = $localize`:@@agent.detail.openedBy:Opened by`;
+  get loadingLabel(): string { return this.translationService.translate('agent.detail.loading'); }
+  get errorLabel(): string { return this.translationService.translate('agent.detail.error'); }
+  get retryLabel(): string { return this.translationService.translate('agent.detail.retry'); }
+  get backToQueueLabel(): string { return this.translationService.translate('agent.detail.backToQueue'); }
+  get shiftLeftContextLabel(): string { return this.translationService.translate('agent.detail.shiftLeftContext'); }
+  get issueLabel(): string { return this.translationService.translate('agent.detail.issue'); }
+  get chatTranscriptLabel(): string { return this.translationService.translate('agent.detail.chatTranscript'); }
+  get unclaimedLabel(): string { return this.translationService.translate('agent.detail.unclaimed'); }
+  get claimingLabel(): string { return this.translationService.translate('agent.detail.claiming'); }
+  get claimTicketLabel(): string { return this.translationService.translate('agent.detail.claimTicket'); }
+  get workNotesLabel(): string { return this.translationService.translate('agent.detail.workNotes'); }
+  get noWorkNotesLabel(): string { return this.translationService.translate('agent.detail.noWorkNotes'); }
+  get addNotePlaceholder(): string { return this.translationService.translate('agent.detail.addNotePlaceholder'); }
+  get addingLabel(): string { return this.translationService.translate('agent.detail.adding'); }
+  get addNoteLabel(): string { return this.translationService.translate('agent.detail.addNote'); }
+  get resolutionLabel(): string { return this.translationService.translate('agent.detail.resolution'); }
+  get resolutionPlaceholder(): string { return this.translationService.translate('agent.detail.resolutionPlaceholder'); }
+  get flagKnowledgeGapLabel(): string { return this.translationService.translate('agent.detail.flagKnowledgeGap'); }
+  get resolvingLabel(): string { return this.translationService.translate('agent.detail.resolving'); }
+  get resolveTicketLabel(): string { return this.translationService.translate('agent.detail.resolveTicket'); }
+  get resolvedByLabel(): string { return this.translationService.translate('agent.detail.resolvedBy'); }
+  get unknownLabel(): string { return this.translationService.translate('agent.detail.unknown'); }
+  get flaggedKnowledgeGapLabel(): string { return this.translationService.translate('agent.detail.flaggedKnowledgeGap'); }
+  get cancelledByUserLabel(): string { return this.translationService.translate('agent.detail.cancelledByUser'); }
+  get unassignedLabel(): string { return this.translationService.translate('agent.detail.unassigned'); }
+  get confirmResolutionLabel(): string { return this.translationService.translate('agent.detail.confirmResolution'); }
+  get cancelLabel(): string { return this.translationService.translate('agent.detail.cancel'); }
+  get confirmLabel(): string { return this.translationService.translate('agent.detail.confirm'); }
+  get assignedToLabel(): string { return this.translationService.translate('agent.detail.assignedTo'); }
+  get openedByLabel(): string { return this.translationService.translate('agent.detail.openedBy'); }
 
-  addNoteErrorLabel = $localize`:@@agent.detail.addNoteError:Failed to add work note.`;
-  claimErrorLabel = $localize`:@@agent.detail.claimError:Failed to claim ticket.`;
-  resolveErrorLabel = $localize`:@@agent.detail.resolveError:Failed to resolve ticket.`;
+  get addNoteErrorLabel(): string { return this.translationService.translate('agent.detail.addNoteError'); }
+  get claimErrorLabel(): string { return this.translationService.translate('agent.detail.claimError'); }
+  get resolveErrorLabel(): string { return this.translationService.translate('agent.detail.resolveError'); }
 
   /** Returns the appropriate Tailwind badge classes for a ticket status. */
   statusBadgeClass(status: string): string {

@@ -1,8 +1,8 @@
 <div class="p-6 max-w-4xl mx-auto">
   <div class="flex items-center justify-end mb-6">
     <div class="flex items-center gap-2">
-      <button (click)="cancel()" class="px-4 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50" i18n="@@admin.articles.cancel">
-        Cancel
+      <button (click)="cancel()" class="px-4 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50">
+        {{ translationService.translate('admin.articles.cancel') }}
       </button>
       <button
         (click)="save()"
@@ -10,9 +10,9 @@
         class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
       >
         @if (isSaving()) {
-          <ng-container i18n="@@admin.articles.saving">Saving...</ng-container>
+          {{ translationService.translate('admin.articles.saving') }}
         } @else {
-          <ng-container i18n="@@admin.articles.save">Save</ng-container>
+          {{ translationService.translate('admin.articles.save') }}
         }
       </button>
     </div>
@@ -23,7 +23,7 @@
   }
 
   @if (isLoading()) {
-    <div class="text-center py-12 text-slate-500" i18n="@@admin.articles.loading">Loading article...</div>
+    <div class="text-center py-12 text-slate-500">{{ translationService.translate('admin.articles.loading') }}</div>
   }
 
   @if (!isLoading()) {
@@ -36,7 +36,7 @@
           [class.border-blue-600.text-blue-600]="activeTab() === 'en'"
           [class.border-transparent.text-slate-500]="activeTab() !== 'en'"
         >
-          <ng-container i18n="@@language.english">English</ng-container>
+          {{ translationService.translate('language.english') }}
         </button>
         <button
           (click)="activeTab.set('fr')"
@@ -44,7 +44,7 @@
           [class.border-blue-600.text-blue-600]="activeTab() === 'fr'"
           [class.border-transparent.text-slate-500]="activeTab() !== 'fr'"
         >
-          <ng-container i18n="@@language.french">French</ng-container>
+          {{ translationService.translate('language.french') }}
         </button>
       </div>
 
@@ -52,29 +52,29 @@
       @if (activeTab() === 'en') {
         <div class="space-y-4">
           <div>
-            <label for="article-title-en" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.articles.label.title-en">Title (EN)</label>
+            <label for="article-title-en" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.articles.label.title-en') }}</label>
             <input
               id="article-title-en"
               type="text"
               [(ngModel)]="titleEn"
               required
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Article title in English" i18n-placeholder="@@admin.articles.placeholder.title-en"
+              [placeholder]="translationService.translate('admin.articles.placeholder.title-en')"
             />
           </div>
           <div>
-            <label for="article-content-en" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.articles.label.content-en">Content (EN) — Markdown</label>
+            <label for="article-content-en" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.articles.label.content-en') }}</label>
             <textarea
               id="article-content-en"
               [(ngModel)]="contentEn"
               required
               rows="16"
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-              placeholder="Write article content in markdown..." i18n-placeholder="@@admin.articles.placeholder.content-en"
+              [placeholder]="translationService.translate('admin.articles.placeholder.content-en')"
             ></textarea>
           </div>
           <div>
-            <span class="block text-sm font-medium text-slate-700 mb-2" i18n="@@admin.articles.label.preview">Preview</span>
+            <span class="block text-sm font-medium text-slate-700 mb-2">{{ translationService.translate('admin.articles.label.preview') }}</span>
             <div class="border border-slate-200 rounded-lg p-4 max-w-none">
               <div class="markdown-content">
                 <markdown [data]="contentEn"></markdown>
@@ -88,27 +88,27 @@
       @if (activeTab() === 'fr') {
         <div class="space-y-4">
           <div>
-            <label for="article-title-fr" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.articles.label.title-fr">Title (FR)</label>
+            <label for="article-title-fr" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.articles.label.title-fr') }}</label>
             <input
               id="article-title-fr"
               type="text"
               [(ngModel)]="titleFr"
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Article title in French (optional)" i18n-placeholder="@@admin.articles.placeholder.title-fr"
+              [placeholder]="translationService.translate('admin.articles.placeholder.title-fr')"
             />
           </div>
           <div>
-            <label for="article-content-fr" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.articles.label.content-fr">Content (FR) — Markdown</label>
+            <label for="article-content-fr" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.articles.label.content-fr') }}</label>
             <textarea
               id="article-content-fr"
               [(ngModel)]="contentFr"
               rows="16"
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-              placeholder="Write article content in French markdown (optional)" i18n-placeholder="@@admin.articles.placeholder.content-fr"
+              [placeholder]="translationService.translate('admin.articles.placeholder.content-fr')"
             ></textarea>
           </div>
           <div>
-            <span class="block text-sm font-medium text-slate-700 mb-2" i18n="@@admin.articles.label.preview">Preview</span>
+            <span class="block text-sm font-medium text-slate-700 mb-2">{{ translationService.translate('admin.articles.label.preview') }}</span>
             <div class="border border-slate-200 rounded-lg p-4 max-w-none">
               <div class="markdown-content">
                 <markdown [data]="contentFr"></markdown>
@@ -121,30 +121,30 @@
       <!-- Excerpt & Featured Image -->
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label for="article-excerpt" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.articles.label.excerpt">Excerpt</label>
+          <label for="article-excerpt" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.articles.label.excerpt') }}</label>
           <textarea
             id="article-excerpt"
             [(ngModel)]="excerpt"
             rows="3"
             class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-            placeholder="Short summary for listings" i18n-placeholder="@@admin.articles.placeholder.excerpt"
+            [placeholder]="translationService.translate('admin.articles.placeholder.excerpt')"
           ></textarea>
         </div>
         <div>
-          <label for="article-featured-image" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.articles.label.featured-image">Featured Image URL</label>
+          <label for="article-featured-image" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.articles.label.featured-image') }}</label>
           <input
             id="article-featured-image"
             type="text"
             [(ngModel)]="featuredImage"
             class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-            placeholder="https://example.com/image.jpg" i18n-placeholder="@@admin.articles.placeholder.featured-image"
+            [placeholder]="translationService.translate('admin.articles.placeholder.featured-image')"
           />
         </div>
       </div>
 
       <!-- Tags Multi-Select -->
       <div>
-        <span class="block text-sm font-medium text-slate-700 mb-2" i18n="@@admin.articles.label.tags">Tags</span>
+        <span class="block text-sm font-medium text-slate-700 mb-2">{{ translationService.translate('admin.articles.label.tags') }}</span>
         <div class="flex flex-wrap gap-2">
           @for (tag of allTags(); track tag.id) {
             <button

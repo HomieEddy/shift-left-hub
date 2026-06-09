@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ConfirmationData } from './confirmation-dialog.model';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { from } from 'rxjs';
 
 @Component({
@@ -43,8 +44,9 @@ import { from } from 'rxjs';
   `,
 })
 export class ConfirmDialogComponent {
-  protected cancelLabel: string = $localize`:@@confirm.action.cancel:Cancel`;
-  protected savingLabel: string = $localize`:@@confirm.state.saving:Saving...`;
+  protected translationService = inject(TranslationService);
+  protected get cancelLabel(): string { return this.translationService.translate('confirm.action.cancel'); }
+  protected get savingLabel(): string { return this.translationService.translate('confirm.state.saving'); }
   dialogRef = inject(DialogRef<boolean>);
   data: ConfirmationData = inject<ConfirmationData>(DIALOG_DATA);
 
@@ -62,7 +64,7 @@ export class ConfirmDialogComponent {
           next: () => this.dialogRef.close(true),
           error: (err: unknown) => {
             this.loading.set(false);
-            const fallbackMsg: string = $localize`:@@confirm.error.generic:An unexpected error occurred. Please try again.`;
+            const fallbackMsg: string = this.translationService.translate('confirm.error.generic');
             this.errorMessage.set(err instanceof Error ? err.message : fallbackMsg);
           },
         });

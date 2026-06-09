@@ -1,5 +1,5 @@
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <a routerLink="/articles" class="text-sm text-blue-600 hover:text-blue-800 mb-6 inline-block" i18n="@@kb.back">&larr; Back to articles</a>
+  <a routerLink="/articles" class="text-sm text-blue-600 hover:text-blue-800 mb-6 inline-block">{{ translationService.translate('kb.back') }}</a>
 
   @if (isLoading()) {
     <div class="text-center py-16">
@@ -14,7 +14,7 @@
   @if (errorMessage()) {
     <div class="text-center py-16">
       <p class="text-lg text-red-600 mb-4">{{ errorMessage() }}</p>
-      <a routerLink="/articles" class="text-blue-600 hover:text-blue-800" i18n="@@kb.browse-all">Browse all articles</a>
+      <a routerLink="/articles" class="text-blue-600 hover:text-blue-800">{{ translationService.translate('kb.browse-all') }}</a>
     </div>
   }
 
@@ -22,8 +22,8 @@
     <article class="max-w-none">
       <!-- Bilingual fallback notice -->
       @if (isFallback) {
-        <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-6 text-sm" i18n="@@kb.fallback-notice">
-          This article is only available in {{ fallbackLanguage }}.
+        <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg mb-6 text-sm">
+          {{ translationService.translate('kb.fallback-notice') }}
         </div>
       }
 
@@ -31,7 +31,7 @@
       <div class="not-prose flex items-center gap-4 mb-8 text-sm text-slate-500">
         <span>{{ article()!.authorName }}</span>
         <span>{{ article()!.publishedAt | date:'longDate' }}</span>
-        <span class="text-xs" i18n="@@kb.views">{{ article()!.viewCount }} view{{ article()!.viewCount === 1 ? '' : 's' }}</span>
+        <span class="text-xs">{{ translationService.translate('kb.views') }}</span>
       </div>
 
       <!-- Tag chips -->

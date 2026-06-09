@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { $localize } from '@angular/localize/init';
 import { AuthService } from '../../../core/auth/auth.service';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -37,7 +36,7 @@ export class RegisterComponent {
     this.errorMessage = '';
 
     if (!this.passwordValid) {
-      this.errorMessage = $localize`:@@error.password-rules:Password must be at least 8 characters with 1 uppercase letter and 1 number.`;
+      this.errorMessage = this.translationService.translate('error.password-rules');
       return;
     }
 
@@ -55,9 +54,9 @@ export class RegisterComponent {
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         if (err.status === 409) {
-          this.errorMessage = $localize`:@@error.email-exists:An account with this email already exists.`;
+          this.errorMessage = this.translationService.translate('error.email-exists');
         } else {
-          this.errorMessage = $localize`:@@error.registration-failed:Registration failed. Please try again.`;
+          this.errorMessage = this.translationService.translate('error.registration-failed');
         }
       },
       complete: () => {

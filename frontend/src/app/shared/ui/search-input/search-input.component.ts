@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-search-input',
@@ -12,8 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       <input
         type="text"
         [attr.aria-label]="placeholder()"
-        [placeholder]="placeholder()"
-        i18n-placeholder="@@shared.search.placeholder"
+        [placeholder]="translationService.translate('shared.search.placeholder')"
         [ngModel]="query()"
         (ngModelChange)="onInput($event)"
         class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -25,6 +25,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   `,
 })
 export class SearchInputComponent {
+  protected translationService = inject(TranslationService);
   placeholder = input('Search...');
   debounceMs = input(300);
   query = input('');

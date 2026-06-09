@@ -1,9 +1,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <!-- Header -->
   <div class="mb-6">
-    <h1 class="text-2xl font-bold text-slate-800" i18n="@@kcs.drafts.title">KCS Drafts</h1>
-    <p class="text-sm text-slate-500 mt-1" i18n="@@kcs.drafts.description">
-      Review and manage AI-drafted knowledge base articles
+    <h1 class="text-2xl font-bold text-slate-800">{{ translationService.translate('kcs.drafts.title') }}</h1>
+    <p class="text-sm text-slate-500 mt-1">
+      {{ translationService.translate('kcs.drafts.description') }}
     </p>
   </div>
 
@@ -23,15 +23,15 @@
 
   <!-- Loading state -->
   @if (isLoading()) {
-    <div class="text-center py-12 text-slate-500" i18n="@@kcs.drafts.loading">
-      Loading drafts...
+    <div class="text-center py-12 text-slate-500">
+      {{ translationService.translate('kcs.drafts.loading') }}
     </div>
   }
 
   <!-- Empty state -->
   @if (!isLoading() && drafts().length === 0) {
-    <div class="text-center py-8 text-slate-500" i18n="@@kcs.drafts.empty">
-      No KCS drafts pending review
+    <div class="text-center py-8 text-slate-500">
+      {{ translationService.translate('kcs.drafts.empty') }}
     </div>
   }
 
@@ -43,30 +43,26 @@
           <tr>
             <th
               class="text-left px-4 py-3 font-medium text-slate-600"
-              i18n="@@kcs.drafts.col.title"
             >
-              Title
+              {{ translationService.translate('kcs.drafts.col.title') }}
             </th>
             <th
               class="text-left px-4 py-3 font-medium text-slate-600"
-              i18n="@@kcs.drafts.col.ticket"
             >
-              Source Ticket
+              {{ translationService.translate('kcs.drafts.col.ticket') }}
             </th>
             <th
               class="text-left px-4 py-3 font-medium text-slate-600"
-              i18n="@@kcs.drafts.col.status"
             >
-              Status
+              {{ translationService.translate('kcs.drafts.col.status') }}
             </th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@kcs.drafts.col.date">
-              Created
+            <th class="text-left px-4 py-3 font-medium text-slate-600">
+              {{ translationService.translate('kcs.drafts.col.date') }}
             </th>
             <th
               class="text-left px-4 py-3 font-medium text-slate-600"
-              i18n="@@kcs.drafts.col.actions"
             >
-              Actions
+              {{ translationService.translate('kcs.drafts.col.actions') }}
             </th>
           </tr>
         </thead>
@@ -83,7 +79,7 @@
                 }
                 @if (draft.similarityWarnings.length > 0) {
                   <div class="mt-1 text-xs text-amber-600">
-                    ⚠ <span i18n="@@kcs.drafts.similarityWarning">Potential duplicate</span>
+                    ⚠ <span>{{ translationService.translate('kcs.drafts.similarityWarning') }}</span>
                   </div>
                 }
               </td>
@@ -118,9 +114,8 @@
                   <a
                     [routerLink]="['/admin/kcs-drafts', draft.id, 'edit']"
                     class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100"
-                    i18n="@@kcs.drafts.edit"
                   >
-                    Edit
+                    {{ translationService.translate('kcs.drafts.edit') }}
                   </a>
 
                   <!-- Approve button (visible for DRAFT only) -->
@@ -130,9 +125,8 @@
                       [disabled]="actionLoading() === draft.id"
                       data-testid="approve-draft-btn"
                       class="text-xs px-2 py-1 rounded border border-green-300 text-green-600 hover:bg-green-50 disabled:opacity-50"
-                      i18n="@@kcs.drafts.approve"
                     >
-                      Approve
+                      {{ translationService.translate('kcs.drafts.approve') }}
                     </button>
                   }
 
@@ -143,9 +137,8 @@
                       [disabled]="actionLoading() === draft.id"
                       data-testid="reject-draft-btn"
                       class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50"
-                      i18n="@@kcs.drafts.reject"
                     >
-                      Reject
+                      {{ translationService.translate('kcs.drafts.reject') }}
                     </button>
                   }
                 </div>
@@ -161,23 +154,18 @@
   <app-modal [open]="confirmModalOpen()" [title]="confirmActionTitle" (close)="cancelAction()">
     <p class="text-sm text-slate-600 mb-6">
       @if (pendingAction()?.type === 'approve') {
-        <ng-container i18n="@@kcs.drafts.confirm.approve">
-          Approve this draft? It will be published immediately.
-        </ng-container>
+        <ng-container>{{ translationService.translate('kcs.drafts.confirm.approve') }}</ng-container>
       }
       @if (pendingAction()?.type === 'reject') {
-        <ng-container i18n="@@kcs.drafts.confirm.reject">
-          Reject this draft? It will be archived.
-        </ng-container>
+        <ng-container>{{ translationService.translate('kcs.drafts.confirm.reject') }}</ng-container>
       }
     </p>
     <div class="flex justify-end gap-3">
       <button
         (click)="cancelAction()"
         class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50"
-        i18n="@@kcs.drafts.confirm.cancel"
       >
-        Cancel
+        {{ translationService.translate('kcs.drafts.confirm.cancel') }}
       </button>
       <button
         (click)="executePendingAction()"
@@ -187,9 +175,8 @@
         [class.bg-red-600]="pendingAction()?.type === 'reject'"
         [class.hover:bg-red-700]="pendingAction()?.type === 'reject'"
         class="px-4 py-2 text-sm rounded-lg text-white"
-        i18n="@@kcs.drafts.confirm.confirm"
       >
-        Confirm
+        {{ translationService.translate('kcs.drafts.confirm.confirm') }}
       </button>
     </div>
   </app-modal>
@@ -201,20 +188,18 @@
         (click)="changePage(currentPage() - 1)"
         [disabled]="currentPage() === 0"
         class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-        i18n="@@pagination.previous"
       >
-        Previous
+        {{ translationService.translate('pagination.previous') }}
       </button>
-      <span class="text-sm text-slate-600" i18n="@@kcs.drafts.pageIndicator"
-        >Page {{ displayPage() }} of {{ totalPages() }}</span
+      <span class="text-sm text-slate-600"
+        >{{ translationService.translate('kcs.drafts.pageIndicator') }} {{ displayPage() }} of {{ totalPages() }}</span
       >
       <button
         (click)="changePage(currentPage() + 1)"
         [disabled]="currentPage() >= totalPages() - 1"
         class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-        i18n="@@pagination.next"
       >
-        Next
+        {{ translationService.translate('pagination.next') }}
       </button>
     </div>
   }

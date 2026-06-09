@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { $localize } from '@angular/localize/init';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { TicketService } from '../ticket.service';
 import { Ticket } from '../ticket.model';
 
@@ -15,6 +15,7 @@ import { Ticket } from '../ticket.model';
 export class TicketListComponent implements OnInit {
   private ticketService = inject(TicketService);
   private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   tickets = signal<Ticket[]>([]);
   filteredTickets = signal<Ticket[]>([]);
@@ -37,7 +38,7 @@ export class TicketListComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set($localize`:@@tickets.error.load:Failed to load tickets.`);
+        this.errorMessage.set(this.translationService.translate('tickets.error.load'));
       },
     });
   }
@@ -51,22 +52,30 @@ export class TicketListComponent implements OnInit {
     }
   }
 
-  allLabel: string = $localize`:@@tickets.filter.all:All`;
+  get allLabel(): string {
+    return this.translationService.translate('tickets.filter.all');
+  }
 
-  statusLabels: Record<string, string> = {
-    'NEW': $localize`:@@tickets.status.new:New`,
-    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
-    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
-    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
-  };
+  statusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      'NEW': this.translationService.translate('tickets.status.new'),
+      'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
+      'RESOLVED': this.translationService.translate('tickets.status.resolved'),
+      'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
+    };
+    return labels[status] || status;
+  }
 
-  categoryLabels: Record<string, string> = {
-    'NETWORK': $localize`:@@tickets.category.network:Network`,
-    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
-    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
-    'ACCESS': $localize`:@@tickets.category.access:Access`,
-    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
-  };
+  categoryLabel(category: string): string {
+    const labels: Record<string, string> = {
+      'NETWORK': this.translationService.translate('tickets.category.network'),
+      'HARDWARE': this.translationService.translate('tickets.category.hardware'),
+      'SOFTWARE': this.translationService.translate('tickets.category.software'),
+      'ACCESS': this.translationService.translate('tickets.category.access'),
+      'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
+    };
+    return labels[category] || category;
+  }
 
   statusBadgeClass = (status: string): string => {
     switch (status) {

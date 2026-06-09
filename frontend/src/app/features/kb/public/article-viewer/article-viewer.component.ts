@@ -29,7 +29,7 @@ export class ArticleViewerComponent implements OnInit {
     if (id != null) {
       this.loadArticle(id);
     } else {
-      this.errorMessage.set($localize`:@@kb.invalid-id:Invalid article ID.`);
+      this.errorMessage.set(this.translationService.translate('kb.invalid-id'));
       this.isLoading.set(false);
     }
   }
@@ -44,7 +44,7 @@ export class ArticleViewerComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set($localize`:@@kb.not-found:Article not found.`);
+        this.errorMessage.set(this.translationService.translate('kb.not-found'));
         this.isLoading.set(false);
       },
     });

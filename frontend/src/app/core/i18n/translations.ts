@@ -284,6 +284,8 @@ export const translations: Record<string, { en: string; fr: string }> = {
   "agent.view": { en: "View", fr: "Voir" },
   "shared.search.placeholder": { en: "Search...", fr: "Rechercher..." },
   "shared.table.empty": { en: "No data found.", fr: "Aucune donnée trouvée." },
+  "admin.settings.llm.key-stored": { en: "A key is currently stored. Enter a new key to replace it.", fr: "Une clé est actuellement stockée. Saisissez-en une nouvelle pour la remplacer." },
+  "confirm.error.generic": { en: "An unexpected error occurred. Please try again.", fr: "Une erreur inattendue s'est produite. Veuillez réessayer." },
   "http.error.forbidden": { en: "You do not have permission to perform this action.", fr: "Vous n'avez pas la permission d'effectuer cette action." },
   "http.error.invalidRequest": { en: "Invalid request", fr: "Requête invalide" },
   "http.error.serverError": { en: "Server error. Please try again later.", fr: "Erreur serveur. Veuillez réessayer plus tard." },

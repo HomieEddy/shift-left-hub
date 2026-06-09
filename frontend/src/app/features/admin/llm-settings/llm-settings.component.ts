@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { $localize } from '@angular/localize/init';
 import { firstValueFrom } from 'rxjs';
+import { TranslationService } from '../../../core/i18n/translation.service';
 import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
 
 @Component({
@@ -12,6 +12,7 @@ import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
 })
 export class LlmSettingsComponent implements OnInit {
   private settingsService = inject(LlmSettingsService);
+  protected translationService = inject(TranslationService);
 
   config: AiConfigResponse | null = null;
   openaiApiKey = '';
@@ -21,10 +22,12 @@ export class LlmSettingsComponent implements OnInit {
   isSaving = false;
   saveMessage = '';
 
-  providers = [
-    { value: 'OLLAMA', label: $localize`:@@admin.settings.llm.provider.ollama:Ollama` },
-    { value: 'OPENAI', label: $localize`:@@admin.settings.llm.provider.openai:OpenAI` },
-  ];
+  get providers() {
+    return [
+      { value: 'OLLAMA', label: this.translationService.translate('admin.settings.llm.provider.ollama') },
+      { value: 'OPENAI', label: this.translationService.translate('admin.settings.llm.provider.openai') },
+    ];
+  }
   modelExamples = ['llama3.2:3b', 'llama3.1:8b', 'mistral', 'mixtral'];
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
 
@@ -51,12 +54,12 @@ export class LlmSettingsComponent implements OnInit {
     });
   }
 
-  saveLabel = $localize`:@@admin.settings.llm.save:Save Settings`;
-  savingLabel = $localize`:@@admin.settings.llm.saving:Saving...`;
-  testLabel = $localize`:@@admin.settings.llm.test:Test Connection`;
-  testingLabel = $localize`:@@admin.settings.llm.testing:Testing...`;
-  reindexLabel = $localize`:@@admin.settings.llm.reindex:Re-Embed All Articles`;
-  reindexingLabel = $localize`:@@admin.settings.llm.reindexing:Re-Embedding...`;
+  get saveLabel(): string { return this.translationService.translate('admin.settings.llm.save'); }
+  get savingLabel(): string { return this.translationService.translate('admin.settings.llm.saving'); }
+  get testLabel(): string { return this.translationService.translate('admin.settings.llm.test'); }
+  get testingLabel(): string { return this.translationService.translate('admin.settings.llm.testing'); }
+  get reindexLabel(): string { return this.translationService.translate('admin.settings.llm.reindex'); }
+  get reindexingLabel(): string { return this.translationService.translate('admin.settings.llm.reindexing'); }
 
   onProviderChange(): void {
     if (this.config == null) return;
@@ -81,9 +84,9 @@ export class LlmSettingsComponent implements OnInit {
     })).then(config => {
       this.config = config;
       this.openaiApiKey = '';
-      this.saveMessage = $localize`:@@admin.settings.llm.saved:Settings saved`;
+      this.saveMessage = this.translationService.translate('admin.settings.llm.saved');
     }).catch(() => {
-      this.saveMessage = $localize`:@@admin.settings.llm.save-error:Failed to save settings`;
+      this.saveMessage = this.translationService.translate('admin.settings.llm.save-error');
     }).finally(() => {
       this.isSaving = false;
     });
@@ -102,7 +105,7 @@ export class LlmSettingsComponent implements OnInit {
     })).then(result => {
       this.testResult = result;
     }).catch(() => {
-      this.testResult = { success: false, message: $localize`:@@admin.settings.llm.test-failure:Connection test failed` };
+      this.testResult = { success: false, message: this.translationService.translate('admin.settings.llm.test-failure') };
     }).finally(() => {
       this.isTesting = false;
     });
@@ -113,7 +116,7 @@ export class LlmSettingsComponent implements OnInit {
     firstValueFrom(this.settingsService.reindexEmbeddings()).then(result => {
       this.saveMessage = result.message;
     }).catch(() => {
-      this.saveMessage = $localize`:@@admin.settings.llm.reindex-error:Failed to start re-embedding`;
+      this.saveMessage = this.translationService.translate('admin.settings.llm.reindex-error');
     }).finally(() => {
       this.isReindexing = false;
     });

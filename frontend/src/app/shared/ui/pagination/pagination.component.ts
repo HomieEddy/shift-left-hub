@@ -1,4 +1,5 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-pagination',
@@ -10,26 +11,28 @@ import { Component, input, output } from '@angular/core';
         (click)="goToPage(currentPage() - 1)"
         [disabled]="currentPage() === 0"
         class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        i18n="@@pagination.previous"
+
       >
-        Previous
+        {{ translationService.translate('pagination.previous') }}
       </button>
-      <span class="text-sm text-slate-600" i18n="@@pagination.pageOf">
-        Page {{ currentPage() + 1 }} of {{ totalPages() }}
+      <span class="text-sm text-slate-600">
+        {{ translationService.translate('pagination.pageOf') }} {{ currentPage() + 1 }} of {{ totalPages() }}
       </span>
       <button
         (click)="goToPage(currentPage() + 1)"
         [disabled]="currentPage() >= totalPages() - 1"
         class="px-3 py-1.5 text-sm rounded border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        i18n="@@pagination.next"
+
       >
-        Next
+        {{ translationService.translate('pagination.next') }}
       </button>
       </div>
     }
   `,
 })
 export class PaginationComponent {
+  protected translationService = inject(TranslationService);
+
   currentPage = input(0);
   totalPages = input(0);
   pageChange = output<number>();

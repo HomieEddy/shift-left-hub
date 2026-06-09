@@ -1,10 +1,10 @@
 <div class="bg-white border border-slate-200 rounded-lg p-4 text-sm">
   @if (!successTicketNumber()) {
-    <h3 class="font-semibold text-slate-800 mb-3" i18n="@@escalation.title">Escalate to Human Agent</h3>
+    <h3 class="font-semibold text-slate-800 mb-3">{{ translationService.translate('escalation.title') }}</h3>
 
     <div class="space-y-3">
       <div>
-        <label for="escalation-issue" class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.issue">Issue Description</label>
+        <label for="escalation-issue" class="block text-xs font-medium text-slate-600 mb-1">{{ translationService.translate('escalation.issue') }}</label>
         <textarea
           id="escalation-issue"
           [(ngModel)]="issue"
@@ -17,7 +17,7 @@
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label for="escalation-category" class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.category">Category</label>
+          <label for="escalation-category" class="block text-xs font-medium text-slate-600 mb-1">{{ translationService.translate('escalation.category') }}</label>
           <select
             id="escalation-category"
             [(ngModel)]="category"
@@ -31,7 +31,7 @@
           </select>
         </div>
         <div>
-          <label for="escalation-urgency" class="block text-xs font-medium text-slate-600 mb-1" i18n="@@escalation.urgency">Urgency</label>
+          <label for="escalation-urgency" class="block text-xs font-medium text-slate-600 mb-1">{{ translationService.translate('escalation.urgency') }}</label>
           <select
             id="escalation-urgency"
             [(ngModel)]="urgency"
@@ -58,31 +58,30 @@
           class="rounded-lg bg-amber-600 px-4 py-2 text-sm text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           @if (isSubmitting()) {
-            <span i18n="@@escalation.submitting">Submitting...</span>
+            <span>{{ translationService.translate('escalation.submitting') }}</span>
           } @else {
-            <span i18n="@@escalation.submit">Submit Ticket</span>
+            <span>{{ translationService.translate('escalation.submit') }}</span>
           }
         </button>
         <button
           (click)="dismiss()"
           [disabled]="isSubmitting()"
           class="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-          i18n="@@escalation.cancel"
         >
-          Cancel
+          {{ translationService.translate('escalation.cancel') }}
         </button>
       </div>
     </div>
   } @else {
     <div class="text-center py-4">
       <div class="text-green-600 font-semibold mb-1">
-        <ng-container i18n="@@escalation.success">Ticket created!</ng-container>
+        <ng-container>{{ translationService.translate('escalation.success') }}</ng-container>
       </div>
-      <p class="text-slate-500 text-xs mb-3" i18n="@@escalation.successMessage">
-        An agent will review your ticket shortly.
+      <p class="text-slate-500 text-xs mb-3">
+        {{ translationService.translate('escalation.successMessage') }}
       </p>
-      <a routerLink="/tickets" class="text-blue-600 hover:text-blue-700 text-xs font-medium" i18n="@@tickets.view.link">
-        View Tickets
+      <a routerLink="/tickets" class="text-blue-600 hover:text-blue-700 text-xs font-medium">
+        {{ translationService.translate('tickets.view.link') }}
       </a>
     </div>
   }

@@ -1,5 +1,5 @@
 <div class="max-w-6xl mx-auto px-4 py-6">
-  <h1 class="text-2xl font-bold text-slate-800 mb-6" i18n="@@agent.ticketQueue">Ticket Queue</h1>
+  <h1 class="text-2xl font-bold text-slate-800 mb-6">{{ translationService.translate('agent.ticketQueue') }}</h1>
 
   <!-- Status tabs -->
   <div class="flex gap-2 mb-4">
@@ -25,7 +25,7 @@
       [value]="selectedCategory()"
       class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700"
     >
-      <option value="" i18n="@@agent.filter.allCategories">All Categories</option>
+      <option value="">{{ translationService.translate('agent.filter.allCategories') }}</option>
       @for (cat of categories.slice(1); track cat) {
         <option [value]="cat">{{ categoryLabels[cat] || cat }}</option>
       }
@@ -35,7 +35,7 @@
       [value]="selectedUrgency()"
       class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700"
     >
-      <option value="" i18n="@@agent.filter.allUrgencies">All Urgencies</option>
+      <option value="">{{ translationService.translate('agent.filter.allUrgencies') }}</option>
       @for (urg of urgencies.slice(1); track urg) {
         <option [value]="urg">{{ urgencyLabels[urg] || urg }}</option>
       }
@@ -74,14 +74,14 @@
       <table class="w-full text-sm">
         <thead class="bg-slate-50 border-b border-slate-200">
           <tr>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.ticket">Ticket #</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.user">User</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.category">Category</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.urgency">Urgency</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.status">Status</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.assigned">Assigned To</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.created">Created</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600" i18n="@@agent.table.actions">Actions</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.ticket') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.user') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.category') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.urgency') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.status') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.assigned') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.created') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('agent.table.actions') }}</th>
           </tr>
         </thead>
         <tbody>

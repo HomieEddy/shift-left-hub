@@ -1,5 +1,5 @@
-import { Component, input, output } from '@angular/core';
-import { $localize } from '@angular/localize/init';
+import { Component, inject, input, output } from '@angular/core';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 export interface Column {
   key: string;
@@ -46,8 +46,10 @@ export interface Column {
   `,
 })
 export class TableComponent {
+  private translationService = inject(TranslationService);
+
   columns = input<Column[]>([]);
-  emptyText = input($localize`:@@shared.table.empty:No data found.`);
+  emptyText = input(this.translationService.translate('shared.table.empty'));
   empty = input(false);
   sortKey = input<string>('');
   sortDir = input<'asc' | 'desc'>('asc');

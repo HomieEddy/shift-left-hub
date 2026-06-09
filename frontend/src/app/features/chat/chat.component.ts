@@ -6,6 +6,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
+import { TranslationService } from '../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-chat',
@@ -15,6 +16,7 @@ import { Subscription } from 'rxjs';
 })
 export class ChatComponent {
   private chatService = inject(ChatService);
+  protected translationService = inject(TranslationService);
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
