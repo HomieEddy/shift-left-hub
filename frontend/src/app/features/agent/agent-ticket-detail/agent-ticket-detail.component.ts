@@ -6,6 +6,7 @@ import { $localize } from '@angular/localize/init';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket, WorkNote } from '../agent-ticket.model';
+import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
 
 @Component({
   selector: 'app-agent-ticket-detail',
@@ -45,6 +46,10 @@ export class AgentTicketDetailComponent implements OnInit {
   claimError = signal<string | null>(null);
   resolveError = signal<string | null>(null);
   workNoteError = signal<string | null>(null);
+
+  readonly statusBadgeClass = statusBadgeClass;
+  readonly categoryBadgeClass = categoryBadgeClass;
+  readonly urgencyBadgeClass = urgencyBadgeClass;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -211,37 +216,4 @@ export class AgentTicketDetailComponent implements OnInit {
   addNoteErrorLabel = $localize`:@@agent.detail.addNoteError:Failed to add work note.`;
   claimErrorLabel = $localize`:@@agent.detail.claimError:Failed to claim ticket.`;
   resolveErrorLabel = $localize`:@@agent.detail.resolveError:Failed to resolve ticket.`;
-
-  /** Returns the appropriate Tailwind badge classes for a ticket status. */
-  statusBadgeClass(status: string): string {
-    switch (status) {
-      case 'NEW': return 'bg-blue-100 text-blue-700';
-      case 'IN_PROGRESS': return 'bg-amber-100 text-amber-700';
-      case 'RESOLVED': return 'bg-green-100 text-green-700';
-      case 'CANCELLED': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
-
-  /** Returns the appropriate Tailwind badge classes for an urgency level. */
-  urgencyBadgeClass(urgency: string): string {
-    switch (urgency) {
-      case 'HIGH': return 'bg-red-100 text-red-700';
-      case 'MEDIUM': return 'bg-amber-100 text-amber-700';
-      case 'LOW': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
-
-  /** Returns the appropriate Tailwind badge classes for a ticket category. */
-  categoryBadgeClass(category: string): string {
-    switch (category) {
-      case 'NETWORK': return 'bg-purple-100 text-purple-700';
-      case 'HARDWARE': return 'bg-cyan-100 text-cyan-700';
-      case 'SOFTWARE': return 'bg-indigo-100 text-indigo-700';
-      case 'ACCESS': return 'bg-teal-100 text-teal-700';
-      case 'PERIPHERALS': return 'bg-pink-100 text-pink-700';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
 }
