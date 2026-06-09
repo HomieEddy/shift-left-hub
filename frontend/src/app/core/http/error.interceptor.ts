@@ -11,7 +11,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let message = $localize`:@@http.error.unexpected:An unexpected error occurred`;
+      let message: string | null = null;
 
       if (error.status === 401) {
         message = $localize`:@@http.error.sessionExpired:Your session has expired. Please log in again.`;
@@ -19,14 +19,19 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       } else if (error.status === 403) {
         message = $localize`:@@http.error.forbidden:You do not have permission to perform this action.`;
       } else if (error.status >= 400 && error.status < 500) {
+        if (req.url.includes('/api/auth/refresh')) {
+          return throwError(() => error);
+        }
         const body = error.error as { message?: string; error?: string } | null;
         message = body?.message ?? body?.error ?? $localize`:@@http.error.invalidRequest:Invalid request`;
       } else if (error.status >= 500) {
         message = $localize`:@@http.error.serverError:Server error. Please try again later.`;
       }
 
-      toastService.error(message);
-      console.error(`[HTTP Error ${error.status}]:`, message);
+      if (message != null) {
+        toastService.error(message);
+        console.error(`[HTTP Error ${error.status}]:`, message);
+      }
 
       return throwError(() => error);
     })
