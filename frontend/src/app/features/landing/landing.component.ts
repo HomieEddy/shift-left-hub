@@ -42,7 +42,7 @@ import {
               {{ firstLetter }}
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-text-primary">{{ translationService.translate('landing.signedInAs') }} {{ authService.user()?.displayName }}</h1>
+              <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
               <p class="text-text-secondary mt-1">{{ translationService.translate('landing.hero.description') }}</p>
             </div>
           </div>
