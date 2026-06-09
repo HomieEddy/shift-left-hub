@@ -3,7 +3,7 @@ import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } fro
 import { AuthService } from './core/auth/auth.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
 import { KcsDraftService } from './features/admin/kcs-draft.service';
-import { interval, startWith, switchMap, filter } from 'rxjs';
+import { interval, switchMap, filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { 
   LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare, 
@@ -45,7 +45,7 @@ export class App {
     ).subscribe(e => this.hideSidebar.set(['/login', '/register'].includes(e.url)));
 
     interval(60000).pipe(
-      startWith(0),
+      filter(() => this.authService.isAdmin()),
       switchMap(() => this.kcsDraftService.getPendingCount()),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
