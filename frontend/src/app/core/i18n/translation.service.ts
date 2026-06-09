@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
+import { translations } from './translations';
 
 export type SupportedLanguage = 'en' | 'fr';
 
@@ -26,5 +27,11 @@ export class TranslationService {
   switchLanguage(lang: SupportedLanguage): void {
     this.currentLang.set(lang);
     localStorage.setItem(this.STORAGE_KEY, lang);
+  }
+
+  translate(key: string): string {
+    const entry = translations[key];
+    if (entry == null) return key;
+    return this.currentLang() === 'fr' ? entry.fr : entry.en;
   }
 }
