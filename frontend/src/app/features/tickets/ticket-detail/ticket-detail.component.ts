@@ -1,6 +1,7 @@
 import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { MarkdownModule } from 'ngx-markdown';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { TicketService } from '../ticket.service';
@@ -9,7 +10,7 @@ import { Ticket, ShiftLeftContext } from '../ticket.model';
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, MarkdownModule],
   templateUrl: './ticket-detail.component.html',
 })
 export class TicketDetailComponent implements OnInit {

@@ -52,15 +52,15 @@
                   [class.justify-end]="msg.role === 'user'"
                   [class.justify-start]="msg.role !== 'user'"
                 >
-                  <div class="max-w-[80%] rounded-lg px-3 py-2 text-sm leading-relaxed"
-                    [class.bg-blue-100]="msg.role === 'user'"
-                    [class.bg-white]="msg.role !== 'user'"
-                    [class.border]="msg.role !== 'user'"
-                    [class.border-slate-200]="msg.role !== 'user'"
-                    [class.text-blue-900]="msg.role === 'user'"
-                    [class.text-slate-700]="msg.role !== 'user'">
-                    {{ msg.content }}
-                  </div>
+                    <div class="max-w-[80%] rounded-lg px-3 py-2 text-sm leading-relaxed markdown-content"
+                      [class.bg-blue-100]="msg.role === 'user'"
+                      [class.bg-white]="msg.role !== 'user'"
+                      [class.border]="msg.role !== 'user'"
+                      [class.border-slate-200]="msg.role !== 'user'"
+                      [class.text-blue-900]="msg.role === 'user'"
+                      [class.text-slate-700]="msg.role !== 'user'">
+                      <markdown [data]="msg.content"></markdown>
+                    </div>
                 </div>
               }
             </div>
@@ -70,7 +70,7 @@
         @if (parsedContext()?.aiSummary) {
           <div class="border-t border-slate-100 pt-3">
             <h2 class="text-sm font-semibold text-slate-700 mb-1">{{ translationService.translate('tickets.aiSummary') }}</h2>
-            <p class="text-sm text-slate-600 bg-slate-50 rounded-lg p-3">{{ parsedContext()?.aiSummary }}</p>
+            <div class="text-sm text-slate-600 bg-slate-50 rounded-lg p-3 markdown-content"><markdown [data]="parsedContext()?.aiSummary ?? ''"></markdown></div>
           </div>
         }
 
