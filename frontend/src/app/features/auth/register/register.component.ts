@@ -19,17 +19,22 @@ export class RegisterComponent {
 
   email = '';
   password = '';
+  showPassword = false;
   displayName = '';
   errorMessage = '';
   isLoading = false;
   showPasswordRules = false;
 
+  get passwordStrength(): number {
+    let score = 0;
+    if (this.password.length >= 8) score++;
+    if (/[A-Z]/.test(this.password)) score++;
+    if (/[0-9]/.test(this.password)) score++;
+    return score;
+  }
+
   get passwordValid(): boolean {
-    return (
-      this.password.length >= 8 &&
-      /[A-Z]/.test(this.password) &&
-      /[0-9]/.test(this.password)
-    );
+    return this.passwordStrength === 3;
   }
 
   onSubmit(): void {
