@@ -64,8 +64,8 @@
   </header>
 
   <div class="flex-1 flex overflow-hidden">
-    <aside class="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 overflow-y-auto"
-      [class.hidden]="isLandingPage()">
+    @if (!isLandingPage()) {
+    <aside class="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 overflow-y-auto">
       <nav class="p-4 flex flex-col gap-1">
         @if (authService.isAuthenticated()) {
           <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">{{ translationService.translate('nav.section.user') }}</div>
@@ -185,6 +185,7 @@
         v1.0.0-PRO-UI
       </div>
     </aside>
+    }
 
     @if (isMobileMenuOpen()) {
       <div 
