@@ -1,15 +1,29 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
 import { KcsDraftService } from './features/admin/kcs-draft.service';
-import { interval, startWith, switchMap } from 'rxjs';
+import { interval, startWith, switchMap, filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { 
+  LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare, 
+  LucideTicket, LucideLayoutList, LucideUsers, LucideFileText, 
+  LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard, 
+  LucideX, LucideSearch, LucideBell, LucideChevronRight
+} from '@lucide/angular';
+import { ToastContainer } from './shared/ui/toast/toast-container';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [
+    RouterOutlet, RouterLink, RouterLinkActive,
+    LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare,
+    LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
+    LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
+    LucideX, LucideSearch, LucideBell, LucideChevronRight,
+    ToastContainer
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -21,9 +35,15 @@ export class App {
   private destroyRef = inject(DestroyRef);
 
   pendingKcsCount = signal(0);
+  isMobileMenuOpen = signal(false);
+  hideSidebar = signal(['/', '/login', '/register'].includes(this.router.url));
 
   constructor() {
-    // Poll pending KCS draft count every 60 seconds for nav badge
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(e => this.hideSidebar.set(['/', '/login', '/register'].includes(e.url)));
+
     interval(60000).pipe(
       startWith(0),
       switchMap(() => this.kcsDraftService.getPendingCount()),
@@ -34,11 +54,6 @@ export class App {
     });
   }
 
-  switchLanguage(lang: SupportedLanguage): void {
-    this.translationService.switchLanguage(lang);
-  }
-
-  logout(): void {
-    this.authService.logout().subscribe(() => { void this.router.navigate(['/']); });
-  }
+  switchLanguage(lang: SupportedLanguage): void { this.translationService.switchLanguage(lang); }
+  logout(): void { this.authService.logout().subscribe(() => { void this.router.navigate(['/']); }); }
 }

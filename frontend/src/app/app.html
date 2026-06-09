@@ -1,161 +1,237 @@
-<!-- Navigation header (always visible) -->
-<header class="bg-white border-b border-slate-200 shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-14">
-      <!-- Left side: Logo + Navigation -->
-      <div class="flex items-center gap-6">
-        <a routerLink="/" class="text-lg font-bold text-slate-800 no-underline" i18n="@@app.title"
-          >SL Knowledge Hub</a
-        >
-        <nav class="flex items-center gap-4 text-sm">
-          @if (authService.isAuthenticated() && authService.isAdmin()) {
-            <a
-              routerLink="/admin/users"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.users"
-            >
-              Users
-            </a>
-            <a
-              routerLink="/admin/articles"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.articles"
-            >
-              Articles
-            </a>
-            <a
-              routerLink="/admin/kcs-drafts"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors relative"
-              i18n="@@nav.kcs-drafts"
-            >
-              KCS Drafts
-              @if (pendingKcsCount() > 0) {
-                <span
-                  data-testid="kcs-pending-badge"
-                  class="absolute -top-1.5 -right-3 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-amber-500 rounded-full min-w-[18px]"
-                >
-                  {{ pendingKcsCount() }}
-                </span>
-              }
-            </a>
-            <a
-              routerLink="/admin/tags"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.tags"
-            >
-              Tags
-            </a>
-            <a
-              routerLink="/admin/settings/llm"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.ai-settings"
-            >
-              AI Settings
-            </a>
-          }
-          @if (authService.isAuthenticated() && (authService.isAdmin() || authService.isAgent())) {
-            <a
-              routerLink="/agent/tickets"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.ticket-queue"
-            >
-              Ticket Queue
-            </a>
-          }
-          @if (authService.isAuthenticated()) {
-            <a
-              routerLink="/chat"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.ai-assistant"
-            >
-              AI Assistant
-            </a>
-            <a
-              routerLink="/tickets"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.my-tickets"
-            >
-              My Tickets
-            </a>
-            <a
-              routerLink="/articles"
-              routerLinkActive="text-blue-600 font-medium"
-              class="text-slate-600 hover:text-slate-800 transition-colors"
-              i18n="@@nav.knowledge-base"
-            >
-              Knowledge Base
-            </a>
-          }
-        </nav>
+<div class="flex h-screen overflow-hidden bg-surface-primary">
+  @if (!hideSidebar()) {
+    <aside class="sidebar hidden lg:flex flex-col bg-surface-secondary border-r border-border-light overflow-y-auto overflow-x-hidden flex-shrink-0 h-full sticky top-0">
+      <div class="flex items-center h-14 px-3 border-b border-border-light">
+        <a routerLink="/" class="flex items-center gap-3 no-underline">
+          <div class="sidebar-icon w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm flex-shrink-0">SL</div>
+          <span class="sidebar-label text-text-primary font-semibold text-sm" i18n="@@app.title">ShiftleftHub</span>
+        </a>
       </div>
 
-      <!-- Right side: Language switcher + Auth -->
-      <div class="flex items-center gap-4">
-        <!-- Language Switcher (D-23) -->
-        <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden text-sm">
-          <button
-            (click)="switchLanguage('en')"
-            class="px-3 py-1 transition-colors"
-            [class.bg-blue-600]="translationService.currentLang() === 'en'"
-            [class.text-white]="translationService.currentLang() === 'en'"
-            [class.text-slate-600]="translationService.currentLang() !== 'en'"
-            [class.hover:bg-slate-100]="translationService.currentLang() !== 'en'"
-            i18n="@@lang.en"
-          >
-            EN
-          </button>
-          <button
-            (click)="switchLanguage('fr')"
-            class="px-3 py-1 transition-colors"
-            [class.bg-blue-600]="translationService.currentLang() === 'fr'"
-            [class.text-white]="translationService.currentLang() === 'fr'"
-            [class.text-slate-600]="translationService.currentLang() !== 'fr'"
-            [class.hover:bg-slate-100]="translationService.currentLang() !== 'fr'"
-            i18n="@@lang.fr"
-          >
-            FR
-          </button>
+      <nav class="flex flex-col gap-0.5 p-3 flex-1">
+        <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link">
+          <span class="sidebar-icon"><lucide-layout-dashboard /></span>
+          <span class="sidebar-label" i18n="@@nav.dashboard">Dashboard</span>
+        </a>
+
+        <div class="mt-4 mb-1 px-2">
+          <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.self-service">Self&#8209;Service</span>
         </div>
 
-        <!-- Auth: show user info when logged in, login/register links when not -->
+        <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link">
+          <span class="sidebar-icon"><lucide-book-open /></span>
+          <span class="sidebar-label" i18n="@@nav.knowledge-base">Knowledge Base</span>
+        </a>
+
         @if (authService.isAuthenticated()) {
-          <span class="text-sm text-slate-600">{{ authService.user()?.displayName }}</span>
+          <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><lucide-message-square /></span>
+            <span class="sidebar-label" i18n="@@nav.ai-assistant">AI Assistant</span>
+          </a>
+          <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><lucide-ticket /></span>
+            <span class="sidebar-label" i18n="@@nav.my-tickets">My Tickets</span>
+          </a>
+        }
+
+        @if (authService.isAuthenticated() && authService.isAgent()) {
+          <div class="mt-4 mb-1 px-2">
+            <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.agent-desk">Agent Desk</span>
+          </div>
+
+          <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><lucide-layout-list /></span>
+            <span class="sidebar-label" i18n="@@nav.ticket-queue">Ticket Queue</span>
+          </a>
+        }
+
+        @if (authService.isAuthenticated() && authService.isAdmin()) {
+          <div class="mt-4 mb-1 px-2">
+            <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.administration">Administration</span>
+          </div>
+
+          <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><lucide-users /></span>
+            <span class="sidebar-label" i18n="@@nav.users">Users</span>
+          </a>
+          <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><lucide-file-text /></span>
+            <span class="sidebar-label" i18n="@@nav.articles">Articles</span>
+          </a>
+          <a routerLink="/admin/kcs-drafts" routerLinkActive="sidebar-active" class="sidebar-link relative">
+            <span class="sidebar-icon"><lucide-clipboard-list /></span>
+            <span class="sidebar-label" i18n="@@nav.kcs-drafts">KCS Drafts</span>
+            @if (pendingKcsCount() > 0) {
+              <span class="absolute top-1 right-2 flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+              </span>
+            }
+          </a>
+          <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><lucide-tag /></span>
+            <span class="sidebar-label" i18n="@@nav.tags">Tags</span>
+          </a>
+          <a routerLink="/admin/settings/llm" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><lucide-settings /></span>
+            <span class="sidebar-label" i18n="@@nav.ai-settings">AI Settings</span>
+          </a>
+        }
+      </nav>
+
+      <div class="mt-auto py-6 px-4 text-center border-t border-border-light text-text-tertiary text-xs">
+        <span class="sidebar-version">ShiftleftHub v1.0</span>
+      </div>
+    </aside>
+  }
+
+  <div class="flex flex-col flex-1 min-w-0">
+    <header class="h-14 flex items-center justify-between px-4 border-b border-border-light bg-surface-primary flex-shrink-0">
+      <div class="flex items-center gap-3">
+        @if (!hideSidebar()) {
+          <button class="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(true)" i18n-aria-label="@@app.open-menu" aria-label="Open menu">
+            <lucide-menu />
+          </button>
+        }
+        @if (hideSidebar()) {
+          <a routerLink="/" class="flex items-center gap-2 no-underline">
+            <div class="w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm">SL</div>
+            <span class="font-semibold text-sm text-text-primary" i18n="@@app.title">ShiftleftHub</span>
+          </a>
+        }
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center border border-border-default rounded-lg overflow-hidden text-xs">
+          <button
+            (click)="switchLanguage('en')"
+            class="px-2.5 py-1.5 transition-colors font-medium"
+            [class.bg-accent-info]="translationService.currentLang() === 'en'"
+            [class.text-white]="translationService.currentLang() === 'en'"
+            [class.text-text-secondary]="translationService.currentLang() !== 'en'"
+            [class.hover:bg-surface-tertiary]="translationService.currentLang() !== 'en'"
+            i18n="@@lang.en"
+          >EN</button>
+          <button
+            (click)="switchLanguage('fr')"
+            class="px-2.5 py-1.5 transition-colors font-medium"
+            [class.bg-accent-info]="translationService.currentLang() === 'fr'"
+            [class.text-white]="translationService.currentLang() === 'fr'"
+            [class.text-text-secondary]="translationService.currentLang() !== 'fr'"
+            [class.hover:bg-surface-tertiary]="translationService.currentLang() !== 'fr'"
+            i18n="@@lang.fr"
+          >FR</button>
+        </div>
+
+        @if (authService.isAuthenticated()) {
+          <span class="text-sm text-text-secondary truncate max-w-[160px]">{{ authService.user()?.displayName }}</span>
           <button
             (click)="logout()"
             data-testid="nav-logout"
-            class="text-sm text-slate-500 hover:text-red-600 transition-colors"
-            i18n="@@nav.logout"
+            class="p-2 rounded-lg text-text-secondary hover:text-red-500 hover:bg-surface-tertiary transition-colors"
+            i18n-title="@@nav.logout"
+            title="Logout"
           >
-            Logout
+            <lucide-log-out />
           </button>
         } @else {
-          <a
-            routerLink="/login"
-            class="text-sm text-slate-600 hover:text-slate-800 transition-colors"
-            i18n="@@nav.signin"
-            >Sign in</a
-          >
-          <a
-            routerLink="/register"
-            class="text-sm rounded-lg bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700 transition-colors"
-            i18n="@@nav.register"
-            >Register</a
-          >
+          <a routerLink="/login" class="text-sm text-text-secondary hover:text-text-primary transition-colors" i18n="@@nav.signin">Sign in</a>
+          <a routerLink="/register" class="text-sm rounded-lg bg-accent-info px-3 py-1.5 text-white hover:opacity-90 transition-opacity" i18n="@@nav.register">Register</a>
         }
       </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto overflow-x-hidden">
+      <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8" [class.max-w-full]="hideSidebar()" [class.p-0]="hideSidebar()">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
+
+@if (isMobileMenuOpen()) {
+  <div class="fixed inset-0 z-50 lg:hidden">
+    <button type="button" class="fixed inset-0 bg-black/50 animate-in border-0 w-full cursor-default" (click)="isMobileMenuOpen.set(false)" aria-label="Close menu"></button>
+    <div class="fixed inset-y-0 left-0 w-64 bg-surface-primary shadow-xl slide-in-from-left flex flex-col">
+      <div class="flex items-center justify-between h-14 px-4 border-b border-border-light flex-shrink-0">
+        <span class="font-semibold text-sm text-text-primary" i18n="@@app.menu">Menu</span>
+        <button class="p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(false)" i18n-aria-label="@@app.close-menu" aria-label="Close menu">
+          <lucide-x />
+        </button>
+      </div>
+
+      <nav class="flex flex-col gap-0.5 p-3 overflow-y-auto flex-1">
+        <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+          <span class="sidebar-icon"><lucide-layout-dashboard /></span>
+          <span class="sidebar-label !opacity-100" i18n="@@nav.dashboard">Dashboard</span>
+        </a>
+
+        <div class="mt-4 mb-1 px-2">
+          <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.self-service">Self&#8209;Service</span>
+        </div>
+
+        <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+          <span class="sidebar-icon"><lucide-book-open /></span>
+          <span class="sidebar-label !opacity-100" i18n="@@nav.knowledge-base">Knowledge Base</span>
+        </a>
+
+        @if (authService.isAuthenticated()) {
+          <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-message-square /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.ai-assistant">AI Assistant</span>
+          </a>
+          <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-ticket /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.my-tickets">My Tickets</span>
+          </a>
+        }
+
+        @if (authService.isAuthenticated() && authService.isAgent()) {
+          <div class="mt-4 mb-1 px-2">
+            <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.agent-desk">Agent Desk</span>
+          </div>
+
+          <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-layout-list /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.ticket-queue">Ticket Queue</span>
+          </a>
+        }
+
+        @if (authService.isAuthenticated() && authService.isAdmin()) {
+          <div class="mt-4 mb-1 px-2">
+            <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.administration">Administration</span>
+          </div>
+
+          <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-users /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.users">Users</span>
+          </a>
+          <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-file-text /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.articles">Articles</span>
+          </a>
+          <a routerLink="/admin/kcs-drafts" routerLinkActive="sidebar-active" class="sidebar-link relative" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-clipboard-list /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.kcs-drafts">KCS Drafts</span>
+            @if (pendingKcsCount() > 0) {
+              <span class="absolute top-1.5 right-3 flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+              </span>
+            }
+          </a>
+          <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-tag /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.tags">Tags</span>
+          </a>
+          <a routerLink="/admin/settings/llm" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><lucide-settings /></span>
+            <span class="sidebar-label !opacity-100" i18n="@@nav.ai-settings">AI Settings</span>
+          </a>
+        }
+      </nav>
     </div>
   </div>
-</header>
+}
 
-<!-- Main content -->
-<main>
-  <router-outlet />
-</main>
+<app-toast-container />
