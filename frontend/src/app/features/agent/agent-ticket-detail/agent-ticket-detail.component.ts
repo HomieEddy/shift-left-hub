@@ -1,17 +1,19 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MarkdownModule } from 'ngx-markdown';
 import { $localize } from '@angular/localize/init';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket, WorkNote } from '../agent-ticket.model';
 import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
+import { ShiftLeftContext } from '../../tickets/ticket.model';
 
 @Component({
   selector: 'app-agent-ticket-detail',
   standalone: true,
-  imports: [DatePipe, RouterLink, FormsModule],
+  imports: [DatePipe, RouterLink, FormsModule, MarkdownModule],
   templateUrl: './agent-ticket-detail.component.html',
 })
 /**
@@ -46,6 +48,18 @@ export class AgentTicketDetailComponent implements OnInit {
   claimError = signal<string | null>(null);
   resolveError = signal<string | null>(null);
   workNoteError = signal<string | null>(null);
+
+  parsedContext = computed(() => {
+    const raw = this.ticket()?.shiftLeftContext;
+    if (raw == null) return null;
+    try {
+      return JSON.parse(raw) as ShiftLeftContext;
+    } catch {
+      return null;
+    }
+  });
+
+  transcriptMessages = computed(() => this.parsedContext()?.transcript ?? []);
 
   readonly statusBadgeClass = statusBadgeClass;
   readonly categoryBadgeClass = categoryBadgeClass;

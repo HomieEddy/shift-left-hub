@@ -64,8 +64,26 @@
               <span class="inline-block transition-transform" [class.rotate-90]="transcriptExpanded()">&#9654;</span> {{ chatTranscriptLabel }}
             </button>
             @if (transcriptExpanded()) {
-              <div class="mt-2 text-sm text-text-secondary">
-                <pre class="whitespace-pre-wrap font-sans">{{ t.shiftLeftContext }}</pre>
+              <div class="mt-2 bg-surface-secondary rounded-lg max-h-72 overflow-y-auto space-y-2 p-3">
+                @for (msg of transcriptMessages(); track $index) {
+                  <div
+                    class="flex"
+                    [class.justify-end]="msg.role === 'user'"
+                    [class.justify-start]="msg.role !== 'user'"
+                  >
+                    <div class="max-w-[80%] rounded-lg px-3 py-2 text-sm leading-relaxed"
+                      [class.bg-surface-tertiary]="msg.role === 'user'"
+                      [class.bg-surface-primary]="msg.role !== 'user'"
+                      [class.border]="msg.role !== 'user'"
+                      [class.border-border-default]="msg.role !== 'user'"
+                      [class.text-text-primary]="true"
+                      [class.text-text-secondary]="msg.role !== 'user'">
+                      <markdown class="markdown-content" [data]="msg.content"></markdown>
+                    </div>
+                  </div>
+                } @empty {
+                  <p class="text-xs text-text-tertiary text-center py-2">No transcript messages.</p>
+                }
               </div>
             }
           }
