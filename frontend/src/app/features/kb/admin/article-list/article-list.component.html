@@ -106,7 +106,7 @@
       >
         Previous
       </button>
-      <span class="text-sm text-slate-600">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+      <span class="text-sm text-slate-600" i18n="@@pagination.page-of">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
       <button
         (click)="changePage(currentPage() + 1)"
         [disabled]="currentPage() >= totalPages() - 1"

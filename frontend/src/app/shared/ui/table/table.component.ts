@@ -1,4 +1,5 @@
 import { Component, input, output } from '@angular/core';
+import { $localize } from '@angular/localize/init';
 
 export interface Column {
   key: string;
@@ -46,7 +47,7 @@ export interface Column {
 })
 export class TableComponent {
   columns = input<Column[]>([]);
-  emptyText = input('No data found.');
+  emptyText = input($localize`:@@shared.table.empty:No data found.`);
   empty = input(false);
   sortKey = input<string>('');
   sortDir = input<'asc' | 'desc'>('asc');
