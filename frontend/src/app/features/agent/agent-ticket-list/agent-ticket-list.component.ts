@@ -7,6 +7,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AgentTicketService } from '../agent-ticket.service';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { AgentTicket } from '../agent-ticket.model';
+import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
 
 @Component({
   selector: 'app-agent-ticket-list',
@@ -41,22 +42,26 @@ export class AgentTicketListComponent implements OnInit {
   readonly categories = ['', 'NETWORK', 'HARDWARE', 'SOFTWARE', 'ACCESS', 'PERIPHERALS'];
   readonly urgencies = ['', 'LOW', 'MEDIUM', 'HIGH'];
 
-  get allLabel(): string { return this.translationService.translate('agent.filter.all'); }
-  get allCategoriesLabel(): string { return this.translationService.translate('agent.filter.allCategories'); }
-  get allUrgenciesLabel(): string { return this.translationService.translate('agent.filter.allUrgencies'); }
-  get searchPlaceholder(): string { return this.translationService.translate('agent.search.placeholder'); }
-  get loadingLabel(): string { return this.translationService.translate('agent.loading'); }
-  get errorLabel(): string { return this.translationService.translate('agent.error.load'); }
-  get retryLabel(): string { return this.translationService.translate('agent.retry'); }
-  get emptyLabel(): string { return this.translationService.translate('agent.empty'); }
-  get claimLabel(): string { return this.translationService.translate('agent.claim'); }
-  get resolveLabel(): string { return this.translationService.translate('agent.resolve'); }
-  get viewLabel(): string { return this.translationService.translate('agent.view'); }
-  get unassignedLabel(): string { return this.translationService.translate('agent.unassigned'); }
-  get claimConfirmLabel(): string { return this.translationService.translate('agent.claim.confirm'); }
-  get cancelLabel(): string { return this.translationService.translate('agent.cancel'); }
-  get confirmLabel(): string { return this.translationService.translate('agent.confirm'); }
-  get claimFailedAlert(): string { return this.translationService.translate('agent.claim.error'); }
+  readonly statusBadgeClass = statusBadgeClass;
+  readonly categoryBadgeClass = categoryBadgeClass;
+  readonly urgencyBadgeClass = urgencyBadgeClass;
+
+  allLabel = $localize`:@@agent.filter.all:All`;
+  allCategoriesLabel = $localize`:@@agent.filter.allCategories:All Categories`;
+  allUrgenciesLabel = $localize`:@@agent.filter.allUrgencies:All Urgencies`;
+  searchPlaceholder = $localize`:@@agent.search.placeholder:Search by ticket # or user...`;
+  loadingLabel = $localize`:@@agent.loading:Loading tickets...`;
+  errorLabel = $localize`:@@agent.error.load:Failed to load tickets.`;
+  retryLabel = $localize`:@@agent.retry:Retry`;
+  emptyLabel = $localize`:@@agent.empty:No tickets found matching your filters`;
+  claimLabel = $localize`:@@agent.claim:Claim`;
+  resolveLabel = $localize`:@@agent.resolve:Resolve`;
+  viewLabel = $localize`:@@agent.view:View`;
+  unassignedLabel = $localize`:@@agent.unassigned:Unassigned`;
+  claimConfirmLabel = $localize`:@@agent.claim.confirm:Claim this ticket?`;
+  cancelLabel = $localize`:@@agent.cancel:Cancel`;
+  confirmLabel = $localize`:@@agent.confirm:Confirm`;
+  claimFailedAlert = $localize`:@@agent.claim.error:Failed to claim ticket.`;
 
   constructor() {
     this.searchSubject.pipe(
@@ -160,46 +165,11 @@ export class AgentTicketListComponent implements OnInit {
     };
   }
 
-  get categoryLabels(): Record<string, string> {
-    return {
-      'NETWORK': this.translationService.translate('tickets.category.network'),
-      'HARDWARE': this.translationService.translate('tickets.category.hardware'),
-      'SOFTWARE': this.translationService.translate('tickets.category.software'),
-      'ACCESS': this.translationService.translate('tickets.category.access'),
-      'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
-    };
-  }
-
-  /** Returns the appropriate Tailwind badge classes for a ticket status. */
-  statusBadgeClass(status: string): string {
-    switch (status) {
-      case 'NEW': return 'bg-blue-100 text-blue-700';
-      case 'IN_PROGRESS': return 'bg-amber-100 text-amber-700';
-      case 'RESOLVED': return 'bg-green-100 text-green-700';
-      case 'CANCELLED': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
-
-  /** Returns the appropriate Tailwind badge classes for a ticket category. */
-  categoryBadgeClass(category: string): string {
-    switch (category) {
-      case 'NETWORK': return 'bg-purple-100 text-purple-700';
-      case 'HARDWARE': return 'bg-cyan-100 text-cyan-700';
-      case 'SOFTWARE': return 'bg-indigo-100 text-indigo-700';
-      case 'ACCESS': return 'bg-teal-100 text-teal-700';
-      case 'PERIPHERALS': return 'bg-pink-100 text-pink-700';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
-
-  /** Returns the appropriate Tailwind badge classes for an urgency level. */
-  urgencyBadgeClass(urgency: string): string {
-    switch (urgency) {
-      case 'HIGH': return 'bg-red-100 text-red-700';
-      case 'MEDIUM': return 'bg-amber-100 text-amber-700';
-      case 'LOW': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
+  categoryLabels: Record<string, string> = {
+    'NETWORK': $localize`:@@tickets.category.network:Network`,
+    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
+    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
+    'ACCESS': $localize`:@@tickets.category.access:Access`,
+    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
+  };
 }

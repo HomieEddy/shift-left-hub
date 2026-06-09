@@ -1,15 +1,15 @@
-<div class="bg-white border border-slate-200 rounded-lg p-4 text-sm">
+<div class="bg-surface-primary border border-border-default rounded-xl p-4 text-sm">
   @if (!successTicketNumber()) {
-    <h3 class="font-semibold text-slate-800 mb-3">{{ translationService.translate('escalation.title') }}</h3>
+    <h3 class="font-semibold text-text-primary mb-3" i18n="@@escalation.title">Escalate to Human Agent</h3>
 
     <div class="space-y-3">
       <div>
-        <label for="escalation-issue" class="block text-xs font-medium text-slate-600 mb-1">{{ translationService.translate('escalation.issue') }}</label>
+        <label for="escalation-issue" class="block text-xs font-medium text-text-secondary mb-1" i18n="@@escalation.issue">Issue Description</label>
         <textarea
           id="escalation-issue"
           [(ngModel)]="issue"
           data-testid="escalation-issue"
-          class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="w-full rounded-xl border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
           rows="3"
           [disabled]="isSubmitting()"
         ></textarea>
@@ -17,12 +17,12 @@
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label for="escalation-category" class="block text-xs font-medium text-slate-600 mb-1">{{ translationService.translate('escalation.category') }}</label>
+          <label for="escalation-category" class="block text-xs font-medium text-text-secondary mb-1" i18n="@@escalation.category">Category</label>
           <select
             id="escalation-category"
             [(ngModel)]="category"
             data-testid="escalation-category"
-            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full rounded-lg border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
             [disabled]="isSubmitting()"
           >
             @for (cat of categories; track cat.value) {
@@ -31,12 +31,12 @@
           </select>
         </div>
         <div>
-          <label for="escalation-urgency" class="block text-xs font-medium text-slate-600 mb-1">{{ translationService.translate('escalation.urgency') }}</label>
+          <label for="escalation-urgency" class="block text-xs font-medium text-text-secondary mb-1" i18n="@@escalation.urgency">Urgency</label>
           <select
             id="escalation-urgency"
             [(ngModel)]="urgency"
             data-testid="escalation-urgency"
-            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full rounded-lg border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
             [disabled]="isSubmitting()"
           >
             @for (urg of urgencies; track urg.value) {
@@ -47,7 +47,7 @@
       </div>
 
       @if (errorMessage()) {
-        <div class="text-red-600 text-xs">{{ errorMessage() }}</div>
+        <div class="text-accent-danger text-xs">{{ errorMessage() }}</div>
       }
 
       <div class="flex gap-2">
@@ -58,7 +58,11 @@
           class="rounded-lg bg-amber-600 px-4 py-2 text-sm text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           @if (isSubmitting()) {
-            <span>{{ translationService.translate('escalation.submitting') }}</span>
+            <svg class="animate-spin -ml-1 mr-1.5 h-4 w-4 text-white inline-block" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span i18n="@@escalation.submitting">Submitting...</span>
           } @else {
             <span>{{ translationService.translate('escalation.submit') }}</span>
           }
@@ -66,7 +70,8 @@
         <button
           (click)="dismiss()"
           [disabled]="isSubmitting()"
-          class="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+          class="rounded-lg border border-border-default px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary transition-colors"
+          i18n="@@escalation.cancel"
         >
           {{ translationService.translate('escalation.cancel') }}
         </button>
@@ -74,14 +79,19 @@
     </div>
   } @else {
     <div class="text-center py-4">
-      <div class="text-green-600 font-semibold mb-1">
-        <ng-container>{{ translationService.translate('escalation.success') }}</ng-container>
+      <div class="mx-auto mb-3 w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+        <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
       </div>
-      <p class="text-slate-500 text-xs mb-3">
-        {{ translationService.translate('escalation.successMessage') }}
+      <div class="text-text-primary font-semibold mb-1">
+        <ng-container i18n="@@escalation.success">Ticket created!</ng-container>
+      </div>
+      <p class="text-text-secondary text-xs mb-3" i18n="@@escalation.successMessage">
+        An agent will review your ticket shortly.
       </p>
-      <a routerLink="/tickets" class="text-blue-600 hover:text-blue-700 text-xs font-medium">
-        {{ translationService.translate('tickets.view.link') }}
+      <a routerLink="/tickets" class="text-primary-600 hover:text-primary-700 text-xs font-medium transition-colors" i18n="@@tickets.view.link">
+        View Tickets
       </a>
     </div>
   }

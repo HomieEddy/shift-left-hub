@@ -3,10 +3,11 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslationService } from '../i18n/translation.service';
 import { catchError, throwError } from 'rxjs';
+import { ToastService } from '../../shared/ui/toast/toast.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  const translationService = inject(TranslationService);
+  const toastService = inject(ToastService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -24,7 +25,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         message = translationService.translate('http.error.serverError');
       }
 
-      // TODO: Replace with shared notification service (toast/snackbar) — planned for post-v1.0
+      toastService.error(message);
       console.error(`[HTTP Error ${error.status}]:`, message);
 
       return throwError(() => error);

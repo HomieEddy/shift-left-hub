@@ -1,57 +1,58 @@
 <div class="p-6 max-w-6xl mx-auto">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-slate-800">{{ translationService.translate('admin.users.title') }}</h1>
+    <h1 class="text-2xl font-bold text-text-primary" i18n="@@admin.users.title">User Management</h1>
     <button
       (click)="loadUsers()"
-      class="px-3 py-1.5 text-sm bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors"
+      class="px-3 py-1.5 text-sm bg-surface-secondary text-text-secondary rounded-lg hover:bg-surface-tertiary transition-colors font-medium"
+      i18n="@@admin.users.refresh"
     >
       {{ translationService.translate('admin.users.refresh') }}
     </button>
   </div>
 
   @if (errorMessage()) {
-    <p class="bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-4">
+    <p class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">
       {{ errorMessage() }}
     </p>
   }
 
   @if (isLoading()) {
-    <div class="text-center py-12 text-slate-500">
-      {{ translationService.translate('admin.users.loading') }}
+    <div class="text-center py-12 text-text-tertiary" i18n="@@admin.users.loading">
+      Loading users...
     </div>
   }
 
   @if (!isLoading()) {
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default overflow-hidden">
       <table class="w-full text-sm">
-        <thead class="bg-slate-50 border-b border-slate-200">
+        <thead class="bg-surface-secondary border-b border-border-default">
           <tr>
-            <th (click)="setSort('displayName')" class="text-left px-4 py-3 font-medium text-slate-600 cursor-pointer hover:text-slate-800">
-              <ng-container>{{ translationService.translate('admin.users.col.name') }}</ng-container><span class="text-xs">{{ sortIndicator('displayName') }}</span>
+            <th (click)="setSort('displayName')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+              <ng-container i18n="@@admin.users.col.name">Name</ng-container><span class="text-xs">{{ sortIndicator('displayName') }}</span>
             </th>
-            <th (click)="setSort('email')" class="text-left px-4 py-3 font-medium text-slate-600 cursor-pointer hover:text-slate-800">
-              <ng-container>{{ translationService.translate('admin.users.col.email') }}</ng-container><span class="text-xs">{{ sortIndicator('email') }}</span>
+            <th (click)="setSort('email')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+              <ng-container i18n="@@admin.users.col.email">Email</ng-container><span class="text-xs">{{ sortIndicator('email') }}</span>
             </th>
-            <th (click)="setSort('role')" class="text-left px-4 py-3 font-medium text-slate-600 cursor-pointer hover:text-slate-800">
-              <ng-container>{{ translationService.translate('admin.users.col.role') }}</ng-container><span class="text-xs">{{ sortIndicator('role') }}</span>
+            <th (click)="setSort('role')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+              <ng-container i18n="@@admin.users.col.role">Role</ng-container><span class="text-xs">{{ sortIndicator('role') }}</span>
             </th>
-            <th (click)="setSort('enabled')" class="text-left px-4 py-3 font-medium text-slate-600 cursor-pointer hover:text-slate-800">
-              <ng-container>{{ translationService.translate('admin.users.col.status') }}</ng-container><span class="text-xs">{{ sortIndicator('enabled') }}</span>
+            <th (click)="setSort('enabled')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+              <ng-container i18n="@@admin.users.col.status">Status</ng-container><span class="text-xs">{{ sortIndicator('enabled') }}</span>
             </th>
-            <th (click)="setSort('createdAt')" class="text-left px-4 py-3 font-medium text-slate-600 cursor-pointer hover:text-slate-800">
-              <ng-container>{{ translationService.translate('admin.users.col.created') }}</ng-container><span class="text-xs">{{ sortIndicator('createdAt') }}</span>
+            <th (click)="setSort('createdAt')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+              <ng-container i18n="@@admin.users.col.created">Created</ng-container><span class="text-xs">{{ sortIndicator('createdAt') }}</span>
             </th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('admin.users.col.actions') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.users.col.actions">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
+        <tbody class="divide-y divide-border-light">
           @for (user of sortedUsers; track user.id) {
-            <tr class="hover:bg-slate-50 transition-colors">
-              <td class="px-4 py-3 font-medium text-slate-800">{{ user.displayName }}</td>
-              <td class="px-4 py-3 text-slate-600">{{ user.email }}</td>
+            <tr class="hover:bg-surface-secondary transition-colors">
+              <td class="px-4 py-3 font-medium text-text-primary">{{ user.displayName }}</td>
+              <td class="px-4 py-3 text-text-secondary">{{ user.email }}</td>
               <td class="px-4 py-3">
                 <span
-                  [ngClass]="user.role === 'ROLE_ADMIN' ? 'bg-purple-100 text-purple-700' : user.role === 'ROLE_AGENT' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'"
+                  [ngClass]="user.role === 'ROLE_ADMIN' ? 'bg-accent-info-muted text-accent-info' : user.role === 'ROLE_AGENT' ? 'bg-accent-warning-muted text-accent-warning' : 'bg-accent-success-muted text-accent-success'"
                   class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
                 >
                   {{ roleLabels[user.role] || user.role }}
@@ -59,28 +60,29 @@
               </td>
               <td class="px-4 py-3">
                 <span
-                  [ngClass]="user.enabled ? 'text-green-600' : 'text-red-600'"
+                  [ngClass]="user.enabled ? 'text-accent-success' : 'text-accent-danger'"
                   class="inline-flex items-center gap-1 text-xs font-medium"
                 >
-                  <span class="w-1.5 h-1.5 rounded-full inline-block" [ngClass]="user.enabled ? 'bg-green-500' : 'bg-red-500'"></span>
+                  <span class="w-1.5 h-1.5 rounded-full inline-block" [ngClass]="user.enabled ? 'bg-accent-success' : 'bg-accent-danger'"></span>
                   {{ user.enabled ? statusLabels['active'] : statusLabels['disabled'] }}
                 </span>
               </td>
-              <td class="px-4 py-3 text-slate-500 text-xs">{{ formatDate(user.createdAt) }}</td>
+              <td class="px-4 py-3 text-text-tertiary text-xs">{{ formatDate(user.createdAt) }}</td>
               <td class="px-4 py-3">
                 <div class="flex items-center gap-2">
                   <button
                     (click)="openRoleDialog(user)"
-                    class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors"
+                    class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary transition-colors font-medium"
+                    i18n="@@admin.users.edit-role"
                   >
                     {{ translationService.translate('admin.users.edit-role') }}
                   </button>
                   <button
                     (click)="toggleStatus(user)"
-                    class="text-xs px-2 py-1 rounded border"
+                    class="text-xs px-2 py-1 rounded border font-medium"
                     [ngClass]="user.enabled
-                      ? 'border-red-300 text-red-600 hover:bg-red-50'
-                      : 'border-green-300 text-green-600 hover:bg-green-50'"
+                      ? 'border-accent-danger text-accent-danger hover:bg-accent-danger-muted'
+                      : 'border-accent-success text-accent-success hover:bg-accent-success-muted'"
                   >
                     {{ user.enabled ? actionDisable : actionEnable }}
                   </button>
@@ -92,8 +94,8 @@
       </table>
 
       @if (users().length === 0) {
-        <p class="text-center py-8 text-slate-500">
-          {{ translationService.translate('admin.users.no-users') }}
+        <p class="text-center py-8 text-text-tertiary" i18n="@@admin.users.no-users">
+          No users found.
         </p>
       }
     </div>
@@ -103,37 +105,38 @@
 <!-- Role Edit Dialog -->
 @if (showRoleDialog()) {
   <div class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl shadow-xl p-6 w-80">
-      <h3 class="text-lg font-semibold text-slate-800 mb-4">{{ translationService.translate('admin.users.dialog.title') }}</h3>
-      <p class="text-sm text-slate-600 mb-4">
-        <ng-container>{{ translationService.translate('admin.users.dialog.changeRole') }}</ng-container> <strong>{{ editingUser()?.displayName }}</strong>
+    <div class="bg-surface-primary rounded-xl shadow-xl p-6 w-80">
+      <h3 class="text-lg font-semibold text-text-primary mb-4" i18n="@@admin.users.dialog.title">Edit Role</h3>
+      <p class="text-sm text-text-secondary mb-4">
+        <ng-container i18n="@@admin.users.dialog.changeRole">Change role for</ng-container> <strong>{{ editingUser()?.displayName }}</strong>
       </p>
       <div class="space-y-2 mb-6">
-        <label for="admin-role" class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-slate-50">
+        <label for="admin-role" class="flex items-center gap-3 p-3 rounded-lg border border-border-default cursor-pointer hover:bg-surface-secondary">
           <input id="admin-role" type="radio" name="role" [value]="'ROLE_ADMIN'" (change)="updateRole('ROLE_ADMIN')" class="accent-blue-600" />
           <div>
-            <p class="font-medium text-sm text-slate-800">{{ translationService.translate('admin.users.role.admin') }}</p>
-            <p class="text-xs text-slate-500">{{ translationService.translate('admin.users.role.admin.desc') }}</p>
+            <p class="font-medium text-sm text-text-primary" i18n="@@admin.users.role.admin">Admin</p>
+            <p class="text-xs text-text-tertiary" i18n="@@admin.users.role.admin.desc">Full access to all features</p>
           </div>
         </label>
-        <label for="agent-role" class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-slate-50">
+        <label for="agent-role" class="flex items-center gap-3 p-3 rounded-lg border border-border-default cursor-pointer hover:bg-surface-secondary">
           <input id="agent-role" type="radio" name="role" [value]="'ROLE_AGENT'" (change)="updateRole('ROLE_AGENT')" class="accent-blue-600" />
           <div>
-            <p class="font-medium text-sm text-slate-800">{{ translationService.translate('admin.users.role.agent') }}</p>
-            <p class="text-xs text-slate-500">{{ translationService.translate('admin.users.role.agent.desc') }}</p>
+            <p class="font-medium text-sm text-text-primary" i18n="@@admin.users.role.agent">Agent</p>
+            <p class="text-xs text-text-tertiary" i18n="@@admin.users.role.agent.desc">Ticket queue and resolution access</p>
           </div>
         </label>
-        <label for="user-role" class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-slate-50">
+        <label for="user-role" class="flex items-center gap-3 p-3 rounded-lg border border-border-default cursor-pointer hover:bg-surface-secondary">
           <input id="user-role" type="radio" name="role" [value]="'ROLE_USER'" (change)="updateRole('ROLE_USER')" class="accent-blue-600" />
           <div>
-            <p class="font-medium text-sm text-slate-800">{{ translationService.translate('admin.users.role.user') }}</p>
-            <p class="text-xs text-slate-500">{{ translationService.translate('admin.users.role.user.desc') }}</p>
+            <p class="font-medium text-sm text-text-primary" i18n="@@admin.users.role.user">User</p>
+            <p class="text-xs text-text-tertiary" i18n="@@admin.users.role.user.desc">Standard user access</p>
           </div>
         </label>
       </div>
       <button
         (click)="closeRoleDialog()"
-        class="w-full text-sm text-slate-600 py-2 rounded-lg border hover:bg-slate-50 transition-colors"
+        class="w-full text-sm text-text-secondary py-2 rounded-lg border border-border-default hover:bg-surface-secondary transition-colors font-medium"
+        i18n="@@admin.users.dialog.cancel"
       >
         {{ translationService.translate('admin.users.dialog.cancel') }}
       </button>

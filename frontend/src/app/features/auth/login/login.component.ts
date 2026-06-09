@@ -19,6 +19,7 @@ export class LoginComponent {
 
   email = '';
   password = '';
+  showPassword = false;
   errorMessage = '';
   isLoading = false;
 

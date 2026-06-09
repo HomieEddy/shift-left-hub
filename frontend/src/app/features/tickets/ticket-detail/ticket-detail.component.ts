@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { TicketService } from '../ticket.service';
 import { Ticket, ShiftLeftContext } from '../ticket.model';
+import { statusBadgeClass } from '../../../shared/ui/badge/badge-utils';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -26,6 +27,8 @@ export class TicketDetailComponent implements OnInit {
   showCancelConfirm = signal(false);
   showTranscript = signal(false);
   showSources = signal(false);
+
+  readonly statusBadgeClass = statusBadgeClass;
 
   parsedContext = computed(() => {
     const raw = this.ticket()?.shiftLeftContext;
@@ -73,15 +76,5 @@ export class TicketDetailComponent implements OnInit {
         this.errorMessage.set(this.translationService.translate('tickets.detail.error.cancel'));
       },
     });
-  }
-
-  statusBadgeClass(status: string): string {
-    switch (status) {
-      case 'NEW': return 'bg-blue-100 text-blue-700';
-      case 'IN_PROGRESS': return 'bg-amber-100 text-amber-700';
-      case 'RESOLVED': return 'bg-green-100 text-green-700';
-      case 'CANCELLED': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
   }
 }

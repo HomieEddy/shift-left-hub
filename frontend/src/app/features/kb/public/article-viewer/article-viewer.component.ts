@@ -12,7 +12,6 @@ import { MarkdownModule } from 'ngx-markdown';
   standalone: true,
   imports: [DatePipe, RouterLink, MarkdownModule],
   templateUrl: './article-viewer.component.html',
-  styleUrls: ['./article-viewer.component.css'],
 })
 export class ArticleViewerComponent implements OnInit {
   private publicArticleService = inject(PublicArticleService);

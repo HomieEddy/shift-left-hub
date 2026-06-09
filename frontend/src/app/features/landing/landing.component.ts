@@ -2,135 +2,223 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { TranslationService } from '../../core/i18n/translation.service';
+import {
+  LucideMessageSquare,
+  LucideBookOpen,
+  LucideTicket,
+  LucideSearch,
+  LucideZap,
+  LucideFileText,
+  LucideSparkles,
+  LucideUsers,
+  LucideArrowRight,
+} from '@lucide/angular';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [RouterLink],
+  imports: [
+    RouterLink,
+    LucideMessageSquare,
+    LucideBookOpen,
+    LucideTicket,
+    LucideSearch,
+    LucideZap,
+    LucideFileText,
+    LucideSparkles,
+    LucideUsers,
+    LucideArrowRight,
+  ],
   template: `
     @if (authService.isAuthenticated()) {
-      <div class="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-6">SL</div>
-        <p class="text-lg text-slate-600 mb-6">{{ translationService.translate('landing.signedInAs') }} <strong class="text-slate-800">{{ authService.user()?.displayName }}</strong></p>
-        <a routerLink="/chat" class="rounded-xl bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition-all shadow-md hover:shadow-lg">
-          {{ translationService.translate('landing.goToAiAssistant') }}
-        </a>
+      <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
+        <div class="max-w-4xl mx-auto px-4 py-12">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-600 to-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+              {{ firstLetter }}
+            </div>
+            <div>
+              <p class="text-lg font-semibold text-text-primary">{{ translationService.translate('landing.signedInAs') }} {{ authService.user()?.displayName }}</p>
+              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.welcome') }}</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <a routerLink="/chat" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-4">
+                <lucide-message-square class="w-5 h-5 text-white"></lucide-message-square>
+              </div>
+              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.dashboard.chat.title') }}</h3>
+              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.dashboard.chat.hint') }}</p>
+            </a>
+            <a routerLink="/articles" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-4">
+                <lucide-book-open class="w-5 h-5 text-white"></lucide-book-open>
+              </div>
+              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.dashboard.articles.title') }}</h3>
+              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.dashboard.articles.hint') }}</p>
+            </a>
+            <a routerLink="/tickets" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center mb-4">
+                <lucide-ticket class="w-5 h-5 text-white"></lucide-ticket>
+              </div>
+              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.dashboard.tickets.title') }}</h3>
+              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.dashboard.tickets.hint') }}</p>
+            </a>
+          </div>
+
+          @if (authService.isAgent()) {
+            <div class="flex flex-wrap gap-3">
+              <a routerLink="/agent/tickets" class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-primary border border-border-default rounded-xl text-sm font-medium text-text-primary hover:bg-surface-secondary transition-colors shadow-sm">
+                <lucide-ticket class="w-4 h-4 text-text-tertiary"></lucide-ticket>
+                {{ translationService.translate('landing.dashboard.agent.tickets') }}
+                <lucide-arrow-right class="w-4 h-4 text-text-tertiary"></lucide-arrow-right>
+              </a>
+              <a routerLink="/admin/articles" class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-primary border border-border-default rounded-xl text-sm font-medium text-text-primary hover:bg-surface-secondary transition-colors shadow-sm">
+                <lucide-file-text class="w-4 h-4 text-text-tertiary"></lucide-file-text>
+                {{ translationService.translate('landing.dashboard.admin.articles') }}
+                <lucide-arrow-right class="w-4 h-4 text-text-tertiary"></lucide-arrow-right>
+              </a>
+            </div>
+          }
+        </div>
       </div>
     } @else {
-      <div class="-mx-4 sm:-mx-6 lg:-mx-8">
+      <div class="min-h-[calc(100vh-3.5rem)]">
         <!-- Hero -->
-        <section class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-500/10 via-transparent to-transparent"></div>
-          <div class="relative max-w-4xl mx-auto text-center">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
+        <section class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 px-4 py-20 sm:py-28">
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-primary-500)_0%,transparent_50%)] opacity-10"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,var(--color-primary-500)_0%,transparent_50%)] opacity-10"></div>
+
+          <div class="relative max-w-3xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-sm text-slate-300 mb-6">
+              <lucide-zap class="w-3.5 h-3.5 text-primary-400"></lucide-zap>
+              {{ translationService.translate('landing.hero.badge') }}
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">
               {{ translationService.translate('landing.hero.title') }}
             </h1>
-            <p class="text-lg sm:text-xl text-slate-300 mb-4 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
               {{ translationService.translate('landing.hero.subtitle') }}
             </p>
-            <p class="text-sm sm:text-base text-slate-400 mb-10 max-w-xl mx-auto leading-relaxed">
-              {{ translationService.translate('landing.hero.description') }}
-            </p>
+
             <div class="flex items-center justify-center gap-4">
-              <a routerLink="/register" class="rounded-xl bg-blue-600 px-8 py-3.5 text-sm font-semibold text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40">
-                {{ translationService.translate('landing.cta.register') }}
+              <a routerLink="/register" class="rounded-xl bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700 transition-colors shadow-sm">
+                {{ translationService.translate('landing.cta.getStarted') }}
               </a>
-              <a routerLink="/login" class="rounded-xl border border-slate-600 bg-white/5 px-8 py-3.5 text-sm font-semibold text-slate-200 hover:bg-white/10 hover:text-white transition-all">
+              <a routerLink="/login" class="rounded-xl border border-slate-600 bg-white/5 px-6 py-2.5 text-sm font-medium text-white hover:bg-white/10 transition-colors">
                 {{ translationService.translate('landing.cta.signin') }}
               </a>
             </div>
           </div>
-          <div class="absolute -bottom-12 left-1/2 -translate-x-1/2 w-[800px] h-[200px] bg-gradient-to-t from-blue-500/20 to-transparent blur-3xl rounded-full"></div>
         </section>
 
         <!-- How It Works -->
-        <section class="bg-slate-50 px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <section class="bg-surface-primary px-4 py-16 sm:py-20">
           <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-3">{{ translationService.translate('landing.how.title') }}</h2>
-            <p class="text-slate-500 text-center mb-12 max-w-lg mx-auto">{{ translationService.translate('landing.how.subtitle') }}</p>
+            <h2 class="text-2xl sm:text-3xl font-bold text-text-primary text-center mb-12">
+              {{ translationService.translate('landing.howItWorks.title') }}
+            </h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"/></svg>
+              <div class="text-center">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-surface-secondary border border-border-default flex items-center justify-center">
+                  <lucide-message-square class="w-6 h-6 text-primary-600"></lucide-message-square>
                 </div>
-                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step1.title') }}</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step1.desc') }}</p>
+                <h3 class="font-semibold text-text-primary mb-2">{{ translationService.translate('landing.howItWorks.step1.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.howItWorks.step1.desc') }}</p>
               </div>
-              <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+              <div class="text-center">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-surface-secondary border border-border-default flex items-center justify-center">
+                  <lucide-search class="w-6 h-6 text-primary-600"></lucide-search>
                 </div>
-                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step2.title') }}</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step2.desc') }}</p>
+                <h3 class="font-semibold text-text-primary mb-2">{{ translationService.translate('landing.howItWorks.step2.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.howItWorks.step2.desc') }}</p>
               </div>
-              <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+              <div class="text-center">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-surface-secondary border border-border-default flex items-center justify-center">
+                  <lucide-sparkles class="w-6 h-6 text-primary-600"></lucide-sparkles>
                 </div>
-                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step3.title') }}</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step3.desc') }}</p>
+                <h3 class="font-semibold text-text-primary mb-2">{{ translationService.translate('landing.howItWorks.step3.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.howItWorks.step3.desc') }}</p>
               </div>
             </div>
+            <p class="text-xs text-slate-500">{{ translationService.translate('app.footer') }}</p>
           </div>
         </section>
 
         <!-- Features -->
-        <section class="bg-white px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <section class="bg-surface-secondary px-4 py-16 sm:py-20">
           <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-3">{{ translationService.translate('landing.features.title') }}</h2>
-            <p class="text-slate-500 text-center mb-12 max-w-lg mx-auto">{{ translationService.translate('landing.features.subtitle') }}</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div class="p-6 rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all group">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <h2 class="text-2xl sm:text-3xl font-bold text-text-primary text-center mb-12">
+              {{ translationService.translate('landing.features.title') }}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+                  <lucide-search class="w-5 h-5 text-blue-600"></lucide-search>
                 </div>
-                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.feature.searchTitle') }}</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.feature.searchDesc') }}</p>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.features.search.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.features.search.desc') }}</p>
               </div>
-              <div class="p-6 rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all group">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
+              <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center mb-4">
+                  <lucide-sparkles class="w-5 h-5 text-purple-700"></lucide-sparkles>
                 </div>
-                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.feature.aiTitle') }}</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.feature.aiDesc') }}</p>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.features.ai.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.features.ai.desc') }}</p>
               </div>
-              <div class="p-6 rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all group">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+              <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center mb-4">
+                  <lucide-file-text class="w-5 h-5 text-green-600"></lucide-file-text>
                 </div>
-                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.feature.docsTitle') }}</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.feature.docsDesc') }}</p>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.features.docs.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.features.docs.desc') }}</p>
+              </div>
+              <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center mb-4">
+                  <lucide-ticket class="w-5 h-5 text-amber-600"></lucide-ticket>
+                </div>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.features.tickets.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.features.tickets.desc') }}</p>
+              </div>
+              <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center mb-4">
+                  <lucide-users class="w-5 h-5 text-cyan-700"></lucide-users>
+                </div>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.features.escalate.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.features.escalate.desc') }}</p>
+              </div>
+              <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+                  <lucide-message-square class="w-5 h-5 text-indigo-700"></lucide-message-square>
+                </div>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.features.bilingual.title') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.features.bilingual.desc') }}</p>
               </div>
             </div>
           </div>
         </section>
 
         <!-- CTA -->
-        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-          <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">{{ translationService.translate('landing.cta.title') }}</h2>
-            <p class="text-blue-100 mb-8 max-w-md mx-auto leading-relaxed">{{ translationService.translate('landing.cta.desc') }}</p>
-            <div class="flex items-center justify-center gap-4">
-              <a routerLink="/register" class="rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-blue-700 hover:bg-blue-50 transition-all shadow-lg">
-                {{ translationService.translate('landing.cta.button') }}
-              </a>
-              <a routerLink="/login" class="rounded-xl border border-white/30 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-all">
-                {{ translationService.translate('landing.cta.signin') }}
-              </a>
-            </div>
+        <section class="bg-gradient-to-r from-primary-600 to-indigo-700 px-4 py-16 sm:py-20">
+          <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">
+              {{ translationService.translate('landing.cta.section.title') }}
+            </h2>
+            <p class="text-blue-100 mb-8 leading-relaxed">
+              {{ translationService.translate('landing.cta.section.subtitle') }}
+            </p>
+            <a routerLink="/register" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-sm font-medium text-primary-600 hover:bg-blue-50 transition-colors shadow-sm">
+              {{ translationService.translate('landing.cta.startToday') }}
+              <lucide-arrow-right class="w-4 h-4"></lucide-arrow-right>
+            </a>
           </div>
         </section>
 
-        <!-- Footer simple -->
-        <footer class="bg-slate-900 px-4 sm:px-6 lg:px-8 py-8">
-          <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold text-[10px]">SL</div>
-              <span class="text-sm text-slate-400 font-medium">{{ translationService.translate('app.title') }}</span>
-            </div>
-            <p class="text-xs text-slate-500">{{ translationService.translate('app.footer') }}</p>
-          </div>
+        <!-- Footer -->
+        <footer class="bg-slate-900 px-4 py-8 text-center text-sm text-slate-500">
+          <p>&copy; {{ currentYear }} {{ translationService.translate('landing.footer.copyright') }}</p>
         </footer>
       </div>
     }
@@ -139,4 +227,13 @@ import { TranslationService } from '../../core/i18n/translation.service';
 export class LandingComponent {
   protected authService = inject(AuthService);
   protected translationService = inject(TranslationService);
+
+  protected get currentYear(): number {
+    return new Date().getFullYear();
+  }
+
+  protected get firstLetter(): string {
+    const name = this.authService.user()?.displayName ?? '';
+    return name.length > 0 ? name.charAt(0).toUpperCase() : '?';
+  }
 }

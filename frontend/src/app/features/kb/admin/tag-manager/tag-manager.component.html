@@ -1,22 +1,23 @@
 <div class="p-6 max-w-4xl mx-auto">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-slate-800">{{ translationService.translate('admin.tags.title') }}</h1>
+    <h1 class="text-2xl font-bold text-text-primary" i18n="@@admin.tags.title">Tag Management</h1>
     <button
       (click)="openCreate()"
-      class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
+      i18n="@@admin.tags.new"
     >
       {{ translationService.translate('admin.tags.new') }}
     </button>
   </div>
 
   @if (errorMessage()) {
-    <p class="bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</p>
+    <p class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</p>
   }
 
   <!-- Create/Edit Form -->
   @if (showForm()) {
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
-      <h3 class="text-lg font-semibold text-slate-800 mb-4">
+    <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6 mb-6">
+      <h3 class="text-lg font-semibold text-text-primary mb-4">
         @if (editingTag()) {
           {{ translationService.translate('admin.tags.edit') }}
         } @else {
@@ -25,35 +26,35 @@
       </h3>
       <div class="grid grid-cols-3 gap-4 mb-4">
         <div>
-          <label for="tag-name-en" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.tags.label.name-en') }}</label>
+          <label for="tag-name-en" class="block text-sm font-medium text-text-secondary mb-1" i18n="@@admin.tags.label.name-en">Name (EN)</label>
           <input
             id="tag-name-en"
             type="text"
             [(ngModel)]="formNameEn"
             required
-            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
           />
         </div>
         <div>
-          <label for="tag-name-fr" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.tags.label.name-fr') }}</label>
+          <label for="tag-name-fr" class="block text-sm font-medium text-text-secondary mb-1" i18n="@@admin.tags.label.name-fr">Name (FR)</label>
           <input
             id="tag-name-fr"
             type="text"
             [(ngModel)]="formNameFr"
             required
-            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
           />
         </div>
         <div>
-          <label for="tag-color" class="block text-sm font-medium text-slate-700 mb-1">{{ translationService.translate('admin.tags.label.color') }}</label>
+          <label for="tag-color" class="block text-sm font-medium text-text-secondary mb-1" i18n="@@admin.tags.label.color">Color</label>
           <div class="flex items-center gap-2">
             <input
               id="tag-color"
               type="color"
               [(ngModel)]="formColor"
-              class="w-10 h-10 rounded border border-slate-300 cursor-pointer"
+              class="w-10 h-10 rounded border border-border-default cursor-pointer"
             />
-            <span class="text-sm text-slate-500">{{ formColor }}</span>
+            <span class="text-sm text-text-tertiary">{{ formColor }}</span>
           </div>
         </div>
       </div>
@@ -61,7 +62,7 @@
         <button
           (click)="saveTag()"
           [disabled]="!formNameEn || !formNameFr"
-          class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
         >
           @if (editingTag()) {
             {{ translationService.translate('admin.tags.update') }}
@@ -71,7 +72,8 @@
         </button>
         <button
           (click)="cancelForm()"
-          class="px-4 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
+          class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors"
+          i18n="@@admin.articles.cancel"
         >
           {{ translationService.translate('admin.articles.cancel') }}
         </button>
@@ -81,50 +83,50 @@
 
   <!-- Tag List -->
   @if (isLoading()) {
-    <div class="text-center py-12 text-slate-500">{{ translationService.translate('admin.tags.loading') }}</div>
+    <div class="text-center py-12 text-text-tertiary" i18n="@@admin.tags.loading">Loading tags...</div>
   }
 
   @if (!isLoading()) {
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default overflow-hidden">
       <table class="w-full text-sm">
-        <thead class="bg-slate-50 border-b border-slate-200">
+        <thead class="bg-surface-secondary border-b border-border-default">
           <tr>
-            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('admin.tags.col.color') }}</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('admin.tags.col.name-en') }}</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('admin.tags.col.name-fr') }}</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('admin.tags.col.articles') }}</th>
-            <th class="text-left px-4 py-3 font-medium text-slate-600">{{ translationService.translate('admin.tags.col.actions') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.tags.col.color">Color</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.tags.col.name-en">Name (EN)</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.tags.col.name-fr">Name (FR)</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.tags.col.articles">Articles</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.tags.col.actions">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
+        <tbody class="divide-y divide-border-light">
           @for (tag of tags(); track tag.id) {
-            <tr class="hover:bg-slate-50">
+            <tr class="hover:bg-surface-secondary">
               <td class="px-4 py-3">
                 <span
-                  class="inline-block w-6 h-6 rounded border border-slate-200"
+                  class="inline-block w-6 h-6 rounded border border-border-default"
                   [style.background-color]="tag.color"
                 ></span>
               </td>
-              <td class="px-4 py-3 font-medium text-slate-800">{{ tag.nameEn }}</td>
-              <td class="px-4 py-3 text-slate-600">{{ tag.nameFr }}</td>
+              <td class="px-4 py-3 font-medium text-text-primary">{{ tag.nameEn }}</td>
+              <td class="px-4 py-3 text-text-secondary">{{ tag.nameFr }}</td>
               <td class="px-4 py-3">
-                <span class="text-slate-600">{{ tag.articleCount }}</span>
+                <span class="text-text-secondary">{{ tag.articleCount }}</span>
               </td>
               <td class="px-4 py-3">
                 <div class="flex items-center gap-1">
-                  <button (click)="openEdit(tag)" class="text-xs px-2 py-1 rounded border border-slate-300 text-slate-600 hover:bg-slate-100">
-                    {{ translationService.translate('admin.articles.edit') }}
+                  <button (click)="openEdit(tag)" class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium" i18n="@@admin.articles.edit">
+                    Edit
                   </button>
-                  <button (click)="deleteTag(tag.id, tag.nameEn)" class="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50">
-                    {{ translationService.translate('admin.articles.delete') }}
+                  <button (click)="deleteTag(tag.id, tag.nameEn)" class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium" i18n="@@admin.articles.delete">
+                    Delete
                   </button>
                 </div>
               </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="5" class="text-center py-8 text-slate-500">
-                {{ translationService.translate('admin.tags.no-tags') }}
+              <td colspan="5" class="text-center py-8 text-text-tertiary" i18n="@@admin.tags.no-tags">
+                No tags created yet. Click "New Tag" to add one.
               </td>
             </tr>
           }

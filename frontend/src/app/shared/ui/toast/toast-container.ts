@@ -1,0 +1,102 @@
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ToastService } from './toast.service';
+import { ToastMessage } from './toast.model';
+
+@Component({
+  selector: 'app-toast-container',
+  standalone: true,
+  template: `
+    <div class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 w-80 pointer-events-none" aria-live="polite" role="status">
+      @for (toast of toasts(); track toast.id) {
+        <div
+          class="pointer-events-auto flex items-start gap-3 p-3 rounded-lg border shadow-lg animate-slide-in-right"
+          [class]="toastClass(toast)"
+        >
+          <span class="shrink-0 mt-0.5" [innerHTML]="iconSvg(toast.type)"></span>
+          <p class="text-sm flex-1 mr-2 break-words">{{ toast.message }}</p>
+          <div class="flex items-center gap-1 shrink-0">
+            @if (toast.action) {
+              <button
+                (click)="runAction(toast)"
+                class="text-sm font-medium underline underline-offset-2 hover:opacity-80"
+              >
+                {{ toast.action.label }}
+              </button>
+            }
+            <button
+              (click)="dismissToast(toast.id)"
+              class="p-0.5 rounded hover:bg-black/5 transition-colors"
+              [attr.aria-label]="dismissLabel"
+            >
+              <span [innerHTML]="xIconSvg"></span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  `,
+  styles: `
+    @keyframes slide-in-right {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .animate-slide-in-right {
+      animation: slide-in-right 0.25s ease-out;
+    }
+  `,
+})
+export class ToastContainer {
+  private readonly toastService = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
+  protected readonly dismissLabel = $localize`:@@toast.dismiss:Dismiss notification`;
+  protected readonly xIconSvg = `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+  protected readonly toasts = signal<ToastMessage[]>([]);
+
+  constructor() {
+    this.toastService.toasts$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((toast: ToastMessage) => {
+      this.toasts.update((t: ToastMessage[]) => [...t, toast]);
+      const duration = toast.duration ?? 5000;
+      setTimeout(() => this.dismissToast(toast.id), duration);
+    });
+
+    this.toastService.dismiss$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((id: string) => {
+      this.toasts.update((t: ToastMessage[]) => t.filter(toast => toast.id !== id));
+    });
+  }
+
+  protected toastClass(toast: ToastMessage): string {
+    switch (toast.type) {
+      case 'success': return 'bg-green-50 border-green-200 text-green-800';
+      case 'error': return 'bg-red-50 border-red-200 text-red-800';
+      case 'warning': return 'bg-amber-50 border-amber-200 text-amber-800';
+      case 'info': return 'bg-blue-50 border-blue-200 text-blue-800';
+      default: return 'bg-slate-50 border-slate-200 text-slate-800';
+    }
+  }
+
+  protected iconSvg(type: string): string {
+    switch (type) {
+      case 'success':
+        return `<svg class="w-5 h-5 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+      case 'error':
+        return `<svg class="w-5 h-5 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+      case 'warning':
+        return `<svg class="w-5 h-5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+      case 'info':
+        return `<svg class="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+      default:
+        return `<svg class="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+    }
+  }
+
+  protected dismissToast(id: string): void {
+    this.toastService.dismiss(id);
+  }
+
+  protected runAction(toast: ToastMessage): void {
+    toast.action?.handler();
+    this.dismissToast(toast.id);
+  }
+}
