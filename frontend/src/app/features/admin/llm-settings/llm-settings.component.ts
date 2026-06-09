@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { $localize } from '@angular/localize/init';
 import { firstValueFrom } from 'rxjs';
 import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
 
@@ -21,8 +22,8 @@ export class LlmSettingsComponent implements OnInit {
   saveMessage = '';
 
   providers = [
-    { value: 'OLLAMA', label: 'Ollama' },
-    { value: 'OPENAI', label: 'OpenAI' },
+    { value: 'OLLAMA', label: $localize`:@@admin.settings.llm.provider.ollama:Ollama` },
+    { value: 'OPENAI', label: $localize`:@@admin.settings.llm.provider.openai:OpenAI` },
   ];
   modelExamples = ['llama3.2:3b', 'llama3.1:8b', 'mistral', 'mixtral'];
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
@@ -50,6 +51,13 @@ export class LlmSettingsComponent implements OnInit {
     });
   }
 
+  saveLabel = $localize`:@@admin.settings.llm.save:Save Settings`;
+  savingLabel = $localize`:@@admin.settings.llm.saving:Saving...`;
+  testLabel = $localize`:@@admin.settings.llm.test:Test Connection`;
+  testingLabel = $localize`:@@admin.settings.llm.testing:Testing...`;
+  reindexLabel = $localize`:@@admin.settings.llm.reindex:Re-Embed All Articles`;
+  reindexingLabel = $localize`:@@admin.settings.llm.reindexing:Re-Embedding...`;
+
   onProviderChange(): void {
     if (this.config == null) return;
     this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
@@ -73,9 +81,9 @@ export class LlmSettingsComponent implements OnInit {
     })).then(config => {
       this.config = config;
       this.openaiApiKey = '';
-      this.saveMessage = 'Settings saved';
+      this.saveMessage = $localize`:@@admin.settings.llm.saved:Settings saved`;
     }).catch(() => {
-      this.saveMessage = 'Failed to save settings';
+      this.saveMessage = $localize`:@@admin.settings.llm.save-error:Failed to save settings`;
     }).finally(() => {
       this.isSaving = false;
     });
@@ -94,7 +102,7 @@ export class LlmSettingsComponent implements OnInit {
     })).then(result => {
       this.testResult = result;
     }).catch(() => {
-      this.testResult = { success: false, message: 'Connection test failed' };
+      this.testResult = { success: false, message: $localize`:@@admin.settings.llm.test-failure:Connection test failed` };
     }).finally(() => {
       this.isTesting = false;
     });
@@ -105,7 +113,7 @@ export class LlmSettingsComponent implements OnInit {
     firstValueFrom(this.settingsService.reindexEmbeddings()).then(result => {
       this.saveMessage = result.message;
     }).catch(() => {
-      this.saveMessage = 'Failed to start re-embedding';
+      this.saveMessage = $localize`:@@admin.settings.llm.reindex-error:Failed to start re-embedding`;
     }).finally(() => {
       this.isReindexing = false;
     });

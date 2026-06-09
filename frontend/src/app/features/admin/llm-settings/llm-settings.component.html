@@ -2,11 +2,11 @@
   @if (config) {
     <div class="space-y-6">
       <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-        <h1 class="text-xl font-semibold text-slate-800 mb-6">LLM Provider Settings</h1>
+        <h1 class="text-xl font-semibold text-slate-800 mb-6" i18n="@@admin.settings.llm.title">LLM Provider Settings</h1>
 
         <div class="space-y-4">
           <div>
-            <label for="provider" class="block text-sm font-medium text-slate-700 mb-1">Provider</label>
+            <label for="provider" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.settings.llm.provider">Provider</label>
             <select
               id="provider"
               [(ngModel)]="config.llmProvider"
@@ -21,7 +21,7 @@
 
           @if (config.llmProvider === 'OLLAMA') {
             <div>
-              <label for="ollamaEndpoint" class="block text-sm font-medium text-slate-700 mb-1">Ollama Endpoint URL</label>
+              <label for="ollamaEndpoint" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.settings.llm.ollama-endpoint">Ollama Endpoint URL</label>
               <input
                 id="ollamaEndpoint"
                 [(ngModel)]="config.ollamaEndpointUrl"
@@ -33,7 +33,7 @@
 
           @if (config.llmProvider === 'OPENAI') {
             <div>
-              <label for="openaiKey" class="block text-sm font-medium text-slate-700 mb-1">OpenAI API Key</label>
+              <label for="openaiKey" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.settings.llm.openai-key">OpenAI API Key</label>
               <input
                 id="openaiKey"
                 [(ngModel)]="openaiApiKey"
@@ -49,10 +49,10 @@
         </div>
 
         <div class="mt-6 space-y-4">
-          <h2 class="text-sm font-semibold text-slate-700">Model Configuration</h2>
+          <h2 class="text-sm font-semibold text-slate-700" i18n="@@admin.settings.llm.model-config">Model Configuration</h2>
 
           <div>
-            <label for="chatModel" class="block text-sm font-medium text-slate-700 mb-1">Chat Model</label>
+            <label for="chatModel" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.settings.llm.chat-model">Chat Model</label>
             <input
               id="chatModel"
               [(ngModel)]="config.chatModelName"
@@ -62,7 +62,7 @@
           </div>
 
           <div>
-            <label for="embeddingModel" class="block text-sm font-medium text-slate-700 mb-1">Embedding Model</label>
+            <label for="embeddingModel" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.settings.llm.embedding-model">Embedding Model</label>
             <input
               id="embeddingModel"
               [(ngModel)]="config.embeddingModelName"
@@ -72,7 +72,7 @@
           </div>
 
           <div>
-            <label for="similarityThreshold" class="block text-sm font-medium text-slate-700 mb-1">Similarity Threshold</label>
+            <label for="similarityThreshold" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.settings.llm.threshold">Similarity Threshold</label>
             <input
               id="similarityThreshold"
               [(ngModel)]="config.similarityThreshold"
@@ -85,7 +85,7 @@
           </div>
 
           <div>
-            <label for="embeddingDimension" class="block text-sm font-medium text-slate-700 mb-1">Embedding Dimension</label>
+            <label for="embeddingDimension" class="block text-sm font-medium text-slate-700 mb-1" i18n="@@admin.settings.llm.embedding-dimension">Embedding Dimension</label>
             <input
               id="embeddingDimension"
               [value]="config.embeddingDimension"
@@ -100,15 +100,16 @@
             (click)="save()"
             [disabled]="isSaving"
             class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
+            i18n="@@admin.settings.llm.save"
           >
-            {{ isSaving ? 'Saving...' : 'Save Settings' }}
+            {{ isSaving ? savingLabel : saveLabel }}
           </button>
           <button
             (click)="testConnection()"
             [disabled]="isTesting"
             class="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
-            {{ isTesting ? 'Testing...' : 'Test Connection' }}
+            {{ isTesting ? testingLabel : testLabel }}
           </button>
         </div>
 
@@ -132,14 +133,14 @@
       </div>
 
       <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-        <h2 class="text-sm font-semibold text-slate-700 mb-3">Re-Embed Articles</h2>
-        <p class="text-amber-600 text-xs mb-3">This may take a while for large knowledge bases</p>
+        <h2 class="text-sm font-semibold text-slate-700 mb-3" i18n="@@admin.settings.llm.reindex-heading">Re-Embed Articles</h2>
+        <p class="text-amber-600 text-xs mb-3" i18n="@@admin.settings.llm.reindex-warning">This may take a while for large knowledge bases</p>
         <button
           (click)="reindex()"
           [disabled]="isReindexing"
           class="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
         >
-          {{ isReindexing ? 'Re-Embedding...' : 'Re-Embed All Articles' }}
+          {{ isReindexing ? reindexingLabel : reindexLabel }}
         </button>
       </div>
     </div>
