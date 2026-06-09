@@ -10,7 +10,7 @@
 
       <nav class="flex flex-col gap-0.5 p-3 flex-1">
         <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link">
-          <span class="sidebar-icon"><lucide-layout-dashboard /></span>
+          <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
           <span class="sidebar-label" i18n="@@nav.dashboard">Dashboard</span>
         </a>
 
@@ -19,17 +19,17 @@
         </div>
 
         <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link">
-          <span class="sidebar-icon"><lucide-book-open /></span>
+          <span class="sidebar-icon"><svg lucideBookOpen /></span>
           <span class="sidebar-label" i18n="@@nav.knowledge-base">Knowledge Base</span>
         </a>
 
         @if (authService.isAuthenticated()) {
           <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><lucide-message-square /></span>
+            <span class="sidebar-icon"><svg lucideMessageSquare /></span>
             <span class="sidebar-label" i18n="@@nav.ai-assistant">AI Assistant</span>
           </a>
           <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><lucide-ticket /></span>
+            <span class="sidebar-icon"><svg lucideTicket /></span>
             <span class="sidebar-label" i18n="@@nav.my-tickets">My Tickets</span>
           </a>
         }
@@ -40,7 +40,7 @@
           </div>
 
           <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><lucide-layout-list /></span>
+            <span class="sidebar-icon"><svg lucideLayoutList /></span>
             <span class="sidebar-label" i18n="@@nav.ticket-queue">Ticket Queue</span>
           </a>
         }
@@ -51,15 +51,15 @@
           </div>
 
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><lucide-users /></span>
+            <span class="sidebar-icon"><svg lucideUsers /></span>
             <span class="sidebar-label" i18n="@@nav.users">Users</span>
           </a>
           <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><lucide-file-text /></span>
+            <span class="sidebar-icon"><svg lucideFileText /></span>
             <span class="sidebar-label" i18n="@@nav.articles">Articles</span>
           </a>
           <a routerLink="/admin/kcs-drafts" routerLinkActive="sidebar-active" class="sidebar-link relative">
-            <span class="sidebar-icon"><lucide-clipboard-list /></span>
+            <span class="sidebar-icon"><svg lucideClipboardList /></span>
             <span class="sidebar-label" i18n="@@nav.kcs-drafts">KCS Drafts</span>
             @if (pendingKcsCount() > 0) {
               <span class="absolute top-1 right-2 flex h-2 w-2">
@@ -69,11 +69,11 @@
             }
           </a>
           <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><lucide-tag /></span>
+            <span class="sidebar-icon"><svg lucideTag /></span>
             <span class="sidebar-label" i18n="@@nav.tags">Tags</span>
           </a>
           <a routerLink="/admin/settings/llm" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><lucide-settings /></span>
+            <span class="sidebar-icon"><svg lucideSettings /></span>
             <span class="sidebar-label" i18n="@@nav.ai-settings">AI Settings</span>
           </a>
         }
@@ -90,7 +90,7 @@
       <div class="flex items-center gap-3">
         @if (!hideSidebar()) {
           <button class="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(true)" i18n-aria-label="@@app.open-menu" aria-label="Open menu">
-            <lucide-menu />
+            <svg lucideMenu />
           </button>
         }
         @if (hideSidebar()) {
@@ -132,7 +132,7 @@
             i18n-title="@@nav.logout"
             title="Logout"
           >
-            <lucide-log-out />
+            <svg lucideLogOut />
           </button>
         } @else {
           <a routerLink="/login" class="text-sm text-text-secondary hover:text-text-primary transition-colors" i18n="@@nav.signin">Sign in</a>
@@ -156,13 +156,13 @@
       <div class="flex items-center justify-between h-14 px-4 border-b border-border-light flex-shrink-0">
         <span class="font-semibold text-sm text-text-primary" i18n="@@app.menu">Menu</span>
         <button class="p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(false)" i18n-aria-label="@@app.close-menu" aria-label="Close menu">
-          <lucide-x />
+          <svg lucideX />
         </button>
       </div>
 
       <nav class="flex flex-col gap-0.5 p-3 overflow-y-auto flex-1">
         <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-          <span class="sidebar-icon"><lucide-layout-dashboard /></span>
+          <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
           <span class="sidebar-label !opacity-100" i18n="@@nav.dashboard">Dashboard</span>
         </a>
 
@@ -171,17 +171,17 @@
         </div>
 
         <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-          <span class="sidebar-icon"><lucide-book-open /></span>
+          <span class="sidebar-icon"><svg lucideBookOpen /></span>
           <span class="sidebar-label !opacity-100" i18n="@@nav.knowledge-base">Knowledge Base</span>
         </a>
 
         @if (authService.isAuthenticated()) {
           <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-message-square /></span>
+            <span class="sidebar-icon"><svg lucideMessageSquare /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.ai-assistant">AI Assistant</span>
           </a>
           <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-ticket /></span>
+            <span class="sidebar-icon"><svg lucideTicket /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.my-tickets">My Tickets</span>
           </a>
         }
@@ -192,7 +192,7 @@
           </div>
 
           <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-layout-list /></span>
+            <span class="sidebar-icon"><svg lucideLayoutList /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.ticket-queue">Ticket Queue</span>
           </a>
         }
@@ -203,15 +203,15 @@
           </div>
 
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-users /></span>
+            <span class="sidebar-icon"><svg lucideUsers /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.users">Users</span>
           </a>
           <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-file-text /></span>
+            <span class="sidebar-icon"><svg lucideFileText /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.articles">Articles</span>
           </a>
           <a routerLink="/admin/kcs-drafts" routerLinkActive="sidebar-active" class="sidebar-link relative" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-clipboard-list /></span>
+            <span class="sidebar-icon"><svg lucideClipboardList /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.kcs-drafts">KCS Drafts</span>
             @if (pendingKcsCount() > 0) {
               <span class="absolute top-1.5 right-3 flex h-2 w-2">
@@ -221,11 +221,11 @@
             }
           </a>
           <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-tag /></span>
+            <span class="sidebar-icon"><svg lucideTag /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.tags">Tags</span>
           </a>
           <a routerLink="/admin/settings/llm" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
-            <span class="sidebar-icon"><lucide-settings /></span>
+            <span class="sidebar-icon"><svg lucideSettings /></span>
             <span class="sidebar-label !opacity-100" i18n="@@nav.ai-settings">AI Settings</span>
           </a>
         }

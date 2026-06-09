@@ -10,7 +10,7 @@
     @if (messages().length === 0) {
       <div class="flex flex-col items-center justify-center h-full text-center py-12">
         <div class="w-14 h-14 rounded-xl bg-surface-tertiary flex items-center justify-center mb-4">
-          <lucide-message-circle class="w-7 h-7 text-text-tertiary"></lucide-message-circle>
+          <svg lucideMessageCircle class="w-7 h-7 text-text-tertiary"></svg>
         </div>
         <p class="text-text-secondary text-sm" i18n="@@chat.empty-state">Start a conversation by describing your IT issue below.</p>
       </div>
@@ -28,7 +28,7 @@
       @if (msg.role === 'assistant') {
         <div class="flex justify-start gap-2">
           <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center flex-shrink-0 mt-1">
-            <lucide-message-circle class="w-4 h-4 text-white"></lucide-message-circle>
+            <svg lucideMessageCircle class="w-4 h-4 text-white"></svg>
           </div>
           <div data-testid="assistant-message" class="max-w-[75%] bg-surface-tertiary text-text-primary rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm prose prose-sm">
             @if (msg.content) {
@@ -117,7 +117,7 @@
         data-testid="chat-send"
         class="rounded-xl bg-primary-600 px-4 py-2.5 text-sm text-white hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm flex items-center gap-1.5"
       >
-        <lucide-send class="w-4 h-4"></lucide-send>
+        <svg lucideSend class="w-4 h-4"></svg>
         <span class="hidden sm:inline" i18n="@@chat.send">Send</span>
       </button>
     </div>

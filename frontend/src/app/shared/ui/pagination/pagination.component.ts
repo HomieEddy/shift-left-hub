@@ -27,7 +27,7 @@ import { Component, computed, input, output } from '@angular/core';
                 [class.text-slate-600]="page !== currentPage()"
                 [class.hover:bg-slate-100]="page !== currentPage()"
               >
-                {{ page + 1 }}
+                {{ pageLabel(page) }}
               </button>
             }
           }
@@ -88,5 +88,9 @@ export class PaginationComponent {
     if (typeof page === 'number' && page >= 0 && page < this.totalPages()) {
       this.pageChange.emit(page);
     }
+  }
+
+  pageLabel(p: number | string): string {
+    return typeof p === 'number' ? String(p + 1) : String(p);
   }
 }
