@@ -18,7 +18,6 @@ import {
   LucideTag,
   LucideShield,
   LucideCheckCircle,
-  LucideClock,
   LucideHelpCircle,
   LucideInbox,
 } from '@lucide/angular';
@@ -43,7 +42,6 @@ import {
     LucideTag,
     LucideShield,
     LucideCheckCircle,
-    LucideClock,
     LucideHelpCircle,
     LucideInbox,
   ],
@@ -76,7 +74,7 @@ import {
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.users') }}</h3>
-                  <p class="text-xs text-text-secondary mt-1">Manage user accounts, roles, and access</p>
+                   <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.usersDesc') }}</p>
                 </div>
                 <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></lucide-arrow-right>
               </a>
@@ -87,18 +85,18 @@ import {
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.articles') }}</h3>
-                  <p class="text-xs text-text-secondary mt-1">Create, edit, and publish knowledge articles</p>
-                </div>
-                <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></lucide-arrow-right>
-              </a>
+                   <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.articlesDesc') }}</p>
+                 </div>
+                 <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></lucide-arrow-right>
+               </a>
 
-              <a routerLink="/admin/tags" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <lucide-tag class="w-5 h-5 text-indigo-600"></lucide-tag>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.tags') }}</h3>
-                  <p class="text-xs text-text-secondary mt-1">Organize articles with tags and categories</p>
+               <a routerLink="/admin/tags" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
+                 <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                   <lucide-tag class="w-5 h-5 text-indigo-600"></lucide-tag>
+                 </div>
+                 <div class="flex-1 min-w-0">
+                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.tags') }}</h3>
+                   <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.tagsDesc') }}</p>
                 </div>
                 <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></lucide-arrow-right>
               </a>
@@ -109,7 +107,7 @@ import {
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.kcs-drafts') }}</h3>
-                  <p class="text-xs text-text-secondary mt-1">Review and approve AI-generated draft articles</p>
+                   <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.draftsDesc') }}</p>
                 </div>
                 <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></lucide-arrow-right>
               </a>
@@ -120,7 +118,7 @@ import {
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.ai-settings') }}</h3>
-                  <p class="text-xs text-text-secondary mt-1">Configure LLM providers and embedding models</p>
+                   <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.settingsDesc') }}</p>
                 </div>
                 <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></lucide-arrow-right>
               </a>
@@ -131,7 +129,7 @@ import {
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.ticket-queue') }}</h3>
-                  <p class="text-xs text-text-secondary mt-1">View and manage the agent ticket queue</p>
+                   <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.queueDesc') }}</p>
                 </div>
                 <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></lucide-arrow-right>
               </a>
@@ -162,9 +160,9 @@ import {
                 <div class="relative z-10">
                   <lucide-inbox class="w-8 h-8 mb-3 opacity-80"></lucide-inbox>
                   <h2 class="text-xl font-bold mb-1">{{ translationService.translate('nav.ticket-queue') }}</h2>
-                  <p class="text-amber-100 text-sm mb-4">Review, claim, and resolve user support tickets</p>
+                   <p class="text-amber-100 text-sm mb-4">{{ translationService.translate('landing.dashboard.agent.ticketQueueDesc') }}</p>
                   <span class="inline-flex items-center gap-1 text-sm font-medium text-white group-hover:gap-2 transition-all">
-                    View Queue <lucide-arrow-right class="w-4 h-4"></lucide-arrow-right>
+                     {{ translationService.translate('landing.dashboard.agent.viewQueue') }} <lucide-arrow-right class="w-4 h-4"></lucide-arrow-right>
                   </span>
                 </div>
                 <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8"></div>
@@ -177,7 +175,7 @@ import {
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.ai-assistant') }}</h3>
-                    <p class="text-xs text-text-secondary mt-0.5">Test the AI assistant experience</p>
+                     <p class="text-xs text-text-secondary mt-0.5">{{ translationService.translate('landing.dashboard.agent.testAi') }}</p>
                   </div>
                   <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0"></lucide-arrow-right>
                 </a>
@@ -187,44 +185,44 @@ import {
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.knowledge-base') }}</h3>
-                    <p class="text-xs text-text-secondary mt-0.5">Browse and search knowledge articles</p>
+                     <p class="text-xs text-text-secondary mt-0.5">{{ translationService.translate('landing.dashboard.agent.browseKb') }}</p>
                   </div>
                   <lucide-arrow-right class="w-4 h-4 text-text-tertiary flex-shrink-0"></lucide-arrow-right>
                 </a>
               </div>
             </div>
 
-            <h2 class="text-lg font-semibold text-text-primary mb-4">Agent Workflow</h2>
+             <h2 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('landing.dashboard.agent.workflow') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-5">
                 <div class="flex items-center gap-3 mb-3">
                   <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
                     <lucide-inbox class="w-4 h-4 text-amber-600"></lucide-inbox>
                   </div>
-                  <span class="text-xs font-bold text-text-tertiary">STEP 1</span>
-                </div>
-                <h3 class="font-semibold text-text-primary text-sm mb-1">Review Incoming Tickets</h3>
-                <p class="text-xs text-text-secondary leading-relaxed">Monitor the ticket queue. Each ticket includes the full AI chat transcript and context for fast triage.</p>
+                   <span class="text-xs font-bold text-text-tertiary">{{ translationService.translate('landing.dashboard.agent.step') }} 1</span>
+                 </div>
+                 <h3 class="font-semibold text-text-primary text-sm mb-1">{{ translationService.translate('landing.dashboard.agent.step1.title') }}</h3>
+                 <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.dashboard.agent.step1.desc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-5">
                 <div class="flex items-center gap-3 mb-3">
                   <div class="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center flex-shrink-0">
                     <lucide-check-circle class="w-4 h-4 text-primary-600"></lucide-check-circle>
                   </div>
-                  <span class="text-xs font-bold text-text-tertiary">STEP 2</span>
-                </div>
-                <h3 class="font-semibold text-text-primary text-sm mb-1">Resolve with Full Context</h3>
-                <p class="text-xs text-text-secondary leading-relaxed">Add work notes, review the Shift-Left context, and resolve tickets with detailed resolution steps.</p>
+                   <span class="text-xs font-bold text-text-tertiary">{{ translationService.translate('landing.dashboard.agent.step') }} 2</span>
+                 </div>
+                 <h3 class="font-semibold text-text-primary text-sm mb-1">{{ translationService.translate('landing.dashboard.agent.step2.title') }}</h3>
+                 <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.dashboard.agent.step2.desc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-5">
                 <div class="flex items-center gap-3 mb-3">
                   <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
                     <lucide-sparkles class="w-4 h-4 text-green-600"></lucide-sparkles>
                   </div>
-                  <span class="text-xs font-bold text-text-tertiary">STEP 3</span>
-                </div>
-                <h3 class="font-semibold text-text-primary text-sm mb-1">Grow the Knowledge Base</h3>
-                <p class="text-xs text-text-secondary leading-relaxed">Resolved tickets automatically generate knowledge drafts via KCS. Flag knowledge gaps for new article creation.</p>
+                   <span class="text-xs font-bold text-text-tertiary">{{ translationService.translate('landing.dashboard.agent.step') }} 3</span>
+                 </div>
+                 <h3 class="font-semibold text-text-primary text-sm mb-1">{{ translationService.translate('landing.dashboard.agent.step3.title') }}</h3>
+                 <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.dashboard.agent.step3.desc') }}</p>
               </div>
             </div>
           </div>
@@ -250,8 +248,8 @@ import {
             <div class="bg-gradient-to-br from-primary-500 to-indigo-600 rounded-2xl p-6 sm:p-8 text-white shadow-md mb-10">
               <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <h2 class="text-xl sm:text-2xl font-bold mb-2">Need help with an IT issue?</h2>
-                  <p class="text-primary-100 text-sm max-w-md">Ask the AI assistant. It searches the knowledge base and provides instant answers backed by verified solutions.</p>
+                   <h2 class="text-xl sm:text-2xl font-bold mb-2">{{ translationService.translate('landing.dashboard.user.heroTitle') }}</h2>
+                   <p class="text-primary-100 text-sm max-w-md">{{ translationService.translate('landing.dashboard.user.heroDesc') }}</p>
                 </div>
                 <a routerLink="/chat" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-sm font-semibold text-primary-700 hover:bg-primary-50 transition-colors shadow-sm whitespace-nowrap flex-shrink-0">
                   {{ translationService.translate('nav.ai-assistant') }}
@@ -321,21 +319,21 @@ import {
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-5">
                 <div class="flex items-center gap-2 mb-3">
                   <lucide-help-circle class="w-5 h-5 text-primary-600"></lucide-help-circle>
-                  <h3 class="font-semibold text-text-primary text-sm">Tips for getting started</h3>
-                </div>
-                <ul class="space-y-2 text-xs text-text-secondary">
-                  <li class="flex items-start gap-2">
-                    <lucide-check-circle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></lucide-check-circle>
-                    <span>Use the <strong class="text-text-primary">AI Assistant</strong> for instant answers to common IT problems.</span>
-                  </li>
-                  <li class="flex items-start gap-2">
-                    <lucide-check-circle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></lucide-check-circle>
-                    <span>Browse the <strong class="text-text-primary">Knowledge Base</strong> for step-by-step guides and documentation.</span>
-                  </li>
-                  <li class="flex items-start gap-2">
-                    <lucide-check-circle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></lucide-check-circle>
-                    <span>Track your <strong class="text-text-primary">Tickets</strong> to see the status of escalated issues.</span>
-                  </li>
+                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('landing.dashboard.user.tipsTitle') }}</h3>
+                 </div>
+                 <ul class="space-y-2 text-xs text-text-secondary">
+                   <li class="flex items-start gap-2">
+                     <lucide-check-circle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></lucide-check-circle>
+                     {{ translationService.translate('landing.dashboard.user.tip1') }}
+                   </li>
+                   <li class="flex items-start gap-2">
+                     <lucide-check-circle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></lucide-check-circle>
+                     {{ translationService.translate('landing.dashboard.user.tip2') }}
+                   </li>
+                   <li class="flex items-start gap-2">
+                     <lucide-check-circle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></lucide-check-circle>
+                     {{ translationService.translate('landing.dashboard.user.tip3') }}
+                   </li>
                 </ul>
               </div>
             </div>
@@ -438,22 +436,22 @@ import {
                 <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center mb-4">
                   <lucide-ticket class="w-5 h-5 text-amber-600"></lucide-ticket>
                 </div>
-                <h3 class="font-semibold text-text-primary mb-1">Smart Escalation</h3>
-                <p class="text-sm text-text-secondary leading-relaxed">When AI cannot resolve, tickets escalate with full transcript and context to human agents.</p>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.escalateTitle') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.escalateDesc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center mb-4">
                   <lucide-shield class="w-5 h-5 text-cyan-700"></lucide-shield>
                 </div>
-                <h3 class="font-semibold text-text-primary mb-1">Role-Based Access</h3>
-                <p class="text-sm text-text-secondary leading-relaxed">Users self-serve, agents manage queues, admins curate the knowledge base.</p>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.rolesTitle') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.rolesDesc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
                   <lucide-message-square class="w-5 h-5 text-indigo-700"></lucide-message-square>
                 </div>
-                <h3 class="font-semibold text-text-primary mb-1">Bilingual EN / FR</h3>
-                <p class="text-sm text-text-secondary leading-relaxed">Full English and French support across the entire application interface.</p>
+                <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.bilingualTitle') }}</h3>
+                <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.bilingualDesc') }}</p>
               </div>
             </div>
           </div>
