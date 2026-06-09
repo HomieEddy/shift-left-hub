@@ -1255,8 +1255,12 @@
         <target>An unexpected error occurred. Please try again.</target>
       </trans-unit>
       <trans-unit id="landing.hero.badge">
-        <source>AI-Powered IT Support</source>
-        <target>AI-Powered IT Support</target>
+        <source>Shift-Left Support Platform</source>
+        <target>Shift-Left Support Platform</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.response">
+        <source>Agent Productivity Boost</source>
+        <target>Agent Productivity Boost</target>
       </trans-unit>
       <trans-unit id="landing.stats.accuracy">
         <source>Resolution Accuracy</source>
@@ -1275,8 +1279,32 @@
         <target>How It Works</target>
       </trans-unit>
       <trans-unit id="landing.how.subtitle">
-        <source>Three simple steps to resolve IT issues before they reach your team</source>
-        <target>Three simple steps to resolve IT issues before they reach your team</target>
+        <source>From ticket submission to self-service knowledge in three steps</source>
+        <target>From ticket submission to self-service knowledge in three steps</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.title">
+        <source>User Submits Issue</source>
+        <target>User Submits Issue</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</source>
+        <target>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Matches or Escalates</source>
+        <target>AI Matches or Escalates</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</source>
+        <target>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</source>
+        <target>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</target>
+      </trans-unit>
+      <trans-unit id="landing.features.subtitle">
+        <source>Built for IT service desks that want to shift left using KCS methodology</source>
+        <target>Built for IT service desks that want to shift left using KCS methodology</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.title">
         <source>User Describes Issue</source>

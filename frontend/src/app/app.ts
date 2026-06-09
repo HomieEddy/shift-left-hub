@@ -54,7 +54,7 @@ export class App {
 
   pendingKcsCount = signal(0);
   isMobileMenuOpen = signal(false);
-  isLandingPage = signal(false);
+  isLandingPage = signal(this.router.url === '/');
 
   constructor() {
     this.router.events.pipe(

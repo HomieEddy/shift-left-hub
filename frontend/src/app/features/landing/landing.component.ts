@@ -61,7 +61,7 @@ import { TranslationService } from '../../core/i18n/translation.service';
                 <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.intercepted') }}</div>
               </div>
               <div>
-                <div class="text-3xl font-bold text-blue-600 mb-1">&lt;15s</div>
+                <div class="text-3xl font-bold text-blue-600 mb-1">5&times;</div>
                 <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.response') }}</div>
               </div>
             </div>
@@ -75,17 +75,23 @@ import { TranslationService } from '../../core/i18n/translation.service';
             <p class="text-slate-500 text-center mb-12 max-w-lg mx-auto">{{ translationService.translate('landing.how.subtitle') }}</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">1</div>
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"/></svg>
+                </div>
                 <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step1.title') }}</h3>
                 <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step1.desc') }}</p>
               </div>
               <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">2</div>
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                </div>
                 <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step2.title') }}</h3>
                 <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step2.desc') }}</p>
               </div>
               <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">3</div>
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                </div>
                 <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step3.title') }}</h3>
                 <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step3.desc') }}</p>
               </div>

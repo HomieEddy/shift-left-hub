@@ -1255,8 +1255,12 @@
         <target>Une erreur inattendue s'est produite. Veuillez réessayer.</target>
       </trans-unit>
       <trans-unit id="landing.hero.badge">
-        <source>AI-Powered IT Support</source>
-        <target>Support IT propulsé par l'IA</target>
+        <source>Shift-Left Support Platform</source>
+        <target>Plateforme de support Shift-Left</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.response">
+        <source>Agent Productivity Boost</source>
+        <target>Gain de productivité agent</target>
       </trans-unit>
       <trans-unit id="landing.stats.accuracy">
         <source>Resolution Accuracy</source>
@@ -1275,8 +1279,32 @@
         <target>Comment ça fonctionne</target>
       </trans-unit>
       <trans-unit id="landing.how.subtitle">
-        <source>Three simple steps to resolve IT issues before they reach your team</source>
-        <target>Trois étapes simples pour résoudre les problèmes IT avant qu'ils n'atteignent votre équipe</target>
+        <source>From ticket submission to self-service knowledge in three steps</source>
+        <target>De la soumission de ticket à la connaissance en libre-service en trois étapes</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.title">
+        <source>User Submits Issue</source>
+        <target>L'utilisateur soumet un problème</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</source>
+        <target>L'utilisateur décrit son problème IT via l'assistant IA ou le formulaire de ticket. Le système capture le contexte, la catégorie et l'urgence automatiquement.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Matches or Escalates</source>
+        <target>L'IA associe ou transfère</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</source>
+        <target>L'IA recherche dans la base de connaissances des solutions pertinentes. Trouvée, l'utilisateur obtient une réponse instantanée. Sinon, un ticket est créé et assigné à un agent automatiquement.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</source>
+        <target>Quand un agent résout un ticket, un article de connaissance est rédigé automatiquement via KCS. La base de connaissances grandit organiquement, réduisant les futurs tickets et la charge de travail des agents.</target>
+      </trans-unit>
+      <trans-unit id="landing.features.subtitle">
+        <source>Built for IT service desks that want to shift left using KCS methodology</source>
+        <target>Conçu pour les services desk IT qui veulent shift-left avec la méthodologie KCS</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.title">
         <source>User Describes Issue</source>
