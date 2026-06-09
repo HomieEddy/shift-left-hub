@@ -1,4 +1,4 @@
-.sidebar { width: 64px; transition: width 200ms ease-out; }
+.sidebar { width: 72px; transition: width 200ms ease-out; }
 .sidebar:hover { width: 240px; transition: width 200ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .sidebar, .sidebar:hover { transition: none; } }
 
