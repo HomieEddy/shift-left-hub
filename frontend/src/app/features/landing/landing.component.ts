@@ -12,6 +12,7 @@ import {
   LucideSparkles,
   LucideUsers,
   LucideArrowRight,
+  LucideLayoutDashboard,
 } from '@lucide/angular';
 
 @Component({
@@ -28,57 +29,112 @@ import {
     LucideSparkles,
     LucideUsers,
     LucideArrowRight,
+    LucideLayoutDashboard,
   ],
   template: `
     @if (authService.isAuthenticated()) {
       <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
-        <div class="max-w-4xl mx-auto px-4 py-12">
-          <div class="flex items-center gap-4 mb-8">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-600 to-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-10 sm:py-14">
+
+          <!-- Welcome -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-10">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
               {{ firstLetter }}
             </div>
             <div>
-              <p class="text-lg font-semibold text-text-primary">{{ translationService.translate('landing.signedInAs') }} {{ authService.user()?.displayName }}</p>
-              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.welcome') }}</p>
+              <h1 class="text-2xl font-bold text-text-primary">{{ translationService.translate('landing.signedInAs') }} {{ authService.user()?.displayName }}</h1>
+              <p class="text-text-secondary mt-1">{{ translationService.translate('landing.hero.description') }}</p>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <a routerLink="/chat" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-4">
+          <!-- Quick actions -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+            <a routerLink="/chat" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-primary-200 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <lucide-message-square class="w-5 h-5 text-white"></lucide-message-square>
               </div>
-              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.dashboard.chat.title') }}</h3>
-              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.dashboard.chat.hint') }}</p>
+              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('nav.ai-assistant') }}</h3>
+              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.feature.aiDesc') }}</p>
             </a>
-            <a routerLink="/articles" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-4">
+            <a routerLink="/articles" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-emerald-200 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <lucide-book-open class="w-5 h-5 text-white"></lucide-book-open>
               </div>
-              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.dashboard.articles.title') }}</h3>
-              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.dashboard.articles.hint') }}</p>
+              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('nav.knowledge-base') }}</h3>
+              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.feature.searchDesc') }}</p>
             </a>
-            <a routerLink="/tickets" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center mb-4">
+            <a routerLink="/tickets" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-amber-200 transition-all">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <lucide-ticket class="w-5 h-5 text-white"></lucide-ticket>
               </div>
-              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.dashboard.tickets.title') }}</h3>
-              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.dashboard.tickets.hint') }}</p>
+              <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('nav.my-tickets') }}</h3>
+              <p class="text-sm text-text-secondary">{{ translationService.translate('landing.feature.docsDesc') }}</p>
             </a>
           </div>
 
-          @if (authService.isAgent()) {
-            <div class="flex flex-wrap gap-3">
-              <a routerLink="/agent/tickets" class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-primary border border-border-default rounded-xl text-sm font-medium text-text-primary hover:bg-surface-secondary transition-colors shadow-sm">
-                <lucide-ticket class="w-4 h-4 text-text-tertiary"></lucide-ticket>
-                {{ translationService.translate('landing.dashboard.agent.tickets') }}
-                <lucide-arrow-right class="w-4 h-4 text-text-tertiary"></lucide-arrow-right>
-              </a>
-              <a routerLink="/admin/articles" class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-primary border border-border-default rounded-xl text-sm font-medium text-text-primary hover:bg-surface-secondary transition-colors shadow-sm">
-                <lucide-file-text class="w-4 h-4 text-text-tertiary"></lucide-file-text>
-                {{ translationService.translate('landing.dashboard.admin.articles') }}
-                <lucide-arrow-right class="w-4 h-4 text-text-tertiary"></lucide-arrow-right>
-              </a>
+          <!-- How it works (abbreviated) -->
+          <div class="mb-10">
+            <h2 class="text-lg font-semibold text-text-primary mb-5">{{ translationService.translate('landing.how.title') }}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-lg bg-surface-tertiary flex items-center justify-center flex-shrink-0">
+                  <span class="text-sm font-bold text-primary-600">1</span>
+                </div>
+                <div>
+                  <h3 class="font-medium text-sm text-text-primary mb-1">{{ translationService.translate('landing.how.step1.title') }}</h3>
+                  <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.how.step1.desc') }}</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-lg bg-surface-tertiary flex items-center justify-center flex-shrink-0">
+                  <span class="text-sm font-bold text-primary-600">2</span>
+                </div>
+                <div>
+                  <h3 class="font-medium text-sm text-text-primary mb-1">{{ translationService.translate('landing.how.step2.title') }}</h3>
+                  <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.how.step2.desc') }}</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-lg bg-surface-tertiary flex items-center justify-center flex-shrink-0">
+                  <span class="text-sm font-bold text-primary-600">3</span>
+                </div>
+                <div>
+                  <h3 class="font-medium text-sm text-text-primary mb-1">{{ translationService.translate('landing.how.step3.title') }}</h3>
+                  <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.how.step3.desc') }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if (authService.isAdmin() || authService.isAgent()) {
+            <div>
+              <h2 class="text-lg font-semibold text-text-primary mb-4">
+                {{ authService.isAdmin() ? translationService.translate('nav.section.admin') : translationService.translate('nav.section.agent') }}
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <a routerLink="/agent/tickets" class="flex items-center gap-3 px-4 py-3 bg-surface-primary border border-border-default rounded-xl hover:bg-surface-secondary transition-colors shadow-sm">
+                  <lucide-layout-dashboard class="w-5 h-5 text-amber-600"></lucide-layout-dashboard>
+                  <span class="text-sm font-medium text-text-primary">{{ translationService.translate('nav.ticket-queue') }}</span>
+                  <lucide-arrow-right class="w-4 h-4 text-text-tertiary ml-auto"></lucide-arrow-right>
+                </a>
+                @if (authService.isAdmin()) {
+                  <a routerLink="/admin/users" class="flex items-center gap-3 px-4 py-3 bg-surface-primary border border-border-default rounded-xl hover:bg-surface-secondary transition-colors shadow-sm">
+                    <lucide-users class="w-5 h-5 text-indigo-600"></lucide-users>
+                    <span class="text-sm font-medium text-text-primary">{{ translationService.translate('nav.users') }}</span>
+                    <lucide-arrow-right class="w-4 h-4 text-text-tertiary ml-auto"></lucide-arrow-right>
+                  </a>
+                  <a routerLink="/admin/articles" class="flex items-center gap-3 px-4 py-3 bg-surface-primary border border-border-default rounded-xl hover:bg-surface-secondary transition-colors shadow-sm">
+                    <lucide-file-text class="w-5 h-5 text-indigo-600"></lucide-file-text>
+                    <span class="text-sm font-medium text-text-primary">{{ translationService.translate('nav.articles') }}</span>
+                    <lucide-arrow-right class="w-4 h-4 text-text-tertiary ml-auto"></lucide-arrow-right>
+                  </a>
+                  <a routerLink="/admin/settings/llm" class="flex items-center gap-3 px-4 py-3 bg-surface-primary border border-border-default rounded-xl hover:bg-surface-secondary transition-colors shadow-sm">
+                    <lucide-zap class="w-5 h-5 text-indigo-600"></lucide-zap>
+                    <span class="text-sm font-medium text-text-primary">{{ translationService.translate('nav.ai-settings') }}</span>
+                    <lucide-arrow-right class="w-4 h-4 text-text-tertiary ml-auto"></lucide-arrow-right>
+                  </a>
+                }
+              </div>
             </div>
           }
         </div>
