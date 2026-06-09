@@ -1,10 +1,10 @@
-<div class="max-w-4xl mx-auto h-[calc(100vh-3.5rem)] flex flex-col">
-  <div class="border-b border-slate-200 px-4 py-3">
+<div class="max-w-4xl mx-auto h-[calc(100vh-4rem)] flex flex-col overflow-y-auto">
+  <div class="border-b border-slate-200 px-4 py-3 flex-shrink-0">
     <h1 class="text-lg font-semibold text-slate-800">{{ translationService.translate('chat.title') }}</h1>
     <p class="text-sm text-slate-500">{{ translationService.translate('chat.subtitle') }}</p>
   </div>
 
-  <div #chatContainer aria-live="polite" data-testid="chat-messages" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+  <div #chatContainer aria-live="polite" data-testid="chat-messages" class="px-4 py-6 space-y-4">
     @for (msg of messages(); track $index) {
       @if (msg.role === 'user') {
         <div class="flex justify-end">
@@ -118,7 +118,7 @@
     </div>
   }
 
-  <div class="border-t border-slate-200 px-4 py-3">
+  <div class="border-t border-slate-200 px-4 py-3 bg-white sticky bottom-0 flex-shrink-0">
     <div class="flex gap-2">
       <input
         [(ngModel)]="currentInput"

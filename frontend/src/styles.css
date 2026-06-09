@@ -314,6 +314,9 @@
   .-bottom-12 {
     bottom: calc(var(--spacing) * -12);
   }
+  .bottom-0 {
+    bottom: calc(var(--spacing) * 0);
+  }
   .left-0 {
     left: calc(var(--spacing) * 0);
   }
@@ -410,9 +413,6 @@
   .hidden {
     display: none;
   }
-  .inline {
-    display: inline;
-  }
   .inline-block {
     display: inline-block;
   }
@@ -455,8 +455,8 @@
   .h-\[200px\] {
     height: 200px;
   }
-  .h-\[calc\(100vh-3\.5rem\)\] {
-    height: calc(100vh - 3.5rem);
+  .h-\[calc\(100vh-4rem\)\] {
+    height: calc(100vh - 4rem);
   }
   .h-full {
     height: 100%;
@@ -577,6 +577,9 @@
   }
   .flex-1 {
     flex: 1;
+  }
+  .flex-shrink-0 {
+    flex-shrink: 0;
   }
   .-translate-x-1\/2 {
     --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);
