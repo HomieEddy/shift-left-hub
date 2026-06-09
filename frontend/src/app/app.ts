@@ -1,9 +1,9 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
 import { KcsDraftService } from './features/admin/kcs-draft.service';
-import { interval, startWith, switchMap } from 'rxjs';
+import { interval, startWith, switchMap, filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { 
   LucideMenu, 
@@ -54,9 +54,14 @@ export class App {
 
   pendingKcsCount = signal(0);
   isMobileMenuOpen = signal(false);
+  isLandingPage = signal(false);
 
   constructor() {
-    // Poll pending KCS draft count every 60 seconds for nav badge
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(e => this.isLandingPage.set(e.url === '/'));
+
     interval(60000).pipe(
       startWith(0),
       switchMap(() => this.kcsDraftService.getPendingCount()),

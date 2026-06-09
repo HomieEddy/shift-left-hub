@@ -546,6 +546,9 @@
   .max-w-\[80\%\] {
     max-width: 80%;
   }
+  .max-w-full {
+    max-width: 100%;
+  }
   .max-w-lg {
     max-width: var(--container-lg);
   }
@@ -1015,6 +1018,9 @@
   .to-transparent {
     --tw-gradient-to: transparent;
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .p-0 {
+    padding: calc(var(--spacing) * 0);
   }
   .p-1 {
     padding: calc(var(--spacing) * 1);

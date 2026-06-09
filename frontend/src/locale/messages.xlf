@@ -1254,6 +1254,74 @@
         <source>An unexpected error occurred. Please try again.</source>
         <target>An unexpected error occurred. Please try again.</target>
       </trans-unit>
+      <trans-unit id="landing.hero.badge">
+        <source>AI-Powered IT Support</source>
+        <target>AI-Powered IT Support</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.accuracy">
+        <source>Resolution Accuracy</source>
+        <target>Resolution Accuracy</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.intercepted">
+        <source>Tickets Intercepted Before Queue</source>
+        <target>Tickets Intercepted Before Queue</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.response">
+        <source>Average AI Response Time</source>
+        <target>Average AI Response Time</target>
+      </trans-unit>
+      <trans-unit id="landing.how.title">
+        <source>How It Works</source>
+        <target>How It Works</target>
+      </trans-unit>
+      <trans-unit id="landing.how.subtitle">
+        <source>Three simple steps to resolve IT issues before they reach your team</source>
+        <target>Three simple steps to resolve IT issues before they reach your team</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.title">
+        <source>User Describes Issue</source>
+        <target>User Describes Issue</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</source>
+        <target>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Resolves or Escalates</source>
+        <target>AI Resolves or Escalates</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</source>
+        <target>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.title">
+        <source>Knowledge Grows Automatically</source>
+        <target>Knowledge Grows Automatically</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</source>
+        <target>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</target>
+      </trans-unit>
+      <trans-unit id="landing.features.title">
+        <source>Everything You Need</source>
+        <target>Everything You Need</target>
+      </trans-unit>
+      <trans-unit id="landing.features.subtitle">
+        <source>Built for IT teams that want to shift left without the documentation burden</source>
+        <target>Built for IT teams that want to shift left without the documentation burden</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.title">
+        <source>Ready to Shift Left?</source>
+        <target>Ready to Shift Left?</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.desc">
+        <source>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</source>
+        <target>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.button">
+        <source>Get Started Free</source>
+        <target>Get Started Free</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

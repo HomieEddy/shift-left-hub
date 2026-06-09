@@ -1254,6 +1254,74 @@
         <source>An unexpected error occurred. Please try again.</source>
         <target>Une erreur inattendue s'est produite. Veuillez réessayer.</target>
       </trans-unit>
+      <trans-unit id="landing.hero.badge">
+        <source>AI-Powered IT Support</source>
+        <target>Support IT propulsé par l'IA</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.accuracy">
+        <source>Resolution Accuracy</source>
+        <target>Précision de résolution</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.intercepted">
+        <source>Tickets Intercepted Before Queue</source>
+        <target>Tickets interceptés avant la file</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.response">
+        <source>Average AI Response Time</source>
+        <target>Temps de réponse IA moyen</target>
+      </trans-unit>
+      <trans-unit id="landing.how.title">
+        <source>How It Works</source>
+        <target>Comment ça fonctionne</target>
+      </trans-unit>
+      <trans-unit id="landing.how.subtitle">
+        <source>Three simple steps to resolve IT issues before they reach your team</source>
+        <target>Trois étapes simples pour résoudre les problèmes IT avant qu'ils n'atteignent votre équipe</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.title">
+        <source>User Describes Issue</source>
+        <target>L'utilisateur décrit le problème</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</source>
+        <target>L'utilisateur décrit son problème IT en langage naturel. Notre IA comprend instantanément le contexte et recherche des solutions pertinentes.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Resolves or Escalates</source>
+        <target>L'IA résout ou transfère</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</source>
+        <target>L'IA compare le problème à la base de connaissances. Résolu, l'utilisateur obtient une réponse instantanée. Sinon, le ticket est transféré à un agent.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.title">
+        <source>Knowledge Grows Automatically</source>
+        <target>La connaissance grandit automatiquement</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</source>
+        <target>Chaque résolution devient un article de connaissance. Le système devient plus intelligent, réduisant les futurs tickets et la charge de travail des agents.</target>
+      </trans-unit>
+      <trans-unit id="landing.features.title">
+        <source>Everything You Need</source>
+        <target>Tout ce dont vous avez besoin</target>
+      </trans-unit>
+      <trans-unit id="landing.features.subtitle">
+        <source>Built for IT teams that want to shift left without the documentation burden</source>
+        <target>Conçu pour les équipes IT qui veulent shift-left sans la charge de documentation</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.title">
+        <source>Ready to Shift Left?</source>
+        <target>Prêt à passer à Shift-Left?</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.desc">
+        <source>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</source>
+        <target>Commencez à résoudre les problèmes IT avant qu'ils n'atteignent la file d'attente. Sans surcharge de documentation. Sans complexité.</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.button">
+        <source>Get Started Free</source>
+        <target>Commencer gratuitement</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -25,7 +25,7 @@ import { TranslationService } from '../../core/i18n/translation.service';
           <div class="relative max-w-4xl mx-auto text-center">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/80 text-xs font-medium mb-8">
               <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-              AI-Powered IT Support
+              {{ translationService.translate('landing.hero.badge') }}
             </div>
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
               {{ translationService.translate('landing.hero.title') }}
@@ -54,15 +54,15 @@ import { TranslationService } from '../../core/i18n/translation.service';
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
               <div>
                 <div class="text-3xl font-bold text-blue-600 mb-1">99.9%</div>
-                <div class="text-sm text-slate-500 font-medium">Resolution Accuracy</div>
+                <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.accuracy') }}</div>
               </div>
               <div>
                 <div class="text-3xl font-bold text-blue-600 mb-1">90%</div>
-                <div class="text-sm text-slate-500 font-medium">Tickets Intercepted Before Queue</div>
+                <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.intercepted') }}</div>
               </div>
               <div>
                 <div class="text-3xl font-bold text-blue-600 mb-1">&lt;15s</div>
-                <div class="text-sm text-slate-500 font-medium">Average AI Response Time</div>
+                <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.response') }}</div>
               </div>
             </div>
           </div>
@@ -71,23 +71,23 @@ import { TranslationService } from '../../core/i18n/translation.service';
         <!-- How It Works -->
         <section class="bg-slate-50 px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-3">How It Works</h2>
-            <p class="text-slate-500 text-center mb-12 max-w-lg mx-auto">Three simple steps to resolve IT issues before they reach your team</p>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-3">{{ translationService.translate('landing.how.title') }}</h2>
+            <p class="text-slate-500 text-center mb-12 max-w-lg mx-auto">{{ translationService.translate('landing.how.subtitle') }}</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">1</div>
-                <h3 class="font-semibold text-slate-800 mb-2">User Describes Issue</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</p>
+                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step1.title') }}</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step1.desc') }}</p>
               </div>
               <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">2</div>
-                <h3 class="font-semibold text-slate-800 mb-2">AI Resolves or Escalates</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</p>
+                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step2.title') }}</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step2.desc') }}</p>
               </div>
               <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mb-4">3</div>
-                <h3 class="font-semibold text-slate-800 mb-2">Knowledge Grows Automatically</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</p>
+                <h3 class="font-semibold text-slate-800 mb-2">{{ translationService.translate('landing.how.step3.title') }}</h3>
+                <p class="text-sm text-slate-500 leading-relaxed">{{ translationService.translate('landing.how.step3.desc') }}</p>
               </div>
             </div>
           </div>
@@ -96,8 +96,8 @@ import { TranslationService } from '../../core/i18n/translation.service';
         <!-- Features -->
         <section class="bg-white px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-3">Everything You Need</h2>
-            <p class="text-slate-500 text-center mb-12 max-w-lg mx-auto">Built for IT teams that want to shift left without the documentation burden</p>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-3">{{ translationService.translate('landing.features.title') }}</h2>
+            <p class="text-slate-500 text-center mb-12 max-w-lg mx-auto">{{ translationService.translate('landing.features.subtitle') }}</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div class="p-6 rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-lg transition-all group">
                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
@@ -127,14 +127,14 @@ import { TranslationService } from '../../core/i18n/translation.service';
         <!-- CTA -->
         <section class="bg-gradient-to-r from-blue-600 to-indigo-700 px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">Ready to Shift Left?</h2>
-            <p class="text-blue-100 mb-8 max-w-md mx-auto leading-relaxed">Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</p>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">{{ translationService.translate('landing.cta.title') }}</h2>
+            <p class="text-blue-100 mb-8 max-w-md mx-auto leading-relaxed">{{ translationService.translate('landing.cta.desc') }}</p>
             <div class="flex items-center justify-center gap-4">
               <a routerLink="/register" class="rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-blue-700 hover:bg-blue-50 transition-all shadow-lg">
-                Get Started Free
+                {{ translationService.translate('landing.cta.button') }}
               </a>
               <a routerLink="/login" class="rounded-xl border border-white/30 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-all">
-                Sign In
+                {{ translationService.translate('landing.cta.signin') }}
               </a>
             </div>
           </div>
@@ -145,9 +145,9 @@ import { TranslationService } from '../../core/i18n/translation.service';
           <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-2">
               <div class="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold text-[10px]">SL</div>
-              <span class="text-sm text-slate-400 font-medium">Shift-Left Knowledge Hub</span>
+              <span class="text-sm text-slate-400 font-medium">{{ translationService.translate('app.title') }}</span>
             </div>
-            <p class="text-xs text-slate-500">&copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</p>
+            <p class="text-xs text-slate-500">{{ translationService.translate('app.footer') }}</p>
           </div>
         </footer>
       </div>
