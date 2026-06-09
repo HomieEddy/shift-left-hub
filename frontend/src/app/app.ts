@@ -54,13 +54,13 @@ export class App {
 
   pendingKcsCount = signal(0);
   isMobileMenuOpen = signal(false);
-  isLandingPage = signal(this.router.url === '/');
+  hideSidebar = signal(['/', '/login', '/register'].includes(this.router.url));
 
   constructor() {
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(e => this.isLandingPage.set(e.url === '/'));
+    ).subscribe(e => this.hideSidebar.set(['/', '/login', '/register'].includes(e.url)));
 
     interval(60000).pipe(
       startWith(0),

@@ -64,7 +64,7 @@
   </header>
 
   <div class="flex-1 flex overflow-hidden">
-    @if (!isLandingPage()) {
+    @if (!hideSidebar()) {
     <aside class="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 overflow-y-auto">
       <nav class="p-4 flex flex-col gap-1">
         @if (authService.isAuthenticated()) {
@@ -288,11 +288,11 @@
     }
 
     <main class="flex-1 overflow-y-auto overflow-x-hidden relative">
-      <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8" [class.max-w-full]="isLandingPage()" [class.p-0]="isLandingPage()">
+      <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8" [class.max-w-full]="hideSidebar()" [class.p-0]="hideSidebar()">
         <router-outlet></router-outlet>
       </div>
 
-      <footer class="mt-auto py-8 px-4 text-center border-t border-slate-100 text-slate-400 text-xs" [class.hidden]="isLandingPage()">
+      <footer class="mt-auto py-8 px-4 text-center border-t border-slate-100 text-slate-400 text-xs" [class.hidden]="hideSidebar()">
         {{ translationService.translate('app.footer') }}
       </footer>
     </main>

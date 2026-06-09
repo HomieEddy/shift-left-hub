@@ -23,10 +23,6 @@ import { TranslationService } from '../../core/i18n/translation.service';
           <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
           <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-500/10 via-transparent to-transparent"></div>
           <div class="relative max-w-4xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/80 text-xs font-medium mb-8">
-              <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-              {{ translationService.translate('landing.hero.badge') }}
-            </div>
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
               {{ translationService.translate('landing.hero.title') }}
             </h1>
@@ -46,26 +42,6 @@ import { TranslationService } from '../../core/i18n/translation.service';
             </div>
           </div>
           <div class="absolute -bottom-12 left-1/2 -translate-x-1/2 w-[800px] h-[200px] bg-gradient-to-t from-blue-500/20 to-transparent blur-3xl rounded-full"></div>
-        </section>
-
-        <!-- Stats -->
-        <section class="bg-white border-y border-slate-200">
-          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-              <div>
-                <div class="text-3xl font-bold text-blue-600 mb-1">99.9%</div>
-                <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.accuracy') }}</div>
-              </div>
-              <div>
-                <div class="text-3xl font-bold text-blue-600 mb-1">90%</div>
-                <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.intercepted') }}</div>
-              </div>
-              <div>
-                <div class="text-3xl font-bold text-blue-600 mb-1">5&times;</div>
-                <div class="text-sm text-slate-500 font-medium">{{ translationService.translate('landing.stats.response') }}</div>
-              </div>
-            </div>
-          </div>
         </section>
 
         <!-- How It Works -->
