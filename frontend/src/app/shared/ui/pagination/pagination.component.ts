@@ -1,4 +1,5 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-pagination',
@@ -10,9 +11,8 @@ import { Component, computed, input, output } from '@angular/core';
           (click)="goToPage(currentPage() - 1)"
           [disabled]="currentPage() === 0"
           class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          i18n="@@pagination.previous"
         >
-          Previous
+          {{ ts.translate('pagination.previous') }}
         </button>
         <div class="hidden sm:flex items-center gap-1">
           @for (page of visiblePages(); track page) {
@@ -32,22 +32,22 @@ import { Component, computed, input, output } from '@angular/core';
             }
           }
         </div>
-        <span class="sm:hidden text-sm text-text-secondary" i18n="@@pagination.pageOf">
-          Page {{ currentPage() + 1 }} of {{ totalPages() }}
+        <span class="sm:hidden text-sm text-text-secondary">
+          {{ ts.translate('pagination.page-of', { VAR_PLURAL: currentPage() + 1, VAR_TOTALPAGES: totalPages() }) }}
         </span>
         <button
           (click)="goToPage(currentPage() + 1)"
           [disabled]="currentPage() >= totalPages() - 1"
           class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          i18n="@@pagination.next"
         >
-          Next
+          {{ ts.translate('pagination.next') }}
         </button>
       </div>
     }
   `,
 })
 export class PaginationComponent {
+  protected ts = inject(TranslationService);
   currentPage = input(0);
   totalPages = input(0);
   pageChange = output<number>();

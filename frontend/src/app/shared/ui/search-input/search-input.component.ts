@@ -16,7 +16,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         type="text"
         [attr.aria-label]="placeholder()"
         [placeholder]="placeholder()"
-        i18n-placeholder="@@shared.search.placeholder"
         [ngModel]="internalValue()"
         (ngModelChange)="onInput($event)"
         class="w-full pl-10 pr-10 py-2 bg-surface-primary border border-border-default rounded-lg text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
