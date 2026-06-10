@@ -33,16 +33,20 @@
         <button
           (click)="activeTab.set('en')"
           class="px-4 py-2 text-sm font-medium border-b-2 transition-colors"
-          [class.border-primary-600.text-primary-600]="activeTab() === 'en'"
-          [class.border-transparent.text-text-tertiary]="activeTab() !== 'en'"
+          [class.border-primary-600]="activeTab() === 'en'"
+          [class.text-primary-600]="activeTab() === 'en'"
+          [class.border-transparent]="activeTab() !== 'en'"
+          [class.text-text-tertiary]="activeTab() !== 'en'"
         >
           {{ translationService.translate('language.english') }}
         </button>
         <button
           (click)="activeTab.set('fr')"
           class="px-4 py-2 text-sm font-medium border-b-2 transition-colors"
-          [class.border-primary-600.text-primary-600]="activeTab() === 'fr'"
-          [class.border-transparent.text-text-tertiary]="activeTab() !== 'fr'"
+          [class.border-primary-600]="activeTab() === 'fr'"
+          [class.text-primary-600]="activeTab() === 'fr'"
+          [class.border-transparent]="activeTab() !== 'fr'"
+          [class.text-text-tertiary]="activeTab() !== 'fr'"
         >
           {{ translationService.translate('language.french') }}
         </button>
