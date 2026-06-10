@@ -41,6 +41,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class SearchInputComponent {
   placeholder = input('Search...');
+  /** Debounce delay in ms. NOTE: read once at construction time; dynamic changes after init are not reflected. */
   debounceMs = input(300);
   query = input('');
   loading = input(false);
