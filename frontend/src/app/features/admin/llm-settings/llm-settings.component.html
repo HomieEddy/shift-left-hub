@@ -13,7 +13,7 @@
               (change)="onProviderChange()"
               class="w-full rounded-xl border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              @for (p of providers; track p.value) {
+              @for (p of providers(); track p.value) {
                 <option [value]="p.value" class="text-text-primary">{{ p.label }}</option>
               }
             </select>

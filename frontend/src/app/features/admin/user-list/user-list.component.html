@@ -54,7 +54,7 @@
                   [ngClass]="user.role === 'ROLE_ADMIN' ? 'bg-accent-info-muted text-accent-info' : user.role === 'ROLE_AGENT' ? 'bg-accent-warning-muted text-accent-warning' : 'bg-accent-success-muted text-accent-success'"
                   class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
                 >
-                  {{ roleLabels[user.role] || user.role }}
+                  {{ roleLabels()[user.role] || user.role }}
                 </span>
               </td>
               <td class="px-4 py-3">
@@ -63,7 +63,7 @@
                   class="inline-flex items-center gap-1 text-xs font-medium"
                 >
                   <span class="w-1.5 h-1.5 rounded-full inline-block" [ngClass]="user.enabled ? 'bg-accent-success' : 'bg-accent-danger'"></span>
-                  {{ user.enabled ? statusLabels['active'] : statusLabels['disabled'] }}
+                  {{ user.enabled ? statusLabels()['active'] : statusLabels()['disabled'] }}
                 </span>
               </td>
               <td class="px-4 py-3 text-text-tertiary text-xs">{{ formatDate(user.createdAt) }}</td>
@@ -82,7 +82,7 @@
                       ? 'border-accent-danger text-accent-danger hover:bg-accent-danger-muted'
                       : 'border-accent-success text-accent-success hover:bg-accent-success-muted'"
                   >
-                    {{ user.enabled ? actionDisable : actionEnable }}
+                    {{ user.enabled ? actionDisable() : actionEnable() }}
                   </button>
                 </div>
               </td>

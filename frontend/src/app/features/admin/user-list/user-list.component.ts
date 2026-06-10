@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserDto } from '../../../core/auth/auth.models';
@@ -119,19 +119,19 @@ export class UserListComponent implements OnInit {
   }
 
   /** Translatable labels */
-  roleLabels: Record<string, string> = {
+  roleLabels = computed<Record<string, string>>(() => ({
     'ROLE_ADMIN': this.translationService.translate('admin.users.role.admin'),
     'ROLE_AGENT': this.translationService.translate('admin.users.role.agent'),
     'ROLE_USER': this.translationService.translate('admin.users.role.user'),
-  };
+  }));
 
-  statusLabels: Record<string, string> = {
+  statusLabels = computed<Record<string, string>>(() => ({
     'active': this.translationService.translate('admin.users.status.active'),
     'disabled': this.translationService.translate('admin.users.status.disabled'),
-  };
+  }));
 
-  actionDisable = this.translationService.translate('admin.users.disable');
-  actionEnable = this.translationService.translate('admin.users.enable');
+  actionDisable = computed(() => this.translationService.translate('admin.users.disable'));
+  actionEnable = computed(() => this.translationService.translate('admin.users.enable'));
 
   /** Format an ISO date string for display. */
   formatDate(dateStr: string): string {

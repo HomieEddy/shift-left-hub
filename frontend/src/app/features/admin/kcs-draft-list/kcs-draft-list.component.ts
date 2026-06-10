@@ -26,7 +26,7 @@ export class KcsDraftListComponent implements OnInit {
   totalPages = signal(0);
   displayPage = computed(() => this.currentPage() + 1);
   actionLoading = signal<string | null>(null); // tracks which draft ID is being processed
-  confirmActionTitle = this.translationService.translate('kcs.drafts.confirm.title');
+  confirmActionTitle = computed(() => this.translationService.translate('kcs.drafts.confirm.title'));
   confirmModalOpen = signal(false);
   pendingAction = signal<{ type: 'approve' | 'reject'; id: string; title: string } | null>(null);
 

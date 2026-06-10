@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
@@ -22,10 +22,10 @@ export class LlmSettingsComponent implements OnInit {
   isSaving = false;
   saveMessage = '';
 
-  providers = [
+  providers = computed(() => [
     { value: 'OLLAMA', label: this.translationService.translate('admin.settings.llm.provider.ollama') },
     { value: 'OPENAI', label: this.translationService.translate('admin.settings.llm.provider.openai') },
-  ];
+  ]);
   modelExamples = ['llama3.2:3b', 'llama3.1:8b', 'mistral', 'mixtral'];
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
 
@@ -34,7 +34,7 @@ export class LlmSettingsComponent implements OnInit {
       next: (config) => {
         this.config = config;
         this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
-        if (!this.providers.some(p => p.value === this.config!.llmProvider)) {
+        if (!this.providers().some(p => p.value === this.config!.llmProvider)) {
           this.config.llmProvider = 'OLLAMA';
         }
       },

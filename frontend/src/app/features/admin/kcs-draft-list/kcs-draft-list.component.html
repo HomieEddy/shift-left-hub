@@ -151,7 +151,7 @@
   }
 
   <!-- Confirmation modal -->
-  <app-modal [open]="confirmModalOpen()" [title]="confirmActionTitle" (close)="cancelAction()">
+  <app-modal [open]="confirmModalOpen()" [title]="confirmActionTitle()" (close)="cancelAction()">
     <p class="text-sm text-text-secondary mb-6">
       @if (pendingAction()?.type === 'approve') {
         {{ translationService.translate('kcs.drafts.confirm.approve') }}
