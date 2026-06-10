@@ -60,7 +60,7 @@ import {
               <div>
                 <div class="flex items-center gap-2 mb-1">
                   <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">{{ translationService.translate('admin.users.role.admin') }}</span>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-accent-info-muted text-accent-info">{{ translationService.translate('admin.users.role.admin') }}</span>
                 </div>
                 <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
               </div>
@@ -68,9 +68,9 @@ import {
 
             <h2 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('nav.section.admin') }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-              <a routerLink="/admin/users" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <svg lucideUsers class="w-5 h-5 text-indigo-600"></svg>
+              <a routerLink="/admin/users" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-info/50 transition-all group">
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
+                  <svg lucideUsers class="w-5 h-5 text-accent-info">"></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.users') }}</h3>
@@ -79,9 +79,9 @@ import {
                 <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></svg>
               </a>
 
-              <a routerLink="/admin/articles" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <svg lucideFileText class="w-5 h-5 text-indigo-600"></svg>
+              <a routerLink="/admin/articles" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-info/50 transition-all group">
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
+                  <svg lucideFileText class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.articles') }}</h3>
@@ -90,9 +90,9 @@ import {
                 <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></svg>
               </a>
 
-              <a routerLink="/admin/tags" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <svg lucideTag class="w-5 h-5 text-indigo-600"></svg>
+              <a routerLink="/admin/tags" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-info/50 transition-all group">
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
+                  <svg lucideTag class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.tags') }}</h3>
@@ -101,9 +101,9 @@ import {
                 <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></svg>
               </a>
 
-              <a routerLink="/admin/kcs-drafts" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <svg lucideClipboardList class="w-5 h-5 text-indigo-600"></svg>
+              <a routerLink="/admin/kcs-drafts" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-info/50 transition-all group">
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
+                  <svg lucideClipboardList class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.kcs-drafts') }}</h3>
@@ -112,9 +112,9 @@ import {
                 <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></svg>
               </a>
 
-              <a routerLink="/admin/settings/llm" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <svg lucideSettings class="w-5 h-5 text-indigo-600"></svg>
+              <a routerLink="/admin/settings/llm" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-info/50 transition-all group">
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
+                  <svg lucideSettings class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.ai-settings') }}</h3>
@@ -123,9 +123,9 @@ import {
                 <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></svg>
               </a>
 
-              <a routerLink="/agent/tickets" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-amber-200 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-                  <svg lucideLayoutDashboard class="w-5 h-5 text-amber-600"></svg>
+              <a routerLink="/agent/tickets" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-warning/50 transition-all group">
+                <div class="w-10 h-10 rounded-xl bg-accent-warning-muted flex items-center justify-center flex-shrink-0">
+                  <svg lucideLayoutDashboard class="w-5 h-5 text-accent-warning"></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.ticket-queue') }}</h3>
@@ -149,7 +149,7 @@ import {
               <div>
                 <div class="flex items-center gap-2 mb-1">
                   <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">{{ translationService.translate('admin.users.role.agent') }}</span>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-accent-warning-muted text-accent-warning">{{ translationService.translate('admin.users.role.agent') }}</span>
                 </div>
                 <p class="text-text-secondary">{{ translationService.translate('nav.section.agent') }} — {{ translationService.translate('landing.hero.subtitle') }}</p>
               </div>
@@ -170,8 +170,8 @@ import {
 
               <div class="grid grid-cols-1 gap-4">
                 <a routerLink="/chat" class="flex items-center gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-4 hover:shadow-md hover:border-primary-200 transition-all group">
-                  <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <svg lucideMessageSquare class="w-5 h-5 text-blue-600"></svg>
+                  <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
+                    <svg lucideMessageSquare class="w-5 h-5 text-accent-info"></svg>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.ai-assistant') }}</h3>
@@ -179,9 +179,9 @@ import {
                   </div>
                   <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0"></svg>
                 </a>
-                <a routerLink="/articles" class="flex items-center gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-4 hover:shadow-md hover:border-emerald-200 transition-all group">
-                  <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                    <svg lucideBookOpen class="w-5 h-5 text-emerald-600"></svg>
+                <a routerLink="/articles" class="flex items-center gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-4 hover:shadow-md hover:border-accent-success/50 transition-all group">
+                  <div class="w-10 h-10 rounded-xl bg-accent-success-muted flex items-center justify-center flex-shrink-0">
+                    <svg lucideBookOpen class="w-5 h-5 text-accent-success"></svg>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.knowledge-base') }}</h3>
@@ -196,8 +196,8 @@ import {
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-5">
                 <div class="flex items-center gap-3 mb-3">
-                  <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
-                    <svg lucideInbox class="w-4 h-4 text-amber-600"></svg>
+                  <div class="w-8 h-8 rounded-lg bg-accent-warning-muted flex items-center justify-center flex-shrink-0">
+                    <svg lucideInbox class="w-4 h-4 text-accent-warning"></svg>
                   </div>
                   <span class="text-xs font-bold text-text-tertiary">{{ translationService.translate('landing.dashboard.agent.step') }} 1</span>
                 </div>
@@ -216,8 +216,8 @@ import {
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-5">
                 <div class="flex items-center gap-3 mb-3">
-                  <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-                    <svg lucideSparkles class="w-4 h-4 text-green-600"></svg>
+                  <div class="w-8 h-8 rounded-lg bg-accent-success-muted flex items-center justify-center flex-shrink-0">
+                    <svg lucideSparkles class="w-4 h-4 text-accent-success"></svg>
                   </div>
                   <span class="text-xs font-bold text-text-tertiary">{{ translationService.translate('landing.dashboard.agent.step') }} 3</span>
                 </div>
@@ -266,14 +266,14 @@ import {
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('nav.ai-assistant') }}</h3>
                 <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.aiDesc') }}</p>
               </a>
-              <a routerLink="/articles" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-emerald-200 transition-all">
+              <a routerLink="/articles" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-success/50 transition-all">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <svg lucideBookOpen class="w-5 h-5 text-white"></svg>
                 </div>
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('nav.knowledge-base') }}</h3>
                 <p class="text-xs text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.searchDesc') }}</p>
               </a>
-              <a routerLink="/tickets" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-amber-200 transition-all">
+              <a routerLink="/tickets" class="group bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-warning/50 transition-all">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <svg lucideTicket class="w-5 h-5 text-white"></svg>
                 </div>
@@ -323,15 +323,15 @@ import {
                 </div>
                 <ul class="space-y-2 text-xs text-text-secondary">
                   <li class="flex items-start gap-2">
-                    <svg lucideCheckCircle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></svg>
+                    <svg lucideCheckCircle class="w-3.5 h-3.5 text-accent-success flex-shrink-0 mt-0.5"></svg>
                     <span>{{ translationService.translate('landing.dashboard.user.tip1') }}</span>
                   </li>
                   <li class="flex items-start gap-2">
-                    <svg lucideCheckCircle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></svg>
+                    <svg lucideCheckCircle class="w-3.5 h-3.5 text-accent-success flex-shrink-0 mt-0.5"></svg>
                     <span>{{ translationService.translate('landing.dashboard.user.tip2') }}</span>
                   </li>
                   <li class="flex items-start gap-2">
-                    <svg lucideCheckCircle class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"></svg>
+                    <svg lucideCheckCircle class="w-3.5 h-3.5 text-accent-success flex-shrink-0 mt-0.5"></svg>
                     <span>{{ translationService.translate('landing.dashboard.user.tip3') }}</span>
                   </li>
                 </ul>
@@ -412,43 +412,43 @@ import {
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
-                  <svg lucideSearch class="w-5 h-5 text-blue-600"></svg>
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center mb-4">
+                  <svg lucideSearch class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.searchTitle') }}</h3>
                 <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.searchDesc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center mb-4">
-                  <svg lucideSparkles class="w-5 h-5 text-purple-700"></svg>
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center mb-4">
+                  <svg lucideSparkles class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.aiTitle') }}</h3>
                 <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.aiDesc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center mb-4">
-                  <svg lucideFileText class="w-5 h-5 text-green-600"></svg>
+                <div class="w-10 h-10 rounded-xl bg-accent-success-muted flex items-center justify-center mb-4">
+                  <svg lucideFileText class="w-5 h-5 text-accent-success"></svg>
                 </div>
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.docsTitle') }}</h3>
                 <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.docsDesc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center mb-4">
-                  <svg lucideTicket class="w-5 h-5 text-amber-600"></svg>
+                <div class="w-10 h-10 rounded-xl bg-accent-warning-muted flex items-center justify-center mb-4">
+                  <svg lucideTicket class="w-5 h-5 text-accent-warning"></svg>
                 </div>
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.escalateTitle') }}</h3>
                 <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.escalateDesc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center mb-4">
-                  <svg lucideShield class="w-5 h-5 text-cyan-700"></svg>
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center mb-4">
+                  <svg lucideShield class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.rolesTitle') }}</h3>
                 <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.rolesDesc') }}</p>
               </div>
               <div class="bg-surface-primary rounded-xl border border-border-default shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
-                  <svg lucideMessageSquare class="w-5 h-5 text-indigo-700"></svg>
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center mb-4">
+                  <svg lucideMessageSquare class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <h3 class="font-semibold text-text-primary mb-1">{{ translationService.translate('landing.feature.bilingualTitle') }}</h3>
                 <p class="text-sm text-text-secondary leading-relaxed">{{ translationService.translate('landing.feature.bilingualDesc') }}</p>
@@ -463,10 +463,10 @@ import {
             <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">
               {{ translationService.translate('landing.cta.title') }}
             </h2>
-            <p class="text-blue-100 mb-8 leading-relaxed">
+            <p class="text-white mb-8 leading-relaxed">
               {{ translationService.translate('landing.cta.desc') }}
             </p>
-            <a routerLink="/register" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-sm font-medium text-primary-600 hover:bg-blue-50 transition-colors shadow-sm">
+            <a routerLink="/register" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-sm font-medium text-primary-600 hover:bg-surface-secondary transition-colors shadow-sm">
               {{ translationService.translate('landing.cta.button') }}
               <svg lucideArrowRight class="w-4 h-4"></svg>
             </a>
