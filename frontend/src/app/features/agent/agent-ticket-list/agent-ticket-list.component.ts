@@ -4,10 +4,10 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { $localize } from '@angular/localize/init';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket } from '../agent-ticket.model';
 import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-agent-ticket-list',
@@ -23,6 +23,7 @@ export class AgentTicketListComponent implements OnInit {
   private agentTicketService = inject(AgentTicketService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   tickets = signal<AgentTicket[]>([]);
   filteredTickets = signal<AgentTicket[]>([]);
@@ -45,22 +46,22 @@ export class AgentTicketListComponent implements OnInit {
   readonly categoryBadgeClass = categoryBadgeClass;
   readonly urgencyBadgeClass = urgencyBadgeClass;
 
-  allLabel = $localize`:@@agent.filter.all:All`;
-  allCategoriesLabel = $localize`:@@agent.filter.allCategories:All Categories`;
-  allUrgenciesLabel = $localize`:@@agent.filter.allUrgencies:All Urgencies`;
-  searchPlaceholder = $localize`:@@agent.search.placeholder:Search by ticket # or user...`;
-  loadingLabel = $localize`:@@agent.loading:Loading tickets...`;
-  errorLabel = $localize`:@@agent.error.load:Failed to load tickets.`;
-  retryLabel = $localize`:@@agent.retry:Retry`;
-  emptyLabel = $localize`:@@agent.empty:No tickets found matching your filters`;
-  claimLabel = $localize`:@@agent.claim:Claim`;
-  resolveLabel = $localize`:@@agent.resolve:Resolve`;
-  viewLabel = $localize`:@@agent.view:View`;
-  unassignedLabel = $localize`:@@agent.unassigned:Unassigned`;
-  claimConfirmLabel = $localize`:@@agent.claim.confirm:Claim this ticket?`;
-  cancelLabel = $localize`:@@agent.cancel:Cancel`;
-  confirmLabel = $localize`:@@agent.confirm:Confirm`;
-  claimFailedAlert = $localize`:@@agent.claim.error:Failed to claim ticket.`;
+  allLabel = this.translationService.translate('agent.filter.all');
+  allCategoriesLabel = this.translationService.translate('agent.filter.allCategories');
+  allUrgenciesLabel = this.translationService.translate('agent.filter.allUrgencies');
+  searchPlaceholder = this.translationService.translate('agent.search.placeholder');
+  loadingLabel = this.translationService.translate('agent.loading');
+  errorLabel = this.translationService.translate('agent.error.load');
+  retryLabel = this.translationService.translate('agent.retry');
+  emptyLabel = this.translationService.translate('agent.empty');
+  claimLabel = this.translationService.translate('agent.claim');
+  resolveLabel = this.translationService.translate('agent.resolve');
+  viewLabel = this.translationService.translate('agent.view');
+  unassignedLabel = this.translationService.translate('agent.unassigned');
+  claimConfirmLabel = this.translationService.translate('agent.claim.confirm');
+  cancelLabel = this.translationService.translate('agent.cancel');
+  confirmLabel = this.translationService.translate('agent.confirm');
+  claimFailedAlert = this.translationService.translate('agent.claim.error');
 
   constructor() {
     this.searchSubject.pipe(
@@ -148,23 +149,23 @@ export class AgentTicketListComponent implements OnInit {
   }
 
   statusLabels: Record<string, string> = {
-    'NEW': $localize`:@@tickets.status.new:New`,
-    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
-    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
-    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
+    'NEW': this.translationService.translate('tickets.status.new'),
+    'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
+    'RESOLVED': this.translationService.translate('tickets.status.resolved'),
+    'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
   };
 
   urgencyLabels: Record<string, string> = {
-    'LOW': $localize`:@@agent.urgency.low:Low`,
-    'MEDIUM': $localize`:@@agent.urgency.medium:Medium`,
-    'HIGH': $localize`:@@agent.urgency.high:High`,
+    'LOW': this.translationService.translate('agent.urgency.low'),
+    'MEDIUM': this.translationService.translate('agent.urgency.medium'),
+    'HIGH': this.translationService.translate('agent.urgency.high'),
   };
 
   categoryLabels: Record<string, string> = {
-    'NETWORK': $localize`:@@tickets.category.network:Network`,
-    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
-    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
-    'ACCESS': $localize`:@@tickets.category.access:Access`,
-    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
+    'NETWORK': this.translationService.translate('tickets.category.network'),
+    'HARDWARE': this.translationService.translate('tickets.category.hardware'),
+    'SOFTWARE': this.translationService.translate('tickets.category.software'),
+    'ACCESS': this.translationService.translate('tickets.category.access'),
+    'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
   };
 }

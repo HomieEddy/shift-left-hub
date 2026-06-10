@@ -3,12 +3,12 @@ import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
-import { $localize } from '@angular/localize/init';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket, WorkNote } from '../agent-ticket.model';
 import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
 import { ShiftLeftContext } from '../../tickets/ticket.model';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-agent-ticket-detail',
@@ -25,6 +25,7 @@ export class AgentTicketDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   ticket = signal<AgentTicket | null>(null);
   workNotes = signal<WorkNote[]>([]);
@@ -176,58 +177,58 @@ export class AgentTicketDetailComponent implements OnInit {
   }
 
   statusLabels: Record<string, string> = {
-    'NEW': $localize`:@@tickets.status.new:New`,
-    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
-    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
-    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
+    'NEW': this.translationService.translate('tickets.status.new'),
+    'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
+    'RESOLVED': this.translationService.translate('tickets.status.resolved'),
+    'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
   };
 
   urgencyLabels: Record<string, string> = {
-    'LOW': $localize`:@@agent.urgency.low:Low`,
-    'MEDIUM': $localize`:@@agent.urgency.medium:Medium`,
-    'HIGH': $localize`:@@agent.urgency.high:High`,
+    'LOW': this.translationService.translate('agent.urgency.low'),
+    'MEDIUM': this.translationService.translate('agent.urgency.medium'),
+    'HIGH': this.translationService.translate('agent.urgency.high'),
   };
 
   categoryLabels: Record<string, string> = {
-    'NETWORK': $localize`:@@tickets.category.network:Network`,
-    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
-    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
-    'ACCESS': $localize`:@@tickets.category.access:Access`,
-    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
+    'NETWORK': this.translationService.translate('tickets.category.network'),
+    'HARDWARE': this.translationService.translate('tickets.category.hardware'),
+    'SOFTWARE': this.translationService.translate('tickets.category.software'),
+    'ACCESS': this.translationService.translate('tickets.category.access'),
+    'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
   };
 
-  loadingLabel = $localize`:@@agent.detail.loading:Loading ticket details...`;
-  errorLabel = $localize`:@@agent.detail.error:Failed to load ticket details.`;
-  retryLabel = $localize`:@@agent.detail.retry:Retry`;
-  backToQueueLabel = $localize`:@@agent.detail.backToQueue:\u2190 Back to Queue`;
-  shiftLeftContextLabel = $localize`:@@agent.detail.shiftLeftContext:Shift-Left Context`;
-  issueLabel = $localize`:@@agent.detail.issue:Issue`;
-  chatTranscriptLabel = $localize`:@@agent.detail.chatTranscript:Chat Transcript`;
-  unclaimedLabel = $localize`:@@agent.detail.unclaimed:This ticket has not been claimed yet.`;
-  claimingLabel = $localize`:@@agent.detail.claiming:Claiming...`;
-  claimTicketLabel = $localize`:@@agent.detail.claimTicket:Claim Ticket`;
-  workNotesLabel = $localize`:@@agent.detail.workNotes:Work Notes`;
-  noWorkNotesLabel = $localize`:@@agent.detail.noWorkNotes:No work notes yet.`;
-  addNotePlaceholder = $localize`:@@agent.detail.addNotePlaceholder:Add a work note...`;
-  addingLabel = $localize`:@@agent.detail.adding:Adding...`;
-  addNoteLabel = $localize`:@@agent.detail.addNote:Add Note`;
-  resolutionLabel = $localize`:@@agent.detail.resolution:Resolution`;
-  resolutionPlaceholder = $localize`:@@agent.detail.resolutionPlaceholder:Describe the resolution steps...`;
-  flagKnowledgeGapLabel = $localize`:@@agent.detail.flagKnowledgeGap:Flag as Knowledge Gap`;
-  resolvingLabel = $localize`:@@agent.detail.resolving:Resolving...`;
-  resolveTicketLabel = $localize`:@@agent.detail.resolveTicket:Resolve Ticket`;
-  resolvedByLabel = $localize`:@@agent.detail.resolvedBy:Resolved by`;
-  unknownLabel = $localize`:@@agent.detail.unknown:Unknown`;
-  flaggedKnowledgeGapLabel = $localize`:@@agent.detail.flaggedKnowledgeGap:Flagged as Knowledge Gap`;
-  cancelledByUserLabel = $localize`:@@agent.detail.cancelledByUser:Cancelled by user`;
-  unassignedLabel = $localize`:@@agent.detail.unassigned:Unassigned`;
-  confirmResolutionLabel = $localize`:@@agent.detail.confirmResolution:Confirm resolution for`;
-  cancelLabel = $localize`:@@agent.detail.cancel:Cancel`;
-  confirmLabel = $localize`:@@agent.detail.confirm:Confirm`;
-  assignedToLabel = $localize`:@@agent.detail.assignedTo:Assigned to`;
-  openedByLabel = $localize`:@@agent.detail.openedBy:Opened by`;
+  loadingLabel = this.translationService.translate('agent.detail.loading');
+  errorLabel = this.translationService.translate('agent.detail.error');
+  retryLabel = this.translationService.translate('agent.detail.retry');
+  backToQueueLabel = this.translationService.translate('agent.detail.backToQueue');
+  shiftLeftContextLabel = this.translationService.translate('agent.detail.shiftLeftContext');
+  issueLabel = this.translationService.translate('agent.detail.issue');
+  chatTranscriptLabel = this.translationService.translate('agent.detail.chatTranscript');
+  unclaimedLabel = this.translationService.translate('agent.detail.unclaimed');
+  claimingLabel = this.translationService.translate('agent.detail.claiming');
+  claimTicketLabel = this.translationService.translate('agent.detail.claimTicket');
+  workNotesLabel = this.translationService.translate('agent.detail.workNotes');
+  noWorkNotesLabel = this.translationService.translate('agent.detail.noWorkNotes');
+  addNotePlaceholder = this.translationService.translate('agent.detail.addNotePlaceholder');
+  addingLabel = this.translationService.translate('agent.detail.adding');
+  addNoteLabel = this.translationService.translate('agent.detail.addNote');
+  resolutionLabel = this.translationService.translate('agent.detail.resolution');
+  resolutionPlaceholder = this.translationService.translate('agent.detail.resolutionPlaceholder');
+  flagKnowledgeGapLabel = this.translationService.translate('agent.detail.flagKnowledgeGap');
+  resolvingLabel = this.translationService.translate('agent.detail.resolving');
+  resolveTicketLabel = this.translationService.translate('agent.detail.resolveTicket');
+  resolvedByLabel = this.translationService.translate('agent.detail.resolvedBy');
+  unknownLabel = this.translationService.translate('agent.detail.unknown');
+  flaggedKnowledgeGapLabel = this.translationService.translate('agent.detail.flaggedKnowledgeGap');
+  cancelledByUserLabel = this.translationService.translate('agent.detail.cancelledByUser');
+  unassignedLabel = this.translationService.translate('agent.detail.unassigned');
+  confirmResolutionLabel = this.translationService.translate('agent.detail.confirmResolution');
+  cancelLabel = this.translationService.translate('agent.detail.cancel');
+  confirmLabel = this.translationService.translate('agent.detail.confirm');
+  assignedToLabel = this.translationService.translate('agent.detail.assignedTo');
+  openedByLabel = this.translationService.translate('agent.detail.openedBy');
 
-  addNoteErrorLabel = $localize`:@@agent.detail.addNoteError:Failed to add work note.`;
-  claimErrorLabel = $localize`:@@agent.detail.claimError:Failed to claim ticket.`;
-  resolveErrorLabel = $localize`:@@agent.detail.resolveError:Failed to resolve ticket.`;
+  addNoteErrorLabel = this.translationService.translate('agent.detail.addNoteError');
+  claimErrorLabel = this.translationService.translate('agent.detail.claimError');
+  resolveErrorLabel = this.translationService.translate('agent.detail.resolveError');
 }
