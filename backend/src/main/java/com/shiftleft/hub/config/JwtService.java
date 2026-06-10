@@ -67,6 +67,9 @@ public class JwtService {
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole().name())
                 .claim("displayName", user.getDisplayName())
+                .claim("workspace_id",
+                    user.getDefaultWorkspaceId() != null
+                        ? user.getDefaultWorkspaceId().toString() : null)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(getSigningKey())
@@ -84,6 +87,9 @@ public class JwtService {
                 .subject(user.getId().toString())
                 .claim("type", "refresh")
                 .claim("tokenId", UUID.randomUUID().toString())
+                .claim("workspace_id",
+                    user.getDefaultWorkspaceId() != null
+                        ? user.getDefaultWorkspaceId().toString() : null)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(getSigningKey())
@@ -99,6 +105,18 @@ public class JwtService {
     public UUID extractUserId(String token) {
         Claims claims = parseToken(token);
         return UUID.fromString(claims.getSubject());
+    }
+
+    /**
+     * Extracts the workspace ID from a JWT token.
+     *
+     * @param token the JWT token
+     * @return the extracted workspace UUID, or null if not present
+     */
+    public UUID extractWorkspaceId(String token) {
+        Claims claims = parseToken(token);
+        String wsId = claims.get("workspace_id", String.class);
+        return wsId != null ? UUID.fromString(wsId) : null;
     }
 
     /**
