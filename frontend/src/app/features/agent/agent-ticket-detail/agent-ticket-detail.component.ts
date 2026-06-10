@@ -45,7 +45,6 @@ export class AgentTicketDetailComponent implements OnInit {
   resolveConfirmOpen = signal(false);
   isClaiming = signal(false);
 
-  noteError = signal<string | null>(null);
   claimError = signal<string | null>(null);
   resolveError = signal<string | null>(null);
   workNoteError = signal<string | null>(null);
@@ -96,7 +95,7 @@ export class AgentTicketDetailComponent implements OnInit {
       next: (notes) => this.workNotes.set(notes),
       error: (err) => {
         if (isDevMode()) { console.error('Failed to load work notes:', err); }
-        this.noteError.set('Failed to load work notes.');
+        this.workNoteError.set('Failed to load work notes.');
       },
     });
   }
@@ -228,7 +227,4 @@ export class AgentTicketDetailComponent implements OnInit {
   assignedToLabel = computed(() => this.translationService.translate('agent.detail.assignedTo'));
   openedByLabel = computed(() => this.translationService.translate('agent.detail.openedBy'));
 
-  addNoteErrorLabel = computed(() => this.translationService.translate('agent.detail.addNoteError'));
-  claimErrorLabel = computed(() => this.translationService.translate('agent.detail.claimError'));
-  resolveErrorLabel = computed(() => this.translationService.translate('agent.detail.resolveError'));
 }
