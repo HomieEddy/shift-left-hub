@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -12,7 +12,6 @@ import { MarkdownModule } from 'ngx-markdown';
   standalone: true,
   imports: [DatePipe, RouterLink, MarkdownModule],
   templateUrl: './article-viewer.component.html',
-  styleUrls: ['./article-viewer.component.css'],
 })
 export class ArticleViewerComponent implements OnInit {
   private publicArticleService = inject(PublicArticleService);
@@ -29,7 +28,7 @@ export class ArticleViewerComponent implements OnInit {
     if (id != null) {
       this.loadArticle(id);
     } else {
-      this.errorMessage.set($localize`:@@kb.invalid-id:Invalid article ID.`);
+      this.errorMessage.set(this.translationService.translate('kb.invalid-id'));
       this.isLoading.set(false);
     }
   }
@@ -44,31 +43,33 @@ export class ArticleViewerComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set($localize`:@@kb.not-found:Article not found.`);
+        this.errorMessage.set(this.translationService.translate('kb.not-found'));
         this.isLoading.set(false);
       },
     });
   }
 
-  get displayContent(): string {
+  displayContent = computed(() => {
     const a = this.article();
     if (a == null) return '';
     if (this.translationService.currentLang() === 'fr') {
       return a.contentFr ?? a.contentEn;
     }
     return a.contentEn;
-  }
+  });
 
-  get isFallback(): boolean {
+  isFallback = computed(() => {
     const a = this.article();
     if (a == null) return false;
     if (this.translationService.currentLang() === 'fr') {
       return a.contentFr == null;
     }
     return false;
-  }
+  });
 
-  get fallbackLanguage(): string {
-    return this.translationService.currentLang() === 'fr' ? 'English' : 'Français';
-  }
+  fallbackLanguage = computed(() => {
+    return this.translationService.currentLang() === 'fr'
+      ? this.translationService.translate('common.english')
+      : this.translationService.translate('common.french');
+  });
 }

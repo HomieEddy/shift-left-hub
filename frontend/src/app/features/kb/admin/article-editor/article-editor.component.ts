@@ -130,4 +130,8 @@ export class ArticleEditorComponent implements OnInit {
   cancel(): void {
     void this.router.navigate(['/admin/articles']);
   }
+
+  protected getTagName(tag: { nameEn: string; nameFr: string }): string {
+    return this.translationService.currentLang() === 'fr' ? tag.nameFr : tag.nameEn;
+  }
 }

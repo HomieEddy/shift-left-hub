@@ -1,26 +1,31 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { $localize } from '@angular/localize/init';
 import { TicketService } from '../ticket.service';
 import { Ticket } from '../ticket.model';
+import { statusBadgeClass, categoryBadgeClass } from '../../../shared/ui/badge/badge-utils';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-ticket-list',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink],
   templateUrl: './ticket-list.component.html',
 })
 export class TicketListComponent implements OnInit {
   private ticketService = inject(TicketService);
   private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   tickets = signal<Ticket[]>([]);
   filteredTickets = signal<Ticket[]>([]);
   isLoading = signal(true);
   errorMessage = signal<string | null>(null);
   activeFilter = signal<string>('ALL');
+
+  readonly statusBadgeClass = statusBadgeClass;
+  readonly categoryBadgeClass = categoryBadgeClass;
 
   ngOnInit(): void {
     this.loadTickets();
@@ -37,7 +42,7 @@ export class TicketListComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set($localize`:@@tickets.error.load:Failed to load tickets.`);
+        this.errorMessage.set(this.translationService.translate('tickets.error.load'));
       },
     });
   }
@@ -51,41 +56,20 @@ export class TicketListComponent implements OnInit {
     }
   }
 
-  allLabel: string = $localize`:@@tickets.filter.all:All`;
+  allLabel = computed(() => this.translationService.translate('tickets.filter.all'));
 
-  statusLabels: Record<string, string> = {
-    'NEW': $localize`:@@tickets.status.new:New`,
-    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
-    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
-    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
-  };
+  statusLabels = computed<Record<string, string>>(() => ({
+    'NEW': this.translationService.translate('tickets.status.new'),
+    'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
+    'RESOLVED': this.translationService.translate('tickets.status.resolved'),
+    'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
+  }));
 
-  categoryLabels: Record<string, string> = {
-    'NETWORK': $localize`:@@tickets.category.network:Network`,
-    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
-    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
-    'ACCESS': $localize`:@@tickets.category.access:Access`,
-    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
-  };
-
-  statusBadgeClass = (status: string): string => {
-    switch (status) {
-      case 'NEW': return 'bg-blue-100 text-blue-700';
-      case 'IN_PROGRESS': return 'bg-amber-100 text-amber-700';
-      case 'RESOLVED': return 'bg-green-100 text-green-700';
-      case 'CANCELLED': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  };
-
-  categoryBadgeClass = (category: string): string => {
-    switch (category) {
-      case 'NETWORK': return 'bg-purple-100 text-purple-700';
-      case 'HARDWARE': return 'bg-cyan-100 text-cyan-700';
-      case 'SOFTWARE': return 'bg-indigo-100 text-indigo-700';
-      case 'ACCESS': return 'bg-teal-100 text-teal-700';
-      case 'PERIPHERALS': return 'bg-pink-100 text-pink-700';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  };
+  categoryLabels = computed<Record<string, string>>(() => ({
+    'NETWORK': this.translationService.translate('tickets.category.network'),
+    'HARDWARE': this.translationService.translate('tickets.category.hardware'),
+    'SOFTWARE': this.translationService.translate('tickets.category.software'),
+    'ACCESS': this.translationService.translate('tickets.category.access'),
+    'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
+  }));
 }

@@ -19,6 +19,7 @@ export class LoginComponent {
 
   email = '';
   password = '';
+  showPassword = false;
   errorMessage = '';
   isLoading = false;
 
@@ -33,9 +34,9 @@ export class LoginComponent {
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         if (err.status === 401) {
-          this.errorMessage = 'Invalid email or password.';
+          this.errorMessage = this.translationService.translate('error.invalid-credentials');
         } else {
-          this.errorMessage = 'Login failed. Please try again.';
+          this.errorMessage = this.translationService.translate('error.login-failed');
         }
       },
       complete: () => {

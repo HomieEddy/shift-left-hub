@@ -1,5 +1,5 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <h1 class="text-3xl font-bold text-slate-800 mb-6" i18n="@@kb.search.title">Search Knowledge Base</h1>
+  <h1 class="text-3xl font-bold text-text-primary mb-6">{{ translationService.translate('kb.search.title') }}</h1>
 
   <!-- Search input -->
   <div class="relative mb-8">
@@ -8,10 +8,10 @@
       [ngModel]="query()"
       (ngModelChange)="onSearchInput($event)"
       data-testid="kb-search-input"
-      placeholder="Search articles..." i18n-placeholder="@@kb.search.placeholder"
-      class="w-full pl-12 pr-4 py-3 text-lg border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      [placeholder]="translationService.translate('kb.search.placeholder')"
+      class="w-full pl-12 pr-4 py-3 text-lg border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface-primary text-text-primary"
     />
-    <svg class="absolute left-4 top-3.5 w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="absolute left-4 top-3.5 w-6 h-6 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
   </div>
@@ -19,12 +19,12 @@
   <!-- Tag filters -->
   @if (availableTags().length > 0) {
     <div class="mb-6">
-      <p class="text-sm text-slate-500 mb-2" i18n="@@kb.search.filter-tags">Filter by tags</p>
+      <p class="text-sm text-text-tertiary mb-2">{{ translationService.translate('kb.search.filter-tags') }}</p>
       <div class="flex flex-wrap gap-2">
         @for (tag of availableTags(); track tag.nameEn) {
           <button
             (click)="toggleTag(tag.nameEn)"
-            class="px-3 py-1 text-xs rounded-full border transition-colors"
+            class="px-3 py-1 text-xs rounded-full border transition-colors font-medium"
             [class.text-white]="isTagSelected(tag.nameEn)"
             [style.background-color]="isTagSelected(tag.nameEn) ? tag.color : 'transparent'"
             [style.border-color]="tag.color"
@@ -39,45 +39,45 @@
 
   <!-- Error message -->
   @if (errorMessage()) {
-    <div class="bg-red-50 text-red-700 px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</div>
+    <div class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</div>
   }
 
   <!-- Loading indicator -->
   @if (isLoading()) {
     <div class="text-center py-8">
-      <div class="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto"></div>
+      <div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
     </div>
   }
 
   <!-- Results -->
   @if (!isLoading() && hasSearched()) {
-    <p class="text-sm text-slate-500 mb-6" i18n="@@kb.search.results">
-      Found {{ totalResults() }} result{{ totalResults() === 1 ? '' : 's' }} for "{{ query() }}"
+    <p class="text-sm text-text-tertiary mb-6">
+      {{ translationService.translate('kb.search.results', { count: totalResults(), query: query() }) }}
     </p>
 
     @if (results().length === 0) {
-      <div class="text-center py-12 text-slate-500">
-        <p class="text-lg mb-2" i18n="@@kb.search.no-results">No results found</p>
-        <p class="text-sm" i18n="@@kb.search.hint">Try different keywords or browse all articles</p>
+      <div class="text-center py-12 text-text-tertiary">
+        <p class="text-lg mb-2">{{ translationService.translate('kb.search.no-results') }}</p>
+        <p class="text-sm">{{ translationService.translate('kb.search.no-results-hint') }}</p>
       </div>
     }
 
     <div class="space-y-4">
       @for (result of results(); track result.id) {
-        <div data-testid="kb-search-result" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
+        <div data-testid="kb-search-result" class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6 hover:shadow-md transition-shadow">
           <a [routerLink]="['/articles', result.id]" class="no-underline">
-            <h2 class="text-lg font-semibold text-blue-600 hover:text-blue-800 mb-2">
+            <h2 class="text-lg font-semibold text-primary-600 hover:text-primary-700 mb-2">
               {{ result.title }}
             </h2>
           </a>
-          <p class="text-sm text-slate-700 mb-3" [innerHTML]="sanitizeHeadline(result.headline)"></p>
-          <div class="flex items-center gap-2 text-xs text-slate-400">
+          <p class="text-sm text-text-secondary mb-3" [innerHTML]="sanitizeHeadline(result.headline)"></p>
+          <div class="flex items-center gap-2 text-xs text-text-tertiary">
             <span>{{ result.publishedAt | date:'mediumDate' }}</span>
             @if (result.tagNames.length > 0) {
-              <span class="text-slate-300">|</span>
+              <span class="text-border-default">|</span>
             }
             @for (tagName of result.tagNames; track $index) {
-              <span class="text-slate-500">{{ tagName }}</span>
+              <span>{{ tagName }}</span>
             }
           </div>
         </div>
@@ -90,19 +90,17 @@
         <button
           (click)="changePage(currentPage() - 1)"
           [disabled]="currentPage() === 0"
-          class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-          i18n="@@pagination.previous"
+          class="px-4 py-2 text-sm rounded-lg border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
         >
-          Previous
+          {{ translationService.translate('pagination.previous') }}
         </button>
-        <span class="text-sm text-slate-600" i18n="@@pagination.page-of">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+        <span class="text-sm text-text-secondary">{{ translationService.translate('pagination.page-of', { VAR_PLURAL: currentPage() + 1, VAR_TOTALPAGES: totalPages() }) }}</span>
         <button
           (click)="changePage(currentPage() + 1)"
           [disabled]="currentPage() >= totalPages() - 1"
-          class="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-          i18n="@@pagination.next"
+          class="px-4 py-2 text-sm rounded-lg border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
         >
-          Next
+          {{ translationService.translate('pagination.next') }}
         </button>
       </div>
     }
@@ -110,11 +108,11 @@
 
   <!-- Initial state -->
   @if (!hasSearched() && !isLoading()) {
-    <div class="text-center py-16 text-slate-400">
-      <svg class="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="text-center py-16 text-text-tertiary">
+      <svg class="w-16 h-16 mx-auto mb-4 text-border-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
-      <p class="text-lg" i18n="@@kb.search.hint">Type a query above to search the knowledge base</p>
+      <p class="text-lg">{{ translationService.translate('kb.search.hint') }}</p>
     </div>
   }
 </div>

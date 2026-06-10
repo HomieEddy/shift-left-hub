@@ -1,7 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-llm-settings',
@@ -11,6 +13,8 @@ import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
 })
 export class LlmSettingsComponent implements OnInit {
   private settingsService = inject(LlmSettingsService);
+  private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   config: AiConfigResponse | null = null;
   openaiApiKey = '';
@@ -20,19 +24,19 @@ export class LlmSettingsComponent implements OnInit {
   isSaving = false;
   saveMessage = '';
 
-  providers = [
-    { value: 'OLLAMA', label: 'Ollama' },
-    { value: 'OPENAI', label: 'OpenAI' },
-  ];
+  providers = computed(() => [
+    { value: 'OLLAMA', label: this.translationService.translate('admin.settings.llm.provider.ollama') },
+    { value: 'OPENAI', label: this.translationService.translate('admin.settings.llm.provider.openai') },
+  ]);
   modelExamples = ['llama3.2:3b', 'llama3.1:8b', 'mistral', 'mixtral'];
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
 
   ngOnInit(): void {
-    this.settingsService.getConfig().subscribe({
+    this.settingsService.getConfig().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (config) => {
         this.config = config;
         this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();
-        if (!this.providers.some(p => p.value === this.config!.llmProvider)) {
+        if (!this.providers().some(p => p.value === this.config!.llmProvider)) {
           this.config.llmProvider = 'OLLAMA';
         }
       },
@@ -73,9 +77,9 @@ export class LlmSettingsComponent implements OnInit {
     })).then(config => {
       this.config = config;
       this.openaiApiKey = '';
-      this.saveMessage = 'Settings saved';
+      this.saveMessage = this.translationService.translate('admin.settings.llm.saved');
     }).catch(() => {
-      this.saveMessage = 'Failed to save settings';
+      this.saveMessage = this.translationService.translate('admin.settings.llm.save-error');
     }).finally(() => {
       this.isSaving = false;
     });
@@ -94,7 +98,7 @@ export class LlmSettingsComponent implements OnInit {
     })).then(result => {
       this.testResult = result;
     }).catch(() => {
-      this.testResult = { success: false, message: 'Connection test failed' };
+      this.testResult = { success: false, message: this.translationService.translate('admin.settings.llm.test-failure') };
     }).finally(() => {
       this.isTesting = false;
     });
@@ -105,7 +109,7 @@ export class LlmSettingsComponent implements OnInit {
     firstValueFrom(this.settingsService.reindexEmbeddings()).then(result => {
       this.saveMessage = result.message;
     }).catch(() => {
-      this.saveMessage = 'Failed to start re-embedding';
+      this.saveMessage = this.translationService.translate('admin.settings.llm.reindex-error');
     }).finally(() => {
       this.isReindexing = false;
     });

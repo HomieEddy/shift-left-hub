@@ -1,11 +1,11 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { $localize } from '@angular/localize/init';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KcsDraftService } from '../kcs-draft.service';
 import { KcsDraft } from '../kcs-draft.model';
 import { ModalComponent } from '../../../shared/ui/modal/modal.component';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-kcs-draft-list',
@@ -16,6 +16,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 export class KcsDraftListComponent implements OnInit {
   private kcsDraftService = inject(KcsDraftService);
   private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   drafts = signal<KcsDraft[]>([]);
   isLoading = signal(true);
@@ -25,7 +26,7 @@ export class KcsDraftListComponent implements OnInit {
   totalPages = signal(0);
   displayPage = computed(() => this.currentPage() + 1);
   actionLoading = signal<string | null>(null); // tracks which draft ID is being processed
-  confirmActionTitle: string = $localize`:@@kcs.drafts.confirm.title:Confirm Action`;
+  confirmActionTitle = computed(() => this.translationService.translate('kcs.drafts.confirm.title'));
   confirmModalOpen = signal(false);
   pendingAction = signal<{ type: 'approve' | 'reject'; id: string; title: string } | null>(null);
 
@@ -45,7 +46,7 @@ export class KcsDraftListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set($localize`:@@kcs.drafts.error.load:Failed to load KCS drafts.`);
+        this.errorMessage.set(this.translationService.translate('kcs.drafts.error.load'));
         this.isLoading.set(false);
       },
     });
@@ -74,16 +75,16 @@ export class KcsDraftListComponent implements OnInit {
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.successMessage.set(action.type === 'approve'
-          ? $localize`:@@kcs.drafts.success.approved:Draft approved and published.`
-          : $localize`:@@kcs.drafts.success.rejected:Draft rejected and archived.`);
+          ? this.translationService.translate('kcs.drafts.success.approved')
+          : this.translationService.translate('kcs.drafts.success.rejected'));
         this.actionLoading.set(null);
         this.pendingAction.set(null);
         this.loadDrafts();
       },
       error: () => {
         this.errorMessage.set(action.type === 'approve'
-          ? $localize`:@@kcs.drafts.error.approve:Failed to approve draft.`
-          : $localize`:@@kcs.drafts.error.reject:Failed to reject draft.`);
+          ? this.translationService.translate('kcs.drafts.error.approve')
+          : this.translationService.translate('kcs.drafts.error.reject'));
         this.actionLoading.set(null);
         this.pendingAction.set(null);
       },

@@ -1,15 +1,29 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, DestroyRef, inject, isDevMode, signal } from '@angular/core';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
 import { KcsDraftService } from './features/admin/kcs-draft.service';
-import { interval, startWith, switchMap } from 'rxjs';
+import { interval, switchMap, filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { 
+  LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare, 
+  LucideTicket, LucideLayoutList, LucideUsers, LucideFileText, 
+  LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard, 
+  LucideX
+} from '@lucide/angular';
+import { ToastContainer } from './shared/ui/toast/toast-container';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [
+    RouterOutlet, RouterLink, RouterLinkActive,
+    LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare,
+    LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
+    LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
+    LucideX,
+    ToastContainer
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -21,24 +35,34 @@ export class App {
   private destroyRef = inject(DestroyRef);
 
   pendingKcsCount = signal(0);
+  isMobileMenuOpen = signal(false);
+  private readonly hideRoutes = ['/login', '/register'];
+  hideSidebar = signal(this.shouldHideSidebar(this.router.url));
+
+  private shouldHideSidebar(url: string): boolean {
+    return this.hideRoutes.some(r => url === r || url.startsWith(r + '?'));
+  }
 
   constructor() {
-    // Poll pending KCS draft count every 60 seconds for nav badge
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(e => this.hideSidebar.set(this.shouldHideSidebar(e.url)));
+
     interval(60000).pipe(
-      startWith(0),
+      filter(() => this.authService.isAdmin()),
       switchMap(() => this.kcsDraftService.getPendingCount()),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (response) => this.pendingKcsCount.set(response.pendingCount),
-      error: (err) => console.warn('KCS pending-count poll failed:', err),
+      error: (err) => { if (isDevMode()) { console.warn('KCS pending-count poll failed:', err); } },
     });
   }
 
-  switchLanguage(lang: SupportedLanguage): void {
-    this.translationService.switchLanguage(lang);
-  }
-
+  switchLanguage(lang: SupportedLanguage): void { this.translationService.switchLanguage(lang); }
   logout(): void {
-    this.authService.logout().subscribe(() => { void this.router.navigate(['/']); });
+    this.authService.logout().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => { void this.router.navigate(['/']); });
   }
 }

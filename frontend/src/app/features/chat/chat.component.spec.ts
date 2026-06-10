@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { Subject } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
 import { vi } from 'vitest';
@@ -29,6 +30,7 @@ describe('ChatComponent', () => {
       providers: [
         { provide: ChatService, useValue: chatService },
         provideHttpClient(),
+        provideRouter([]),
       ],
     }).compileComponents();
 

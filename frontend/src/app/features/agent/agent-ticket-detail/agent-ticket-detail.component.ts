@@ -1,16 +1,19 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, isDevMode, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { $localize } from '@angular/localize/init';
+import { MarkdownModule } from 'ngx-markdown';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket, WorkNote } from '../agent-ticket.model';
+import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
+import { ShiftLeftContext } from '../../tickets/ticket.model';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-agent-ticket-detail',
   standalone: true,
-  imports: [DatePipe, RouterLink, FormsModule],
+  imports: [DatePipe, RouterLink, FormsModule, MarkdownModule],
   templateUrl: './agent-ticket-detail.component.html',
 })
 /**
@@ -22,6 +25,7 @@ export class AgentTicketDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
 
   ticket = signal<AgentTicket | null>(null);
   workNotes = signal<WorkNote[]>([]);
@@ -41,10 +45,25 @@ export class AgentTicketDetailComponent implements OnInit {
   resolveConfirmOpen = signal(false);
   isClaiming = signal(false);
 
-  noteError = signal<string | null>(null);
   claimError = signal<string | null>(null);
   resolveError = signal<string | null>(null);
   workNoteError = signal<string | null>(null);
+
+  parsedContext = computed(() => {
+    const raw = this.ticket()?.shiftLeftContext;
+    if (raw == null) return null;
+    try {
+      return JSON.parse(raw) as ShiftLeftContext;
+    } catch {
+      return null;
+    }
+  });
+
+  transcriptMessages = computed(() => this.parsedContext()?.transcript ?? []);
+
+  readonly statusBadgeClass = statusBadgeClass;
+  readonly categoryBadgeClass = categoryBadgeClass;
+  readonly urgencyBadgeClass = urgencyBadgeClass;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -75,8 +94,8 @@ export class AgentTicketDetailComponent implements OnInit {
     this.agentTicketService.getWorkNotes(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (notes) => this.workNotes.set(notes),
       error: (err) => {
-        console.error('Failed to load work notes:', err);
-        this.noteError.set('Failed to load work notes.');
+        if (isDevMode()) { console.error('Failed to load work notes:', err); }
+        this.workNoteError.set('Failed to load work notes.');
       },
     });
   }
@@ -97,7 +116,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isSubmittingNote.set(false);
-        console.error('Failed to add work note');
+        if (isDevMode()) { console.error('Failed to add work note'); }
         this.workNoteError.set('Failed to add work note. Please try again.');
       },
     });
@@ -116,7 +135,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isClaiming.set(false);
-        console.error('Failed to claim ticket');
+        if (isDevMode()) { console.error('Failed to claim ticket'); }
         this.claimError.set('Failed to claim ticket. Please try again.');
       },
     });
@@ -145,7 +164,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isResolving.set(false);
-        console.error('Failed to resolve ticket');
+        if (isDevMode()) { console.error('Failed to resolve ticket'); }
         this.resolveError.set('Failed to resolve ticket. Please try again.');
       },
     });
@@ -156,92 +175,56 @@ export class AgentTicketDetailComponent implements OnInit {
     this.resolveConfirmOpen.set(false);
   }
 
-  statusLabels: Record<string, string> = {
-    'NEW': $localize`:@@tickets.status.new:New`,
-    'IN_PROGRESS': $localize`:@@tickets.status.in_progress:In Progress`,
-    'RESOLVED': $localize`:@@tickets.status.resolved:Resolved`,
-    'CANCELLED': $localize`:@@tickets.status.cancelled:Cancelled`,
-  };
+  statusLabels = computed<Record<string, string>>(() => ({
+    'NEW': this.translationService.translate('tickets.status.new'),
+    'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
+    'RESOLVED': this.translationService.translate('tickets.status.resolved'),
+    'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
+  }));
 
-  urgencyLabels: Record<string, string> = {
-    'LOW': $localize`:@@agent.urgency.low:Low`,
-    'MEDIUM': $localize`:@@agent.urgency.medium:Medium`,
-    'HIGH': $localize`:@@agent.urgency.high:High`,
-  };
+  urgencyLabels = computed<Record<string, string>>(() => ({
+    'LOW': this.translationService.translate('agent.urgency.low'),
+    'MEDIUM': this.translationService.translate('agent.urgency.medium'),
+    'HIGH': this.translationService.translate('agent.urgency.high'),
+  }));
 
-  categoryLabels: Record<string, string> = {
-    'NETWORK': $localize`:@@tickets.category.network:Network`,
-    'HARDWARE': $localize`:@@tickets.category.hardware:Hardware`,
-    'SOFTWARE': $localize`:@@tickets.category.software:Software`,
-    'ACCESS': $localize`:@@tickets.category.access:Access`,
-    'PERIPHERALS': $localize`:@@tickets.category.peripherals:Peripherals`,
-  };
+  categoryLabels = computed<Record<string, string>>(() => ({
+    'NETWORK': this.translationService.translate('tickets.category.network'),
+    'HARDWARE': this.translationService.translate('tickets.category.hardware'),
+    'SOFTWARE': this.translationService.translate('tickets.category.software'),
+    'ACCESS': this.translationService.translate('tickets.category.access'),
+    'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
+  }));
 
-  loadingLabel = $localize`:@@agent.detail.loading:Loading ticket details...`;
-  errorLabel = $localize`:@@agent.detail.error:Failed to load ticket details.`;
-  retryLabel = $localize`:@@agent.detail.retry:Retry`;
-  backToQueueLabel = $localize`:@@agent.detail.backToQueue:\u2190 Back to Queue`;
-  shiftLeftContextLabel = $localize`:@@agent.detail.shiftLeftContext:Shift-Left Context`;
-  issueLabel = $localize`:@@agent.detail.issue:Issue`;
-  chatTranscriptLabel = $localize`:@@agent.detail.chatTranscript:Chat Transcript`;
-  unclaimedLabel = $localize`:@@agent.detail.unclaimed:This ticket has not been claimed yet.`;
-  claimingLabel = $localize`:@@agent.detail.claiming:Claiming...`;
-  claimTicketLabel = $localize`:@@agent.detail.claimTicket:Claim Ticket`;
-  workNotesLabel = $localize`:@@agent.detail.workNotes:Work Notes`;
-  noWorkNotesLabel = $localize`:@@agent.detail.noWorkNotes:No work notes yet.`;
-  addNotePlaceholder = $localize`:@@agent.detail.addNotePlaceholder:Add a work note...`;
-  addingLabel = $localize`:@@agent.detail.adding:Adding...`;
-  addNoteLabel = $localize`:@@agent.detail.addNote:Add Note`;
-  resolutionLabel = $localize`:@@agent.detail.resolution:Resolution`;
-  resolutionPlaceholder = $localize`:@@agent.detail.resolutionPlaceholder:Describe the resolution steps...`;
-  flagKnowledgeGapLabel = $localize`:@@agent.detail.flagKnowledgeGap:Flag as Knowledge Gap`;
-  resolvingLabel = $localize`:@@agent.detail.resolving:Resolving...`;
-  resolveTicketLabel = $localize`:@@agent.detail.resolveTicket:Resolve Ticket`;
-  resolvedByLabel = $localize`:@@agent.detail.resolvedBy:Resolved by`;
-  unknownLabel = $localize`:@@agent.detail.unknown:Unknown`;
-  flaggedKnowledgeGapLabel = $localize`:@@agent.detail.flaggedKnowledgeGap:Flagged as Knowledge Gap`;
-  cancelledByUserLabel = $localize`:@@agent.detail.cancelledByUser:Cancelled by user`;
-  unassignedLabel = $localize`:@@agent.detail.unassigned:Unassigned`;
-  confirmResolutionLabel = $localize`:@@agent.detail.confirmResolution:Confirm resolution for`;
-  cancelLabel = $localize`:@@agent.detail.cancel:Cancel`;
-  confirmLabel = $localize`:@@agent.detail.confirm:Confirm`;
-  assignedToLabel = $localize`:@@agent.detail.assignedTo:Assigned to`;
-  openedByLabel = $localize`:@@agent.detail.openedBy:Opened by`;
+  loadingLabel = computed(() => this.translationService.translate('agent.detail.loading'));
+  errorLabel = computed(() => this.translationService.translate('agent.detail.error'));
+  retryLabel = computed(() => this.translationService.translate('agent.detail.retry'));
+  backToQueueLabel = computed(() => this.translationService.translate('agent.detail.backToQueue'));
+  shiftLeftContextLabel = computed(() => this.translationService.translate('agent.detail.shiftLeftContext'));
+  issueLabel = computed(() => this.translationService.translate('agent.detail.issue'));
+  chatTranscriptLabel = computed(() => this.translationService.translate('agent.detail.chatTranscript'));
+  unclaimedLabel = computed(() => this.translationService.translate('agent.detail.unclaimed'));
+  claimingLabel = computed(() => this.translationService.translate('agent.detail.claiming'));
+  claimTicketLabel = computed(() => this.translationService.translate('agent.detail.claimTicket'));
+  workNotesLabel = computed(() => this.translationService.translate('agent.detail.workNotes'));
+  noWorkNotesLabel = computed(() => this.translationService.translate('agent.detail.noWorkNotes'));
+  addNotePlaceholder = computed(() => this.translationService.translate('agent.detail.addNotePlaceholder'));
+  addingLabel = computed(() => this.translationService.translate('agent.detail.adding'));
+  addNoteLabel = computed(() => this.translationService.translate('agent.detail.addNote'));
+  resolutionLabel = computed(() => this.translationService.translate('agent.detail.resolution'));
+  resolutionPlaceholder = computed(() => this.translationService.translate('agent.detail.resolutionPlaceholder'));
+  flagKnowledgeGapLabel = computed(() => this.translationService.translate('agent.detail.flagKnowledgeGap'));
+  resolvingLabel = computed(() => this.translationService.translate('agent.detail.resolving'));
+  resolveTicketLabel = computed(() => this.translationService.translate('agent.detail.resolveTicket'));
+  resolvedByLabel = computed(() => this.translationService.translate('agent.detail.resolvedBy'));
+  unknownLabel = computed(() => this.translationService.translate('agent.detail.unknown'));
+  flaggedKnowledgeGapLabel = computed(() => this.translationService.translate('agent.detail.flaggedKnowledgeGap'));
+  cancelledByUserLabel = computed(() => this.translationService.translate('agent.detail.cancelledByUser'));
+  unassignedLabel = computed(() => this.translationService.translate('agent.detail.unassigned'));
+  confirmResolutionLabel = computed(() => this.translationService.translate('agent.detail.confirmResolution'));
+  cancelLabel = computed(() => this.translationService.translate('agent.detail.cancel'));
+  confirmLabel = computed(() => this.translationService.translate('agent.detail.confirm'));
+  assignedToLabel = computed(() => this.translationService.translate('agent.detail.assignedTo'));
+  openedByLabel = computed(() => this.translationService.translate('agent.detail.openedBy'));
 
-  addNoteErrorLabel = $localize`:@@agent.detail.addNoteError:Failed to add work note.`;
-  claimErrorLabel = $localize`:@@agent.detail.claimError:Failed to claim ticket.`;
-  resolveErrorLabel = $localize`:@@agent.detail.resolveError:Failed to resolve ticket.`;
-
-  /** Returns the appropriate Tailwind badge classes for a ticket status. */
-  statusBadgeClass(status: string): string {
-    switch (status) {
-      case 'NEW': return 'bg-blue-100 text-blue-700';
-      case 'IN_PROGRESS': return 'bg-amber-100 text-amber-700';
-      case 'RESOLVED': return 'bg-green-100 text-green-700';
-      case 'CANCELLED': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
-
-  /** Returns the appropriate Tailwind badge classes for an urgency level. */
-  urgencyBadgeClass(urgency: string): string {
-    switch (urgency) {
-      case 'HIGH': return 'bg-red-100 text-red-700';
-      case 'MEDIUM': return 'bg-amber-100 text-amber-700';
-      case 'LOW': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
-
-  /** Returns the appropriate Tailwind badge classes for a ticket category. */
-  categoryBadgeClass(category: string): string {
-    switch (category) {
-      case 'NETWORK': return 'bg-purple-100 text-purple-700';
-      case 'HARDWARE': return 'bg-cyan-100 text-cyan-700';
-      case 'SOFTWARE': return 'bg-indigo-100 text-indigo-700';
-      case 'ACCESS': return 'bg-teal-100 text-teal-700';
-      case 'PERIPHERALS': return 'bg-pink-100 text-pink-700';
-      default: return 'bg-slate-100 text-slate-600';
-    }
-  }
 }

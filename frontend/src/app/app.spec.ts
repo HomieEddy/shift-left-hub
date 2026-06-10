@@ -20,7 +20,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const titleLink = compiled.querySelector('a[routerlink="/"]');
-    expect(titleLink?.textContent).toContain('SL Knowledge Hub');
+    const titleText = compiled.querySelector('a[routerlink="/"] .sidebar-label');
+    expect(titleText?.textContent).toContain('Knowledge Hub');
   });
 });

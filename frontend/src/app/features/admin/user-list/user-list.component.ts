@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, computed } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgClass } from '@angular/common';
-import { $localize } from '@angular/localize/init';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserDto } from '../../../core/auth/auth.models';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 type SortField = 'displayName' | 'email' | 'role' | 'enabled' | 'createdAt';
 type SortDir = 'asc' | 'desc';
@@ -16,6 +17,8 @@ type SortDir = 'asc' | 'desc';
 })
 export class UserListComponent implements OnInit {
   private authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
+  protected translationService = inject(TranslationService);
   protected users = signal<UserDto[]>([]);
   protected isLoading = signal(true);
   protected errorMessage = signal('');
@@ -34,13 +37,13 @@ export class UserListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.authService.getUsers().subscribe({
+    this.authService.getUsers().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.users.set(data);
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set($localize`:@@error.load-users:Failed to load users. Make sure you have admin access.`);
+        this.errorMessage.set(this.translationService.translate('error.load-users'));
         this.isLoading.set(false);
       },
     });
@@ -93,13 +96,13 @@ export class UserListComponent implements OnInit {
     const user = this.editingUser();
     if (user == null) return;
 
-    this.authService.updateUserRole(user.id, newRole).subscribe({
+    this.authService.updateUserRole(user.id, newRole).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (updated) => {
         this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
         this.closeRoleDialog();
       },
       error: () => {
-        this.errorMessage.set($localize`:@@error.update-role:Failed to update role. Please try again.`);
+        this.errorMessage.set(this.translationService.translate('error.update-role'));
         this.closeRoleDialog();
       },
     });
@@ -107,39 +110,30 @@ export class UserListComponent implements OnInit {
 
   /** Toggle a user's enabled/disabled status via the API. */
   toggleStatus(user: UserDto): void {
-    this.authService.toggleUserStatus(user.id).subscribe({
+    this.authService.toggleUserStatus(user.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (updated) => {
         this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
       },
       error: () => {
-        this.errorMessage.set($localize`:@@error.toggle-status:Failed to toggle user status.`);
+        this.errorMessage.set(this.translationService.translate('error.toggle-status'));
       },
     });
   }
 
   /** Translatable labels */
-  roleLabels: Record<string, string> = {
-    'ROLE_ADMIN': $localize`:@@admin.users.role.admin:Admin`,
-    'ROLE_AGENT': $localize`:@@admin.users.role.agent:Agent`,
-    'ROLE_USER': $localize`:@@admin.users.role.user:User`,
-  };
+  roleLabels = computed<Record<string, string>>(() => ({
+    'ROLE_ADMIN': this.translationService.translate('admin.users.role.admin'),
+    'ROLE_AGENT': this.translationService.translate('admin.users.role.agent'),
+    'ROLE_USER': this.translationService.translate('admin.users.role.user'),
+  }));
 
-  statusLabels: Record<string, string> = {
-    'active': $localize`:@@admin.users.status.active:Active`,
-    'disabled': $localize`:@@admin.users.status.disabled:Disabled`,
-  };
+  statusLabels = computed<Record<string, string>>(() => ({
+    'active': this.translationService.translate('admin.users.status.active'),
+    'disabled': this.translationService.translate('admin.users.status.disabled'),
+  }));
 
-  actionEditRole: string = $localize`:@@admin.users.edit-role:Edit Role`;
-  actionDisable: string = $localize`:@@admin.users.disable:Disable`;
-  actionEnable: string = $localize`:@@admin.users.enable:Enable`;
-
-  dialogTitle: string = $localize`:@@admin.users.dialog.title:Edit Role`;
-  dialogCancel: string = $localize`:@@admin.users.dialog.cancel:Cancel`;
-  dialogChangeRoleFor: string = $localize`:@@admin.users.dialog.changeRole:Change role for`;
-
-  dialogDescAdmin: string = $localize`:@@admin.users.role.admin.desc:Full access to all features`;
-  dialogDescAgent: string = $localize`:@@admin.users.role.agent.desc:Ticket queue and resolution access`;
-  dialogDescUser: string = $localize`:@@admin.users.role.user.desc:Standard user access`;
+  actionDisable = computed(() => this.translationService.translate('admin.users.disable'));
+  actionEnable = computed(() => this.translationService.translate('admin.users.enable'));
 
   /** Format an ISO date string for display. */
   formatDate(dateStr: string): string {

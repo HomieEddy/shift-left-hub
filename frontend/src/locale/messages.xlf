@@ -1154,6 +1154,202 @@
         <source>Knowledge Base Sources ({INTERPOLATION})</source>
         <target state="new">Knowledge Base Sources ({INTERPOLATION})</target>
       </trans-unit>
+      <trans-unit id="nav.mobile.title">
+        <source>Hub</source>
+        <target>Hub</target>
+      </trans-unit>
+      <trans-unit id="nav.home">
+        <source>Home</source>
+        <target>Home</target>
+      </trans-unit>
+      <trans-unit id="nav.section.guest">
+        <source>Getting Started</source>
+        <target>Getting Started</target>
+      </trans-unit>
+      <trans-unit id="nav.mobile.lang.en">
+        <source>English</source>
+        <target>English</target>
+      </trans-unit>
+      <trans-unit id="nav.mobile.lang.fr">
+        <source>Français</source>
+        <target>Français</target>
+      </trans-unit>
+      <trans-unit id="app.footer">
+        <source>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</source>
+        <target>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.model-config">
+        <source>Model Configuration</source>
+        <target>Model Configuration</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.embedding-dimension">
+        <source>Embedding Dimension</source>
+        <target>Embedding Dimension</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.provider.ollama">
+        <source>Ollama</source>
+        <target>Ollama</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.provider.openai">
+        <source>OpenAI</source>
+        <target>OpenAI</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.save-error">
+        <source>Failed to save settings</source>
+        <target>Failed to save settings</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.test-failure">
+        <source>Connection test failed</source>
+        <target>Connection test failed</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindex-error">
+        <source>Failed to start re-embedding</source>
+        <target>Failed to start re-embedding</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.saving">
+        <source>Saving...</source>
+        <target>Saving...</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.testing">
+        <source>Testing...</source>
+        <target>Testing...</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.reindexing">
+        <source>Re-Embedding...</source>
+        <target>Re-Embedding...</target>
+      </trans-unit>
+      <trans-unit id="escalation.error.create">
+        <source>Failed to create ticket. Please try again.</source>
+        <target>Failed to create ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.claim.error.detail">
+        <source>Failed to claim ticket. Please try again.</source>
+        <target>Failed to claim ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.loadNotesError">
+        <source>Failed to load work notes.</source>
+        <target>Failed to load work notes.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.addNoteError.detail">
+        <source>Failed to add work note. Please try again.</source>
+        <target>Failed to add work note. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.claimError.detail">
+        <source>Failed to claim ticket. Please try again.</source>
+        <target>Failed to claim ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="agent.detail.resolveError.detail">
+        <source>Failed to resolve ticket. Please try again.</source>
+        <target>Failed to resolve ticket. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="shared.table.empty">
+        <source>No data found.</source>
+        <target>No data found.</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.key-stored">
+        <source>A key is currently stored. Enter a new key to replace it.</source>
+        <target>A key is currently stored. Enter a new key to replace it.</target>
+      </trans-unit>
+      <trans-unit id="confirm.error.generic">
+        <source>An unexpected error occurred. Please try again.</source>
+        <target>An unexpected error occurred. Please try again.</target>
+      </trans-unit>
+      <trans-unit id="landing.hero.badge">
+        <source>Shift-Left Support Platform</source>
+        <target>Shift-Left Support Platform</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.response">
+        <source>Agent Productivity Boost</source>
+        <target>Agent Productivity Boost</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.accuracy">
+        <source>Resolution Accuracy</source>
+        <target>Resolution Accuracy</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.intercepted">
+        <source>Tickets Intercepted Before Queue</source>
+        <target>Tickets Intercepted Before Queue</target>
+      </trans-unit>
+      <trans-unit id="landing.stats.response">
+        <source>Average AI Response Time</source>
+        <target>Average AI Response Time</target>
+      </trans-unit>
+      <trans-unit id="landing.how.title">
+        <source>How It Works</source>
+        <target>How It Works</target>
+      </trans-unit>
+      <trans-unit id="landing.how.subtitle">
+        <source>From ticket submission to self-service knowledge in three steps</source>
+        <target>From ticket submission to self-service knowledge in three steps</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.title">
+        <source>User Submits Issue</source>
+        <target>User Submits Issue</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</source>
+        <target>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Matches or Escalates</source>
+        <target>AI Matches or Escalates</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</source>
+        <target>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</source>
+        <target>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</target>
+      </trans-unit>
+      <trans-unit id="landing.features.subtitle">
+        <source>Built for IT service desks that want to shift left using KCS methodology</source>
+        <target>Built for IT service desks that want to shift left using KCS methodology</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.title">
+        <source>User Describes Issue</source>
+        <target>User Describes Issue</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</source>
+        <target>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Resolves or Escalates</source>
+        <target>AI Resolves or Escalates</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</source>
+        <target>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.title">
+        <source>Knowledge Grows Automatically</source>
+        <target>Knowledge Grows Automatically</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</source>
+        <target>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</target>
+      </trans-unit>
+      <trans-unit id="landing.features.title">
+        <source>Everything You Need</source>
+        <target>Everything You Need</target>
+      </trans-unit>
+      <trans-unit id="landing.features.subtitle">
+        <source>Built for IT teams that want to shift left without the documentation burden</source>
+        <target>Built for IT teams that want to shift left without the documentation burden</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.title">
+        <source>Ready to Shift Left?</source>
+        <target>Ready to Shift Left?</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.desc">
+        <source>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</source>
+        <target>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.button">
+        <source>Get Started Free</source>
+        <target>Get Started Free</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -1,20 +1,24 @@
-import { Component, inject, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, isDevMode, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
+import { LucideSend, LucideMessageCircle } from '@lucide/angular';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
+import { TranslationService } from '../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, RouterLink, MarkdownModule, EscalationFormComponent],
+  imports: [FormsModule, RouterLink, MarkdownModule, LucideSend, LucideMessageCircle, ModalComponent, EscalationFormComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
   private chatService = inject(ChatService);
+  protected translationService = inject(TranslationService);
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
@@ -221,11 +225,10 @@ export class ChatComponent {
         });
       }
     } catch (e) {
-        console.warn('Scroll failed:', e);
+        if (isDevMode()) {
+          console.warn('Scroll failed:', e);
+        }
       }
   }
 
-  trackByFn(_index: number, msg: ChatMessage) {
-    return msg.id ?? _index;
-  }
 }

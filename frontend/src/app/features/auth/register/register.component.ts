@@ -19,24 +19,29 @@ export class RegisterComponent {
 
   email = '';
   password = '';
+  showPassword = false;
   displayName = '';
   errorMessage = '';
   isLoading = false;
   showPasswordRules = false;
 
+  get passwordStrength(): number {
+    let score = 0;
+    if (this.password.length >= 8) score++;
+    if (/[A-Z]/.test(this.password)) score++;
+    if (/[0-9]/.test(this.password)) score++;
+    return score;
+  }
+
   get passwordValid(): boolean {
-    return (
-      this.password.length >= 8 &&
-      /[A-Z]/.test(this.password) &&
-      /[0-9]/.test(this.password)
-    );
+    return this.passwordStrength === 3;
   }
 
   onSubmit(): void {
     this.errorMessage = '';
 
     if (!this.passwordValid) {
-      this.errorMessage = 'Password must be at least 8 characters with 1 uppercase letter and 1 number.';
+      this.errorMessage = this.translationService.translate('error.password-rules');
       return;
     }
 
@@ -54,9 +59,9 @@ export class RegisterComponent {
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         if (err.status === 409) {
-          this.errorMessage = 'An account with this email already exists.';
+          this.errorMessage = this.translationService.translate('error.email-exists');
         } else {
-          this.errorMessage = 'Registration failed. Please try again.';
+          this.errorMessage = this.translationService.translate('error.registration-failed');
         }
       },
       complete: () => {
