@@ -55,7 +55,7 @@
           (click)="submit()"
           [disabled]="isSubmitting() || !issue().trim()"
           data-testid="escalation-submit"
-          class="rounded-lg bg-amber-600 px-4 py-2 text-sm text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="rounded-lg bg-accent-warning px-4 py-2 text-sm text-white hover:bg-accent-warning/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           @if (isSubmitting()) {
             <svg class="animate-spin -ml-1 mr-1.5 h-4 w-4 text-white inline-block" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
