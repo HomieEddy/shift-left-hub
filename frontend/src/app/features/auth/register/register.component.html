@@ -74,17 +74,17 @@
         <div class="mt-2 flex gap-1">
           @for (i of [0, 1, 2]; track i) {
             <div class="flex-1 h-1.5 rounded-full transition-colors"
-              [class.bg-green-500]="passwordStrength > i"
-              [class.bg-slate-200]="passwordStrength <= i">
+              [class.bg-accent-success]="passwordStrength > i"
+              [class.bg-surface-tertiary]="passwordStrength <= i">
             </div>
           }
         </div>
 
         @if (showPasswordRules) {
           <ul class="text-xs mt-2 space-y-1">
-            <li class="flex items-center gap-1.5" [class.text-green-600]="password.length >= 8" [class.text-text-tertiary]="password.length < 8">
+            <li class="flex items-center gap-1.5" [class.text-accent-success]="password.length >= 8" [class.text-text-tertiary]="password.length < 8">
               @if (password.length >= 8) {
-                <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3.5 h-3.5 text-accent-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
               } @else {
@@ -94,9 +94,9 @@
               }
               {{ translationService.translate('register.password.rule.length') }}
             </li>
-            <li class="flex items-center gap-1.5" [class.text-green-600]="/[A-Z]/.test(password)" [class.text-text-tertiary]="!/[A-Z]/.test(password)">
+            <li class="flex items-center gap-1.5" [class.text-accent-success]="/[A-Z]/.test(password)" [class.text-text-tertiary]="!/[A-Z]/.test(password)">
               @if (/[A-Z]/.test(password)) {
-                <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3.5 h-3.5 text-accent-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
               } @else {
@@ -106,9 +106,9 @@
               }
               {{ translationService.translate('register.password.rule.uppercase') }}
             </li>
-            <li class="flex items-center gap-1.5" [class.text-green-600]="/[0-9]/.test(password)" [class.text-text-tertiary]="!/[0-9]/.test(password)">
+            <li class="flex items-center gap-1.5" [class.text-accent-success]="/[0-9]/.test(password)" [class.text-text-tertiary]="!/[0-9]/.test(password)">
               @if (/[0-9]/.test(password)) {
-                <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3.5 h-3.5 text-accent-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
               } @else {
