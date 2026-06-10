@@ -21,9 +21,9 @@
   @if (!isLoading() && article() !== null) {
     <article class="max-w-none">
       <!-- Bilingual fallback notice -->
-      @if (isFallback) {
+      @if (isFallback()) {
         <div class="bg-accent-info-muted border border-accent-info text-accent-info px-4 py-3 rounded-lg mb-6 text-sm">
-          {{ translationService.translate('kb.fallback-notice', { VAR_LANG: fallbackLanguage }) }}
+          {{ translationService.translate('kb.fallback-notice', { VAR_LANG: fallbackLanguage() }) }}
         </div>
       }
 
@@ -45,7 +45,7 @@
 
       <!-- Content -->
       <div class="markdown-content">
-        <markdown [data]="displayContent"></markdown>
+        <markdown [data]="displayContent()"></markdown>
       </div>
     </article>
   }

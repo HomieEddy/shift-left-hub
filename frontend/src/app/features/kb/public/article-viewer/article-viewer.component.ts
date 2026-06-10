@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -49,25 +49,25 @@ export class ArticleViewerComponent implements OnInit {
     });
   }
 
-  get displayContent(): string {
+  displayContent = computed(() => {
     const a = this.article();
     if (a == null) return '';
     if (this.translationService.currentLang() === 'fr') {
       return a.contentFr ?? a.contentEn;
     }
     return a.contentEn;
-  }
+  });
 
-  get isFallback(): boolean {
+  isFallback = computed(() => {
     const a = this.article();
     if (a == null) return false;
     if (this.translationService.currentLang() === 'fr') {
       return a.contentFr == null;
     }
     return false;
-  }
+  });
 
-  get fallbackLanguage(): string {
+  fallbackLanguage = computed(() => {
     return this.translationService.currentLang() === 'fr' ? 'English' : 'Français';
-  }
+  });
 }
