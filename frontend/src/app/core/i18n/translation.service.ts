@@ -35,7 +35,7 @@ export class TranslationService {
     let result = this.currentLang() === 'fr' ? entry.fr : entry.en;
     if (params) {
       for (const [k, v] of Object.entries(params)) {
-        result = result.replace(`{${k}}`, String(v));
+        result = result.replaceAll(`{${k}}`, String(v));
       }
     }
     return result;
