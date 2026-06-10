@@ -1,12 +1,11 @@
 <div class="p-6 max-w-6xl mx-auto">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-text-primary" i18n="@@admin.articles.title">Articles</h1>
+    <h1 class="text-2xl font-bold text-text-primary">{{ translationService.translate('admin.articles.title') }}</h1>
     <a
       routerLink="/admin/articles/new"
       class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
-      i18n="@@admin.articles.new"
     >
-      New Article
+      {{ translationService.translate('admin.articles.new') }}
     </a>
   </div>
 
@@ -15,7 +14,7 @@
   }
 
   @if (isLoading()) {
-    <div class="text-center py-12 text-text-tertiary" i18n="@@admin.articles.loading">Loading articles...</div>
+    <div class="text-center py-12 text-text-tertiary">{{ translationService.translate('admin.articles.loading') }}</div>
   }
 
   @if (!isLoading()) {
@@ -23,12 +22,12 @@
       <table class="w-full text-sm">
         <thead class="bg-surface-secondary border-b border-border-default">
           <tr>
-            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.articles.col.title">Title</th>
-            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.articles.col.status">Status</th>
-            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.articles.col.tags">Tags</th>
-            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.articles.col.author">Author</th>
-            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.articles.col.updated">Updated</th>
-            <th class="text-left px-4 py-3 font-medium text-text-secondary" i18n="@@admin.articles.col.actions">Actions</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('admin.articles.col.title') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('admin.articles.col.status') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('admin.articles.col.tags') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('admin.articles.col.author') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('admin.articles.col.updated') }}</th>
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('admin.articles.col.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-border-light">
@@ -64,29 +63,29 @@
               <td class="px-4 py-3 text-text-tertiary text-xs">{{ article.updatedAt | date:'mediumDate' }}</td>
               <td class="px-4 py-3">
                 <div class="flex items-center gap-1">
-                  <a [routerLink]="['/admin/articles', article.id, 'edit']" class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium" i18n="@@admin.articles.edit">
-                    Edit
+                  <a [routerLink]="['/admin/articles', article.id, 'edit']" class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium">
+                    {{ translationService.translate('admin.articles.edit') }}
                   </a>
                   @if (article.status === 'DRAFT') {
-                    <button (click)="publish(article.id)" class="text-xs px-2 py-1 rounded border border-accent-success text-accent-success hover:bg-accent-success-muted font-medium" i18n="@@admin.articles.publish">
-                      Publish
+                    <button (click)="publish(article.id)" class="text-xs px-2 py-1 rounded border border-accent-success text-accent-success hover:bg-accent-success-muted font-medium">
+                      {{ translationService.translate('admin.articles.publish') }}
                     </button>
                   }
                   @if (article.status === 'PUBLISHED') {
-                    <button (click)="archive(article.id)" class="text-xs px-2 py-1 rounded border border-accent-warning text-accent-warning hover:bg-accent-warning-muted font-medium" i18n="@@admin.articles.archive">
-                      Archive
+                    <button (click)="archive(article.id)" class="text-xs px-2 py-1 rounded border border-accent-warning text-accent-warning hover:bg-accent-warning-muted font-medium">
+                      {{ translationService.translate('admin.articles.archive') }}
                     </button>
                   }
-                  <button (click)="deleteArticle(article.id)" class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium" i18n="@@admin.articles.delete">
-                    Delete
+                  <button (click)="deleteArticle(article.id)" class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium">
+                    {{ translationService.translate('admin.articles.delete') }}
                   </button>
                 </div>
               </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="6" class="text-center py-8 text-text-tertiary" i18n="@@admin.articles.no-articles">
-                No articles found.
+              <td colspan="6" class="text-center py-8 text-text-tertiary">
+                {{ translationService.translate('admin.articles.no-articles') }}
               </td>
             </tr>
           }
@@ -102,18 +101,16 @@
         (click)="changePage(currentPage() - 1)"
         [disabled]="currentPage() === 0"
         class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
-        i18n="@@pagination.previous"
       >
-        Previous
+        {{ translationService.translate('pagination.previous') }}
       </button>
-      <span class="text-sm text-text-secondary">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+      <span class="text-sm text-text-secondary">{{ translationService.translate('pagination.page-of', { VAR_PLURAL: currentPage() + 1, VAR_TOTALPAGES: totalPages() }) }}</span>
       <button
         (click)="changePage(currentPage() + 1)"
         [disabled]="currentPage() >= totalPages() - 1"
         class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
-        i18n="@@pagination.next"
       >
-        Next
+        {{ translationService.translate('pagination.next') }}
       </button>
     </div>
   }
