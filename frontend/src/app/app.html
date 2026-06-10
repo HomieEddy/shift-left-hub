@@ -4,63 +4,63 @@
       <div class="flex items-center h-14 px-3 border-b border-border-light">
         <a routerLink="/" class="flex items-center gap-3 no-underline">
           <div class="sidebar-icon w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm flex-shrink-0">SL</div>
-          <span class="sidebar-label text-text-primary font-semibold text-sm" i18n="@@app.title">ShiftleftHub</span>
+          <span class="sidebar-label text-text-primary font-semibold text-sm">{{ translationService.translate('app.title') }}</span>
         </a>
       </div>
 
       <nav class="flex flex-col gap-0.5 p-3 flex-1">
         <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link">
           <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
-          <span class="sidebar-label" i18n="@@nav.dashboard">Dashboard</span>
+          <span class="sidebar-label">{{ translationService.translate('nav.home') }}</span>
         </a>
 
         <div class="mt-4 mb-1 px-2">
-          <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.self-service">Self&#8209;Service</span>
+          <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.user') }}</span>
         </div>
 
         <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link">
           <span class="sidebar-icon"><svg lucideBookOpen /></span>
-          <span class="sidebar-label" i18n="@@nav.knowledge-base">Knowledge Base</span>
+          <span class="sidebar-label">{{ translationService.translate('nav.knowledge-base') }}</span>
         </a>
 
         @if (authService.isAuthenticated()) {
           <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideMessageSquare /></span>
-            <span class="sidebar-label" i18n="@@nav.ai-assistant">AI Assistant</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.ai-assistant') }}</span>
           </a>
           <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideTicket /></span>
-            <span class="sidebar-label" i18n="@@nav.my-tickets">My Tickets</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.my-tickets') }}</span>
           </a>
         }
 
         @if (authService.isAuthenticated() && authService.isAgent()) {
           <div class="mt-4 mb-1 px-2">
-            <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.agent-desk">Agent Desk</span>
+            <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.agent') }}</span>
           </div>
 
           <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideLayoutList /></span>
-            <span class="sidebar-label" i18n="@@nav.ticket-queue">Ticket Queue</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.ticket-queue') }}</span>
           </a>
         }
 
         @if (authService.isAuthenticated() && authService.isAdmin()) {
           <div class="mt-4 mb-1 px-2">
-            <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.administration">Administration</span>
+            <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.admin') }}</span>
           </div>
 
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideUsers /></span>
-            <span class="sidebar-label" i18n="@@nav.users">Users</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.users') }}</span>
           </a>
           <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideFileText /></span>
-            <span class="sidebar-label" i18n="@@nav.articles">Articles</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.articles') }}</span>
           </a>
           <a routerLink="/admin/kcs-drafts" routerLinkActive="sidebar-active" class="sidebar-link relative">
             <span class="sidebar-icon"><svg lucideClipboardList /></span>
-            <span class="sidebar-label" i18n="@@nav.kcs-drafts">KCS Drafts</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.kcs-drafts') }}</span>
             @if (pendingKcsCount() > 0) {
               <span class="absolute top-1 right-2 flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -70,17 +70,17 @@
           </a>
           <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideTag /></span>
-            <span class="sidebar-label" i18n="@@nav.tags">Tags</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.tags') }}</span>
           </a>
           <a routerLink="/admin/settings/llm" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideSettings /></span>
-            <span class="sidebar-label" i18n="@@nav.ai-settings">AI Settings</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.ai-settings') }}</span>
           </a>
         }
       </nav>
 
       <div class="mt-auto py-6 px-4 text-center border-t border-border-light text-text-tertiary text-xs">
-        <span class="sidebar-version">ShiftleftHub v1.0</span>
+        <span class="sidebar-version">{{ translationService.translate('app.version') }}</span>
       </div>
     </aside>
   }
@@ -89,14 +89,14 @@
     <header class="h-14 flex items-center justify-between px-4 border-b border-border-light bg-surface-primary flex-shrink-0">
       <div class="flex items-center gap-3">
         @if (!hideSidebar()) {
-          <button class="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(true)" i18n-aria-label="@@app.open-menu" aria-label="Open menu">
+          <button class="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(true)" [attr.aria-label]="translationService.translate('app.open-menu')">
             <svg lucideMenu />
           </button>
         }
         @if (hideSidebar()) {
           <a routerLink="/" class="flex items-center gap-2 no-underline">
             <div class="w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm">SL</div>
-            <span class="font-semibold text-sm text-text-primary" i18n="@@app.title">ShiftleftHub</span>
+            <span class="font-semibold text-sm text-text-primary">{{ translationService.translate('app.title') }}</span>
           </a>
         }
       </div>
@@ -110,8 +110,7 @@
             [class.text-white]="translationService.currentLang() === 'en'"
             [class.text-text-secondary]="translationService.currentLang() !== 'en'"
             [class.hover:bg-surface-tertiary]="translationService.currentLang() !== 'en'"
-            i18n="@@lang.en"
-          >EN</button>
+          >{{ translationService.translate('lang.en') }}</button>
           <button
             (click)="switchLanguage('fr')"
             class="px-2.5 py-1.5 transition-colors font-medium"
@@ -119,8 +118,7 @@
             [class.text-white]="translationService.currentLang() === 'fr'"
             [class.text-text-secondary]="translationService.currentLang() !== 'fr'"
             [class.hover:bg-surface-tertiary]="translationService.currentLang() !== 'fr'"
-            i18n="@@lang.fr"
-          >FR</button>
+          >{{ translationService.translate('lang.fr') }}</button>
         </div>
 
         @if (authService.isAuthenticated()) {
@@ -129,14 +127,13 @@
             (click)="logout()"
             data-testid="nav-logout"
             class="p-2 rounded-lg text-text-secondary hover:text-red-500 hover:bg-surface-tertiary transition-colors"
-            i18n-title="@@nav.logout"
-            title="Logout"
+            [attr.title]="translationService.translate('nav.logout')"
           >
             <svg lucideLogOut />
           </button>
         } @else {
-          <a routerLink="/login" class="text-sm text-text-secondary hover:text-text-primary transition-colors" i18n="@@nav.signin">Sign in</a>
-          <a routerLink="/register" class="text-sm rounded-lg bg-accent-info px-3 py-1.5 text-white hover:opacity-90 transition-opacity" i18n="@@nav.register">Register</a>
+          <a routerLink="/login" class="text-sm text-text-secondary hover:text-text-primary transition-colors">{{ translationService.translate('nav.signin') }}</a>
+          <a routerLink="/register" class="text-sm rounded-lg bg-accent-info px-3 py-1.5 text-white hover:opacity-90 transition-opacity">{{ translationService.translate('nav.register') }}</a>
         }
       </div>
     </header>
@@ -151,11 +148,11 @@
 
 @if (isMobileMenuOpen()) {
   <div class="fixed inset-0 z-50 lg:hidden">
-    <button type="button" class="fixed inset-0 bg-black/50 animate-in border-0 w-full cursor-default" (click)="isMobileMenuOpen.set(false)" aria-label="Close menu"></button>
+    <button type="button" class="fixed inset-0 bg-black/50 animate-in border-0 w-full cursor-default" (click)="isMobileMenuOpen.set(false)" [attr.aria-label]="translationService.translate('app.close-menu')"></button>
     <div class="fixed inset-y-0 left-0 w-64 bg-surface-primary shadow-xl slide-in-from-left flex flex-col">
       <div class="flex items-center justify-between h-14 px-4 border-b border-border-light flex-shrink-0">
-        <span class="font-semibold text-sm text-text-primary" i18n="@@app.menu">Menu</span>
-        <button class="p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(false)" i18n-aria-label="@@app.close-menu" aria-label="Close menu">
+        <span class="font-semibold text-sm text-text-primary">{{ translationService.translate('app.menu') }}</span>
+        <button class="p-2 rounded-lg text-text-secondary hover:bg-surface-tertiary transition-colors" (click)="isMobileMenuOpen.set(false)" [attr.aria-label]="translationService.translate('app.close-menu')">
           <svg lucideX />
         </button>
       </div>
@@ -163,56 +160,56 @@
       <nav class="flex flex-col gap-0.5 p-3 overflow-y-auto flex-1">
         <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
           <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
-          <span class="sidebar-label !opacity-100" i18n="@@nav.dashboard">Dashboard</span>
+          <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.home') }}</span>
         </a>
 
         <div class="mt-4 mb-1 px-2">
-          <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.self-service">Self&#8209;Service</span>
+          <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.user') }}</span>
         </div>
 
         <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
           <span class="sidebar-icon"><svg lucideBookOpen /></span>
-          <span class="sidebar-label !opacity-100" i18n="@@nav.knowledge-base">Knowledge Base</span>
+          <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.knowledge-base') }}</span>
         </a>
 
         @if (authService.isAuthenticated()) {
           <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideMessageSquare /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.ai-assistant">AI Assistant</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.ai-assistant') }}</span>
           </a>
           <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideTicket /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.my-tickets">My Tickets</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.my-tickets') }}</span>
           </a>
         }
 
         @if (authService.isAuthenticated() && authService.isAgent()) {
           <div class="mt-4 mb-1 px-2">
-            <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.agent-desk">Agent Desk</span>
+            <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.agent') }}</span>
           </div>
 
           <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideLayoutList /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.ticket-queue">Ticket Queue</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.ticket-queue') }}</span>
           </a>
         }
 
         @if (authService.isAuthenticated() && authService.isAdmin()) {
           <div class="mt-4 mb-1 px-2">
-            <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider" i18n="@@section.administration">Administration</span>
+            <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.admin') }}</span>
           </div>
 
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideUsers /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.users">Users</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.users') }}</span>
           </a>
           <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideFileText /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.articles">Articles</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.articles') }}</span>
           </a>
           <a routerLink="/admin/kcs-drafts" routerLinkActive="sidebar-active" class="sidebar-link relative" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideClipboardList /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.kcs-drafts">KCS Drafts</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.kcs-drafts') }}</span>
             @if (pendingKcsCount() > 0) {
               <span class="absolute top-1.5 right-3 flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -222,11 +219,11 @@
           </a>
           <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideTag /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.tags">Tags</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.tags') }}</span>
           </a>
           <a routerLink="/admin/settings/llm" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideSettings /></span>
-            <span class="sidebar-label !opacity-100" i18n="@@nav.ai-settings">AI Settings</span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.ai-settings') }}</span>
           </a>
         }
       </nav>
