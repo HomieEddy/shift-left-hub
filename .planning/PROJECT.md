@@ -2,13 +2,23 @@
 
 ## What This Is
 
-A modern IT Service Management (ITSM) web application that transforms corporate helpdesks from passive ticket systems into proactive resolution platforms. Provides an intelligent assistant that guides users through troubleshooting using company documentation, escalates with full context when needed, and auto-generates new knowledge base articles from resolved tickets — creating a continuous improvement loop.
+A plug-and-play knowledge platform that turns any collection of documents into an intelligent, AI-powered assistant. Workspaces can bring their own knowledge base (markdown, plain text, PDF) and their own LLM (any OpenAI-compatible endpoint) — making it domain-agnostic. IT helpdesk, HR policy lookup, product documentation, legal research: the KB defines the domain.
 
-v1.0 ships: conversational AI triage, contextual ticketing, agent dashboard with resolution workflow, and KCS auto-drafting — all gated by CI/CD.
+v2.0 ships: multi-tenant workspaces, document ingestion, BYO LLM, domain-agnostic assistant.
 
 ## Core Value
 
-Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on IT agents.
+Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents.
+
+## Current Milestone: v2.0 Workspace Platform
+
+**Goal:** Transform the app from an IT-specific helpdesk into a general-purpose, plug-and-play knowledge platform that any team can adopt.
+
+**Target features:**
+- Multi-tenant workspaces with isolated KB, users, and LLM config
+- Document ingestion (markdown, plain text, PDF)
+- BYO LLM — any OpenAI-compatible endpoint per workspace
+- Domain-agnostic assistant — KB defines the domain, not the app
 
 ## Requirements
 
@@ -26,7 +36,7 @@ Shift resolution as close to the user as possible by intercepting Level 0/1 issu
 
 ### Active
 
-(No active requirements — v1.0 shipped. Next milestone: planning.)
+(Defining requirements — see .planning/REQUIREMENTS.md)
 
 ### Out of Scope
 
@@ -41,14 +51,15 @@ Shift resolution as close to the user as possible by intercepting Level 0/1 issu
 
 ## Context
 
-- **Domain:** ITSM / Knowledge-Centered Service (KCS)
+- **Domain:** Knowledge Platform / Multi-Tenant AI Assistant
 - **Architecture:** Modular Monolith — Angular 21.2 SPA + Spring Boot 3.5 REST API + PostgreSQL 16 with pgvector
-- **AI Pipeline:** RAG with hybrid search (FTS + pgvector + RRF); Ollama/OpenAI provider
+- **AI Pipeline:** RAG with hybrid search (FTS + pgvector + RRF); configurable OpenAI-compatible provider
 - **Bilingual:** English/French with dynamic layout handling
 - **Team:** Solo developer — all decisions prioritize demonstrable functionality
 - **v1.0 shipped:** 8 phases, 60 plans, 41 requirements
 - **Codebase:** ~8,700 frontend LOC + ~5,500 backend main LOC + ~2,200 test LOC
 - **Coverage:** 112 backend integration tests (Testcontainers) + 104 frontend tests + Playwright E2E
+- **v2.0 focus:** Multi-tenant workspaces, document ingestion, BYO LLM, domain-agnostic
 
 ## Constraints
 
@@ -92,4 +103,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-08 after v1.0 milestone*
+*Last updated: 2026-06-10 after milestone v2.0 start*
