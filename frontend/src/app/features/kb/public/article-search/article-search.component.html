@@ -1,5 +1,5 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <h1 class="text-3xl font-bold text-text-primary mb-6" i18n="@@kb.search.title">Search Knowledge Base</h1>
+  <h1 class="text-3xl font-bold text-text-primary mb-6">{{ translationService.translate('kb.search.title') }}</h1>
 
   <!-- Search input -->
   <div class="relative mb-8">
@@ -8,7 +8,7 @@
       [ngModel]="query()"
       (ngModelChange)="onSearchInput($event)"
       data-testid="kb-search-input"
-      placeholder="Search articles..." i18n-placeholder="@@kb.search.placeholder"
+      [placeholder]="translationService.translate('kb.search.placeholder')"
       class="w-full pl-12 pr-4 py-3 text-lg border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface-primary text-text-primary"
     />
     <svg class="absolute left-4 top-3.5 w-6 h-6 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,7 +19,7 @@
   <!-- Tag filters -->
   @if (availableTags().length > 0) {
     <div class="mb-6">
-      <p class="text-sm text-text-tertiary mb-2" i18n="@@kb.search.filter-tags">Filter by tags</p>
+      <p class="text-sm text-text-tertiary mb-2">{{ translationService.translate('kb.search.filter-tags') }}</p>
       <div class="flex flex-wrap gap-2">
         @for (tag of availableTags(); track tag.nameEn) {
           <button
@@ -51,14 +51,14 @@
 
   <!-- Results -->
   @if (!isLoading() && hasSearched()) {
-    <p class="text-sm text-text-tertiary mb-6" i18n="@@kb.search.results">
-      Found {{ totalResults() }} result{{ totalResults() === 1 ? '' : 's' }} for "{{ query() }}"
+    <p class="text-sm text-text-tertiary mb-6">
+      {{ translationService.translate('kb.search.results', { count: totalResults(), query: query() }) }}
     </p>
 
     @if (results().length === 0) {
       <div class="text-center py-12 text-text-tertiary">
-        <p class="text-lg mb-2" i18n="@@kb.search.no-results">No results found</p>
-        <p class="text-sm" i18n="@@kb.search.hint">Try different keywords or browse all articles</p>
+        <p class="text-lg mb-2">{{ translationService.translate('kb.search.no-results') }}</p>
+        <p class="text-sm">{{ translationService.translate('kb.search.hint') }}</p>
       </div>
     }
 
@@ -91,18 +91,16 @@
           (click)="changePage(currentPage() - 1)"
           [disabled]="currentPage() === 0"
           class="px-4 py-2 text-sm rounded-lg border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
-          i18n="@@pagination.previous"
         >
-          Previous
+          {{ translationService.translate('pagination.previous') }}
         </button>
-        <span class="text-sm text-text-secondary" i18n="@@pagination.page-of">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+        <span class="text-sm text-text-secondary">{{ translationService.translate('pagination.page-of', { VAR_PLURAL: currentPage() + 1, VAR_TOTALPAGES: totalPages() }) }}</span>
         <button
           (click)="changePage(currentPage() + 1)"
           [disabled]="currentPage() >= totalPages() - 1"
           class="px-4 py-2 text-sm rounded-lg border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
-          i18n="@@pagination.next"
         >
-          Next
+          {{ translationService.translate('pagination.next') }}
         </button>
       </div>
     }
@@ -114,7 +112,7 @@
       <svg class="w-16 h-16 mx-auto mb-4 text-border-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
-      <p class="text-lg" i18n="@@kb.search.hint">Type a query above to search the knowledge base</p>
+      <p class="text-lg">{{ translationService.translate('kb.search.hint') }}</p>
     </div>
   }
 </div>
