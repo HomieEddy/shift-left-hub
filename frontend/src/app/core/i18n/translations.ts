@@ -114,6 +114,7 @@ export const translations: Record<string, { en: string; fr: string }> = {
   "kb.search.placeholder": { en: "Search articles...", fr: "Rechercher des articles..." },
   "kb.search.no-results": { en: "No results found", fr: "Aucun résultat trouvé" },
   "kb.search.hint": { en: "Type a query above to search the knowledge base", fr: "Tapez une requête pour rechercher dans la base" },
+  "kb.search.no-results-hint": { en: "Try different keywords or browse all articles", fr: "Essayez d'autres mots-clés ou parcourez tous les articles" },
   "kb.search-articles": { en: "Search Articles", fr: "Rechercher des articles" },
   "kb.no-articles": { en: "No articles published yet.", fr: "Aucun article publié pour le moment." },
   "kb.loading": { en: "Loading articles...", fr: "Chargement des articles..." },

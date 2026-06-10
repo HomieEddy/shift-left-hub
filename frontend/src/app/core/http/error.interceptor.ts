@@ -8,25 +8,25 @@ import { TranslationService } from '../i18n/translation.service';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toastService = inject(ToastService);
-  const ts = inject(TranslationService);
+  const translationService = inject(TranslationService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let message: string | null = null;
 
       if (error.status === 401) {
-        message = ts.translate('http.error.sessionExpired');
+        message = translationService.translate('http.error.sessionExpired');
         void router.navigate(['/login']);
       } else if (error.status === 403) {
-        message = ts.translate('http.error.forbidden');
+        message = translationService.translate('http.error.forbidden');
       } else if (error.status >= 400 && error.status < 500) {
         if (req.url.includes('/auth/refresh') || (error.url?.includes('/auth/refresh') ?? false)) {
           return throwError(() => error);
         }
         const body = error.error as { message?: string; error?: string } | null;
-        message = body?.message ?? body?.error ?? ts.translate('http.error.invalidRequest');
+        message = body?.message ?? body?.error ?? translationService.translate('http.error.invalidRequest');
       } else if (error.status >= 500) {
-        message = ts.translate('http.error.serverError');
+        message = translationService.translate('http.error.serverError');
       }
 
       if (message != null) {

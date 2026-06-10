@@ -130,17 +130,8 @@ export class UserListComponent implements OnInit {
     'disabled': this.translationService.translate('admin.users.status.disabled'),
   };
 
-  actionEditRole = this.translationService.translate('admin.users.edit-role');
   actionDisable = this.translationService.translate('admin.users.disable');
   actionEnable = this.translationService.translate('admin.users.enable');
-
-  dialogTitle = this.translationService.translate('admin.users.dialog.title');
-  dialogCancel = this.translationService.translate('admin.users.dialog.cancel');
-  dialogChangeRoleFor = this.translationService.translate('admin.users.dialog.changeRole');
-
-  dialogDescAdmin = this.translationService.translate('admin.users.role.admin.desc');
-  dialogDescAgent = this.translationService.translate('admin.users.role.agent.desc');
-  dialogDescUser = this.translationService.translate('admin.users.role.user.desc');
 
   /** Format an ISO date string for display. */
   formatDate(dateStr: string): string {
