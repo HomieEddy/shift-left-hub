@@ -26,19 +26,19 @@
       <table class="w-full text-sm">
         <thead class="bg-surface-secondary border-b border-border-default">
           <tr>
-            <th (click)="setSort('displayName')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+            <th (click)="setSort('displayName')" (keydown.enter)="setSort('displayName')" tabindex="0" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
               {{ translationService.translate('admin.users.col.name') }}<span class="text-xs">{{ sortIndicator('displayName') }}</span>
             </th>
-            <th (click)="setSort('email')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+            <th (click)="setSort('email')" (keydown.enter)="setSort('email')" tabindex="0" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
               {{ translationService.translate('admin.users.col.email') }}<span class="text-xs">{{ sortIndicator('email') }}</span>
             </th>
-            <th (click)="setSort('role')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+            <th (click)="setSort('role')" (keydown.enter)="setSort('role')" tabindex="0" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
               {{ translationService.translate('admin.users.col.role') }}<span class="text-xs">{{ sortIndicator('role') }}</span>
             </th>
-            <th (click)="setSort('enabled')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+            <th (click)="setSort('enabled')" (keydown.enter)="setSort('enabled')" tabindex="0" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
               {{ translationService.translate('admin.users.col.status') }}<span class="text-xs">{{ sortIndicator('enabled') }}</span>
             </th>
-            <th (click)="setSort('createdAt')" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
+            <th (click)="setSort('createdAt')" (keydown.enter)="setSort('createdAt')" tabindex="0" class="text-left px-4 py-3 font-medium text-text-secondary cursor-pointer hover:text-text-primary">
               {{ translationService.translate('admin.users.col.created') }}<span class="text-xs">{{ sortIndicator('createdAt') }}</span>
             </th>
             <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('admin.users.col.actions') }}</th>
