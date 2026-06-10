@@ -37,10 +37,10 @@ export class ButtonComponent {
 
     const variants: Record<string, string> = {
       primary: 'bg-primary-600 text-white hover:bg-primary-700',
-      secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200',
-      outline: 'border border-slate-300 text-slate-700 hover:bg-slate-50',
-      ghost: 'text-slate-600 hover:bg-slate-100',
-      danger: 'bg-red-600 text-white hover:bg-red-700',
+      secondary: 'bg-surface-tertiary text-text-primary hover:bg-surface-secondary',
+      outline: 'border border-border-default text-text-primary hover:bg-surface-secondary',
+      ghost: 'text-text-secondary hover:bg-surface-tertiary',
+      danger: 'bg-accent-danger text-white hover:bg-accent-danger/90',
     };
 
     const sizes: Record<string, string> = {
@@ -88,10 +88,10 @@ export class IconButtonComponent {
 
     const variants: Record<string, string> = {
       primary: 'bg-primary-600 text-white hover:bg-primary-700',
-      secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200',
-      outline: 'border border-slate-300 text-slate-700 hover:bg-slate-50',
-      ghost: 'text-slate-600 hover:bg-slate-100',
-      danger: 'bg-red-600 text-white hover:bg-red-700',
+      secondary: 'bg-surface-tertiary text-text-primary hover:bg-surface-secondary',
+      outline: 'border border-border-default text-text-primary hover:bg-surface-secondary',
+      ghost: 'text-text-secondary hover:bg-surface-tertiary',
+      danger: 'bg-accent-danger text-white hover:bg-accent-danger/90',
     };
 
     const sizes: Record<string, string> = {
