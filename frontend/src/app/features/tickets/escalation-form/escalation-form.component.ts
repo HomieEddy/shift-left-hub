@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TicketService } from '../ticket.service';
@@ -26,18 +26,18 @@ export class EscalationFormComponent {
   successTicketNumber = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  categories = [
+  categories = computed(() => [
     { value: 'NETWORK', label: this.translationService.translate('tickets.category.network') },
     { value: 'HARDWARE', label: this.translationService.translate('tickets.category.hardware') },
     { value: 'SOFTWARE', label: this.translationService.translate('tickets.category.software') },
     { value: 'ACCESS', label: this.translationService.translate('tickets.category.access') },
     { value: 'PERIPHERALS', label: this.translationService.translate('tickets.category.peripherals') },
-  ];
-  urgencies = [
+  ]);
+  urgencies = computed(() => [
     { value: 'LOW', label: this.translationService.translate('agent.urgency.low') },
     { value: 'MEDIUM', label: this.translationService.translate('agent.urgency.medium') },
     { value: 'HIGH', label: this.translationService.translate('agent.urgency.high') },
-  ];
+  ]);
 
   submit(): void {
     if (this.isSubmitting() || !this.issue().trim()) return;

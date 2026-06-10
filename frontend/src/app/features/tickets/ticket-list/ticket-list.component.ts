@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -56,20 +56,20 @@ export class TicketListComponent implements OnInit {
     }
   }
 
-  allLabel = this.translationService.translate('tickets.filter.all');
+  allLabel = computed(() => this.translationService.translate('tickets.filter.all'));
 
-  statusLabels: Record<string, string> = {
+  statusLabels = computed<Record<string, string>>(() => ({
     'NEW': this.translationService.translate('tickets.status.new'),
     'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
     'RESOLVED': this.translationService.translate('tickets.status.resolved'),
     'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
-  };
+  }));
 
-  categoryLabels: Record<string, string> = {
+  categoryLabels = computed<Record<string, string>>(() => ({
     'NETWORK': this.translationService.translate('tickets.category.network'),
     'HARDWARE': this.translationService.translate('tickets.category.hardware'),
     'SOFTWARE': this.translationService.translate('tickets.category.software'),
     'ACCESS': this.translationService.translate('tickets.category.access'),
     'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
-  };
+  }));
 }

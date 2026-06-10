@@ -25,7 +25,7 @@
             class="w-full rounded-lg border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
             [disabled]="isSubmitting()"
           >
-            @for (cat of categories; track cat.value) {
+            @for (cat of categories(); track cat.value) {
               <option [value]="cat.value">{{ cat.label }}</option>
             }
           </select>
@@ -39,7 +39,7 @@
             class="w-full rounded-lg border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
             [disabled]="isSubmitting()"
           >
-            @for (urg of urgencies; track urg.value) {
+            @for (urg of urgencies(); track urg.value) {
               <option [value]="urg.value">{{ urg.label }}</option>
             }
           </select>
