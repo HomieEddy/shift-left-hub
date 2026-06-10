@@ -1,5 +1,4 @@
-import { Component, computed, inject, input, output } from '@angular/core';
-import { TranslationService } from '../../../core/i18n/translation.service';
+import { Component, computed, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
@@ -12,7 +11,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
           [disabled]="currentPage() === 0"
           class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {{ translationService.translate('pagination.previous') }}
+          {{ previousLabel() }}
         </button>
         <div class="hidden sm:flex items-center gap-1">
           @for (page of visiblePages(); track page) {
@@ -33,21 +32,23 @@ import { TranslationService } from '../../../core/i18n/translation.service';
           }
         </div>
         <span class="sm:hidden text-sm text-text-secondary">
-          {{ translationService.translate('pagination.page-of', { VAR_PLURAL: currentPage() + 1, VAR_TOTALPAGES: totalPages() }) }}
+          {{ pageOfLabel() }}
         </span>
         <button
           (click)="goToPage(currentPage() + 1)"
           [disabled]="currentPage() >= totalPages() - 1"
           class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {{ translationService.translate('pagination.next') }}
+          {{ nextLabel() }}
         </button>
       </div>
     }
   `,
 })
 export class PaginationComponent {
-  protected translationService = inject(TranslationService);
+  previousLabel = input('Previous');
+  nextLabel = input('Next');
+  pageOfLabel = input('Page 1 of 1');
   currentPage = input(0);
   totalPages = input(0);
   pageChange = output<number>();
