@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, isDevMode, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
@@ -55,7 +55,7 @@ export class App {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (response) => this.pendingKcsCount.set(response.pendingCount),
-      error: (err) => console.warn('KCS pending-count poll failed:', err),
+      error: (err) => { if (isDevMode()) { console.warn('KCS pending-count poll failed:', err); } },
     });
   }
 

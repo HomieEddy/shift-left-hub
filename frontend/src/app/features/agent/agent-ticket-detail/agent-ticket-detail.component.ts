@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, isDevMode, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -95,7 +95,7 @@ export class AgentTicketDetailComponent implements OnInit {
     this.agentTicketService.getWorkNotes(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (notes) => this.workNotes.set(notes),
       error: (err) => {
-        console.error('Failed to load work notes:', err);
+        if (isDevMode()) { console.error('Failed to load work notes:', err); }
         this.noteError.set('Failed to load work notes.');
       },
     });
@@ -117,7 +117,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isSubmittingNote.set(false);
-        console.error('Failed to add work note');
+        if (isDevMode()) { console.error('Failed to add work note'); }
         this.workNoteError.set('Failed to add work note. Please try again.');
       },
     });
@@ -136,7 +136,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isClaiming.set(false);
-        console.error('Failed to claim ticket');
+        if (isDevMode()) { console.error('Failed to claim ticket'); }
         this.claimError.set('Failed to claim ticket. Please try again.');
       },
     });
@@ -165,7 +165,7 @@ export class AgentTicketDetailComponent implements OnInit {
       },
       error: () => {
         this.isResolving.set(false);
-        console.error('Failed to resolve ticket');
+        if (isDevMode()) { console.error('Failed to resolve ticket'); }
         this.resolveError.set('Failed to resolve ticket. Please try again.');
       },
     });

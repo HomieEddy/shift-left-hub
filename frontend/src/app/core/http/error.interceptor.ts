@@ -1,5 +1,5 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, isDevMode } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { ToastService } from '../../shared/ui/toast/toast.service';
@@ -31,7 +31,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       if (message != null) {
         toastService.error(message);
-        console.error(`[HTTP Error ${error.status}]:`, message);
+        if (isDevMode()) { console.error(`[HTTP Error ${error.status}]:`, message); }
       }
 
       return throwError(() => error);
