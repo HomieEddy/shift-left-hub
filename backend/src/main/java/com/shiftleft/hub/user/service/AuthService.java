@@ -131,7 +131,8 @@ public class AuthService {
             user.getId().toString(),
             user.getEmail(),
             user.getRole().name(),
-            user.getDisplayName()
+            user.getDisplayName(),
+            user.getDefaultWorkspaceId() != null ? user.getDefaultWorkspaceId().toString() : null
         );
     }
 }

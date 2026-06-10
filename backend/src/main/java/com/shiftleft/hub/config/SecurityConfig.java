@@ -1,5 +1,6 @@
 package com.shiftleft.hub.config;
 
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.user.domain.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,6 +31,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
@@ -152,6 +154,11 @@ public class SecurityConfig {
                                 SecurityContextHolder.getContext()
                                     .setAuthentication(authentication);
                             }
+
+                            UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
+                            if (workspaceId != null) {
+                                WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+                            }
                         } catch (Exception e) {
                             log.warn("JWT validation failed", e);
                             SecurityContextHolder.clearContext();
@@ -159,7 +166,11 @@ public class SecurityConfig {
                     }
                 }
 
-                filterChain.doFilter(request, response);
+                try {
+                    filterChain.doFilter(request, response);
+                } finally {
+                    WorkspaceContextHolder.clear();
+                }
             }
         };
     }

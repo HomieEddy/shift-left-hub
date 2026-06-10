@@ -1,5 +1,6 @@
 package com.shiftleft.hub.ticket.domain;
 
+import com.shiftleft.hub.common.domain.WorkspaceAwareEntity;
 import com.shiftleft.hub.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +41,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Ticket {
+public class Ticket extends WorkspaceAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

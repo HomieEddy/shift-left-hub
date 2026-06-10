@@ -1,9 +1,7 @@
-package com.shiftleft.hub.user.domain;
+package com.shiftleft.hub.workspace.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,46 +15,45 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
-/** JPA entity representing a user in the system. */
+/**
+ * JPA entity representing a workspace for multi-tenant isolation.
+ */
 @Entity
-@Table(name = "app_user")
+@Table(name = "workspace")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class Workspace {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false, unique = true)
-    private String email;
+    private String slug;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    @Column(nullable = false)
-    private String displayName;
+    @Column(name = "logo_url", length = 512)
+    private String logoUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole role;
-
-    @Column(nullable = false)
-    private boolean enabled;
-
-    @Column(name = "default_workspace_id")
-    private UUID defaultWorkspaceId;
+    @Column(name = "created_by", nullable = false, updatable = false)
+    private UUID createdBy;
 
     @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Override
@@ -64,10 +61,10 @@ public class User {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof User user)) {
+        if (!(o instanceof Workspace that)) {
             return false;
         }
-        return id != null && id.equals(user.id);
+        return id != null && id.equals(that.id);
     }
 
     @Override

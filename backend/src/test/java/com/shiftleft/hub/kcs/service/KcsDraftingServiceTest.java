@@ -5,6 +5,7 @@ import com.shiftleft.hub.ai.service.AiConfigService;
 import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
 import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
 import com.shiftleft.hub.tag.domain.Tag;
@@ -17,6 +18,8 @@ import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.ticket.domain.TicketStatus;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,7 +53,18 @@ class KcsDraftingServiceTest {
 
     @InjectMocks private KcsDraftingService kcsDraftingService;
 
+    private static final UUID WORKSPACE_ID = UUID.randomUUID();
     private final UUID ticketId = UUID.randomUUID();
+
+    @BeforeEach
+    void setUp() {
+        WorkspaceContextHolder.setCurrentWorkspaceId(WORKSPACE_ID);
+    }
+
+    @AfterEach
+    void tearDown() {
+        WorkspaceContextHolder.clear();
+    }
     private final String ticketNumber = "TKT-0005";
     private final UUID articleId = UUID.randomUUID();
     private final UUID systemUserId = UUID.randomUUID();
@@ -155,7 +169,7 @@ class KcsDraftingServiceTest {
                 .createdAt(LocalDateTime.now()).build();
         });
         // checkDuplicates: FTS empty, vector empty
-        when(articleRepository.searchByText(anyString(), any(Pageable.class)))
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
@@ -212,7 +226,7 @@ class KcsDraftingServiceTest {
                 .author(a.getAuthor()).sourceTicketId(ticketId)
                 .createdAt(LocalDateTime.now()).build();
         });
-        when(articleRepository.searchByText(anyString(), any(Pageable.class)))
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
@@ -263,7 +277,7 @@ class KcsDraftingServiceTest {
                 "Slug should have UUID suffix: " + a.getSlug());
             return a;
         });
-        when(articleRepository.searchByText(anyString(), any(Pageable.class)))
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
@@ -280,7 +294,7 @@ class KcsDraftingServiceTest {
         Ticket ticket = createTicket();
         when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
         // findSimilarArticles returns empty
-        when(articleRepository.searchByText(anyString(), any(Pageable.class)))
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
 
         KcsDraftResponse response = kcsDraftingService.enrichDraftResponse(article);
@@ -298,7 +312,7 @@ class KcsDraftingServiceTest {
         article.setSourceTicketId(null);
         // findSimilarArticles — title is "VPN Connection Guide"
         // Keywords: "vpn connection guide"
-        when(articleRepository.searchByText(anyString(), any(Pageable.class)))
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
 
         KcsDraftResponse response = kcsDraftingService.enrichDraftResponse(article);
@@ -318,7 +332,7 @@ class KcsDraftingServiceTest {
         Object[] row1 = new Object[]{otherId, "Similar VPN Guide"};
         Object[] row2 = new Object[]{UUID.randomUUID(), "Another VPN Article"};
         Page<Object[]> ftsPage = new PageImpl<>(List.of(row1, row2));
-        when(articleRepository.searchByText(anyString(), any(Pageable.class)))
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(ftsPage);
 
         KcsDraftResponse response = kcsDraftingService.enrichDraftResponse(article);

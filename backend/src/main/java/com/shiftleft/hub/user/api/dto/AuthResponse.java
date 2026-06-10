@@ -7,6 +7,7 @@ public record AuthResponse(
         String userId,
         String email,
         String role,
-        String displayName
+        String displayName,
+        String workspaceId
 ) {
 }

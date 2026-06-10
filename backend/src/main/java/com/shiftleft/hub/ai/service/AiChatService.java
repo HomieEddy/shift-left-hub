@@ -5,6 +5,7 @@ import com.shiftleft.hub.ai.api.dto.ChatRequest;
 import com.shiftleft.hub.ai.api.dto.StreamEvent;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.article.domain.ArticleRepository;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -17,6 +18,7 @@ import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -193,7 +195,8 @@ public class AiChatService {
     }
 
     private List<HybridSearchResult> ftsSearch(String query) {
-        var page = articleRepository.searchByText(query, org.springframework.data.domain.PageRequest.of(0, TOP_K));
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        var page = articleRepository.searchByText(query, workspaceId, PageRequest.of(0, TOP_K));
         return page.getContent().stream()
             .map(row -> {
                 UUID id = (UUID) row[0];
@@ -207,8 +210,14 @@ public class AiChatService {
     }
 
     private List<HybridSearchResult> vectorSearch(String query, double threshold) {
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         List<Document> docs = vectorStore.similaritySearch(
-            SearchRequest.builder().query(query).topK(TOP_K).similarityThreshold(threshold).build());
+            SearchRequest.builder()
+                .query(query)
+                .topK(TOP_K)
+                .similarityThreshold(threshold)
+                .filterExpression("workspace_id == '" + workspaceId + "'")
+                .build());
         return docs.stream()
             .map(doc -> {
                 Map<String, Object> meta = doc.getMetadata();

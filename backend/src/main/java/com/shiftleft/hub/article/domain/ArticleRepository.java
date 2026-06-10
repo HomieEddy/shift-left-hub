@@ -82,6 +82,60 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     Page<Object[]> searchByText(@Param("query") String query, Pageable pageable);
 
     /**
+     * Full-text search across published articles scoped to a workspace.
+     *
+     * @param query       the search query
+     * @param workspaceId the workspace UUID to scope results to
+     * @param pageable    the pagination information
+     * @return a page of raw search result rows
+     */
+    @Query(value = """
+        WITH q AS (
+          SELECT plainto_tsquery('english', :query) AS en_query,
+                 plainto_tsquery('french', :query) AS fr_query
+        )
+        SELECT a.id, a.title_en, a.title_fr, a.slug, a.excerpt, a.published_at,
+               ts_headline('english', a.content_en, q.en_query,
+                           'MaxWords=50, MinWords=20, StartSel=<mark>, StopSel=</mark>') AS headline_en,
+               ts_headline('french', a.content_fr, q.fr_query,
+                           'MaxWords=50, MinWords=20, StartSel=<mark>, StopSel=</mark>') AS headline_fr,
+               COALESCE(
+                 (
+                   SELECT array_agg(t.name_en ORDER BY t.name_en)
+                   FROM article_tag at2
+                   JOIN tag t ON t.id = at2.tag_id
+                   WHERE at2.article_id = a.id
+                 ),
+                 ARRAY[]::text[]
+               ) AS tag_names
+        FROM article a
+        CROSS JOIN q
+        WHERE a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ q.en_query
+            OR a.tsv_fr @@ q.fr_query)
+          AND a.workspace_id = CAST(:workspaceId AS UUID)
+        ORDER BY GREATEST(ts_rank(a.tsv_en, q.en_query), ts_rank(a.tsv_fr, q.fr_query)) DESC
+        """,
+        countQuery = """
+        WITH q AS (
+          SELECT plainto_tsquery('english', :query) AS en_query,
+                 plainto_tsquery('french', :query) AS fr_query
+        )
+        SELECT count(*)
+        FROM article a
+        CROSS JOIN q
+        WHERE a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ q.en_query
+            OR a.tsv_fr @@ q.fr_query)
+          AND a.workspace_id = CAST(:workspaceId AS UUID)
+        """,
+        nativeQuery = true)
+    Page<Object[]> searchByText(
+            @Param("query") String query,
+            @Param("workspaceId") UUID workspaceId,
+            Pageable pageable);
+
+    /**
      * Full-text search across published articles filtered by tag names.
      *
      * @param query    the search query
@@ -148,6 +202,76 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
             Pageable pageable);
 
     /**
+     * Full-text search across published articles scoped to a workspace, filtered by tag names.
+     *
+     * @param query       the search query
+     * @param tagNames    the tag names to filter by
+     * @param workspaceId the workspace UUID to scope results to
+     * @param pageable    the pagination information
+     * @return a page of raw search result rows
+     */
+    @Query(value = """
+        WITH q AS (
+          SELECT plainto_tsquery('english', :query) AS en_query,
+                 plainto_tsquery('french', :query) AS fr_query
+        )
+        SELECT a.id, a.title_en, a.title_fr, a.slug, a.excerpt, a.published_at,
+               ts_headline('english', a.content_en, q.en_query,
+                           'MaxWords=50, MinWords=20, StartSel=<mark>, StopSel=</mark>') AS headline_en,
+               ts_headline('french', a.content_fr, q.fr_query,
+                           'MaxWords=50, MinWords=20, StartSel=<mark>, StopSel=</mark>') AS headline_fr,
+               COALESCE(
+                 (
+                   SELECT array_agg(t.name_en ORDER BY t.name_en)
+                   FROM article_tag at2
+                   JOIN tag t ON t.id = at2.tag_id
+                   WHERE at2.article_id = a.id
+                 ),
+                 ARRAY[]::text[]
+               ) AS tag_names
+        FROM article a
+        CROSS JOIN q
+        WHERE a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ q.en_query
+            OR a.tsv_fr @@ q.fr_query)
+          AND EXISTS (
+            SELECT 1
+            FROM article_tag atf
+            JOIN tag tf ON tf.id = atf.tag_id
+            WHERE atf.article_id = a.id
+              AND tf.name_en IN (:tagNames)
+          )
+          AND a.workspace_id = CAST(:workspaceId AS UUID)
+        ORDER BY GREATEST(ts_rank(a.tsv_en, q.en_query), ts_rank(a.tsv_fr, q.fr_query)) DESC
+        """,
+        countQuery = """
+        WITH q AS (
+          SELECT plainto_tsquery('english', :query) AS en_query,
+                 plainto_tsquery('french', :query) AS fr_query
+        )
+        SELECT count(*)
+        FROM article a
+        CROSS JOIN q
+        WHERE a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ q.en_query
+            OR a.tsv_fr @@ q.fr_query)
+          AND EXISTS (
+            SELECT 1
+            FROM article_tag atf
+            JOIN tag tf ON tf.id = atf.tag_id
+            WHERE atf.article_id = a.id
+              AND tf.name_en IN (:tagNames)
+          )
+          AND a.workspace_id = CAST(:workspaceId AS UUID)
+        """,
+        nativeQuery = true)
+    Page<Object[]> searchByTextAndTagNames(
+            @Param("query") String query,
+            @Param("tagNames") Collection<String> tagNames,
+            @Param("workspaceId") UUID workspaceId,
+            Pageable pageable);
+
+    /**
      * Finds tag facet counts for published articles.
      *
      * @return a list of raw tag facet rows
@@ -162,6 +286,24 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
         ORDER BY t.name_en
         """, nativeQuery = true)
     List<Object[]> findPublishedTagFacets();
+
+    /**
+     * Finds tag facet counts for published articles scoped to a workspace.
+     *
+     * @param workspaceId the workspace UUID to scope results to
+     * @return a list of raw tag facet rows
+     */
+    @Query(value = """
+        SELECT t.name_en, t.name_fr, t.color, COUNT(*)
+        FROM article a
+        JOIN article_tag at ON at.article_id = a.id
+        JOIN tag t ON t.id = at.tag_id
+        WHERE a.status = 'PUBLISHED'
+          AND a.workspace_id = CAST(:workspaceId AS UUID)
+        GROUP BY t.id, t.name_en, t.name_fr, t.color
+        ORDER BY t.name_en
+        """, nativeQuery = true)
+    List<Object[]> findPublishedTagFacets(@Param("workspaceId") UUID workspaceId);
 
     // === KCS Draft Query Methods ===
 

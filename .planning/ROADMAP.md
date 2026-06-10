@@ -3,6 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Initial MVP** — Phases 1-8 (shipped 2026-06-08)
+- 🔷 **v2.0 Workspace Platform** — Phases 9-12 (in planning)
 
 ## Phases
 
@@ -20,11 +21,73 @@
 
 </details>
 
-### 📋 v2 — Planned
+<details>
+<summary>🔷 v2.0 Workspace Platform (Phases 9-12) — IN PLANNING</summary>
 
-- [ ] Phase 9: Notifications & Real-time Updates
-- [ ] Phase 10: Analytics & Dashboard
-- [ ] Phase 11: Advanced Features
+- [ ] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
+- [ ] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
+- [ ] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
+- [ ] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
+
+</details>
+
+## Phase Details
+
+### Phase 9: Workspace Foundation
+**Goal**: Multi-tenant workspace isolation is established — users can create workspaces, all domain data is scoped by workspace_id, and existing v1.0 data is migrated to a default workspace
+**Depends on**: Nothing (v1.0 shipped)
+**Requirements**: WSF-01, WSF-02, WSF-03, WSF-04, WSF-05, WSF-06
+**Success Criteria** (what must be TRUE):
+  1. User can create a workspace with a name, and the system auto-generates a URL-safe slug
+  2. All existing domain tables (articles, tickets, tags, AI chat transcripts) carry a workspace_id FK and all repository queries are automatically filtered by the active workspace via Hibernate @Filter + AOP
+  3. JWT authentication includes a workspace_id claim, scoping all API operations to the user's current workspace
+  4. pgvector similarity searches (hybrid search, RAG) only return vector results from the active workspace via metadata filtering
+  5. Existing v1.0 data is migrated to a "Default Workspace" on first startup and remains fully accessible
+**Plans**: 4 plans in 3 waves
+
+Plans:
+- [ ] 09-01-PLAN.md — Database schema + JPA entities (Flyway V3, Workspace, WorkspaceAwareEntity)
+- [ ] 09-02-PLAN.md — Security + AOP + Vector filtering (JWT claims, ContextHolder, FilterAspect)
+- [ ] 09-03-PLAN.md — Migration + Admin API (Default Workspace seeder, AdminWorkspaceController)
+- [ ] 09-04-PLAN.md — Admin workspace frontend (list, create, assign users)
+
+### Phase 10: Document Ingestion + BYO LLM
+**Goal**: Users can upload documents to be processed by an async Spring AI ETL pipeline and configure their own OpenAI-compatible LLM endpoint per workspace
+**Depends on**: Phase 9
+**Requirements**: DOC-01, DOC-02, DOC-03, DOC-04, DOC-05, LLM-01, LLM-02, LLM-03, LLM-04, LLM-05
+**Success Criteria** (what must be TRUE):
+  1. User can drag-and-drop markdown, plain text, and PDF files for upload, triggering automatic text extraction, chunking, and embedding via Spring AI ETL pipeline
+  2. Upload processing status is visible through 5 stages (UPLOADED → PARSING → CHUNKING → EMBEDDING → READY/FAILED) with user-facing progress tracking
+  3. Duplicate content (matching SHA-256 content hash) is detected and reported; user can reprocess a single document after fixing the source file
+  4. Workspace admin can configure an OpenAI-compatible endpoint URL with API key encrypted at rest (Spring TextEncryptor), and test connectivity before saving
+  5. Workspace admin selects a model name; all AI chat sessions use the workspace's configured ChatModel via a cached WorkspaceChatModelRegistry
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 11: Domain-Agnostic AI
+**Goal**: The AI assistant becomes domain-agnostic — workspaces define their own taxonomy, customize system prompts, and search across both articles and document chunks
+**Depends on**: Phase 10
+**Requirements**: DOM-01, DOM-02, DOM-03, DOM-04, DOM-05
+**Success Criteria** (what must be TRUE):
+  1. Workspace admin can define a category/subcategory taxonomy that labels documents and articles for domain organization
+  2. Documents and articles display domain metadata (category, subcategory) in their views and search results
+  3. Workspace admin can customize the AI assistant's system prompt using template variables ({workspace_name}, {domain}) for domain-appropriate responses
+  4. Hybrid search returns unified RRF-ranked results from both KB articles and ingested document chunks in a single result set
+  5. All AI queries and similarity searches are scoped exclusively to the active workspace's knowledge base
+**Plans**: TBD
+
+### Phase 12: Workspace Management UI
+**Goal**: Users can manage their workspaces end-to-end — switch between workspaces, invite members, administer settings, and handle lifecycle operations
+**Depends on**: Phase 11
+**Requirements**: WSM-01, WSM-02, WSM-03, WSM-04, WSM-05
+**Success Criteria** (what must be TRUE):
+  1. User can switch between workspaces via a dropdown in the navigation bar; all UI state (articles, chats, documents, settings) reloads for the selected workspace
+  2. Workspace admin can invite new members via email with role selection (admin / member / read-only); invited users see and can respond to pending invitations
+  3. Workspace-scoped roles are enforced in the UI: read-only users cannot create/edit content, members have standard access, admins can manage workspace settings
+  4. Workspace admin panel provides a unified interface for managing members (roles, removal), LLM configuration, and document management with status badges
+  5. Users can leave a workspace with confirmation; workspace admin can delete a workspace with cascade handling and confirmation
+**Plans**: TBD
+**UI hint**: yes
 
 ## Progress
 
@@ -38,7 +101,11 @@
 | 6. KCS Auto-Drafting & Admin Review | v1.0 | 3/3 | Complete | 2026-06-05 |
 | 7. Quality, Polish & DevOps | v1.0 | 9/9 | Complete | 2026-06-06 |
 | 8. Testing & CI/CD | v1.0 | 8/8 | Complete | 2026-06-08 |
+| 9. Workspace Foundation | v2.0 | 0/4 | Planning | - |
+| 10. Document Ingestion + BYO LLM | v2.0 | — | Planning | - |
+| 11. Domain-Agnostic AI | v2.0 | — | Planning | - |
+| 12. Workspace Management UI | v2.0 | — | Planning | - |
 
 ---
 
-*Last updated: 2026-06-08 — v1.0 milestone shipped*
+*Last updated: 2026-06-10 — v2.0 roadmap created*

@@ -5,6 +5,7 @@ import com.shiftleft.hub.ai.service.AiConfigService;
 import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
@@ -121,7 +122,8 @@ public class KcsDraftingService {
         // FTS fast-path — check if similar articles exist by keyword overlap (D-12)
         String searchText = extractKeywords(
             Objects.toString(event.issue(), "") + " " + Objects.toString(event.resolutionNotes(), ""));
-        var ftsResults = articleRepository.searchByText(searchText,
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        var ftsResults = articleRepository.searchByText(searchText, workspaceId,
             org.springframework.data.domain.PageRequest.of(0, 5));
 
         Set<UUID> duplicates = new HashSet<>();
@@ -143,6 +145,7 @@ public class KcsDraftingService {
                     .query(queryText)
                     .topK(DEDUP_TOP_K)
                     .similarityThreshold(DEDUP_SIMILARITY_THRESHOLD)
+                    .filterExpression("workspace_id == '" + workspaceId + "'")
                     .build());
 
             for (Document doc : docs) {
@@ -367,7 +370,8 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
             return Set.of();
         }
         try {
-            var results = articleRepository.searchByText(keywords, PageRequest.of(0, 5));
+            UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+            var results = articleRepository.searchByText(keywords, workspaceId, PageRequest.of(0, 5));
             return results.getContent().stream()
                 .map(row -> (Object[]) row)
                 .filter(row -> {
