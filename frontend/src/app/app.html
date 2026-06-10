@@ -34,7 +34,7 @@
           </a>
         }
 
-        @if (authService.isAuthenticated() && authService.isAgent()) {
+        @if (authService.isAuthenticated() && authService.isAgent() && !authService.isAdmin()) {
           <div class="mt-4 mb-1 px-2">
             <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.agent') }}</span>
           </div>
@@ -49,6 +49,11 @@
           <div class="mt-4 mb-1 px-2">
             <span class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.admin') }}</span>
           </div>
+
+          <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><svg lucideLayoutList /></span>
+            <span class="sidebar-label">{{ translationService.translate('nav.ticket-queue') }}</span>
+          </a>
 
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideUsers /></span>
@@ -183,7 +188,7 @@
           </a>
         }
 
-        @if (authService.isAuthenticated() && authService.isAgent()) {
+        @if (authService.isAuthenticated() && authService.isAgent() && !authService.isAdmin()) {
           <div class="mt-4 mb-1 px-2">
             <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.agent') }}</span>
           </div>
@@ -198,6 +203,11 @@
           <div class="mt-4 mb-1 px-2">
             <span class="text-text-tertiary text-xs font-semibold uppercase tracking-wider">{{ translationService.translate('nav.section.admin') }}</span>
           </div>
+
+          <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><svg lucideLayoutList /></span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.ticket-queue') }}</span>
+          </a>
 
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideUsers /></span>

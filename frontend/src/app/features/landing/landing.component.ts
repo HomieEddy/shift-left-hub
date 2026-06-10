@@ -475,7 +475,7 @@ import {
 
         <!-- Footer -->
         <footer class="bg-slate-900 px-4 py-8 text-center text-sm text-slate-500">
-          <p>&copy; {{ currentYear }} {{ translationService.translate('app.footer') }}</p>
+          <p>{{ translationService.translate('app.footer') }}</p>
         </footer>
       </div>
     }

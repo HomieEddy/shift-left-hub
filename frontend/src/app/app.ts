@@ -9,7 +9,7 @@ import {
   LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare, 
   LucideTicket, LucideLayoutList, LucideUsers, LucideFileText, 
   LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard, 
-  LucideX, LucideSearch, LucideBell, LucideChevronRight
+  LucideX
 } from '@lucide/angular';
 import { ToastContainer } from './shared/ui/toast/toast-container';
 
@@ -21,7 +21,7 @@ import { ToastContainer } from './shared/ui/toast/toast-container';
     LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare,
     LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
     LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
-    LucideX, LucideSearch, LucideBell, LucideChevronRight,
+    LucideX,
     ToastContainer
   ],
   templateUrl: './app.html',
@@ -36,13 +36,18 @@ export class App {
 
   pendingKcsCount = signal(0);
   isMobileMenuOpen = signal(false);
-  hideSidebar = signal(['/login', '/register'].includes(this.router.url));
+  private readonly hideRoutes = ['/login', '/register'];
+  hideSidebar = signal(this.shouldHideSidebar(this.router.url));
+
+  private shouldHideSidebar(url: string): boolean {
+    return this.hideRoutes.some(r => url === r || url.startsWith(r + '?'));
+  }
 
   constructor() {
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(e => this.hideSidebar.set(['/login', '/register'].includes(e.url)));
+    ).subscribe(e => this.hideSidebar.set(this.shouldHideSidebar(e.url)));
 
     interval(60000).pipe(
       filter(() => this.authService.isAdmin()),
@@ -55,5 +60,9 @@ export class App {
   }
 
   switchLanguage(lang: SupportedLanguage): void { this.translationService.switchLanguage(lang); }
-  logout(): void { this.authService.logout().subscribe(() => { void this.router.navigate(['/']); }); }
+  logout(): void {
+    this.authService.logout().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => { void this.router.navigate(['/']); });
+  }
 }
