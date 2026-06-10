@@ -13,7 +13,7 @@
         [class.text-text-secondary]="activeStatus() !== tab"
         [class.hover:bg-surface-secondary]="activeStatus() !== tab"
       >
-        {{ tab === 'ALL' ? allLabel : statusLabels[tab] || tab }}
+        {{ tab === 'ALL' ? allLabel() : statusLabels()[tab] || tab }}
       </button>
     }
   </div>
@@ -27,7 +27,7 @@
     >
       <option value="">{{ translationService.translate('agent.filter.allCategories') }}</option>
       @for (cat of categories.slice(1); track cat) {
-        <option [value]="cat">{{ categoryLabels[cat] || cat }}</option>
+        <option [value]="cat">{{ categoryLabels()[cat] || cat }}</option>
       }
     </select>
     <select
@@ -37,12 +37,12 @@
     >
       <option value="">{{ translationService.translate('agent.filter.allUrgencies') }}</option>
       @for (urg of urgencies.slice(1); track urg) {
-        <option [value]="urg">{{ urgencyLabels[urg] || urg }}</option>
+        <option [value]="urg">{{ urgencyLabels()[urg] || urg }}</option>
       }
     </select>
     <input
       type="text"
-      [placeholder]="searchPlaceholder"
+      [placeholder]="searchPlaceholder()"
       (input)="onSearchInput($event.target.value)"
       class="text-sm border border-border-default rounded-lg px-3 py-1.5 bg-surface-primary text-text-primary flex-1 min-w-[200px] transition-shadow"
     />
@@ -50,21 +50,21 @@
 
   <!-- Loading state -->
   @if (isLoading()) {
-    <div class="text-center py-12 text-text-secondary">{{ loadingLabel }}</div>
+    <div class="text-center py-12 text-text-secondary">{{ loadingLabel() }}</div>
   }
 
   <!-- Error state -->
   @if (isError()) {
-    <div class="bg-accent-danger-muted border border-red-200 rounded-lg px-4 py-3 text-sm text-accent-danger mb-4">
-      {{ errorLabel }}
-      <button (click)="loadTickets()" class="ml-2 underline transition-colors">{{ retryLabel }}</button>
+    <div class="bg-accent-danger-muted border border-accent-danger rounded-lg px-4 py-3 text-sm text-accent-danger mb-4">
+      {{ errorLabel() }}
+      <button (click)="loadTickets()" class="ml-2 underline transition-colors">{{ retryLabel() }}</button>
     </div>
   }
 
   <!-- Empty state -->
   @if (!isLoading() && !isError() && filteredTickets().length === 0) {
     <div class="text-center py-12 text-text-secondary">
-      {{ emptyLabel }}
+      {{ emptyLabel() }}
     </div>
   }
 
@@ -93,21 +93,21 @@
               <td class="px-4 py-3 text-text-primary">{{ ticket.userDisplayName }}</td>
               <td class="px-4 py-3">
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="categoryBadgeClass(ticket.category)">
-                  {{ categoryLabels[ticket.category] || ticket.category }}
+                  {{ categoryLabels()[ticket.category] || ticket.category }}
                 </span>
               </td>
               <td class="px-4 py-3">
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="urgencyBadgeClass(ticket.urgency)">
-                  {{ urgencyLabels[ticket.urgency] || ticket.urgency }}
+                  {{ urgencyLabels()[ticket.urgency] || ticket.urgency }}
                 </span>
               </td>
               <td class="px-4 py-3">
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="statusBadgeClass(ticket.status)">
-                  {{ statusLabels[ticket.status] || ticket.status }}
+                  {{ statusLabels()[ticket.status] || ticket.status }}
                 </span>
               </td>
               <td class="px-4 py-3 text-text-secondary">
-                {{ ticket.assignedToDisplayName || unassignedLabel }}
+                {{ ticket.assignedToDisplayName || unassignedLabel() }}
               </td>
               <td class="px-4 py-3 text-text-secondary">{{ ticket.createdAt | date:'medium' }}</td>
               <td class="px-4 py-3">
@@ -116,7 +116,7 @@
                     (click)="openClaimConfirm(ticket.id)"
                     class="text-xs bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors"
                   >
-                    {{ claimLabel }}
+                    {{ claimLabel() }}
                   </button>
                 }
                 @if (ticket.status === 'IN_PROGRESS') {
@@ -124,7 +124,7 @@
                     [routerLink]="['/agent/tickets', ticket.id]"
                     class="text-xs bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors"
                   >
-                    {{ resolveLabel }}
+                    {{ resolveLabel() }}
                   </a>
                 }
                 @if (ticket.status === 'RESOLVED' || ticket.status === 'CANCELLED') {
@@ -132,7 +132,7 @@
                     [routerLink]="['/agent/tickets', ticket.id]"
                     class="text-xs text-primary-600 hover:underline transition-colors"
                   >
-                    {{ viewLabel }}
+                    {{ viewLabel() }}
                   </a>
                 }
               </td>
@@ -153,19 +153,19 @@
       tabindex="0"
     >
       <div data-testid="claim-modal-content" class="bg-surface-primary rounded-xl shadow-xl p-6 max-w-md w-full mx-4" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
-        <p class="text-sm text-text-primary mb-4">{{ claimConfirmLabel }}</p>
+        <p class="text-sm text-text-primary mb-4">{{ claimConfirmLabel() }}</p>
         <div class="flex gap-2 justify-end">
           <button
             (click)="cancelClaim()"
             class="px-4 py-1.5 text-sm text-text-secondary bg-surface-primary border border-border-default rounded-lg hover:bg-surface-secondary transition-colors"
           >
-            {{ cancelLabel }}
+            {{ cancelLabel() }}
           </button>
           <button
             (click)="confirmClaim()"
             class="px-4 py-1.5 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
-            {{ confirmLabel }}
+            {{ confirmLabel() }}
           </button>
         </div>
       </div>

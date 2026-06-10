@@ -176,59 +176,59 @@ export class AgentTicketDetailComponent implements OnInit {
     this.resolveConfirmOpen.set(false);
   }
 
-  statusLabels: Record<string, string> = {
+  statusLabels = computed<Record<string, string>>(() => ({
     'NEW': this.translationService.translate('tickets.status.new'),
     'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
     'RESOLVED': this.translationService.translate('tickets.status.resolved'),
     'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
-  };
+  }));
 
-  urgencyLabels: Record<string, string> = {
+  urgencyLabels = computed<Record<string, string>>(() => ({
     'LOW': this.translationService.translate('agent.urgency.low'),
     'MEDIUM': this.translationService.translate('agent.urgency.medium'),
     'HIGH': this.translationService.translate('agent.urgency.high'),
-  };
+  }));
 
-  categoryLabels: Record<string, string> = {
+  categoryLabels = computed<Record<string, string>>(() => ({
     'NETWORK': this.translationService.translate('tickets.category.network'),
     'HARDWARE': this.translationService.translate('tickets.category.hardware'),
     'SOFTWARE': this.translationService.translate('tickets.category.software'),
     'ACCESS': this.translationService.translate('tickets.category.access'),
     'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
-  };
+  }));
 
-  loadingLabel = this.translationService.translate('agent.detail.loading');
-  errorLabel = this.translationService.translate('agent.detail.error');
-  retryLabel = this.translationService.translate('agent.detail.retry');
-  backToQueueLabel = this.translationService.translate('agent.detail.backToQueue');
-  shiftLeftContextLabel = this.translationService.translate('agent.detail.shiftLeftContext');
-  issueLabel = this.translationService.translate('agent.detail.issue');
-  chatTranscriptLabel = this.translationService.translate('agent.detail.chatTranscript');
-  unclaimedLabel = this.translationService.translate('agent.detail.unclaimed');
-  claimingLabel = this.translationService.translate('agent.detail.claiming');
-  claimTicketLabel = this.translationService.translate('agent.detail.claimTicket');
-  workNotesLabel = this.translationService.translate('agent.detail.workNotes');
-  noWorkNotesLabel = this.translationService.translate('agent.detail.noWorkNotes');
-  addNotePlaceholder = this.translationService.translate('agent.detail.addNotePlaceholder');
-  addingLabel = this.translationService.translate('agent.detail.adding');
-  addNoteLabel = this.translationService.translate('agent.detail.addNote');
-  resolutionLabel = this.translationService.translate('agent.detail.resolution');
-  resolutionPlaceholder = this.translationService.translate('agent.detail.resolutionPlaceholder');
-  flagKnowledgeGapLabel = this.translationService.translate('agent.detail.flagKnowledgeGap');
-  resolvingLabel = this.translationService.translate('agent.detail.resolving');
-  resolveTicketLabel = this.translationService.translate('agent.detail.resolveTicket');
-  resolvedByLabel = this.translationService.translate('agent.detail.resolvedBy');
-  unknownLabel = this.translationService.translate('agent.detail.unknown');
-  flaggedKnowledgeGapLabel = this.translationService.translate('agent.detail.flaggedKnowledgeGap');
-  cancelledByUserLabel = this.translationService.translate('agent.detail.cancelledByUser');
-  unassignedLabel = this.translationService.translate('agent.detail.unassigned');
-  confirmResolutionLabel = this.translationService.translate('agent.detail.confirmResolution');
-  cancelLabel = this.translationService.translate('agent.detail.cancel');
-  confirmLabel = this.translationService.translate('agent.detail.confirm');
-  assignedToLabel = this.translationService.translate('agent.detail.assignedTo');
-  openedByLabel = this.translationService.translate('agent.detail.openedBy');
+  loadingLabel = computed(() => this.translationService.translate('agent.detail.loading'));
+  errorLabel = computed(() => this.translationService.translate('agent.detail.error'));
+  retryLabel = computed(() => this.translationService.translate('agent.detail.retry'));
+  backToQueueLabel = computed(() => this.translationService.translate('agent.detail.backToQueue'));
+  shiftLeftContextLabel = computed(() => this.translationService.translate('agent.detail.shiftLeftContext'));
+  issueLabel = computed(() => this.translationService.translate('agent.detail.issue'));
+  chatTranscriptLabel = computed(() => this.translationService.translate('agent.detail.chatTranscript'));
+  unclaimedLabel = computed(() => this.translationService.translate('agent.detail.unclaimed'));
+  claimingLabel = computed(() => this.translationService.translate('agent.detail.claiming'));
+  claimTicketLabel = computed(() => this.translationService.translate('agent.detail.claimTicket'));
+  workNotesLabel = computed(() => this.translationService.translate('agent.detail.workNotes'));
+  noWorkNotesLabel = computed(() => this.translationService.translate('agent.detail.noWorkNotes'));
+  addNotePlaceholder = computed(() => this.translationService.translate('agent.detail.addNotePlaceholder'));
+  addingLabel = computed(() => this.translationService.translate('agent.detail.adding'));
+  addNoteLabel = computed(() => this.translationService.translate('agent.detail.addNote'));
+  resolutionLabel = computed(() => this.translationService.translate('agent.detail.resolution'));
+  resolutionPlaceholder = computed(() => this.translationService.translate('agent.detail.resolutionPlaceholder'));
+  flagKnowledgeGapLabel = computed(() => this.translationService.translate('agent.detail.flagKnowledgeGap'));
+  resolvingLabel = computed(() => this.translationService.translate('agent.detail.resolving'));
+  resolveTicketLabel = computed(() => this.translationService.translate('agent.detail.resolveTicket'));
+  resolvedByLabel = computed(() => this.translationService.translate('agent.detail.resolvedBy'));
+  unknownLabel = computed(() => this.translationService.translate('agent.detail.unknown'));
+  flaggedKnowledgeGapLabel = computed(() => this.translationService.translate('agent.detail.flaggedKnowledgeGap'));
+  cancelledByUserLabel = computed(() => this.translationService.translate('agent.detail.cancelledByUser'));
+  unassignedLabel = computed(() => this.translationService.translate('agent.detail.unassigned'));
+  confirmResolutionLabel = computed(() => this.translationService.translate('agent.detail.confirmResolution'));
+  cancelLabel = computed(() => this.translationService.translate('agent.detail.cancel'));
+  confirmLabel = computed(() => this.translationService.translate('agent.detail.confirm'));
+  assignedToLabel = computed(() => this.translationService.translate('agent.detail.assignedTo'));
+  openedByLabel = computed(() => this.translationService.translate('agent.detail.openedBy'));
 
-  addNoteErrorLabel = this.translationService.translate('agent.detail.addNoteError');
-  claimErrorLabel = this.translationService.translate('agent.detail.claimError');
-  resolveErrorLabel = this.translationService.translate('agent.detail.resolveError');
+  addNoteErrorLabel = computed(() => this.translationService.translate('agent.detail.addNoteError'));
+  claimErrorLabel = computed(() => this.translationService.translate('agent.detail.claimError'));
+  resolveErrorLabel = computed(() => this.translationService.translate('agent.detail.resolveError'));
 }

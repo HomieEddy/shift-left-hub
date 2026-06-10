@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -46,22 +46,22 @@ export class AgentTicketListComponent implements OnInit {
   readonly categoryBadgeClass = categoryBadgeClass;
   readonly urgencyBadgeClass = urgencyBadgeClass;
 
-  allLabel = this.translationService.translate('agent.filter.all');
-  allCategoriesLabel = this.translationService.translate('agent.filter.allCategories');
-  allUrgenciesLabel = this.translationService.translate('agent.filter.allUrgencies');
-  searchPlaceholder = this.translationService.translate('agent.search.placeholder');
-  loadingLabel = this.translationService.translate('agent.loading');
-  errorLabel = this.translationService.translate('agent.error.load');
-  retryLabel = this.translationService.translate('agent.retry');
-  emptyLabel = this.translationService.translate('agent.empty');
-  claimLabel = this.translationService.translate('agent.claim');
-  resolveLabel = this.translationService.translate('agent.resolve');
-  viewLabel = this.translationService.translate('agent.view');
-  unassignedLabel = this.translationService.translate('agent.unassigned');
-  claimConfirmLabel = this.translationService.translate('agent.claim.confirm');
-  cancelLabel = this.translationService.translate('agent.cancel');
-  confirmLabel = this.translationService.translate('agent.confirm');
-  claimFailedAlert = this.translationService.translate('agent.claim.error');
+  allLabel = computed(() => this.translationService.translate('agent.filter.all'));
+  allCategoriesLabel = computed(() => this.translationService.translate('agent.filter.allCategories'));
+  allUrgenciesLabel = computed(() => this.translationService.translate('agent.filter.allUrgencies'));
+  searchPlaceholder = computed(() => this.translationService.translate('agent.search.placeholder'));
+  loadingLabel = computed(() => this.translationService.translate('agent.loading'));
+  errorLabel = computed(() => this.translationService.translate('agent.error.load'));
+  retryLabel = computed(() => this.translationService.translate('agent.retry'));
+  emptyLabel = computed(() => this.translationService.translate('agent.empty'));
+  claimLabel = computed(() => this.translationService.translate('agent.claim'));
+  resolveLabel = computed(() => this.translationService.translate('agent.resolve'));
+  viewLabel = computed(() => this.translationService.translate('agent.view'));
+  unassignedLabel = computed(() => this.translationService.translate('agent.unassigned'));
+  claimConfirmLabel = computed(() => this.translationService.translate('agent.claim.confirm'));
+  cancelLabel = computed(() => this.translationService.translate('agent.cancel'));
+  confirmLabel = computed(() => this.translationService.translate('agent.confirm'));
+  claimFailedAlert = computed(() => this.translationService.translate('agent.claim.error'));
 
   constructor() {
     this.searchSubject.pipe(
@@ -148,24 +148,24 @@ export class AgentTicketListComponent implements OnInit {
     this.claimingTicketId.set(null);
   }
 
-  statusLabels: Record<string, string> = {
+  statusLabels = computed<Record<string, string>>(() => ({
     'NEW': this.translationService.translate('tickets.status.new'),
     'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
     'RESOLVED': this.translationService.translate('tickets.status.resolved'),
     'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
-  };
+  }));
 
-  urgencyLabels: Record<string, string> = {
+  urgencyLabels = computed<Record<string, string>>(() => ({
     'LOW': this.translationService.translate('agent.urgency.low'),
     'MEDIUM': this.translationService.translate('agent.urgency.medium'),
     'HIGH': this.translationService.translate('agent.urgency.high'),
-  };
+  }));
 
-  categoryLabels: Record<string, string> = {
+  categoryLabels = computed<Record<string, string>>(() => ({
     'NETWORK': this.translationService.translate('tickets.category.network'),
     'HARDWARE': this.translationService.translate('tickets.category.hardware'),
     'SOFTWARE': this.translationService.translate('tickets.category.software'),
     'ACCESS': this.translationService.translate('tickets.category.access'),
     'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
-  };
+  }));
 }

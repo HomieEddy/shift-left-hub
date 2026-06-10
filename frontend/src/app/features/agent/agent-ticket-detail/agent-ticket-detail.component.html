@@ -7,15 +7,15 @@
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      {{ loadingLabel }}
+      {{ loadingLabel() }}
     </div>
   }
 
   <!-- Error -->
   @if (isError()) {
-    <div class="bg-accent-danger-muted border border-red-200 rounded-lg px-4 py-3 text-sm text-accent-danger mb-4">
-      {{ errorLabel }}
-      <button (click)="ngOnInit()" class="ml-2 underline transition-colors">{{ retryLabel }}</button>
+    <div class="bg-accent-danger-muted border border-accent-danger rounded-lg px-4 py-3 text-sm text-accent-danger mb-4">
+      {{ errorLabel() }}
+      <button (click)="ngOnInit()" class="ml-2 underline transition-colors">{{ retryLabel() }}</button>
     </div>
   }
 
@@ -28,18 +28,18 @@
       <div class="flex items-center gap-3 flex-wrap">
         <h1 class="text-2xl font-bold text-text-primary font-mono">{{ t.ticketNumber }}</h1>
         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="statusBadgeClass(t.status)">
-          {{ statusLabels[t.status] || t.status }}
+          {{ statusLabels()[t.status] || t.status }}
         </span>
         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="categoryBadgeClass(t.category)">
-          {{ categoryLabels[t.category] || t.category }}
+          {{ categoryLabels()[t.category] || t.category }}
         </span>
         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="urgencyBadgeClass(t.urgency)">
-          {{ urgencyLabels[t.urgency] || t.urgency }}
+          {{ urgencyLabels()[t.urgency] || t.urgency }}
         </span>
       </div>
       <div class="mt-1 text-sm text-text-secondary">
-        {{ t.assignedToDisplayName ? (assignedToLabel + ' ' + t.assignedToDisplayName) : unassignedLabel }}
-        &middot; {{ openedByLabel }} {{ t.userDisplayName }} ({{ t.userEmail }})
+        {{ t.assignedToDisplayName ? (assignedToLabel() + ' ' + t.assignedToDisplayName) : unassignedLabel() }}
+        &middot; {{ openedByLabel() }} {{ t.userDisplayName }} ({{ t.userEmail }})
       </div>
     </div>
 
@@ -49,13 +49,13 @@
         (click)="contextExpanded.set(!contextExpanded())"
         class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-text-primary hover:bg-surface-secondary transition-colors"
       >
-        <span>{{ shiftLeftContextLabel }}</span>
+        <span>{{ shiftLeftContextLabel() }}</span>
         <span class="transition-transform" [class.rotate-180]="contextExpanded()">&#9660;</span>
       </button>
       @if (contextExpanded()) {
         <div class="px-4 pb-4 space-y-3">
           <div>
-            <h3 class="text-xs font-medium text-text-secondary uppercase mb-1">{{ issueLabel }}</h3>
+            <h3 class="text-xs font-medium text-text-secondary uppercase mb-1">{{ issueLabel() }}</h3>
             <p class="text-sm text-text-primary whitespace-pre-wrap">{{ t.issue }}</p>
           </div>
           @if (t.shiftLeftContext) {
@@ -63,7 +63,7 @@
               (click)="transcriptExpanded.set(!transcriptExpanded())"
               class="text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
             >
-              <span class="inline-block transition-transform" [class.rotate-90]="transcriptExpanded()">&#9654;</span> {{ chatTranscriptLabel }}
+              <span class="inline-block transition-transform" [class.rotate-90]="transcriptExpanded()">&#9654;</span> {{ chatTranscriptLabel() }}
             </button>
             @if (transcriptExpanded()) {
               <div class="mt-2 bg-surface-secondary rounded-lg max-h-72 overflow-y-auto space-y-2 p-3">
@@ -97,7 +97,7 @@
     @if (t.status === 'NEW') {
       <div class="bg-surface-primary rounded-xl border border-border-default mb-4">
         <div class="px-4 py-4 text-center">
-          <p class="text-sm text-text-secondary mb-3">{{ unclaimedLabel }}</p>
+          <p class="text-sm text-text-secondary mb-3">{{ unclaimedLabel() }}</p>
           @if (claimError()) {
             <p class="text-xs text-accent-danger mb-2">{{ claimError() }}</p>
           }
@@ -112,9 +112,9 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ claimingLabel }}
+              {{ claimingLabel() }}
             } @else {
-              {{ claimTicketLabel }}
+              {{ claimTicketLabel() }}
             }
           </button>
         </div>
@@ -124,7 +124,7 @@
     <!-- Work Notes Timeline -->
     <div class="bg-surface-primary rounded-xl border border-border-default mb-4 overflow-hidden">
       <div class="px-4 py-3 border-b border-border-light">
-        <h2 class="text-sm font-medium text-text-primary">{{ workNotesLabel }}</h2>
+        <h2 class="text-sm font-medium text-text-primary">{{ workNotesLabel() }}</h2>
       </div>
       <div class="px-4 py-3 space-y-3 max-h-80 overflow-y-auto">
         @for (note of workNotes(); track $index) {
@@ -138,7 +138,7 @@
         }
         @if (workNotes().length === 0) {
           <div class="text-sm text-text-tertiary text-center py-4">
-            {{ noWorkNotesLabel }}
+            {{ noWorkNotesLabel() }}
           </div>
         }
       </div>
@@ -150,7 +150,7 @@
           }
           <textarea
             [(ngModel)]="newWorkNote"
-            [placeholder]="addNotePlaceholder"
+            [placeholder]="addNotePlaceholder()"
             rows="2"
             class="w-full text-sm border border-border-default rounded-lg px-3 py-2 resize-none bg-surface-primary text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
           ></textarea>
@@ -164,9 +164,9 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ addingLabel }}
+              {{ addingLabel() }}
             } @else {
-              {{ addNoteLabel }}
+              {{ addNoteLabel() }}
             }
           </button>
         </div>
@@ -177,7 +177,7 @@
     @if (t.status === 'IN_PROGRESS') {
       <div class="bg-surface-primary rounded-xl border border-border-default mb-4 overflow-hidden">
         <div class="px-4 py-3 border-b border-border-light">
-          <h2 class="text-sm font-medium text-text-primary">{{ resolutionLabel }}</h2>
+          <h2 class="text-sm font-medium text-text-primary">{{ resolutionLabel() }}</h2>
         </div>
         <div class="px-4 py-3 space-y-3">
           @if (resolveError()) {
@@ -185,14 +185,14 @@
           }
           <textarea
             [(ngModel)]="resolutionNotes"
-            [placeholder]="resolutionPlaceholder"
+            [placeholder]="resolutionPlaceholder()"
             data-testid="agent-resolution-notes"
             rows="3"
             class="w-full text-sm border border-border-default rounded-lg px-3 py-2 resize-none bg-surface-primary text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
           ></textarea>
           <label class="flex items-center gap-2 text-sm text-text-primary cursor-pointer">
             <input type="checkbox" [(ngModel)]="isKnowledgeGap" data-testid="agent-knowledge-gap" class="rounded border-border-default" />
-            {{ flagKnowledgeGapLabel }}
+            {{ flagKnowledgeGapLabel() }}
           </label>
           <button
             (click)="openResolveConfirm()"
@@ -205,9 +205,9 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ resolvingLabel }}
+              {{ resolvingLabel() }}
             } @else {
-              {{ resolveTicketLabel }}
+              {{ resolveTicketLabel() }}
             }
           </button>
         </div>
@@ -218,14 +218,14 @@
     @if (t.status === 'RESOLVED') {
       <div data-testid="ticket-resolved" class="bg-surface-secondary border border-border-default rounded-lg px-4 py-3">
         <p class="text-sm text-text-primary">
-          {{ resolvedByLabel }} {{ t.resolvedByDisplayName || unknownLabel }}
+          {{ resolvedByLabel() }} {{ t.resolvedByDisplayName || unknownLabel() }}
           @if (t.resolvedAt) {
             <span>on {{ t.resolvedAt | date:'medium' }}</span>
           }
         </p>
         @if (t.isKnowledgeGap) {
           <p class="text-xs text-text-secondary mt-1 font-medium">
-            {{ flaggedKnowledgeGapLabel }}
+            {{ flaggedKnowledgeGapLabel() }}
           </p>
         }
         @if (t.resolutionNotes) {
@@ -239,7 +239,7 @@
     <!-- Cancelled state -->
     @if (t.status === 'CANCELLED') {
       <div class="bg-surface-secondary border border-border-default rounded-lg px-4 py-3">
-        <p class="text-sm text-text-secondary">{{ cancelledByUserLabel }}</p>
+        <p class="text-sm text-text-secondary">{{ cancelledByUserLabel() }}</p>
         @if (t.cancelReason) {
           <p class="text-sm text-text-secondary mt-1">{{ t.cancelReason }}</p>
         }
@@ -266,20 +266,20 @@
         tabindex="0"
       >
         <div class="bg-surface-primary rounded-xl shadow-xl p-6 max-w-md w-full mx-4" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
-          <p class="text-sm text-text-primary mb-4">{{ confirmResolutionLabel }} {{ t.ticketNumber }}?</p>
+          <p class="text-sm text-text-primary mb-4">{{ confirmResolutionLabel() }} {{ t.ticketNumber }}?</p>
           <div class="flex gap-2 justify-end">
             <button
               (click)="cancelResolveConfirm()"
               class="px-4 py-1.5 text-sm text-text-secondary bg-surface-primary border border-border-default rounded-lg hover:bg-surface-secondary transition-colors"
             >
-              {{ cancelLabel }}
+              {{ cancelLabel() }}
             </button>
             <button
               (click)="confirmResolve()"
               data-testid="agent-confirm-resolve"
               class="px-4 py-1.5 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
             >
-              {{ confirmLabel }}
+              {{ confirmLabel() }}
             </button>
           </div>
         </div>
