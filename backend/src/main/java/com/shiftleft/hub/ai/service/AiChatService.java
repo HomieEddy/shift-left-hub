@@ -5,6 +5,7 @@ import com.shiftleft.hub.ai.api.dto.ChatRequest;
 import com.shiftleft.hub.ai.api.dto.StreamEvent;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.article.domain.ArticleRepository;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -207,8 +208,14 @@ public class AiChatService {
     }
 
     private List<HybridSearchResult> vectorSearch(String query, double threshold) {
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         List<Document> docs = vectorStore.similaritySearch(
-            SearchRequest.builder().query(query).topK(TOP_K).similarityThreshold(threshold).build());
+            SearchRequest.builder()
+                .query(query)
+                .topK(TOP_K)
+                .similarityThreshold(threshold)
+                .filterExpression("workspace_id == '" + workspaceId + "'")
+                .build());
         return docs.stream()
             .map(doc -> {
                 Map<String, Object> meta = doc.getMetadata();
