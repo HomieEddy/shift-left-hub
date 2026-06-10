@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { $localize } from '@angular/localize/init';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserDto } from '../../../core/auth/auth.models';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 type SortField = 'displayName' | 'email' | 'role' | 'enabled' | 'createdAt';
 type SortDir = 'asc' | 'desc';
@@ -16,6 +16,7 @@ type SortDir = 'asc' | 'desc';
 })
 export class UserListComponent implements OnInit {
   private authService = inject(AuthService);
+  protected translationService = inject(TranslationService);
   protected users = signal<UserDto[]>([]);
   protected isLoading = signal(true);
   protected errorMessage = signal('');
@@ -40,7 +41,7 @@ export class UserListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set($localize`:@@error.load-users:Failed to load users. Make sure you have admin access.`);
+        this.errorMessage.set(this.translationService.translate('error.load-users'));
         this.isLoading.set(false);
       },
     });
@@ -99,7 +100,7 @@ export class UserListComponent implements OnInit {
         this.closeRoleDialog();
       },
       error: () => {
-        this.errorMessage.set($localize`:@@error.update-role:Failed to update role. Please try again.`);
+        this.errorMessage.set(this.translationService.translate('error.update-role'));
         this.closeRoleDialog();
       },
     });
@@ -112,34 +113,34 @@ export class UserListComponent implements OnInit {
         this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
       },
       error: () => {
-        this.errorMessage.set($localize`:@@error.toggle-status:Failed to toggle user status.`);
+        this.errorMessage.set(this.translationService.translate('error.toggle-status'));
       },
     });
   }
 
   /** Translatable labels */
   roleLabels: Record<string, string> = {
-    'ROLE_ADMIN': $localize`:@@admin.users.role.admin:Admin`,
-    'ROLE_AGENT': $localize`:@@admin.users.role.agent:Agent`,
-    'ROLE_USER': $localize`:@@admin.users.role.user:User`,
+    'ROLE_ADMIN': this.translationService.translate('admin.users.role.admin'),
+    'ROLE_AGENT': this.translationService.translate('admin.users.role.agent'),
+    'ROLE_USER': this.translationService.translate('admin.users.role.user'),
   };
 
   statusLabels: Record<string, string> = {
-    'active': $localize`:@@admin.users.status.active:Active`,
-    'disabled': $localize`:@@admin.users.status.disabled:Disabled`,
+    'active': this.translationService.translate('admin.users.status.active'),
+    'disabled': this.translationService.translate('admin.users.status.disabled'),
   };
 
-  actionEditRole: string = $localize`:@@admin.users.edit-role:Edit Role`;
-  actionDisable: string = $localize`:@@admin.users.disable:Disable`;
-  actionEnable: string = $localize`:@@admin.users.enable:Enable`;
+  actionEditRole = this.translationService.translate('admin.users.edit-role');
+  actionDisable = this.translationService.translate('admin.users.disable');
+  actionEnable = this.translationService.translate('admin.users.enable');
 
-  dialogTitle: string = $localize`:@@admin.users.dialog.title:Edit Role`;
-  dialogCancel: string = $localize`:@@admin.users.dialog.cancel:Cancel`;
-  dialogChangeRoleFor: string = $localize`:@@admin.users.dialog.changeRole:Change role for`;
+  dialogTitle = this.translationService.translate('admin.users.dialog.title');
+  dialogCancel = this.translationService.translate('admin.users.dialog.cancel');
+  dialogChangeRoleFor = this.translationService.translate('admin.users.dialog.changeRole');
 
-  dialogDescAdmin: string = $localize`:@@admin.users.role.admin.desc:Full access to all features`;
-  dialogDescAgent: string = $localize`:@@admin.users.role.agent.desc:Ticket queue and resolution access`;
-  dialogDescUser: string = $localize`:@@admin.users.role.user.desc:Standard user access`;
+  dialogDescAdmin = this.translationService.translate('admin.users.role.admin.desc');
+  dialogDescAgent = this.translationService.translate('admin.users.role.agent.desc');
+  dialogDescUser = this.translationService.translate('admin.users.role.user.desc');
 
   /** Format an ISO date string for display. */
   formatDate(dateStr: string): string {

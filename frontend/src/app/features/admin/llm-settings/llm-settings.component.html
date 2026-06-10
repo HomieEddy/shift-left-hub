@@ -2,11 +2,11 @@
   @if (config) {
     <div class="space-y-6">
       <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
-        <h1 class="text-xl font-semibold text-text-primary mb-6">LLM Provider Settings</h1>
+        <h1 class="text-xl font-semibold text-text-primary mb-6">{{ translationService.translate('admin.settings.llm.title') }}</h1>
 
         <div class="space-y-4">
           <div>
-            <label for="provider" class="block text-sm font-medium text-text-secondary mb-1">Provider</label>
+            <label for="provider" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.provider') }}</label>
             <select
               id="provider"
               [(ngModel)]="config.llmProvider"
@@ -21,7 +21,7 @@
 
           @if (config.llmProvider === 'OLLAMA') {
             <div>
-              <label for="ollamaEndpoint" class="block text-sm font-medium text-text-secondary mb-1">Ollama Endpoint URL</label>
+              <label for="ollamaEndpoint" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.ollama-endpoint') }}</label>
               <input
                 id="ollamaEndpoint"
                 [(ngModel)]="config.ollamaEndpointUrl"
@@ -33,7 +33,7 @@
 
           @if (config.llmProvider === 'OPENAI') {
             <div>
-              <label for="openaiKey" class="block text-sm font-medium text-text-secondary mb-1">OpenAI API Key</label>
+              <label for="openaiKey" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.openai-key') }}</label>
               <input
                 id="openaiKey"
                 [(ngModel)]="openaiApiKey"
@@ -42,17 +42,17 @@
                 class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               @if (config.hasOpenaiKey) {
-                <p class="text-xs text-text-tertiary mt-1">A key is currently stored. Enter a new key to replace it.</p>
+                <p class="text-xs text-text-tertiary mt-1">{{ translationService.translate('admin.settings.llm.key-stored') }}</p>
               }
             </div>
           }
         </div>
 
         <div class="mt-6 space-y-4">
-          <h2 class="text-sm font-semibold text-text-secondary">Model Configuration</h2>
+          <h2 class="text-sm font-semibold text-text-secondary">{{ translationService.translate('admin.settings.llm.model-config') }}</h2>
 
           <div>
-            <label for="chatModel" class="block text-sm font-medium text-text-secondary mb-1">Chat Model</label>
+            <label for="chatModel" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.chat-model') }}</label>
             <input
               id="chatModel"
               [(ngModel)]="config.chatModelName"
@@ -62,7 +62,7 @@
           </div>
 
           <div>
-            <label for="embeddingModel" class="block text-sm font-medium text-text-secondary mb-1">Embedding Model</label>
+            <label for="embeddingModel" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.embedding-model') }}</label>
             <input
               id="embeddingModel"
               [(ngModel)]="config.embeddingModelName"
@@ -72,7 +72,7 @@
           </div>
 
           <div>
-            <label for="similarityThreshold" class="block text-sm font-medium text-text-secondary mb-1">Similarity Threshold</label>
+            <label for="similarityThreshold" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.threshold') }}</label>
             <input
               id="similarityThreshold"
               [(ngModel)]="config.similarityThreshold"
@@ -85,7 +85,7 @@
           </div>
 
           <div>
-            <label for="embeddingDimension" class="block text-sm font-medium text-text-secondary mb-1">Embedding Dimension</label>
+            <label for="embeddingDimension" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.embedding-dimension') }}</label>
             <input
               id="embeddingDimension"
               [value]="config.embeddingDimension"
@@ -101,14 +101,14 @@
             [disabled]="isSaving"
             class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
           >
-            {{ isSaving ? 'Saving...' : 'Save Settings' }}
+            {{ isSaving ? translationService.translate('admin.settings.llm.saving') : translationService.translate('admin.settings.llm.save') }}
           </button>
           <button
             (click)="testConnection()"
             [disabled]="isTesting"
             class="rounded-lg border border-border-default px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
           >
-            {{ isTesting ? 'Testing...' : 'Test Connection' }}
+            {{ isTesting ? translationService.translate('admin.settings.llm.testing') : translationService.translate('admin.settings.llm.test') }}
           </button>
         </div>
 
@@ -132,14 +132,14 @@
       </div>
 
       <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
-        <h2 class="text-sm font-semibold text-text-secondary mb-3">Re-Embed Articles</h2>
-        <p class="text-accent-warning text-xs mb-3">This may take a while for large knowledge bases</p>
+        <h2 class="text-sm font-semibold text-text-secondary mb-3">{{ translationService.translate('admin.settings.llm.reindex') }}</h2>
+        <p class="text-accent-warning text-xs mb-3">{{ translationService.translate('admin.settings.llm.reindex-warning') }}</p>
         <button
           (click)="reindex()"
           [disabled]="isReindexing"
           class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
         >
-          {{ isReindexing ? 'Re-Embedding...' : 'Re-Embed All Articles' }}
+          {{ isReindexing ? translationService.translate('admin.settings.llm.reindexing') : translationService.translate('admin.settings.llm.reindex') }}
         </button>
       </div>
     </div>
