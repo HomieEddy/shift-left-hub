@@ -88,7 +88,7 @@ export class WorkspaceListComponent implements OnInit {
         this.openUserDialog(workspace);
         this.selectedUserId.set('');
       },
-      error: () => {},
+      error: () => { /* user assignment error handled silently */ },
     });
   }
 

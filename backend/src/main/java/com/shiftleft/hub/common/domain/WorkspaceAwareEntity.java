@@ -19,7 +19,7 @@ import java.util.UUID;
 @Filter(name = "workspaceFilter", condition = "workspace_id = :workspaceId")
 public abstract class WorkspaceAwareEntity {
 
-    @Column(name = "workspace_id", nullable = false, updatable = false)
+    @Column(name = "workspace_id", updatable = false)
     private UUID workspaceId;
 
     /**
