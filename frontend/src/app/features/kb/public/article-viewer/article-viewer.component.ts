@@ -68,6 +68,8 @@ export class ArticleViewerComponent implements OnInit {
   });
 
   fallbackLanguage = computed(() => {
-    return this.translationService.currentLang() === 'fr' ? 'English' : 'Français';
+    return this.translationService.currentLang() === 'fr'
+      ? this.translationService.translate('common.english')
+      : this.translationService.translate('common.french');
   });
 }

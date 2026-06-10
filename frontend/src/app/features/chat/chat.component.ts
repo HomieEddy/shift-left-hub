@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, isDevMode, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -225,7 +225,9 @@ export class ChatComponent {
         });
       }
     } catch (e) {
-        console.warn('Scroll failed:', e);
+        if (isDevMode()) {
+          console.warn('Scroll failed:', e);
+        }
       }
   }
 

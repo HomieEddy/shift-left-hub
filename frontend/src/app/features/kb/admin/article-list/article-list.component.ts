@@ -92,6 +92,10 @@ export class ArticleListComponent implements OnInit {
     }
   }
 
+  protected getTagName(tag: { nameEn: string; nameFr: string }): string {
+    return this.translationService.currentLang() === 'fr' ? tag.nameFr : tag.nameEn;
+  }
+
   changePage(page: number): void {
     this.currentPage.set(page);
     this.loadArticles();

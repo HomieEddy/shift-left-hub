@@ -70,7 +70,7 @@ export class ConfirmDialogComponent {
         });
       } catch (err) {
         this.loading.set(false);
-        this.errorMessage.set(err instanceof Error ? err.message : 'Unexpected error');
+        this.errorMessage.set(err instanceof Error ? err.message : this.ts.translate('confirm.error.generic'));
       }
     } else {
       this.dialogRef.close(true);

@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, computed } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserDto } from '../../../core/auth/auth.models';
@@ -16,6 +17,7 @@ type SortDir = 'asc' | 'desc';
 })
 export class UserListComponent implements OnInit {
   private authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
   protected users = signal<UserDto[]>([]);
   protected isLoading = signal(true);
@@ -35,7 +37,7 @@ export class UserListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.authService.getUsers().subscribe({
+    this.authService.getUsers().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.users.set(data);
         this.isLoading.set(false);
@@ -94,7 +96,7 @@ export class UserListComponent implements OnInit {
     const user = this.editingUser();
     if (user == null) return;
 
-    this.authService.updateUserRole(user.id, newRole).subscribe({
+    this.authService.updateUserRole(user.id, newRole).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (updated) => {
         this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
         this.closeRoleDialog();
@@ -108,7 +110,7 @@ export class UserListComponent implements OnInit {
 
   /** Toggle a user's enabled/disabled status via the API. */
   toggleStatus(user: UserDto): void {
-    this.authService.toggleUserStatus(user.id).subscribe({
+    this.authService.toggleUserStatus(user.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (updated) => {
         this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
       },

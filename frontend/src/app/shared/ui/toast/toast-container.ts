@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from './toast.service';
 import { ToastMessage } from './toast.model';
@@ -46,7 +46,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
             <button
               (click)="dismissToast(toast.id)"
               class="p-0.5 rounded hover:bg-black/5 transition-colors"
-              [attr.aria-label]="dismissLabel"
+              [attr.aria-label]="dismissLabel()"
             >
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -69,7 +69,7 @@ export class ToastContainer {
   private readonly toastService = inject(ToastService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly ts = inject(TranslationService);
-  protected readonly dismissLabel = this.ts.translate('toast.dismiss');
+  protected readonly dismissLabel = computed(() => this.ts.translate('toast.dismiss'));
 
   protected readonly toasts = signal<ToastMessage[]>([]);
 

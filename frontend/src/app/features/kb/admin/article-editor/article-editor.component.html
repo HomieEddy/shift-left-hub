@@ -159,7 +159,7 @@
               [style.border-color]="tag.color"
               [style.color]="selectedTagIds().has(tag.id) ? 'white' : tag.color"
             >
-              {{ translationService.currentLang() === 'fr' ? tag.nameFr : tag.nameEn }}
+              {{ getTagName(tag) }}
             </button>
           }
         </div>

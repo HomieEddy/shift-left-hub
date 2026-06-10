@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { LlmSettingsService, AiConfigResponse } from './llm-settings.service';
@@ -12,6 +13,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
 })
 export class LlmSettingsComponent implements OnInit {
   private settingsService = inject(LlmSettingsService);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   config: AiConfigResponse | null = null;
@@ -30,7 +32,7 @@ export class LlmSettingsComponent implements OnInit {
   embeddingExamples = ['nomic-embed-text', 'all-minilm'];
 
   ngOnInit(): void {
-    this.settingsService.getConfig().subscribe({
+    this.settingsService.getConfig().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (config) => {
         this.config = config;
         this.config.llmProvider = (this.config.llmProvider || 'OLLAMA').trim().toUpperCase();

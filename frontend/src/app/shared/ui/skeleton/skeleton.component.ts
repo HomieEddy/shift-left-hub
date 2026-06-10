@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-skeleton',
@@ -42,7 +42,7 @@ export class SkeletonCardComponent {}
       <div class="p-4 border-b border-border-default">
         <div class="animate-pulse bg-surface-tertiary rounded h-4 w-1/4"></div>
       </div>
-      @for (row of skeletonRows; track $index) {
+      @for (row of skeletonRows(); track $index) {
         <div class="px-4 py-3 border-b border-border-default flex items-center gap-4">
           <div class="animate-pulse bg-surface-tertiary rounded h-4 w-2/5"></div>
           <div class="animate-pulse bg-surface-tertiary rounded h-4 w-1/4"></div>
@@ -55,7 +55,7 @@ export class SkeletonCardComponent {}
 })
 export class SkeletonTableComponent {
   readonly rows = input(5);
-  protected get skeletonRows(): number[] {
-    return Array.from({ length: this.rows() }, (_, i) => i);
-  }
+  protected skeletonRows = computed(() =>
+    Array.from({ length: this.rows() }, (_, i) => i)
+  );
 }
