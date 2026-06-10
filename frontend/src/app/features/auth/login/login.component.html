@@ -7,8 +7,8 @@
       </div>
     </div>
 
-    <h1 class="text-2xl font-bold text-center text-text-primary mb-1" i18n="@@login.title">Login</h1>
-    <p class="text-center text-text-secondary text-sm mb-6" i18n="@@login.subtitle">Welcome back</p>
+    <h1 class="text-2xl font-bold text-center text-text-primary mb-1">{{ translationService.translate('login.title') }}</h1>
+    <p class="text-center text-text-secondary text-sm mb-6">{{ translationService.translate('login.subtitle') }}</p>
 
     @if (errorMessage) {
       <div class="bg-accent-danger-muted border border-red-200 text-accent-danger text-sm rounded-xl px-4 py-3 mb-6">
@@ -18,7 +18,7 @@
 
     <form (ngSubmit)="onSubmit()" class="space-y-4">
       <div>
-        <label for="email" class="block text-sm font-medium text-text-primary mb-1" i18n="@@auth.email.label">Email</label>
+        <label for="email" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.email.label') }}</label>
         <input
           id="email"
           type="email"
@@ -27,12 +27,12 @@
           name="email"
           required
           class="w-full bg-surface-primary border border-border-default rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent placeholder:text-text-tertiary"
-          i18n-placeholder="@@auth.email.placeholder" placeholder="you@example.com"
+          [placeholder]="translationService.translate('auth.email.placeholder')"
         />
       </div>
 
       <div>
-        <label for="password" class="block text-sm font-medium text-text-primary mb-1" i18n="@@auth.password.label">Password</label>
+        <label for="password" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.password.label') }}</label>
         <div class="relative">
           <input
             id="password"
@@ -43,7 +43,7 @@
             required
             minlength="8"
             class="w-full bg-surface-primary border border-border-default rounded-xl px-4 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent placeholder:text-text-tertiary"
-            i18n-placeholder="@@auth.password.placeholder" placeholder="Enter your password"
+            [placeholder]="translationService.translate('auth.password.placeholder')"
           />
           <button type="button" (click)="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors" tabindex="-1">
             @if (showPassword) {
@@ -71,20 +71,20 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
           </svg>
-          <span i18n="@@login.signing-in">Signing in...</span>
+          <span>{{ translationService.translate('login.signing-in') }}</span>
         } @else {
-          <span i18n="@@login.signin">Sign In</span>
+          <span>{{ translationService.translate('login.signin') }}</span>
         }
       </button>
     </form>
 
     <p class="text-center text-sm text-text-secondary mt-6">
-      <ng-container i18n="@@login.no-account">Don't have an account?</ng-container>
-      <a routerLink="/register" class="text-primary-600 hover:text-primary-700 font-medium" i18n="@@login.registerLink">Register</a>
+      {{ translationService.translate('login.no-account') }}
+      <a routerLink="/register" class="text-primary-600 hover:text-primary-700 font-medium">{{ translationService.translate('login.registerLink') }}</a>
     </p>
 
     <div class="text-center mt-4">
-      <a routerLink="/" class="text-sm text-text-tertiary hover:text-text-primary transition-colors" i18n="@@login.backToHome">Back to home</a>
+      <a routerLink="/" class="text-sm text-text-tertiary hover:text-text-primary transition-colors">{{ translationService.translate('login.backToHome') }}</a>
     </div>
   </div>
 </div>

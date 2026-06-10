@@ -7,8 +7,8 @@
       </div>
     </div>
 
-    <h1 class="text-2xl font-bold text-center text-text-primary mb-1" i18n="@@register.title">Create Account</h1>
-    <p class="text-center text-text-secondary text-sm mb-6" i18n="@@register.subtitle">Get started with your free account</p>
+    <h1 class="text-2xl font-bold text-center text-text-primary mb-1">{{ translationService.translate('register.title') }}</h1>
+    <p class="text-center text-text-secondary text-sm mb-6">{{ translationService.translate('register.subtitle') }}</p>
 
     @if (errorMessage) {
       <div class="bg-accent-danger-muted border border-red-200 text-accent-danger text-sm rounded-xl px-4 py-3 mb-6">
@@ -18,7 +18,7 @@
 
     <form (ngSubmit)="onSubmit()" class="space-y-4">
       <div>
-        <label for="displayName" class="block text-sm font-medium text-text-primary mb-1" i18n="@@auth.display-name.label">Display Name</label>
+        <label for="displayName" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.display-name.label') }}</label>
         <input
           id="displayName"
           type="text"
@@ -26,12 +26,12 @@
           name="displayName"
           required
           class="w-full bg-surface-primary border border-border-default rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent placeholder:text-text-tertiary"
-          i18n-placeholder="@@auth.display-name.placeholder" placeholder="John Doe"
+          [placeholder]="translationService.translate('auth.display-name.placeholder')"
         />
       </div>
 
       <div>
-        <label for="reg-email" class="block text-sm font-medium text-text-primary mb-1" i18n="@@auth.email.label">Email</label>
+        <label for="reg-email" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.email.label') }}</label>
         <input
           id="reg-email"
           type="email"
@@ -39,12 +39,12 @@
           name="email"
           required
           class="w-full bg-surface-primary border border-border-default rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent placeholder:text-text-tertiary"
-          i18n-placeholder="@@auth.email.placeholder" placeholder="you@example.com"
+          [placeholder]="translationService.translate('auth.email.placeholder')"
         />
       </div>
 
       <div>
-        <label for="reg-password" class="block text-sm font-medium text-text-primary mb-1" i18n="@@auth.password.label">Password</label>
+        <label for="reg-password" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.password.label') }}</label>
         <div class="relative">
           <input
             id="reg-password"
@@ -54,7 +54,7 @@
             required
             (focus)="showPasswordRules = true"
             class="w-full bg-surface-primary border border-border-default rounded-xl px-4 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent placeholder:text-text-tertiary"
-            i18n-placeholder="@@auth.password.placeholder.register" placeholder="At least 8 characters"
+            [placeholder]="translationService.translate('auth.password.placeholder.register')"
           />
           <button type="button" (click)="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors" tabindex="-1">
             @if (showPassword) {
@@ -92,7 +92,7 @@
                   <circle cx="12" cy="12" r="10" stroke-width="2" />
                 </svg>
               }
-              <ng-container i18n="@@register.password.rule.length">At least 8 characters</ng-container>
+              {{ translationService.translate('register.password.rule.length') }}
             </li>
             <li class="flex items-center gap-1.5" [class.text-green-600]="/[A-Z]/.test(password)" [class.text-text-tertiary]="!/[A-Z]/.test(password)">
               @if (/[A-Z]/.test(password)) {
@@ -104,7 +104,7 @@
                   <circle cx="12" cy="12" r="10" stroke-width="2" />
                 </svg>
               }
-              <ng-container i18n="@@register.password.rule.uppercase">One uppercase letter</ng-container>
+              {{ translationService.translate('register.password.rule.uppercase') }}
             </li>
             <li class="flex items-center gap-1.5" [class.text-green-600]="/[0-9]/.test(password)" [class.text-text-tertiary]="!/[0-9]/.test(password)">
               @if (/[0-9]/.test(password)) {
@@ -116,7 +116,7 @@
                   <circle cx="12" cy="12" r="10" stroke-width="2" />
                 </svg>
               }
-              <ng-container i18n="@@register.password.rule.number">One number</ng-container>
+              {{ translationService.translate('register.password.rule.number') }}
             </li>
           </ul>
         }
@@ -132,20 +132,20 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
           </svg>
-          <span i18n="@@register.creating">Creating account...</span>
+          <span>{{ translationService.translate('register.creating') }}</span>
         } @else {
-          <span i18n="@@register.create">Create Account</span>
+          <span>{{ translationService.translate('register.create') }}</span>
         }
       </button>
     </form>
 
     <p class="text-center text-sm text-text-secondary mt-6">
-      <ng-container i18n="@@register.has-account">Already have an account?</ng-container>
-      <a routerLink="/login" class="text-primary-600 hover:text-primary-700 font-medium" i18n="@@register.signinLink">Sign in</a>
+      {{ translationService.translate('register.has-account') }}
+      <a routerLink="/login" class="text-primary-600 hover:text-primary-700 font-medium">{{ translationService.translate('register.signinLink') }}</a>
     </p>
 
     <div class="text-center mt-4">
-      <a routerLink="/" class="text-sm text-text-tertiary hover:text-text-primary transition-colors" i18n="@@register.backToHome">Back to home</a>
+      <a routerLink="/" class="text-sm text-text-tertiary hover:text-text-primary transition-colors">{{ translationService.translate('register.backToHome') }}</a>
     </div>
   </div>
 </div>
