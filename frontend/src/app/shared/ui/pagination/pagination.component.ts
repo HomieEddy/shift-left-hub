@@ -23,8 +23,8 @@ import { Component, computed, input, output } from '@angular/core';
                 class="w-8 h-8 text-sm rounded transition-colors"
                 [class.bg-primary-600]="page === currentPage()"
                 [class.text-white]="page === currentPage()"
-                [class.text-slate-600]="page !== currentPage()"
-                [class.hover:bg-slate-100]="page !== currentPage()"
+                [class.text-text-secondary]="page !== currentPage()"
+                [class.hover:bg-surface-secondary]="page !== currentPage()"
               >
                 {{ pageLabel(page) }}
               </button>
