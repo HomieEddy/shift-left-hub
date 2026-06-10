@@ -1,6 +1,7 @@
 package com.shiftleft.hub.tag.domain;
 
 import com.shiftleft.hub.article.domain.Article;
+import com.shiftleft.hub.common.domain.WorkspaceAwareEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tag {
+public class Tag extends WorkspaceAwareEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

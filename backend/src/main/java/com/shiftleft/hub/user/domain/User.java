@@ -50,6 +50,9 @@ public class User {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Column(name = "default_workspace_id")
+    private UUID defaultWorkspaceId;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
