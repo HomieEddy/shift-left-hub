@@ -106,50 +106,52 @@ public class DataSeeder {
         }
     }
 
+    private static final String PUBLIC_WS_NAME = "public";
+    private static final String PUBLIC_WS_SLUG = "public";
+
     /**
-     * Migrates all existing v1.0 data into a Default Workspace on startup.
-     * Runs after the seed() method to ensure users exist before assignment.
+     * Creates the public workspace and assigns all existing data to it.
+     * Runs at Order(3) to ensure seed users (Order 1) and KB articles (Order 2) exist first.
      */
     @EventListener(ApplicationReadyEvent.class)
-    @Order(2)
+    @Order(3)
     public void migrateWorkspaces() {
-        if (workspaceService.findBySlug("default").isEmpty()) {
-            log.info("Starting v1.0 -> Default Workspace migration...");
-            migrateToDefaultWorkspace();
-            log.info("Default Workspace migration complete");
+        if (workspaceService.findBySlug(PUBLIC_WS_SLUG).isEmpty()) {
+            log.info("Starting v1.0 -> public workspace migration...");
+            migrateToPublicWorkspace();
         } else {
-            log.info("Default Workspace already exists - migration already completed");
+            log.info("Public workspace already exists — migration already completed");
         }
     }
 
-    private void migrateToDefaultWorkspace() {
+    private void migrateToPublicWorkspace() {
         User admin = userRepository.findAll().stream()
             .filter(u -> u.getRole() == UserRole.ROLE_ADMIN)
             .findFirst()
             .orElse(null);
         UUID creatorId = admin != null ? admin.getId() : UUID.randomUUID();
-        Workspace defaultWorkspace = workspaceService.createWorkspace(
-            "Default Workspace", "Default workspace for existing v1.0 data", null, creatorId);
-        log.info("Created Default Workspace (slug: default)");
+        Workspace publicWs = workspaceService.createWorkspace(
+            PUBLIC_WS_NAME, "Public workspace — all users have access by default", null, creatorId);
+        log.info("Created public workspace (slug: {})", PUBLIC_WS_SLUG);
 
-        UUID defaultWsId = defaultWorkspace.getId();
+        UUID wsId = publicWs.getId();
 
         List<User> allUsers = userRepository.findAll();
         for (User user : allUsers) {
-            if (!workspaceService.isMemberOfWorkspace(defaultWsId, user.getId())) {
-                workspaceService.assignUserToWorkspace(defaultWsId, user.getId(), "ADMIN");
+            if (!workspaceService.isMemberOfWorkspace(wsId, user.getId())) {
+                workspaceService.assignUserToWorkspace(wsId, user.getId(), "ADMIN");
             }
             if (user.getDefaultWorkspaceId() == null) {
-                user.setDefaultWorkspaceId(defaultWsId);
+                user.setDefaultWorkspaceId(wsId);
                 userRepository.save(user);
             }
         }
-        log.info("Migrated {} users to Default Workspace", allUsers.size());
+        log.info("Assigned {} users to public workspace", allUsers.size());
 
         List<Article> allArticles = articleRepository.findAll();
         for (Article article : allArticles) {
             if (article.getWorkspaceId() == null) {
-                article.setWorkspaceId(defaultWsId);
+                article.setWorkspaceId(wsId);
             }
         }
         if (!allArticles.isEmpty()) {
@@ -159,7 +161,7 @@ public class DataSeeder {
         List<Ticket> allTickets = ticketRepository.findAll();
         for (Ticket ticket : allTickets) {
             if (ticket.getWorkspaceId() == null) {
-                ticket.setWorkspaceId(defaultWsId);
+                ticket.setWorkspaceId(wsId);
             }
         }
         if (!allTickets.isEmpty()) {
@@ -169,7 +171,7 @@ public class DataSeeder {
         List<Tag> allTags = tagRepository.findAll();
         for (Tag tag : allTags) {
             if (tag.getWorkspaceId() == null) {
-                tag.setWorkspaceId(defaultWsId);
+                tag.setWorkspaceId(wsId);
             }
         }
         if (!allTags.isEmpty()) {
@@ -179,14 +181,14 @@ public class DataSeeder {
         List<WorkNote> allWorkNotes = workNoteRepository.findAll();
         for (WorkNote workNote : allWorkNotes) {
             if (workNote.getWorkspaceId() == null) {
-                workNote.setWorkspaceId(defaultWsId);
+                workNote.setWorkspaceId(wsId);
             }
         }
         if (!allWorkNotes.isEmpty()) {
             workNoteRepository.saveAll(allWorkNotes);
         }
 
-        log.info("Default Workspace migration complete - assigned {} articles, {} tickets, {} tags, {} work notes",
+        log.info("Public workspace migration complete — assigned {} articles, {} tickets, {} tags, {} work notes",
             allArticles.size(), allTickets.size(), allTags.size(), allWorkNotes.size());
     }
 }
