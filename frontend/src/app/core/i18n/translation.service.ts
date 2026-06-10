@@ -29,9 +29,15 @@ export class TranslationService {
     localStorage.setItem(this.STORAGE_KEY, lang);
   }
 
-  translate(key: string): string {
+  translate(key: string, params?: Record<string, string | number>): string {
     const entry = translations[key];
     if (entry == null) return key;
-    return this.currentLang() === 'fr' ? entry.fr : entry.en;
+    let result = this.currentLang() === 'fr' ? entry.fr : entry.en;
+    if (params) {
+      for (const [k, v] of Object.entries(params)) {
+        result = result.replace(`{${k}}`, String(v));
+      }
+    }
+    return result;
   }
 }
