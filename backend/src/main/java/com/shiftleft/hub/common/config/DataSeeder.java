@@ -1,5 +1,7 @@
 package com.shiftleft.hub.common.config;
 
+import com.shiftleft.hub.agent.domain.WorkNote;
+import com.shiftleft.hub.agent.domain.WorkNoteRepository;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
 import com.shiftleft.hub.article.domain.Article;
@@ -39,6 +41,7 @@ public class DataSeeder {
     private final ArticleRepository articleRepository;
     private final TicketRepository ticketRepository;
     private final TagRepository tagRepository;
+    private final WorkNoteRepository workNoteRepository;
 
     @Value("${app.admin.email:#{null}}")
     private String adminEmail;
@@ -173,7 +176,17 @@ public class DataSeeder {
             tagRepository.saveAll(allTags);
         }
 
-        log.info("Default Workspace migration complete - assigned {} articles, {} tickets, {} tags",
-            allArticles.size(), allTickets.size(), allTags.size());
+        List<WorkNote> allWorkNotes = workNoteRepository.findAll();
+        for (WorkNote workNote : allWorkNotes) {
+            if (workNote.getWorkspaceId() == null) {
+                workNote.setWorkspaceId(defaultWsId);
+            }
+        }
+        if (!allWorkNotes.isEmpty()) {
+            workNoteRepository.saveAll(allWorkNotes);
+        }
+
+        log.info("Default Workspace migration complete - assigned {} articles, {} tickets, {} tags, {} work notes",
+            allArticles.size(), allTickets.size(), allTags.size(), allWorkNotes.size());
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -194,7 +195,8 @@ public class AiChatService {
     }
 
     private List<HybridSearchResult> ftsSearch(String query) {
-        var page = articleRepository.searchByText(query, org.springframework.data.domain.PageRequest.of(0, TOP_K));
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        var page = articleRepository.searchByText(query, workspaceId, PageRequest.of(0, TOP_K));
         return page.getContent().stream()
             .map(row -> {
                 UUID id = (UUID) row[0];
