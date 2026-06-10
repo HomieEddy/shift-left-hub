@@ -55,6 +55,10 @@
             <span class="sidebar-label">{{ translationService.translate('nav.ticket-queue') }}</span>
           </a>
 
+          <a routerLink="/admin/workspaces" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
+            <span class="sidebar-label">{{ translationService.translate('nav.workspaces') }}</span>
+          </a>
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideUsers /></span>
             <span class="sidebar-label">{{ translationService.translate('nav.users') }}</span>
@@ -209,6 +213,10 @@
             <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.ticket-queue') }}</span>
           </a>
 
+          <a routerLink="/admin/workspaces" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
+            <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
+            <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.workspaces') }}</span>
+          </a>
           <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link" (click)="isMobileMenuOpen.set(false)">
             <span class="sidebar-icon"><svg lucideUsers /></span>
             <span class="sidebar-label !opacity-100">{{ translationService.translate('nav.users') }}</span>
