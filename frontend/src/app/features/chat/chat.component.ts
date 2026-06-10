@@ -229,7 +229,4 @@ export class ChatComponent {
       }
   }
 
-  trackByFn(_index: number, msg: ChatMessage) {
-    return msg.id ?? _index;
-  }
 }
