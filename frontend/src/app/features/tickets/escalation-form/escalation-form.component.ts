@@ -1,18 +1,19 @@
 import { Component, inject, input, output, signal } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TicketService } from '../ticket.service';
 import { EscalationPayload } from '../ticket.model';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-escalation-form',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './escalation-form.component.html',
 })
 export class EscalationFormComponent {
   private ticketService = inject(TicketService);
+  protected translationService = inject(TranslationService);
 
   escalationPayload = input<EscalationPayload | null>(null);
   ticketCreated = output<string>();
@@ -26,16 +27,16 @@ export class EscalationFormComponent {
   errorMessage = signal<string | null>(null);
 
   categories = [
-    { value: 'NETWORK', label: 'Network' },
-    { value: 'HARDWARE', label: 'Hardware' },
-    { value: 'SOFTWARE', label: 'Software' },
-    { value: 'ACCESS', label: 'Access' },
-    { value: 'PERIPHERALS', label: 'Peripherals' },
+    { value: 'NETWORK', label: this.translationService.translate('tickets.category.network') },
+    { value: 'HARDWARE', label: this.translationService.translate('tickets.category.hardware') },
+    { value: 'SOFTWARE', label: this.translationService.translate('tickets.category.software') },
+    { value: 'ACCESS', label: this.translationService.translate('tickets.category.access') },
+    { value: 'PERIPHERALS', label: this.translationService.translate('tickets.category.peripherals') },
   ];
   urgencies = [
-    { value: 'LOW', label: 'Low' },
-    { value: 'MEDIUM', label: 'Medium' },
-    { value: 'HIGH', label: 'High' },
+    { value: 'LOW', label: this.translationService.translate('agent.urgency.low') },
+    { value: 'MEDIUM', label: this.translationService.translate('agent.urgency.medium') },
+    { value: 'HIGH', label: this.translationService.translate('agent.urgency.high') },
   ];
 
   submit(): void {
@@ -68,7 +69,7 @@ export class EscalationFormComponent {
       },
       error: () => {
         this.isSubmitting.set(false);
-        this.errorMessage.set('Failed to create ticket. Please try again.');
+        this.errorMessage.set(this.translationService.translate('escalation.error.create'));
       },
     });
   }

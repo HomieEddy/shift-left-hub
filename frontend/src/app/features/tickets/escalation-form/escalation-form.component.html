@@ -1,10 +1,10 @@
 <div class="bg-surface-primary border border-border-default rounded-xl p-4 text-sm">
   @if (!successTicketNumber()) {
-    <h3 class="font-semibold text-text-primary mb-3" i18n="@@escalation.title">Escalate to Human Agent</h3>
+    <h3 class="font-semibold text-text-primary mb-3">{{ translationService.translate('escalation.title') }}</h3>
 
     <div class="space-y-3">
       <div>
-        <label for="escalation-issue" class="block text-xs font-medium text-text-secondary mb-1" i18n="@@escalation.issue">Issue Description</label>
+        <label for="escalation-issue" class="block text-xs font-medium text-text-secondary mb-1">{{ translationService.translate('escalation.issue') }}</label>
         <textarea
           id="escalation-issue"
           [(ngModel)]="issue"
@@ -17,7 +17,7 @@
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label for="escalation-category" class="block text-xs font-medium text-text-secondary mb-1" i18n="@@escalation.category">Category</label>
+          <label for="escalation-category" class="block text-xs font-medium text-text-secondary mb-1">{{ translationService.translate('escalation.category') }}</label>
           <select
             id="escalation-category"
             [(ngModel)]="category"
@@ -31,7 +31,7 @@
           </select>
         </div>
         <div>
-          <label for="escalation-urgency" class="block text-xs font-medium text-text-secondary mb-1" i18n="@@escalation.urgency">Urgency</label>
+          <label for="escalation-urgency" class="block text-xs font-medium text-text-secondary mb-1">{{ translationService.translate('escalation.urgency') }}</label>
           <select
             id="escalation-urgency"
             [(ngModel)]="urgency"
@@ -62,18 +62,17 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span i18n="@@escalation.submitting">Submitting...</span>
+            <span>{{ translationService.translate('escalation.submitting') }}</span>
           } @else {
-            <span i18n="@@escalation.submit">Submit Ticket</span>
+            <span>{{ translationService.translate('escalation.submit') }}</span>
           }
         </button>
         <button
           (click)="dismiss()"
           [disabled]="isSubmitting()"
           class="rounded-lg border border-border-default px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary transition-colors"
-          i18n="@@escalation.cancel"
         >
-          Cancel
+          {{ translationService.translate('escalation.cancel') }}
         </button>
       </div>
     </div>
@@ -85,13 +84,13 @@
         </svg>
       </div>
       <div class="text-text-primary font-semibold mb-1">
-        <ng-container i18n="@@escalation.success">Ticket created!</ng-container>
+        {{ translationService.translate('escalation.success') }}
       </div>
-      <p class="text-text-secondary text-xs mb-3" i18n="@@escalation.successMessage">
-        An agent will review your ticket shortly.
+      <p class="text-text-secondary text-xs mb-3">
+        {{ translationService.translate('escalation.successMessage') }}
       </p>
-      <a routerLink="/tickets" class="text-primary-600 hover:text-primary-700 text-xs font-medium transition-colors" i18n="@@tickets.view.link">
-        View Tickets
+      <a routerLink="/tickets" class="text-primary-600 hover:text-primary-700 text-xs font-medium transition-colors">
+        {{ translationService.translate('tickets.view.link') }}
       </a>
     </div>
   }

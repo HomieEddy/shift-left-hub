@@ -1,6 +1,6 @@
 <div class="max-w-4xl mx-auto px-4 py-6">
-  <a routerLink="/tickets" class="text-sm text-primary-600 hover:text-primary-700 mb-4 inline-block transition-colors" i18n="@@tickets.back">
-    &larr; Back to Tickets
+  <a routerLink="/tickets" class="text-sm text-primary-600 hover:text-primary-700 mb-4 inline-block transition-colors">
+    {{ translationService.translate('tickets.back') }}
   </a>
 
   @if (isLoading()) {
@@ -9,7 +9,7 @@
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      <span i18n="@@tickets.loading">Loading...</span>
+      <span>{{ translationService.translate('tickets.loading') }}</span>
     </div>
   }
 
@@ -40,7 +40,7 @@
 
       <div class="px-6 py-4 space-y-4">
         <div>
-          <h2 class="text-sm font-semibold text-text-primary mb-1" i18n="@@tickets.issue">Issue Description</h2>
+          <h2 class="text-sm font-semibold text-text-primary mb-1">{{ translationService.translate('tickets.issue') }}</h2>
           <p class="text-sm text-text-secondary bg-surface-secondary rounded-lg p-3">{{ t.issue }}</p>
         </div>
 
@@ -50,7 +50,7 @@
             class="text-sm font-semibold text-text-primary flex items-center gap-1 hover:text-text-secondary transition-colors"
           >
             <span [class.rotate-90]="showTranscript()" class="transition-transform inline-block">&rarr;</span>
-            <span i18n="@@tickets.transcript">AI Chat Transcript</span>
+            <span>{{ translationService.translate('tickets.transcript') }}</span>
           </button>
           @if (showTranscript()) {
             <div class="mt-2 bg-surface-secondary rounded-lg max-h-72 overflow-y-auto space-y-2 p-3">
@@ -77,7 +77,7 @@
 
         @if (parsedContext()?.aiSummary) {
           <div class="border-t border-border-light pt-3">
-            <h2 class="text-sm font-semibold text-text-primary mb-1" i18n="@@tickets.aiSummary">AI Summary</h2>
+            <h2 class="text-sm font-semibold text-text-primary mb-1">{{ translationService.translate('tickets.aiSummary') }}</h2>
             <p class="text-sm text-text-secondary bg-surface-secondary rounded-lg p-3">{{ parsedContext()?.aiSummary }}</p>
           </div>
         }
@@ -89,7 +89,7 @@
               class="text-sm font-semibold text-text-primary flex items-center gap-1 hover:text-text-secondary transition-colors"
             >
               <span [class.rotate-90]="showSources()" class="transition-transform inline-block">&rarr;</span>
-              <span i18n="@@tickets.sources">Knowledge Base Sources ({{ kbSources().length }})</span>
+              <span>{{ translationService.translate('tickets.sources', { INTERPOLATION: kbSources().length }) }}</span>
             </button>
             @if (showSources()) {
               <div class="mt-2 space-y-1">
@@ -105,25 +105,25 @@
         }
 
         <div class="border-t border-border-light pt-3 text-xs text-text-secondary space-y-1">
-          <p><span i18n="@@tickets.created">Created:</span> {{ t.createdAt | date:'medium' }}</p>
+          <p><span>{{ translationService.translate('tickets.created') }}</span> {{ t.createdAt | date:'medium' }}</p>
           @if (t.updatedAt !== t.createdAt) {
             <p>
-              <span i18n="@@tickets.updated">Updated:</span> {{ t.updatedAt | date:'medium' }}
+              <span>{{ translationService.translate('tickets.updated') }}</span> {{ t.updatedAt | date:'medium' }}
             </p>
           }
           @if (t.resolvedAt) {
             <p>
-              <span i18n="@@tickets.resolved">Resolved:</span> {{ t.resolvedAt | date:'medium' }}
+              <span>{{ translationService.translate('tickets.resolved') }}</span> {{ t.resolvedAt | date:'medium' }}
             </p>
           }
           @if (t.cancelledAt) {
             <p>
-              <span i18n="@@tickets.cancelled">Cancelled:</span> {{ t.cancelledAt | date:'medium' }}
+              <span>{{ translationService.translate('tickets.cancelled') }}</span> {{ t.cancelledAt | date:'medium' }}
             </p>
           }
           @if (t.cancelReason) {
             <p>
-              <span i18n="@@tickets.cancelReason">Reason:</span> {{ t.cancelReason }}
+              <span>{{ translationService.translate('tickets.cancelReason') }}</span> {{ t.cancelReason }}
             </p>
           }
         </div>
@@ -134,26 +134,23 @@
               <button
                 (click)="showCancelConfirm.set(true)"
                 class="rounded-lg border border-red-300 px-4 py-2 text-sm text-accent-danger hover:bg-accent-danger-muted transition-colors"
-                i18n="@@tickets.cancel.button"
               >
-                Cancel Ticket
+                {{ translationService.translate('tickets.cancel.button') }}
               </button>
             } @else {
               <div class="flex items-center gap-2">
-                <span class="text-sm text-text-secondary" i18n="@@tickets.cancel.confirm">Are you sure?</span>
+                <span class="text-sm text-text-secondary">{{ translationService.translate('tickets.cancel.confirm') }}</span>
                 <button
                   (click)="cancelTicket()"
                   class="rounded-lg bg-accent-danger-muted border border-red-200 px-3 py-1.5 text-xs text-accent-danger hover:bg-red-100 transition-colors"
-                  i18n="@@tickets.cancel.yes"
                 >
-                  Yes
+                  {{ translationService.translate('tickets.cancel.yes') }}
                 </button>
                 <button
                   (click)="showCancelConfirm.set(false)"
                   class="rounded-lg border border-border-default px-3 py-1.5 text-xs text-text-secondary hover:bg-surface-secondary transition-colors"
-                  i18n="@@tickets.cancel.no"
                 >
-                  No
+                  {{ translationService.translate('tickets.cancel.no') }}
                 </button>
               </div>
             }
