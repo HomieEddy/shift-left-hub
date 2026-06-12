@@ -11,6 +11,7 @@ export interface WorkspaceLlmConfigResponse {
   embeddingModelName: string;
   similarityThreshold: number;
   embeddingDimension: number;
+  systemPrompt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -22,6 +23,7 @@ export interface WorkspaceLlmConfigRequest {
   modelName?: string;
   embeddingModelName?: string;
   similarityThreshold?: number;
+  systemPrompt?: string | null;
 }
 
 export interface TestConnectionResult {

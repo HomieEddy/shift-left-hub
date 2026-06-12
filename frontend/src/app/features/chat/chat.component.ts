@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
-import { LucideSend, LucideMessageCircle } from '@lucide/angular';
+import { LucideSend, LucideMessageCircle, LucideFileText } from '@lucide/angular';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { EscalationFormComponent } from '../tickets/escalation-form/escalation-form.component';
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
@@ -13,7 +13,7 @@ import { TranslationService } from '../../core/i18n/translation.service';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, RouterLink, MarkdownModule, LucideSend, LucideMessageCircle, ModalComponent, EscalationFormComponent],
+  imports: [FormsModule, RouterLink, MarkdownModule, LucideSend, LucideMessageCircle, LucideFileText, ModalComponent, EscalationFormComponent],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
@@ -87,6 +87,12 @@ export class ChatComponent {
         } else if (event.type === 'done') {
           this.isStreaming.set(false);
           this.showFeedback.set(true);
+          this.messages.update(m => {
+            const updated = [...m];
+            const lastIdx = updated.length - 1;
+            updated[lastIdx] = { ...updated[lastIdx], sources: event.sources };
+            return updated;
+          });
           this.setEscalationPayload(event);
         } else if (event.type === 'fallback') {
           this.isStreaming.set(false);

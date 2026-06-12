@@ -73,6 +73,11 @@
           <p class="text-sm text-text-secondary mb-3" [innerHTML]="sanitizeHeadline(result.headline)"></p>
           <div class="flex items-center gap-2 text-xs text-text-tertiary">
             <span>{{ result.publishedAt | date:'mediumDate' }}</span>
+            @if (categories().length > 0) {
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent-success-muted text-accent-success">
+                {{ categories()[0].nameEn }}
+              </span>
+            }
             @if (result.tagNames.length > 0) {
               <span class="text-border-default">|</span>
             }

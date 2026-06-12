@@ -32,6 +32,7 @@ export class LlmSettingsComponent implements OnInit {
   protected selectedWorkspaceId = signal<string>('');
   protected workspaceConfig = signal<WorkspaceLlmConfigResponse | null>(null);
   protected isWorkspaceMode = signal(false);
+  protected systemPrompt = signal('');
 
   providers = computed(() => [
     { value: 'OLLAMA', label: this.translationService.translate('admin.settings.llm.provider.ollama') },
@@ -94,6 +95,7 @@ export class LlmSettingsComponent implements OnInit {
           this.config.chatModelName = config.modelName;
           this.config.embeddingModelName = config.embeddingModelName;
           this.config.similarityThreshold = config.similarityThreshold;
+          this.systemPrompt.set(config.systemPrompt ?? '');
         }
       },
       error: () => {
@@ -124,6 +126,7 @@ export class LlmSettingsComponent implements OnInit {
         modelName: this.config.chatModelName,
         embeddingModelName: this.config.embeddingModelName,
         similarityThreshold: this.config.similarityThreshold,
+        systemPrompt: this.systemPrompt() || null,
       })).then(wsConfig => {
         this.config = {
           llmProvider: wsConfig.llmProvider,
@@ -191,6 +194,11 @@ export class LlmSettingsComponent implements OnInit {
     }).finally(() => {
       this.isTesting = false;
     });
+  }
+
+  insertTemplateVariable(variable: string): void {
+    const current = this.systemPrompt();
+    this.systemPrompt.set(current + variable);
   }
 
   reindex(): void {
