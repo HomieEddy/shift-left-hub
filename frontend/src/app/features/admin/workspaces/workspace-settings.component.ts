@@ -6,13 +6,12 @@ import { WorkspaceService } from './workspace.service';
 import { WorkspaceDto, UpdateWorkspaceRequest } from './workspace.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
 import { ConfirmationDialogService } from '../../../shared/ui/confirmation-dialog/confirmation-dialog.service';
-import { NgClass } from '@angular/common';
 import { IconPickerComponent } from './icon-picker.component';
 
 @Component({
   selector: 'app-workspace-settings',
   standalone: true,
-  imports: [NgClass, FormsModule, IconPickerComponent],
+  imports: [FormsModule, IconPickerComponent],
   templateUrl: './workspace-settings.component.html',
 })
 export class WorkspaceSettingsComponent implements OnInit {

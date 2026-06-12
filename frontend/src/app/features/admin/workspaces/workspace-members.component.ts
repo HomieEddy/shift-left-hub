@@ -1,6 +1,5 @@
 import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgClass, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceMemberDto, InvitationDto, CreateInvitationRequest, ChangeRoleRequest } from './workspace.model';
@@ -9,7 +8,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
 @Component({
   selector: 'app-workspace-members',
   standalone: true,
-  imports: [NgClass, DatePipe, FormsModule],
+  imports: [FormsModule],
   templateUrl: './workspace-members.component.html',
 })
 export class WorkspaceMembersComponent implements OnInit {

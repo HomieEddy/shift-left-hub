@@ -1,7 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgClass } from '@angular/common';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceDto } from './workspace.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
@@ -11,7 +10,7 @@ import { WorkspaceSettingsComponent } from './workspace-settings.component';
 @Component({
   selector: 'app-workspace-detail',
   standalone: true,
-  imports: [NgClass, WorkspaceMembersComponent, WorkspaceSettingsComponent],
+  imports: [WorkspaceMembersComponent, WorkspaceSettingsComponent],
   templateUrl: './workspace-detail.component.html',
 })
 export class WorkspaceDetailComponent implements OnInit {

@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-icon-picker',
   standalone: true,
-  imports: [NgClass],
+  imports: [],
   templateUrl: './icon-picker.component.html',
 })
 export class IconPickerComponent {

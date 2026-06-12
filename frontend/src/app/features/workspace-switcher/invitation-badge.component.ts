@@ -3,13 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WorkspaceService } from '../admin/workspaces/workspace.service';
 import { InvitationDto } from '../admin/workspaces/workspace.model';
 import { TranslationService } from '../../core/i18n/translation.service';
-import { NgClass } from '@angular/common';
 import { LucideBell, LucideCheck, LucideX, LucideUsers, LucideLoader2 } from '@lucide/angular';
 
 @Component({
   selector: 'app-invitation-badge',
   standalone: true,
-  imports: [NgClass, LucideBell, LucideCheck, LucideX, LucideUsers, LucideLoader2],
+  imports: [LucideBell, LucideCheck, LucideX, LucideUsers, LucideLoader2],
   templateUrl: './invitation-badge.component.html',
 })
 export class InvitationBadgeComponent implements OnInit {
@@ -37,9 +36,14 @@ export class InvitationBadgeComponent implements OnInit {
     this.isLoading.set(true);
     this.workspaceService.getMyInvitations()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(invs => {
-        this.invitations.set(invs);
-        this.isLoading.set(false);
+      .subscribe({
+        next: invs => {
+          this.invitations.set(invs);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        },
       });
   }
 
