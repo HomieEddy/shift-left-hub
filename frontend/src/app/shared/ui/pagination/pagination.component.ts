@@ -3,47 +3,7 @@ import { Component, computed, input, output } from '@angular/core';
 @Component({
   selector: 'app-pagination',
   standalone: true,
-  template: `
-    @if (totalPages() > 1) {
-      <div class="flex items-center justify-center gap-1 mt-6">
-        <button
-          (click)="goToPage(currentPage() - 1)"
-          [disabled]="currentPage() === 0"
-          class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {{ previousLabel() }}
-        </button>
-        <div class="hidden sm:flex items-center gap-1">
-          @for (page of visiblePages(); track page) {
-            @if (page === '...') {
-              <span class="px-2 py-1.5 text-sm text-text-tertiary">...</span>
-            } @else {
-              <button
-                (click)="goToPage(page)"
-                class="w-8 h-8 text-sm rounded transition-colors"
-                [class.bg-primary-600]="page === currentPage()"
-                [class.text-white]="page === currentPage()"
-                [class.text-text-secondary]="page !== currentPage()"
-                [class.hover:bg-surface-secondary]="page !== currentPage()"
-              >
-                {{ pageLabel(page) }}
-              </button>
-            }
-          }
-        </div>
-        <span class="sm:hidden text-sm text-text-secondary">
-          {{ pageOfLabel() }}
-        </span>
-        <button
-          (click)="goToPage(currentPage() + 1)"
-          [disabled]="currentPage() >= totalPages() - 1"
-          class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {{ nextLabel() }}
-        </button>
-      </div>
-    }
-  `,
+  templateUrl: './pagination.component.html',
 })
 export class PaginationComponent {
   previousLabel = input('Previous');
