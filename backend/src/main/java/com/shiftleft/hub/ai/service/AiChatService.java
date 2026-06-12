@@ -107,8 +107,8 @@ public class AiChatService {
                             r.titleEn() != null ? r.titleEn() : r.titleFr(),
                             r.slug(),
                             r.score(),
-                            null,
-                            null))
+                            r.slug() == null ? "document" : null,
+                            r.excerpt()))
                             .toList();
                         emitter.send(SseEmitter.event().name("message")
                             .data(new StreamEvent("done", fullResponse.get(), sourceRefs)));
