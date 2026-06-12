@@ -18,13 +18,13 @@ import { IconPickerComponent } from './icon-picker.component';
       <div class="rounded-xl border border-border-default bg-surface-primary p-6 space-y-4">
         <h3 class="text-lg font-semibold text-text-primary">{{ translationService.translate('admin.workspaces.settings.name') }}</h3>
         <div>
-          <label class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.workspaces.settings.name') }}</label>
-          <input type="text" [ngModel]="name()" (ngModelChange)="name.set($event)"
+          <label for="ws-name" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.workspaces.settings.name') }}</label>
+          <input id="ws-name" type="text" [ngModel]="name()" (ngModelChange)="name.set($event)"
             class="w-full rounded-lg border border-border-default px-3 py-2 text-sm bg-surface-primary text-text-primary" />
         </div>
         <div>
-          <label class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.workspaces.settings.description') }}</label>
-          <textarea [ngModel]="description()" (ngModelChange)="description.set($event)" rows="3"
+          <label for="ws-desc" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.workspaces.settings.description') }}</label>
+          <textarea id="ws-desc" [ngModel]="description()" (ngModelChange)="description.set($event)" rows="3"
             class="w-full rounded-lg border border-border-default px-3 py-2 text-sm bg-surface-primary text-text-primary"></textarea>
         </div>
         <div>
@@ -138,7 +138,7 @@ export class WorkspaceSettingsComponent implements OnInit {
       if (confirmed) {
         this.workspaceService.leaveWorkspace(this.workspace.id)
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => this.router.navigate(['/admin/workspaces']));
+          .subscribe(() => void this.router.navigate(['/admin/workspaces']));
       }
     });
   }

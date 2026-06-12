@@ -64,7 +64,8 @@ export class WorkspaceSwitcherComponent implements OnInit {
     const list = this.workspaces();
     if (!user) { return null; }
     // Find workspace matching JWT workspace_id from user details
-    return list.find(ws => ws.id === user.workspaceId) || list[0] || null;
+    const found = list.find(ws => ws.id === user.workspaceId);
+    return found ?? list[0] ?? null;
   });
 
   ngOnInit() {
@@ -84,7 +85,7 @@ export class WorkspaceSwitcherComponent implements OnInit {
         next: () => {
           this.workspaceRoleService.refreshRole();
           this.isOpen.set(false);
-          this.router.navigateByUrl('/');
+          void this.router.navigateByUrl('/');
         },
         error: () => this.isOpen.set(false),
       });

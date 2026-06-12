@@ -80,13 +80,12 @@ export class WorkspaceDetailComponent implements OnInit {
 
   ngOnInit() {
     const idOrNull = this.route.snapshot.paramMap.get('id');
-    const id = idOrNull as string;
-    if (!idOrNull) {
+    if (idOrNull === null) {
       this.errorMessage.set(this.translationService.translate('admin.workspaces.detail.not-found'));
       this.isLoading.set(false);
       return;
     }
-    this.workspaceService.getWorkspace(id)
+    this.workspaceService.getWorkspace(idOrNull)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: ws => { this.workspace.set(ws); this.isLoading.set(false); },
@@ -96,7 +95,10 @@ export class WorkspaceDetailComponent implements OnInit {
 
   switchTab(tabId: string) {
     this.activeTab.set(tabId as 'members' | 'llm' | 'documents' | 'settings');
-    void this.router.navigate(['/admin/workspaces', this.workspace()?.id as string], { fragment: tabId });
+    const ws = this.workspace();
+    if (ws !== null) {
+      void this.router.navigate(['/admin/workspaces', ws.id], { fragment: tabId });
+    }
   }
 
   goBack() {
