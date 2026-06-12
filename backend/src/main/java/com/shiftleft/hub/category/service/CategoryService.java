@@ -113,6 +113,12 @@ public class CategoryService {
         Category target = categoryRepository.findByWorkspaceIdAndId(workspaceId, targetId)
             .orElseThrow(() -> new CategoryNotFoundException(targetId));
 
+        // Reassign child categories to target before deleting source
+        categoryRepository.findByParentId(sourceId).forEach(child -> {
+            child.setParent(target);
+            categoryRepository.save(child);
+        });
+
         reassignContent(sourceId, target);
 
         categoryRepository.delete(source);
