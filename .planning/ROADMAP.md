@@ -33,6 +33,25 @@
 
 ## Phase Details
 
+### Phase 13: Frontend Cleanup
+**Goal**: All Angular components use external templates (`templateUrl:`), multi-component files are split into individual files, non-conforming filenames renamed. Angular Style Guide compliance across the entire frontend codebase.
+**Depends on**: Phase 12 (workspace management UI components created)
+**Requirements**: FEC-01, FEC-02, FEC-03, FEC-04
+**Success Criteria** (what must be TRUE):
+1. Zero inline `template:` declarations remain — all 37 components use `templateUrl:` pointing to dedicated `.component.html` files
+2. All multi-component files are split — one class per file (skeleton: 3→3, button: 2→2)
+3. All non-conforming filenames are renamed (`app.ts`→`app.component.ts`, `toast-container.ts`→`toast-container.component.ts`)
+4. `ng build` compiles without errors
+5. All existing frontend tests pass
+**Plans**: 4 plans in 2 waves
+**UI hint**: no
+
+Plans:
+- [x] 13-01-PLAN.md — Extract feature component templates + rename app.ts
+- [x] 13-02-PLAN.md — Extract shared UI templates + modal styles to CSS
+- [x] 13-03-PLAN.md — Split skeleton/button, rename toast-container
+- [x] 13-04-PLAN.md — Build & test verification (pnpm build + ng test)
+
 ### Phase 9: Workspace Foundation
 **Goal**: Multi-tenant workspace isolation is established — users can create workspaces, all domain data is scoped by workspace_id, and existing v1.0 data is migrated to a default workspace
 **Depends on**: Nothing (v1.0 shipped)
@@ -126,7 +145,8 @@ Plans:
 | 10. Document Ingestion + BYO LLM | v2.0 | 4/4 | Complete | 2026-06-10 |
 | 11. Domain-Agnostic AI | v2.0 | 6/6 | Complete | 2026-06-12 |
 | 12. Workspace Management UI | v2.0 | 5/5 | Complete | 2026-06-12 |
+| 13. Frontend Cleanup | v2.0 | 4/4 | Complete | 2026-06-12 |
 
 ---
 
-*Last updated: 2026-06-12 — Phase 12 complete (5/5 plans) — v2.0 shipped*
+*Last updated: 2026-06-12 — Phase 13 complete (4/4 plans) — Frontend Cleanup*
