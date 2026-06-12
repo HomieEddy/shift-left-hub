@@ -506,4 +506,5 @@ export const translations: Record<string, { en: string; fr: string }> = {
   "admin.settings.llm.systemPromptHint": { en: "Customize how the AI assistant behaves for this workspace. Leave empty to use the default prompt.", fr: "Personnalisez le comportement de l'assistant IA pour cet espace de travail. Laissez vide pour utiliser le prompt par d�faut." },
   "admin.settings.llm.systemPromptPlaceholder": { en: "You are a helpful assistant...", fr: "Vous �tes un assistant utile..." },
   "admin.settings.llm.systemPromptReset": { en: "Reset to default", fr: "Réinitialiser" },
-  "chat.sources": { en: "Sources", fr: "Sources" },};
+  "chat.sources": { en: "Sources", fr: "Sources" }
+};
