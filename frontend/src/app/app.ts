@@ -11,7 +11,7 @@ import {
   LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
   LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
   LucideX, LucideUpload, LucideChevronsUpDown, LucideCheck, LucideBuilding2,
-  LucideBell, LucideUsers as LucideUsersIcon, LucideLoader2
+  LucideBell, LucideLoader2
 } from '@lucide/angular';
 import { ToastContainer } from './shared/ui/toast/toast-container';
 import { WorkspaceSwitcherComponent } from './features/workspace-switcher/workspace-switcher.component';
@@ -26,7 +26,7 @@ import { InvitationBadgeComponent } from './features/workspace-switcher/invitati
     LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
     LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
     LucideX, LucideUpload, LucideChevronsUpDown, LucideCheck, LucideBuilding2,
-    LucideBell, LucideUsersIcon, LucideLoader2,
+    LucideBell, LucideLoader2,
     ToastContainer, WorkspaceSwitcherComponent, InvitationBadgeComponent
   ],
   templateUrl: './app.html',

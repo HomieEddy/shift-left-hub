@@ -4,12 +4,12 @@ import { WorkspaceService } from '../admin/workspaces/workspace.service';
 import { InvitationDto } from '../admin/workspaces/workspace.model';
 import { TranslationService } from '../../core/i18n/translation.service';
 import { NgClass } from '@angular/common';
-import { LucideAngularModule } from '@lucide/angular';
+import { LucideBell, LucideCheck, LucideX, LucideUsers, LucideLoader2 } from '@lucide/angular';
 
 @Component({
   selector: 'app-invitation-badge',
   standalone: true,
-  imports: [NgClass, LucideAngularModule],
+  imports: [NgClass, LucideBell, LucideCheck, LucideX, LucideUsers, LucideLoader2],
   template: `
     <div class="relative">
       <button (click)="toggleDropdown()" class="relative p-2 rounded-lg hover:bg-surface-tertiary transition-colors">

@@ -7,12 +7,12 @@ import { WorkspaceService } from '../admin/workspaces/workspace.service';
 import { WorkspaceDto } from '../admin/workspaces/workspace.model';
 import { TranslationService } from '../../core/i18n/translation.service';
 import { NgClass } from '@angular/common';
-import { LucideAngularModule } from '@lucide/angular';
+import { LucideChevronsUpDown, LucideCheck, LucideBuilding2 } from '@lucide/angular';
 
 @Component({
   selector: 'app-workspace-switcher',
   standalone: true,
-  imports: [NgClass, LucideAngularModule],
+  imports: [NgClass, LucideChevronsUpDown, LucideCheck, LucideBuilding2],
   template: `
     <div class="relative">
       <button
