@@ -122,8 +122,8 @@ public class CategoryService {
     }
 
     private long countContentByCategory(UUID categoryId) {
-        return articleRepository.findByCategoryId(categoryId).size()
-            + documentRepository.findByCategoryId(categoryId).size();
+        return articleRepository.countByCategoryId(categoryId)
+            + documentRepository.countByCategoryId(categoryId);
     }
 
     private void reassignContent(UUID sourceId, Category target) {

@@ -325,6 +325,8 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     List<Article> findByCategoryId(UUID categoryId);
 
+    long countByCategoryId(UUID categoryId);
+
     /**
      * Counts articles that originated from tickets by their status.
      *
