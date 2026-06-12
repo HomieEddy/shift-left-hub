@@ -36,6 +36,7 @@ public class AiChatService {
     private final VectorStore vectorStore;
     private final AiConfigService aiConfigService;
     private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
+    private final UnifiedSearchService unifiedSearchService;
 
     private static final int RRF_K = 60;
     private static final int MAX_HISTORY = 10;
@@ -105,7 +106,9 @@ public class AiChatService {
                             r.articleId(),
                             r.titleEn() != null ? r.titleEn() : r.titleFr(),
                             r.slug(),
-                            r.score()))
+                            r.score(),
+                            null,
+                            null))
                             .toList();
                         emitter.send(SseEmitter.event().name("message")
                             .data(new StreamEvent("done", fullResponse.get(), sourceRefs)));
@@ -150,7 +153,12 @@ public class AiChatService {
     }
 
     List<HybridSearchResult> hybridSearch(String query, double threshold) {
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+
+        // 1. FTS search — articles (existing)
         List<HybridSearchResult> ftsResults = ftsSearch(query);
+
+        // 2. Vector search — articles (existing)
         List<HybridSearchResult> vectorResults;
         try {
             vectorResults = vectorSearch(query, threshold);
@@ -159,6 +167,43 @@ public class AiChatService {
             vectorResults = List.of();
         }
 
+        // 3. Document chunk vector search
+        List<HybridSearchResult> docChunkResults;
+        try {
+            var chunkResults = unifiedSearchService.vectorSearchDocumentChunks(query, workspaceId, threshold);
+            docChunkResults = chunkResults.stream()
+                .map(cr -> new HybridSearchResult(
+                    cr.chunkId(),
+                    cr.filename(),
+                    null,
+                    null,
+                    cr.excerpt(),
+                    cr.score()))
+                .toList();
+        } catch (Exception e) {
+            log.warn("Document chunk vector search failed: {}", e.getMessage());
+            docChunkResults = List.of();
+        }
+
+        // 4. Document chunk FTS search
+        List<HybridSearchResult> docChunkFtsResults;
+        try {
+            var chunkFtsResults = unifiedSearchService.ftsSearchDocumentChunks(query, workspaceId);
+            docChunkFtsResults = chunkFtsResults.stream()
+                .map(cr -> new HybridSearchResult(
+                    cr.chunkId(),
+                    cr.filename(),
+                    null,
+                    null,
+                    cr.excerpt(),
+                    0))
+                .toList();
+        } catch (Exception e) {
+            log.warn("Document chunk FTS search failed: {}", e.getMessage());
+            docChunkFtsResults = List.of();
+        }
+
+        // Four-way RRF merge: FTS articles + vector articles + vector doc chunks + FTS doc chunks
         Map<UUID, Double> rrfScores = new HashMap<>();
         Map<UUID, HybridSearchResult> resultMap = new HashMap<>();
 
@@ -171,6 +216,18 @@ public class AiChatService {
         for (int j = 0; j < vectorResults.size(); j++) {
             HybridSearchResult r = vectorResults.get(j);
             rrfScores.merge(r.articleId(), 1.0 / (RRF_K + j), Double::sum);
+            resultMap.putIfAbsent(r.articleId(), r);
+        }
+
+        for (int k = 0; k < docChunkResults.size(); k++) {
+            HybridSearchResult r = docChunkResults.get(k);
+            rrfScores.merge(r.articleId(), 1.0 / (RRF_K + k), Double::sum);
+            resultMap.putIfAbsent(r.articleId(), r);
+        }
+
+        for (int l = 0; l < docChunkFtsResults.size(); l++) {
+            HybridSearchResult r = docChunkFtsResults.get(l);
+            rrfScores.merge(r.articleId(), 1.0 / (RRF_K + l), Double::sum);
             resultMap.putIfAbsent(r.articleId(), r);
         }
 
