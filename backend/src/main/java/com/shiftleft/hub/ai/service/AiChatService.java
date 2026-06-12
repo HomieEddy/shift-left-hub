@@ -341,9 +341,6 @@ public class AiChatService {
     }
 
     private String resolveWorkspaceName() {
-        UUID wsId = WorkspaceContextHolder.getCurrentWorkspaceId();
-        // TODO: resolve actual workspace name from WorkspaceRepository
-        // Currently falls back to UUID string when proper name resolution is not available
-        return wsId != null ? wsId.toString() : "this workspace";
+        return WorkspaceContextHolder.getCurrentWorkspaceId().toString();
     }
 }

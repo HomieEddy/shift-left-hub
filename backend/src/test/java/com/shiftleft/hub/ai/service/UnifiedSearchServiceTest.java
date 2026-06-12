@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
+
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +34,7 @@ class UnifiedSearchServiceTest {
         UUID chunkId = UUID.randomUUID();
         UUID documentId = UUID.randomUUID();
         Object[] row = {chunkId, documentId, "test content", 0, "test.txt", "text/plain"};
-        when(documentChunkRepository.ftsSearch("test", workspaceId, 10)).thenReturn(List.of(row));
+        when(documentChunkRepository.ftsSearch("test", workspaceId, 10)).thenReturn(Collections.singletonList(row));
 
         var results = unifiedSearchService.ftsSearchDocumentChunks("test", workspaceId);
 
@@ -59,7 +61,7 @@ class UnifiedSearchServiceTest {
         UUID documentId = UUID.randomUUID();
         Object[] row = {chunkId, documentId, "test content", 0, "doc.pdf", 0.85};
         when(documentChunkRepository.vectorSearch(eq(embedding), eq(workspaceId), eq(0.65), eq(10)))
-            .thenReturn(List.of(row));
+            .thenReturn(Collections.singletonList(row));
 
         var results = unifiedSearchService.vectorSearchDocumentChunks("test query", workspaceId, 0.65);
 
@@ -85,7 +87,7 @@ class UnifiedSearchServiceTest {
 
         Object[] row = {UUID.randomUUID(), UUID.randomUUID(), longContent, 0, "long.txt", 0.9};
         when(documentChunkRepository.vectorSearch(any(), eq(workspaceId), eq(0.65), eq(10)))
-            .thenReturn(List.of(row));
+            .thenReturn(Collections.singletonList(row));
 
         var results = unifiedSearchService.vectorSearchDocumentChunks("query", workspaceId, 0.65);
 

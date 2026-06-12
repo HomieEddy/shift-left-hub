@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -138,8 +139,8 @@ class CategoryServiceTest {
         Category cat = createCategory(categoryId, "Test", "Test", null);
         when(categoryRepository.findByWorkspaceIdAndId(workspaceId, categoryId)).thenReturn(Optional.of(cat));
         when(categoryRepository.existsByParentId(categoryId)).thenReturn(false);
-        when(articleRepository.findByCategoryId(categoryId)).thenReturn(List.of());
-        when(documentRepository.findByCategoryId(categoryId)).thenReturn(List.of());
+        when(articleRepository.countByCategoryId(categoryId)).thenReturn(0L);
+        when(documentRepository.countByCategoryId(categoryId)).thenReturn(0L);
 
         categoryService.deleteCategory(categoryId, null);
 
@@ -161,8 +162,7 @@ class CategoryServiceTest {
         Category cat = createCategory(categoryId, "Test", "Test", null);
         when(categoryRepository.findByWorkspaceIdAndId(workspaceId, categoryId)).thenReturn(Optional.of(cat));
         when(categoryRepository.existsByParentId(categoryId)).thenReturn(false);
-        var article = mock(com.shiftleft.hub.article.domain.Article.class);
-        when(articleRepository.findByCategoryId(categoryId)).thenReturn(List.of(article));
+        when(articleRepository.countByCategoryId(categoryId)).thenReturn(3L);
 
         assertThrows(CategoryInUseException.class, () -> categoryService.deleteCategory(categoryId, null));
     }
@@ -171,17 +171,16 @@ class CategoryServiceTest {
     void deleteCategory_shouldReassignContent() {
         Category cat = createCategory(categoryId, "Source", "Source", null);
         Category target = createCategory(parentId, "Target", "Cible", null);
-        var article = mock(com.shiftleft.hub.article.domain.Article.class);
         when(categoryRepository.findByWorkspaceIdAndId(workspaceId, categoryId)).thenReturn(Optional.of(cat));
         when(categoryRepository.findByWorkspaceIdAndId(workspaceId, parentId)).thenReturn(Optional.of(target));
         when(categoryRepository.existsByParentId(categoryId)).thenReturn(false);
-        when(articleRepository.findByCategoryId(categoryId)).thenReturn(List.of(article));
-        when(documentRepository.findByCategoryId(categoryId)).thenReturn(List.of());
+        when(articleRepository.countByCategoryId(categoryId)).thenReturn(2L);
+        when(documentRepository.countByCategoryId(categoryId)).thenReturn(1L);
 
         categoryService.deleteCategory(categoryId, parentId);
 
-        verify(article).setCategory(target);
-        verify(articleRepository).save(article);
+        verify(articleRepository).reassignCategory(categoryId, parentId);
+        verify(documentRepository).reassignCategory(categoryId, parentId);
         verify(categoryRepository).delete(cat);
     }
 
@@ -189,15 +188,14 @@ class CategoryServiceTest {
     void mergeCategories_shouldReassignContentAndDeleteSource() {
         Category source = createCategory(categoryId, "Source", "Source", null);
         Category target = createCategory(parentId, "Target", "Cible", null);
-        var article = mock(com.shiftleft.hub.article.domain.Article.class);
         when(categoryRepository.findByWorkspaceIdAndId(workspaceId, categoryId)).thenReturn(Optional.of(source));
         when(categoryRepository.findByWorkspaceIdAndId(workspaceId, parentId)).thenReturn(Optional.of(target));
-        when(articleRepository.findByCategoryId(categoryId)).thenReturn(List.of(article));
-        when(documentRepository.findByCategoryId(categoryId)).thenReturn(List.of());
+        when(categoryRepository.findByParentId(categoryId)).thenReturn(List.of());
 
         categoryService.mergeCategories(categoryId, parentId);
 
-        verify(article).setCategory(target);
+        verify(articleRepository).reassignCategory(categoryId, parentId);
+        verify(documentRepository).reassignCategory(categoryId, parentId);
         verify(categoryRepository).delete(source);
     }
 
