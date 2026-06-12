@@ -42,6 +42,7 @@ public class AiChatService {
     private static final int RRF_K = 60;
     private static final int MAX_HISTORY = 10;
     private static final int TOP_K = 10;
+    private static final int MAX_CONTEXT_RESULTS = 5;
 
     record HybridSearchResult(UUID articleId, String titleEn, String titleFr,
         String slug, String excerpt, double score) {
@@ -73,7 +74,7 @@ public class AiChatService {
                 return;
             }
 
-            List<HybridSearchResult> topResults = results.size() > 5 ? results.subList(0, 5) : results;
+            List<HybridSearchResult> topResults = results.size() > MAX_CONTEXT_RESULTS ? results.subList(0, MAX_CONTEXT_RESULTS) : results;
             String context = buildContext(topResults);
             String history = formatHistory(request.history());
 
@@ -338,6 +339,8 @@ public class AiChatService {
 
     private String resolveWorkspaceName() {
         UUID wsId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        // TODO: resolve actual workspace name from WorkspaceRepository
+        // Currently falls back to UUID string when proper name resolution is not available
         return wsId != null ? wsId.toString() : "this workspace";
     }
 }
