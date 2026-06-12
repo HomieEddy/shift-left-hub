@@ -5,23 +5,7 @@ import { NgClass } from '@angular/common';
   selector: 'app-icon-picker',
   standalone: true,
   imports: [NgClass],
-  template: `
-    <div class="grid grid-cols-5 gap-2">
-      @for (iconName of ICONS; track iconName) {
-        <button
-          type="button"
-          (click)="selectIcon(iconName)"
-          class="flex items-center justify-center w-10 h-10 rounded-lg border transition-colors text-sm"
-          [class.border-accent-info]="selectedIcon() === iconName"
-          [class.bg-accent-info-muted]="selectedIcon() === iconName"
-          [class.border-border-default]="selectedIcon() !== iconName"
-          [class.hover:bg-surface-tertiary]="selectedIcon() !== iconName"
-          [title]="iconName">
-          {{ iconName.charAt(0).toUpperCase() }}
-        </button>
-      }
-    </div>
-  `,
+  templateUrl: './icon-picker.component.html',
 })
 export class IconPickerComponent {
   readonly ICONS = [
