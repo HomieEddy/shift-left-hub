@@ -140,11 +140,16 @@ public class AuthService {
         String accessToken = jwtService.generateAccessTokenWithWorkspace(user, workspaceId);
         String refreshToken = jwtService.generateRefreshTokenWithWorkspace(user, workspaceId);
 
-        return buildAuthResponse(user, accessToken, refreshToken);
+        return buildAuthResponse(user, accessToken, refreshToken, workspaceId);
     }
 
     private AuthResponse buildAuthResponse(
             User user, String accessToken, String refreshToken) {
+        return buildAuthResponse(user, accessToken, refreshToken, user.getDefaultWorkspaceId());
+    }
+
+    private AuthResponse buildAuthResponse(
+            User user, String accessToken, String refreshToken, UUID effectiveWorkspaceId) {
         return new AuthResponse(
             accessToken,
             refreshToken,
@@ -152,7 +157,7 @@ public class AuthService {
             user.getEmail(),
             user.getRole().name(),
             user.getDisplayName(),
-            user.getDefaultWorkspaceId() != null ? user.getDefaultWorkspaceId().toString() : null
+            effectiveWorkspaceId != null ? effectiveWorkspaceId.toString() : null
         );
     }
 }

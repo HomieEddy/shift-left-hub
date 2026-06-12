@@ -21,7 +21,12 @@ export class WorkspaceRoleService {
   }
 
   refreshRole(): void {
-    this.fetchRole().subscribe();
+    this.fetchRole().subscribe({
+      error: () => {
+        console.error('Failed to refresh workspace role');
+        this.roleSignal.set('NONE');
+      },
+    });
   }
 
   clearRole(): void {

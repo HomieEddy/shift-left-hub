@@ -84,6 +84,9 @@ public class JwtService {
      * @return the signed access token string
      */
     public String generateAccessTokenWithWorkspace(User user, UUID workspaceId) {
+        if (workspaceId == null) {
+            throw new IllegalArgumentException("workspaceId must not be null");
+        }
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())
@@ -104,6 +107,9 @@ public class JwtService {
      * @return the signed refresh token string
      */
     public String generateRefreshTokenWithWorkspace(User user, UUID workspaceId) {
+        if (workspaceId == null) {
+            throw new IllegalArgumentException("workspaceId must not be null");
+        }
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("type", "refresh")

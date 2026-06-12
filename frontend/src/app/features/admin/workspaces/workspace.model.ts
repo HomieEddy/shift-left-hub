@@ -1,3 +1,5 @@
+export type WorkspaceRole = 'ADMIN' | 'MEMBER' | 'READ_ONLY';
+
 export interface WorkspaceDto {
   id: string;
   name: string;

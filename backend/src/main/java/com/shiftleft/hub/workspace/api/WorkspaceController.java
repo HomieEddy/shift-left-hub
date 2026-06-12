@@ -4,7 +4,6 @@ import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceResponse;
 import com.shiftleft.hub.workspace.domain.Workspace;
-import com.shiftleft.hub.workspace.service.WorkspaceInvitationService;
 import com.shiftleft.hub.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,6 @@ import java.util.UUID;
 public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
-    private final WorkspaceInvitationService invitationService;
     private final UserRepository userRepository;
 
     /**

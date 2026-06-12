@@ -22,6 +22,7 @@ CREATE INDEX IF NOT EXISTS idx_wsinvitation_status ON workspace_invitation(statu
 
 -- 2. Workspace soft-delete support: deleted_at TIMESTAMP (nullable, NULL = active)
 ALTER TABLE workspace ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP WITHOUT TIME ZONE;
+CREATE INDEX IF NOT EXISTS idx_workspace_deleted_at ON workspace(deleted_at);
 
 -- 3. Workspace icon metadata: icon VARCHAR (nullable, stores Lucide icon name like "building2")
 ALTER TABLE workspace ADD COLUMN IF NOT EXISTS icon VARCHAR(64);

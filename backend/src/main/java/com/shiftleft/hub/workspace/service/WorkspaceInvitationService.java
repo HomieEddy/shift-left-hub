@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -58,11 +59,15 @@ public class WorkspaceInvitationService {
             throw new IllegalArgumentException("A pending invitation already exists for this user");
         }
 
+        String normalizedRole = role != null ? role.toUpperCase() : "MEMBER";
+        if (!Set.of("ADMIN", "MEMBER", "READ_ONLY").contains(normalizedRole)) {
+            throw new IllegalArgumentException("Invalid role: " + role);
+        }
         WorkspaceInvitation invitation = WorkspaceInvitation.builder()
             .workspaceId(workspaceId)
             .invitedUserId(invitedUserId)
             .invitedBy(invitedByUserId)
-            .role(role != null ? role.toUpperCase() : "MEMBER")
+            .role(normalizedRole)
             .status("PENDING")
             .build();
         invitation = invitationRepository.save(invitation);
@@ -155,7 +160,7 @@ public class WorkspaceInvitationService {
         if (!"PENDING".equals(invitation.getStatus())) {
             throw new IllegalArgumentException("Only pending invitations can be revoked");
         }
-        invitation.setStatus("REJECTED");
+        invitation.setStatus("REVOKED");
         invitationRepository.save(invitation);
         log.info("Invitation {} revoked by admin", invitationId);
     }
@@ -168,12 +173,15 @@ public class WorkspaceInvitationService {
      */
     public WorkspaceInvitationResponse toResponse(WorkspaceInvitation invitation) {
         var invitedUser = userRepository.findById(invitation.getInvitedUserId()).orElse(null);
+        if (invitedUser == null) {
+            log.warn("Invitation {} references deleted user {}", invitation.getId(), invitation.getInvitedUserId());
+        }
         return new WorkspaceInvitationResponse(
             invitation.getId(),
             invitation.getWorkspaceId(),
             invitation.getInvitedUserId(),
-            invitedUser != null ? invitedUser.getEmail() : "unknown",
-            invitedUser != null ? invitedUser.getDisplayName() : "Unknown",
+            invitedUser != null ? invitedUser.getEmail() : "[deleted]",
+            invitedUser != null ? invitedUser.getDisplayName() : "[deleted]",
             invitation.getInvitedBy(),
             invitation.getRole(),
             invitation.getStatus(),
