@@ -25,12 +25,11 @@ services:
     container_name: shiftleft-backend
     ports:
       - "8082:8080"
+    command: ["./mvnw", "-Pdocker", "-Dcheckstyle.skip=true", "-Dmaven.test.skip=true", "spring-boot:run"]
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_FLYWAY_ENABLED: "false"
-      # Note: Flyway auto-configuration is not activating in this setup.
-      # Hibernate DDL update handles schema for dev. Flyway is the production strategy.
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shiftleft
       SPRING_DATASOURCE_USERNAME: shiftleft
       SPRING_DATASOURCE_PASSWORD: shiftleft
@@ -38,6 +37,7 @@ services:
       APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL:-admin@shiftleft.com}
       APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-ShiftLeft!2026}
       APP_AI_ENCRYPTION_KEY: ${APP_AI_ENCRYPTION_KEY:-local-dev-placeholder-key-2026}
+      APP_JWT_SECRET: ${APP_JWT_SECRET}
     volumes:
       - ./backend:/app
       - maven_cache:/home/app/.m2
