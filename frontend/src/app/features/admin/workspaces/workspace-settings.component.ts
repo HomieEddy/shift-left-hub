@@ -27,8 +27,8 @@ import { IconPickerComponent } from './icon-picker.component';
           <textarea id="ws-desc" [ngModel]="description()" (ngModelChange)="description.set($event)" rows="3"
             class="w-full rounded-lg border border-border-default px-3 py-2 text-sm bg-surface-primary text-text-primary"></textarea>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-text-secondary mb-2">{{ translationService.translate('admin.workspaces.settings.icon') }}</label>
+        <div role="group" [attr.aria-label]="translationService.translate('admin.workspaces.settings.icon')">
+          <span class="block text-sm font-medium text-text-secondary mb-2">{{ translationService.translate('admin.workspaces.settings.icon') }}</span>
           <app-icon-picker [selected]="icon()" (iconChange)="onIconChange($event)" />
         </div>
         <button (click)="saveSettings()" [disabled]="isSaving()"
