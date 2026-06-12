@@ -78,7 +78,7 @@ export class ArticleSearchComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (cats) => this.categories.set(cats),
-      error: () => {},
+      error: () => { /* categories are non-critical, silently ignore */ },
     });
   }
 

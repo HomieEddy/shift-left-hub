@@ -26,7 +26,18 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
 
     List<Document> findByCategoryId(UUID categoryId);
 
+    /**
+     * Counts documents assigned to a given category.
+     */
     long countByCategoryId(UUID categoryId);
+
+    /**
+     * Bulk-reassigns all documents from one category to another.
+     * @return number of documents updated
+     */
+    @Modifying
+    @Query("UPDATE Document d SET d.category.id = :categoryId WHERE d.category.id = :sourceId")
+    int reassignCategory(@Param("sourceId") UUID sourceId, @Param("categoryId") UUID categoryId);
 
     @Modifying
     @Query("UPDATE Document d SET d.category.id = :categoryId WHERE d.category.id = :sourceId")

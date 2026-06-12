@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Repository for Category entities with workspace-scoped query methods.
+ */
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     List<Category> findByWorkspaceIdOrderByNameEnAsc(UUID workspaceId);

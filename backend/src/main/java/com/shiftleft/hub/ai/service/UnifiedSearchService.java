@@ -11,6 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service for searching document chunks via full-text and vector similarity.
+ * Provides FTS and vector search methods for document chunks, used by
+ * AiChatService for the unified hybrid search (articles + document chunks).
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,6 +28,9 @@ public class UnifiedSearchService {
 
     private static final int TOP_K = 10;
 
+    /**
+     * Full-text search across document chunks using the tsvector column and GIN index.
+     */
     public List<DocumentChunkResult> ftsSearchDocumentChunks(String query, UUID workspaceId) {
         var results = documentChunkRepository.ftsSearch(query, workspaceId, TOP_K);
         return results.stream().map(row -> {
@@ -36,6 +44,9 @@ public class UnifiedSearchService {
         }).toList();
     }
 
+    /**
+     * Vector similarity search across document chunks using pgvector cosine distance.
+     */
     public List<DocumentChunkResult> vectorSearchDocumentChunks(String query, UUID workspaceId, double threshold) {
         float[] queryEmbedding;
         try {
@@ -58,8 +69,12 @@ public class UnifiedSearchService {
         }).toList();
     }
 
+    /**
+     * Result record for a document chunk search hit.
+     */
     public record DocumentChunkResult(
         UUID chunkId, UUID documentId, String filename,
         String content, String excerpt, int chunkIndex, double score
-    ) {}
+    ) {
+    }
 }

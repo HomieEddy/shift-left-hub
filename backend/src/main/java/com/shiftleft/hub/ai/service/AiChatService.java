@@ -74,7 +74,8 @@ public class AiChatService {
                 return;
             }
 
-            List<HybridSearchResult> topResults = results.size() > MAX_CONTEXT_RESULTS ? results.subList(0, MAX_CONTEXT_RESULTS) : results;
+            List<HybridSearchResult> topResults = results.size() > MAX_CONTEXT_RESULTS
+                ? results.subList(0, MAX_CONTEXT_RESULTS) : results;
             String context = buildContext(topResults);
             String history = formatHistory(request.history());
 
@@ -158,10 +159,10 @@ public class AiChatService {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
 
         // 1. FTS search — articles (existing)
-        List<HybridSearchResult> ftsResults = ftsSearch(query);
+        final List<HybridSearchResult> ftsResults = ftsSearch(query);
 
         // 2. Vector search — articles (existing)
-        List<HybridSearchResult> vectorResults;
+        final List<HybridSearchResult> vectorResults;
         try {
             vectorResults = vectorSearch(query, threshold);
         } catch (Exception e) {
@@ -316,7 +317,9 @@ public class AiChatService {
     private String buildPrompt(String userMessage, String context, String history, String systemPrompt) {
         String effectivePrompt = (systemPrompt != null && !systemPrompt.isBlank())
             ? systemPrompt
-            : "You are a helpful assistant using the workspace knowledge base. Answer based on the workspace's knowledge base articles and uploaded documents. Use Markdown formatting with clear sections.";
+            : "You are a helpful assistant using the workspace knowledge base. Answer based on the"
+            + " workspace's knowledge base articles and uploaded documents. Use Markdown formatting"
+            + " with clear sections.";
 
         effectivePrompt = effectivePrompt
             .replace("{workspace_name}", resolveWorkspaceName())

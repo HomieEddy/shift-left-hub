@@ -15,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service for managing workspace-scoped category taxonomy.
+ * Provides CRUD operations, merge, and reassign-on-delete functionality.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,6 +29,9 @@ public class CategoryService {
     private final ArticleRepository articleRepository;
     private final DocumentRepository documentRepository;
 
+    /**
+     * Returns all categories for the current workspace as a flat list.
+     */
     public List<CategoryResponse> getAllCategories() {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         return categoryRepository.findByWorkspaceIdOrderByNameEnAsc(workspaceId).stream()
@@ -32,6 +39,9 @@ public class CategoryService {
             .toList();
     }
 
+    /**
+     * Returns a single category by ID within the current workspace.
+     */
     public CategoryResponse getCategory(UUID id) {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         Category category = categoryRepository.findByWorkspaceIdAndId(workspaceId, id)
@@ -39,6 +49,9 @@ public class CategoryService {
         return CategoryResponse.from(category, category.getChildren().size());
     }
 
+    /**
+     * Creates a new category with optional parent reference.
+     */
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request) {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
@@ -57,6 +70,9 @@ public class CategoryService {
         return CategoryResponse.from(saved, 0L);
     }
 
+    /**
+     * Updates an existing category's name and parent reference.
+     */
     @Transactional
     public CategoryResponse updateCategory(UUID id, CategoryRequest request) {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
@@ -78,6 +94,10 @@ public class CategoryService {
         return CategoryResponse.from(saved, saved.getChildren().size());
     }
 
+    /**
+     * Deletes a category. If it has content and reassignToId is provided,
+     * reassigns all articles and documents to the target category.
+     */
     @Transactional
     public void deleteCategory(UUID id, UUID reassignToId) {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
@@ -105,6 +125,9 @@ public class CategoryService {
         log.info("Category {} deleted from workspace {}", id, workspaceId);
     }
 
+    /**
+     * Merges source category into target, reassigning all content and child categories.
+     */
     @Transactional
     public CategoryResponse mergeCategories(UUID sourceId, UUID targetId) {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();

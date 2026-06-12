@@ -142,7 +142,7 @@ export class TaxonomyTreeComponent implements OnInit {
   }
 
   mergeCategories(): void {
-    if (!this.mergeSourceId || !this.mergeTargetId) return;
+    if (this.mergeSourceId == null || this.mergeTargetId == null) return;
     const request: MergeRequest = { sourceCategoryId: this.mergeSourceId, targetCategoryId: this.mergeTargetId };
     this.categoryService.merge(request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
@@ -154,7 +154,7 @@ export class TaxonomyTreeComponent implements OnInit {
 
   onDrop(draggedId: string, targetId: string): void {
     const cat = this.rawCategories().find(c => c.id === draggedId);
-    if (!cat) return;
+    if (cat == null) return;
     const request: CategoryRequest = { nameEn: cat.nameEn, nameFr: cat.nameFr, parentId: targetId };
     this.categoryService.update(draggedId, request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.loadCategories(),
@@ -165,7 +165,7 @@ export class TaxonomyTreeComponent implements OnInit {
     const parts: string[] = [cat.nameEn];
     let current = cat;
     const map = new Map(this.rawCategories().map(c => [c.id, c]));
-    while (current.parentId && map.has(current.parentId)) {
+    while (current.parentId != null && map.has(current.parentId)) {
       current = map.get(current.parentId)!;
       parts.unshift(current.nameEn);
     }
@@ -180,7 +180,7 @@ export class TaxonomyTreeComponent implements OnInit {
     let depth = 0;
     let current = this.rawCategories().find(c => c.id === catId);
     const map = new Map(this.rawCategories().map(c => [c.id, c]));
-    while (current && current.parentId && map.has(current.parentId)) {
+    while (current != null && current.parentId != null && map.has(current.parentId)) {
       current = map.get(current.parentId)!;
       depth++;
     }

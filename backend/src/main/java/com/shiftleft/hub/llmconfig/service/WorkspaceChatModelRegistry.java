@@ -59,6 +59,9 @@ public class WorkspaceChatModelRegistry {
         return workspaceLlmConfigRepository.findByWorkspaceId(workspaceId).orElse(null);
     }
 
+    /**
+     * Returns the custom system prompt for a workspace, or null if not configured.
+     */
     public String getSystemPrompt(UUID workspaceId) {
         return workspaceLlmConfigRepository.findByWorkspaceId(workspaceId)
             .map(WorkspaceLlmConfig::getSystemPrompt)

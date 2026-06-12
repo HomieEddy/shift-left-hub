@@ -32,7 +32,7 @@ export class TaxonomyBulkComponent implements OnInit {
 
   applyCategory(): void {
     const catId = this.selectedCategoryId();
-    if (!catId) return;
+    if (catId == null) return;
     this.isApplying.set(true);
     this.applyMessage.set('');
     const tab = this.activeTab();

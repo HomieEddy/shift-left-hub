@@ -16,7 +16,7 @@ export class CategoryService {
   update(id: string, request: CategoryRequest) { return this.http.put<CategoryDto>(`${this.baseUrl}/${id}`, request); }
 
   delete(id: string, reassignTo?: string) {
-    const params = reassignTo ? { reassignTo } : {};
+    const params = reassignTo != null ? { reassignTo } : {};
     return this.http.delete(`${this.baseUrl}/${id}`, { params });
   }
 

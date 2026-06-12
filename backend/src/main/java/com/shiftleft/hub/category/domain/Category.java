@@ -24,6 +24,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * JPA entity representing a hierarchical category within a workspace.
+ * Supports self-referencing parent-child relationships for arbitrary nesting depth.
+ */
 @Entity
 @Table(name = "category")
 @Getter
@@ -61,8 +65,12 @@ public class Category extends WorkspaceAwareEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Category category)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Category category)) {
+            return false;
+        }
         return id != null && id.equals(category.id);
     }
 

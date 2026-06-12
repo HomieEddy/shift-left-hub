@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Admin REST controller for workspace-scoped category management.
+ * Provides CRUD, merge, and reassign-on-delete endpoints.
+ */
 @RestController
 @RequestMapping("/api/admin/categories")
 @RequiredArgsConstructor

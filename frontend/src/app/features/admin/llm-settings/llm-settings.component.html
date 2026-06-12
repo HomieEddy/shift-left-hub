@@ -171,15 +171,15 @@
         <div class="flex flex-wrap gap-2 mb-3">
           <button type="button" (click)="insertTemplateVariable('{workspace_name}')"
                   class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20">
-            {workspace_name}
+            {{ '{' }}workspace_name{{ '}' }}
           </button>
           <button type="button" (click)="insertTemplateVariable('{domain}')"
                   class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20">
-            {domain}
+            {{ '{' }}domain{{ '}' }}
           </button>
           <button type="button" (click)="insertTemplateVariable('{categories}')"
                   class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20">
-            {categories}
+            {{ '{' }}categories{{ '}' }}
           </button>
         </div>
 

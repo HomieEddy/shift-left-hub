@@ -326,8 +326,15 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     List<Article> findByCategoryId(UUID categoryId);
 
+    /**
+     * Counts articles assigned to a given category.
+     */
     long countByCategoryId(UUID categoryId);
 
+    /**
+     * Bulk-reassigns all articles from one category to another.
+     * @return number of articles updated
+     */
     @Modifying
     @Query("UPDATE Article a SET a.category.id = :categoryId WHERE a.category.id = :sourceId")
     int reassignCategory(@Param("sourceId") UUID sourceId, @Param("categoryId") UUID categoryId);
