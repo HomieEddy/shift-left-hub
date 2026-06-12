@@ -1,17 +1,21 @@
 import { Component, DestroyRef, inject, isDevMode, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
+import { WorkspaceRoleService } from './core/auth/workspace-role.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
 import { KcsDraftService } from './features/admin/kcs-draft.service';
 import { interval, switchMap, filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { 
-  LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare, 
-  LucideTicket, LucideLayoutList, LucideUsers, LucideFileText, 
-  LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard, 
-  LucideX, LucideUpload
+import {
+  LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare,
+  LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
+  LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
+  LucideX, LucideUpload, LucideChevronsUpDown, LucideCheck, LucideBuilding2,
+  LucideBell, LucideUsers as LucideUsersIcon, LucideLoader2
 } from '@lucide/angular';
 import { ToastContainer } from './shared/ui/toast/toast-container';
+import { WorkspaceSwitcherComponent } from './features/workspace-switcher/workspace-switcher.component';
+import { InvitationBadgeComponent } from './features/workspace-switcher/invitation-badge.component';
 
 @Component({
   selector: 'app-root',
@@ -21,14 +25,16 @@ import { ToastContainer } from './shared/ui/toast/toast-container';
     LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare,
     LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
     LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
-    LucideX, LucideUpload,
-    ToastContainer
+    LucideX, LucideUpload, LucideChevronsUpDown, LucideCheck, LucideBuilding2,
+    LucideBell, LucideUsersIcon, LucideLoader2,
+    ToastContainer, WorkspaceSwitcherComponent, InvitationBadgeComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
   protected authService = inject(AuthService);
+  protected workspaceRoleService = inject(WorkspaceRoleService);
   protected translationService = inject(TranslationService);
   private router = inject(Router);
   private kcsDraftService = inject(KcsDraftService);
