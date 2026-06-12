@@ -38,7 +38,7 @@
                  draggable="true"
                  (dragstart)="onDragStart($event, node.category.id)"
                  (dragover)="$event.preventDefault()"
-                 (drop)="onDrop(node.category.id, $event)">
+                 (drop)="draggedCategoryId != null && onDrop(draggedCategoryId, node.category.id)">
               <button type="button" (click)="toggleExpand(node)" (keydown.enter)="toggleExpand(node)"
                       class="w-5 h-5 flex items-center justify-center text-text-tertiary hover:text-text-secondary">
                 @if (node.children.length > 0) {
@@ -68,7 +68,30 @@
             @if (node.expanded && node.children.length > 0) {
               <div class="border-l-2 border-border-default ml-3">
                 @for (child of node.children; track child.category.id) {
-                  <app-taxonomy-tree-node [node]="child" (onDrop)="onDrop($event.draggedId, $event.targetId)"></app-taxonomy-tree-node>
+                  <div class="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-surface-secondary group ml-4">
+                    <button type="button" (click)="toggleExpand(child)" (keydown.enter)="toggleExpand(child)"
+                            class="w-5 h-5 flex items-center justify-center text-text-tertiary hover:text-text-secondary">
+                      @if (child.children.length > 0) {
+                        <svg [class.rotate-90]="child.expanded" class="w-4 h-4 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+                        </svg>
+                      } @else {
+                        <span class="w-4"></span>
+                      }
+                    </button>
+                    <span class="flex-1 text-sm text-text-primary">{{ child.category.nameEn }}</span>
+                    <span class="text-xs text-text-tertiary">{{ child.category.nameFr }}</span>
+                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button type="button" (click)="openEdit(child.category)" (keydown.enter)="openEdit(child.category)"
+                              class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium">
+                        {{ translationService.translate('admin.taxonomy.edit') }}
+                      </button>
+                      <button type="button" (click)="confirmDelete(child.category)" (keydown.enter)="confirmDelete(child.category)"
+                              class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium">
+                        {{ translationService.translate('admin.articles.delete') }}
+                      </button>
+                    </div>
+                  </div>
                 }
               </div>
             }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { CategoryDto, CategoryRequest, MergeRequest } from './category.model';
 
@@ -16,8 +16,9 @@ export class CategoryService {
   update(id: string, request: CategoryRequest) { return this.http.put<CategoryDto>(`${this.baseUrl}/${id}`, request); }
 
   delete(id: string, reassignTo?: string) {
-    const params = reassignTo != null ? { reassignTo } : {};
-    return this.http.delete(`${this.baseUrl}/${id}`, { params });
+    const params = new HttpParams();
+    const finalParams = reassignTo != null ? params.set('reassignTo', reassignTo) : params;
+    return this.http.delete(`${this.baseUrl}/${id}`, { params: finalParams });
   }
 
   merge(request: MergeRequest) { return this.http.post<CategoryDto>(`${this.baseUrl}/merge`, request); }

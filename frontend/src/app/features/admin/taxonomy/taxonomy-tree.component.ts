@@ -16,7 +16,7 @@ export class TaxonomyTreeComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
-  private rawCategories = signal<CategoryDto[]>([]);
+  protected rawCategories = signal<CategoryDto[]>([]);
   treeNodes = signal<TreeNode[]>([]);
   isLoading = signal(true);
   errorMessage = signal('');
@@ -150,6 +150,12 @@ export class TaxonomyTreeComponent implements OnInit {
         this.loadCategories();
       },
     });
+  }
+
+  protected draggedCategoryId: string | null = null;
+
+  onDragStart(event: DragEvent, categoryId: string): void {
+    this.draggedCategoryId = categoryId;
   }
 
   onDrop(draggedId: string, targetId: string): void {
