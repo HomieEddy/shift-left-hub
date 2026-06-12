@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -269,14 +270,17 @@ public class AiChatService {
         return docs.stream()
             .map(doc -> {
                 Map<String, Object> meta = doc.getMetadata();
-                UUID articleId = meta.containsKey("articleId")
-                    ? UUID.fromString((String) meta.get("articleId"))
-                    : UUID.randomUUID();
+                if (!meta.containsKey("articleId")) {
+                    log.warn("Vector result missing articleId, skipping");
+                    return null;
+                }
+                UUID articleId = UUID.fromString((String) meta.get("articleId"));
                 String title = (String) meta.getOrDefault("title", "");
                 String slug = (String) meta.getOrDefault("slug", "");
                 double score = doc.getScore() != null ? doc.getScore() : 0;
                 return new HybridSearchResult(articleId, title, "", slug, "", score);
             })
+            .filter(Objects::nonNull)
             .toList();
     }
 
