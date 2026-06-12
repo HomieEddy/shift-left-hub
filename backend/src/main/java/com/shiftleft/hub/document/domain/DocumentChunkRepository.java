@@ -23,7 +23,7 @@ public interface DocumentChunkRepository extends JpaRepository<DocumentChunk, UU
         WITH q AS (
             SELECT plainto_tsquery('english', :query) AS en_query
         )
-        SELECT dc.id, dc.document_id, dc.content, dc.chunk_index, d.filename, d.mime_type
+        SELECT dc.id, dc.document_id, dc.content, dc.chunk_index, d.filename
         FROM document_chunk dc
         JOIN document d ON d.id = dc.document_id
         CROSS JOIN q
