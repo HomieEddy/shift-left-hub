@@ -56,6 +56,12 @@ public class Workspace {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    @Column(length = 64)
+    private String icon;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

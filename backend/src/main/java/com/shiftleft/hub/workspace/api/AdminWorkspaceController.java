@@ -139,7 +139,7 @@ public class AdminWorkspaceController {
     private WorkspaceResponse toResponse(Workspace w) {
         return new WorkspaceResponse(
             w.getId(), w.getName(), w.getSlug(),
-            w.getDescription(), w.getLogoUrl(),
+            w.getDescription(), w.getLogoUrl(), w.getIcon(),
             workspaceService.getMemberCount(w.getId()),
             w.getCreatedBy(), w.getCreatedAt(), w.getUpdatedAt());
     }
