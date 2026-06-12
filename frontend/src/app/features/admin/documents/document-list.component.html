@@ -46,6 +46,18 @@
       <p class="text-text-secondary text-sm mb-1">{{ translationService.translate('admin.documents.drop-zone') }}</p>
       <p class="text-text-tertiary text-xs">{{ translationService.translate('admin.documents.accepted-types') }}</p>
     </div>
+
+    <!-- Category selector for upload -->
+    <div class="mt-4">
+      <label for="doc-category" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.documents.category') }}</label>
+      <select id="doc-category" [(ngModel)]="selectedCategoryId"
+              class="w-full max-w-xs px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm">
+        <option [ngValue]="null">{{ translationService.translate('admin.documents.categoryNone') }}</option>
+        @for (cat of categories(); track cat.id) {
+          <option [ngValue]="cat.id">{{ cat.nameEn }}</option>
+        }
+      </select>
+    </div>
   </div>
 
   <!-- Document list -->

@@ -19,6 +19,7 @@ export interface ArticleDto {
   slug: string;
   excerpt: string | null;
   featuredImage: string | null;
+  categoryId: string | null;
   status: ArticleStatus;
   viewCount: number;
   publishedAt: string | null;
@@ -39,6 +40,7 @@ export interface CreateArticleRequest {
   excerpt?: string;
   featuredImage?: string;
   tagIds?: string[];
+  categoryId?: string;
 }
 
 export interface UpdateArticleRequest {
@@ -49,6 +51,7 @@ export interface UpdateArticleRequest {
   excerpt?: string;
   featuredImage?: string;
   tagIds?: string[];
+  categoryId?: string;
 }
 
 export interface ArticleSearchResult {

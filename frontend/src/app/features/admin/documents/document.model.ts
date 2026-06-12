@@ -8,6 +8,7 @@ export interface DocumentDto {
   errorMessage: string | null;
   fileSize: number;
   chunkCount: number;
+  categoryId: string | null;
   createdAt: string;
   updatedAt: string;
 }
