@@ -20,4 +20,6 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
     List<Document> findByWorkspaceIdAndStatus(UUID workspaceId, DocumentStatus status);
 
     long countByWorkspaceIdAndStatus(UUID workspaceId, DocumentStatus status);
+
+    List<Document> findByCategoryId(UUID categoryId);
 }
