@@ -3,6 +3,7 @@ package com.shiftleft.hub.article.domain;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -322,6 +323,27 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
      * @return an Optional containing the article if found
      */
     Optional<Article> findBySourceTicketId(UUID sourceTicketId);
+
+    List<Article> findByCategoryId(UUID categoryId);
+
+    /**
+     * Counts articles assigned to a given category.
+     *
+     * @param categoryId the category UUID
+     * @return number of articles in the category
+     */
+    long countByCategoryId(UUID categoryId);
+
+    /**
+     * Bulk-reassigns all articles from one category to another.
+     *
+     * @param sourceId   the source category UUID
+     * @param categoryId the target category UUID
+     * @return number of articles updated
+     */
+    @Modifying
+    @Query("UPDATE Article a SET a.category.id = :categoryId WHERE a.category.id = :sourceId")
+    int reassignCategory(@Param("sourceId") UUID sourceId, @Param("categoryId") UUID categoryId);
 
     /**
      * Counts articles that originated from tickets by their status.

@@ -73,6 +73,8 @@ public class WorkspaceLlmConfigService {
             config.setSimilarityThreshold(request.similarityThreshold());
         }
 
+        config.setSystemPrompt(request.systemPrompt());
+
         config = repository.save(config);
         chatModelRegistry.evict(workspaceId);
         log.info("LLM config saved for workspace {} (provider: {})", workspaceId, config.getLlmProvider());

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -36,10 +37,12 @@ public class AiChatService {
     private final VectorStore vectorStore;
     private final AiConfigService aiConfigService;
     private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
+    private final UnifiedSearchService unifiedSearchService;
 
     private static final int RRF_K = 60;
     private static final int MAX_HISTORY = 10;
     private static final int TOP_K = 10;
+    private static final int MAX_CONTEXT_RESULTS = 5;
 
     record HybridSearchResult(UUID articleId, String titleEn, String titleFr,
         String slug, String excerpt, double score) {
@@ -71,12 +74,14 @@ public class AiChatService {
                 return;
             }
 
-            List<HybridSearchResult> topResults = results.size() > 5 ? results.subList(0, 5) : results;
+            List<HybridSearchResult> topResults = results.size() > MAX_CONTEXT_RESULTS
+                ? results.subList(0, MAX_CONTEXT_RESULTS) : results;
             String context = buildContext(topResults);
             String history = formatHistory(request.history());
 
             ChatClient chatClient = workspaceChatModelRegistry.getChatClient(workspaceId);
-            String fullPrompt = buildPrompt(request.message(), context, history);
+            String systemPrompt = workspaceChatModelRegistry.getSystemPrompt(workspaceId);
+            String fullPrompt = buildPrompt(request.message(), context, history, systemPrompt);
             AtomicReference<String> fullResponse = new AtomicReference<>("");
             final Disposable[] subscription = {null};
 
@@ -104,7 +109,9 @@ public class AiChatService {
                             r.articleId(),
                             r.titleEn() != null ? r.titleEn() : r.titleFr(),
                             r.slug(),
-                            r.score()))
+                            r.score(),
+                            r.slug() == null ? "document" : null,
+                            r.excerpt()))
                             .toList();
                         emitter.send(SseEmitter.event().name("message")
                             .data(new StreamEvent("done", fullResponse.get(), sourceRefs)));
@@ -149,7 +156,12 @@ public class AiChatService {
     }
 
     List<HybridSearchResult> hybridSearch(String query, double threshold) {
-        List<HybridSearchResult> ftsResults = ftsSearch(query);
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+
+        // 1. FTS search — articles (existing)
+        final List<HybridSearchResult> ftsResults = ftsSearch(query);
+
+        // 2. Vector search — articles (existing)
         List<HybridSearchResult> vectorResults;
         try {
             vectorResults = vectorSearch(query, threshold);
@@ -158,6 +170,43 @@ public class AiChatService {
             vectorResults = List.of();
         }
 
+        // 3. Document chunk vector search
+        List<HybridSearchResult> docChunkResults;
+        try {
+            var chunkResults = unifiedSearchService.vectorSearchDocumentChunks(query, workspaceId, threshold);
+            docChunkResults = chunkResults.stream()
+                .map(cr -> new HybridSearchResult(
+                    cr.chunkId(),
+                    cr.filename(),
+                    null,
+                    null,
+                    cr.excerpt(),
+                    cr.score()))
+                .toList();
+        } catch (Exception e) {
+            log.warn("Document chunk vector search failed: {}", e.getMessage());
+            docChunkResults = List.of();
+        }
+
+        // 4. Document chunk FTS search
+        List<HybridSearchResult> docChunkFtsResults;
+        try {
+            var chunkFtsResults = unifiedSearchService.ftsSearchDocumentChunks(query, workspaceId);
+            docChunkFtsResults = chunkFtsResults.stream()
+                .map(cr -> new HybridSearchResult(
+                    cr.chunkId(),
+                    cr.filename(),
+                    null,
+                    null,
+                    cr.excerpt(),
+                    0))
+                .toList();
+        } catch (Exception e) {
+            log.warn("Document chunk FTS search failed: {}", e.getMessage());
+            docChunkFtsResults = List.of();
+        }
+
+        // Four-way RRF merge: FTS articles + vector articles + vector doc chunks + FTS doc chunks
         Map<UUID, Double> rrfScores = new HashMap<>();
         Map<UUID, HybridSearchResult> resultMap = new HashMap<>();
 
@@ -170,6 +219,18 @@ public class AiChatService {
         for (int j = 0; j < vectorResults.size(); j++) {
             HybridSearchResult r = vectorResults.get(j);
             rrfScores.merge(r.articleId(), 1.0 / (RRF_K + j), Double::sum);
+            resultMap.putIfAbsent(r.articleId(), r);
+        }
+
+        for (int k = 0; k < docChunkResults.size(); k++) {
+            HybridSearchResult r = docChunkResults.get(k);
+            rrfScores.merge(r.articleId(), 1.0 / (RRF_K + k), Double::sum);
+            resultMap.putIfAbsent(r.articleId(), r);
+        }
+
+        for (int l = 0; l < docChunkFtsResults.size(); l++) {
+            HybridSearchResult r = docChunkFtsResults.get(l);
+            rrfScores.merge(r.articleId(), 1.0 / (RRF_K + l), Double::sum);
             resultMap.putIfAbsent(r.articleId(), r);
         }
 
@@ -211,14 +272,17 @@ public class AiChatService {
         return docs.stream()
             .map(doc -> {
                 Map<String, Object> meta = doc.getMetadata();
-                UUID articleId = meta.containsKey("articleId")
-                    ? UUID.fromString((String) meta.get("articleId"))
-                    : UUID.randomUUID();
+                if (!meta.containsKey("articleId")) {
+                    log.warn("Vector result missing articleId, skipping");
+                    return null;
+                }
+                UUID articleId = UUID.fromString((String) meta.get("articleId"));
                 String title = (String) meta.getOrDefault("title", "");
                 String slug = (String) meta.getOrDefault("slug", "");
                 double score = doc.getScore() != null ? doc.getScore() : 0;
                 return new HybridSearchResult(articleId, title, "", slug, "", score);
             })
+            .filter(Objects::nonNull)
             .toList();
     }
 
@@ -250,26 +314,33 @@ public class AiChatService {
         return sb.toString();
     }
 
-    private String buildPrompt(String userMessage, String context, String history) {
+    private String buildPrompt(String userMessage, String context, String history, String systemPrompt) {
+        String effectivePrompt = (systemPrompt != null && !systemPrompt.isBlank())
+            ? systemPrompt
+            : "You are a helpful assistant using the workspace knowledge base. Answer based on the"
+            + " workspace's knowledge base articles and uploaded documents. Use Markdown formatting"
+            + " with clear sections.";
+
+        effectivePrompt = effectivePrompt
+            .replace("{workspace_name}", resolveWorkspaceName())
+            // TODO: Resolve {domain} and {categories} from workspace configuration
+            // when workspace domain/category context is available
+            .replace("{domain}", "")
+            .replace("{categories}", "");
+
         return """
-You are an IT support assistant. Use the following knowledge base articles to answer the user's question.
-Provide step-by-step resolution guides based on the articles. If the articles don't answer the question,
-say you couldn't find relevant information and offer to escalate.
+    %s
 
-Formatting rules for every response:
-- Use Markdown.
-- Start with a short summary sentence.
-- Use a section titled "### Steps" with a numbered list for actions.
-- Use bullet points for notes, prerequisites, warnings, or alternatives.
-- Add blank lines between sections and between paragraphs.
-- Keep each step concise and on its own line.
+    %s
 
-%s
+    Conversation history:
+    %s
 
-Conversation history:
-%s
+    User: %s
+    Assistant:""".formatted(effectivePrompt, context, history, userMessage);
+    }
 
-User: %s
-Assistant:""".formatted(context, history, userMessage);
+    private String resolveWorkspaceName() {
+        return WorkspaceContextHolder.getCurrentWorkspaceId().toString();
     }
 }

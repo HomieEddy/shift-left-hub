@@ -80,7 +80,15 @@ Plans:
   3. Workspace admin can customize the AI assistant's system prompt using template variables ({workspace_name}, {domain}) for domain-appropriate responses
   4. Hybrid search returns unified RRF-ranked results from both KB articles and ingested document chunks in a single result set
   5. All AI queries and similarity searches are scoped exclusively to the active workspace's knowledge base
-**Plans**: TBD
+**Plans**: 6 plans in 4 waves
+
+Plans:
+- [ ] 11-01-PLAN.md — Database schema + JPA entities (Flyway V5, Category entity, category_id FKs, system_prompt column, doc chunk tsvector)
+- [ ] 11-02-PLAN.md — Category admin API + service (AdminCategoryController, CRUD, merge, reassign)
+- [ ] 11-03-PLAN.md — System prompt + AI customization (template variables, buildPrompt refactor)
+- [ ] 11-04-PLAN.md — Unified hybrid search (document chunk FTS + vector, three-way RRF merge)
+- [ ] 11-05-PLAN.md — Taxonomy management UI (tree view, article/doc selectors, bulk management)
+- [ ] 11-06-PLAN.md — AI customization UI + search display (system prompt editor, category badges, doc citations)
 
 ### Phase 12: Workspace Management UI
 **Goal**: Users can manage their workspaces end-to-end — switch between workspaces, invite members, administer settings, and handle lifecycle operations
@@ -109,9 +117,9 @@ Plans:
 | 8. Testing & CI/CD | v1.0 | 8/8 | Complete | 2026-06-08 |
 | 9. Workspace Foundation | v2.0 | 4/4 | Complete | 2026-06-10 |
 | 10. Document Ingestion + BYO LLM | v2.0 | 4/4 | Complete | 2026-06-10 |
-| 11. Domain-Agnostic AI | v2.0 | — | Planning | - |
+| 11. Domain-Agnostic AI | v2.0 | 0/6 | Planning | - |
 | 12. Workspace Management UI | v2.0 | — | Planning | - |
 
 ---
 
-*Last updated: 2026-06-10 — Phase 10 executed (4 plans in 3 waves — complete)*
+*Last updated: 2026-06-12 — Phase 11 planned (6 plans in 4 waves)*

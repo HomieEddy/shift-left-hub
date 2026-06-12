@@ -1,0 +1,42 @@
+<div class="bg-surface-primary rounded-xl border border-border-default p-6">
+  <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.bulk') }}</h3>
+
+  <div class="flex items-center gap-1 border-b border-border-default mb-4">
+    <button type="button" (click)="activeTab.set('articles')"
+            class="px-4 py-2 text-sm font-medium border-b-2 transition-colors"
+            [class.border-primary-600]="activeTab() === 'articles'"
+            [class.text-primary-600]="activeTab() === 'articles'"
+            [class.border-transparent]="activeTab() !== 'articles'"
+            [class.text-text-tertiary]="activeTab() !== 'articles'">
+      {{ translationService.translate('admin.taxonomy.bulk.articles') }}
+    </button>
+    <button type="button" (click)="activeTab.set('documents')"
+            class="px-4 py-2 text-sm font-medium border-b-2 transition-colors"
+            [class.border-primary-600]="activeTab() === 'documents'"
+            [class.text-primary-600]="activeTab() === 'documents'"
+            [class.border-transparent]="activeTab() !== 'documents'"
+            [class.text-text-tertiary]="activeTab() !== 'documents'">
+      {{ translationService.translate('admin.taxonomy.bulk.documents') }}
+    </button>
+  </div>
+
+  <div class="flex items-end gap-3">
+    <div class="flex-1">
+      <label for="bulk-category" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.articles.category') }}</label>
+      <select id="bulk-category" [(ngModel)]="selectedCategoryId" class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+        <option [ngValue]="null">{{ translationService.translate('admin.articles.categoryNone') }}</option>
+        @for (cat of categories(); track cat.id) {
+          <option [ngValue]="cat.id">{{ cat.nameEn }}</option>
+        }
+      </select>
+    </div>
+    <button type="button" (click)="applyCategory()" [disabled]="selectedCategoryId() === null || isApplying()"
+            class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors">
+      {{ translationService.translate('admin.taxonomy.bulk.apply') }}
+    </button>
+  </div>
+
+  @if (applyMessage()) {
+    <p class="text-sm text-accent-success mt-3">{{ applyMessage() }}</p>
+  }
+</div>

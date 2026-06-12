@@ -66,6 +66,11 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
   {
+    path: 'admin/taxonomy',
+    loadComponent: () => import('./features/admin/taxonomy/taxonomy-tree.component').then(m => m.TaxonomyTreeComponent),
+    canActivate: [adminGuard],
+  },
+  {
     path: 'admin/settings/llm',
     loadComponent: () => import('./features/admin/llm-settings/llm-settings.component').then(m => m.LlmSettingsComponent),
     canActivate: [adminGuard],

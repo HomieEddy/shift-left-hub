@@ -25,6 +25,7 @@ public record StreamEvent(
      * @param slug      the article slug
      * @param score     the relevance score
      */
-    public record SourceRef(UUID articleId, String title, String slug, double score) {
+    public record SourceRef(UUID articleId, String title, String slug, double score,
+                             @Nullable String filename, @Nullable String excerpt) {
     }
 }

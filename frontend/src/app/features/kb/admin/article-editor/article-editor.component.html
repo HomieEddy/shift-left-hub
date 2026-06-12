@@ -164,6 +164,18 @@
           }
         </div>
       </div>
+
+      <!-- Category Selector -->
+      <div>
+        <label for="article-category" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.articles.category') }}</label>
+        <select id="article-category" [(ngModel)]="selectedCategoryId"
+                class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm">
+          <option [ngValue]="null">{{ translationService.translate('admin.articles.categoryNone') }}</option>
+          @for (cat of categories(); track cat.id) {
+            <option [ngValue]="cat.id">{{ cat.nameEn }}</option>
+          }
+        </select>
+      </div>
     </div>
   }
 </div>

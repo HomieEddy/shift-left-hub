@@ -74,6 +74,9 @@ public class WorkspaceLlmConfig extends WorkspaceAwareEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "system_prompt", columnDefinition = "TEXT")
+    private String systemPrompt;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -20,6 +20,7 @@ import {
   LucideCheckCircle,
     LucideHelpCircle,
   LucideInbox,
+  LucideFolderTree,
 } from '@lucide/angular';
 
 @Component({
@@ -44,6 +45,7 @@ import {
     LucideCheckCircle,
         LucideHelpCircle,
     LucideInbox,
+    LucideFolderTree,
   ],
   template: `
     @if (authService.isAuthenticated()) {
@@ -70,7 +72,7 @@ import {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
               <a routerLink="/admin/users" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-info/50 transition-all group">
                 <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
-                  <svg lucideUsers class="w-5 h-5 text-accent-info">"></svg>
+                  <svg lucideUsers class="w-5 h-5 text-accent-info"></svg>
                 </div>
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.users') }}</h3>
@@ -119,6 +121,17 @@ import {
                 <div class="flex-1 min-w-0">
                   <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.ai-settings') }}</h3>
                   <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.settingsDesc') }}</p>
+                </div>
+                <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></svg>
+              </a>
+
+              <a routerLink="/admin/taxonomy" class="flex items-start gap-4 bg-surface-primary rounded-xl border border-border-default shadow-sm p-5 hover:shadow-md hover:border-accent-info/50 transition-all group">
+                <div class="w-10 h-10 rounded-xl bg-accent-info-muted flex items-center justify-center flex-shrink-0">
+                  <svg lucideFolderTree class="w-5 h-5 text-accent-info"></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-semibold text-text-primary text-sm">{{ translationService.translate('nav.taxonomy') }}</h3>
+                  <p class="text-xs text-text-secondary mt-1">{{ translationService.translate('landing.dashboard.admin.taxonomyDesc') }}</p>
                 </div>
                 <svg lucideArrowRight class="w-4 h-4 text-text-tertiary flex-shrink-0 group-hover:translate-x-0.5 transition-transform"></svg>
               </a>

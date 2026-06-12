@@ -5,12 +5,22 @@ export interface ChatMessage {
   id?: string;
   role: 'user' | 'assistant';
   content: string;
+  sources?: SourceRef[];
+}
+
+export interface SourceRef {
+  articleId: string;
+  title: string;
+  slug: string;
+  score: number;
+  filename?: string;
+  excerpt?: string;
 }
 
 export interface StreamEvent {
   type: 'token' | 'done' | 'fallback' | 'error';
   content: string;
-  sources?: { articleId: string; title: string; slug: string; score: number }[];
+  sources?: SourceRef[];
 }
 
 @Injectable({ providedIn: 'root' })

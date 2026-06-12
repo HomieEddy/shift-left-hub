@@ -80,7 +80,7 @@ class WorkspaceLlmConfigServiceTest {
 
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
             WORKSPACE_ID, LlmProvider.OPENAI_COMPATIBLE, "https://api.openai.com/v1",
-            "sk-test", "gpt-4", "text-embedding-3-small", 0.7);
+            "sk-test", "gpt-4", "text-embedding-3-small", 0.7, null);
         when(aiConfigService.encrypt("sk-test")).thenReturn("encrypted-key");
 
         WorkspaceLlmConfig result = workspaceLlmConfigService.saveConfig(WORKSPACE_ID, request);
@@ -99,7 +99,7 @@ class WorkspaceLlmConfigServiceTest {
 
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
             WORKSPACE_ID, LlmProvider.OPENAI_COMPATIBLE, "https://custom-endpoint.com",
-            null, "gpt-4o", null, 0.8);
+            null, "gpt-4o", null, 0.8, null);
 
         WorkspaceLlmConfig result = workspaceLlmConfigService.saveConfig(WORKSPACE_ID, request);
 
@@ -124,7 +124,7 @@ class WorkspaceLlmConfigServiceTest {
     void testConnection_shouldDelegateToAiConfigService() {
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
             WORKSPACE_ID, LlmProvider.OLLAMA, "http://localhost:11434",
-            null, "llama3.2", null, null);
+            null, "llama3.2", null, null, null);
 
         workspaceLlmConfigService.testConnection(WORKSPACE_ID, request);
 
@@ -143,7 +143,7 @@ class WorkspaceLlmConfigServiceTest {
 
         // Only provide endpointUrl and similarityThreshold; leave rest null
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
-            WORKSPACE_ID, null, "https://new-endpoint.com", null, null, null, 0.8);
+            WORKSPACE_ID, null, "https://new-endpoint.com", null, null, null, 0.8, null);
 
         WorkspaceLlmConfig result = workspaceLlmConfigService.saveConfig(WORKSPACE_ID, request);
 
@@ -167,7 +167,7 @@ class WorkspaceLlmConfigServiceTest {
         when(repository.save(any(WorkspaceLlmConfig.class))).thenReturn(existing);
 
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
-            WORKSPACE_ID, null, null, null, null, null, null);
+            WORKSPACE_ID, null, null, null, null, null, null, null);
 
         workspaceLlmConfigService.saveConfig(WORKSPACE_ID, request);
 
@@ -182,7 +182,7 @@ class WorkspaceLlmConfigServiceTest {
         when(repository.save(any(WorkspaceLlmConfig.class))).thenReturn(existing);
 
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
-            WORKSPACE_ID, null, null, "", null, null, null);
+            WORKSPACE_ID, null, null, "", null, null, null, null);
 
         workspaceLlmConfigService.saveConfig(WORKSPACE_ID, request);
 
@@ -200,7 +200,7 @@ class WorkspaceLlmConfigServiceTest {
 
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
             WORKSPACE_ID, LlmProvider.OLLAMA, "http://localhost:11434",
-            null, "llama3.2", null, null);
+            null, "llama3.2", null, null, null);
 
         workspaceLlmConfigService.testConnection(WORKSPACE_ID, request);
 
@@ -215,7 +215,7 @@ class WorkspaceLlmConfigServiceTest {
 
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
             WORKSPACE_ID, LlmProvider.OLLAMA, "http://localhost:11434",
-            null, "llama3.2", null, null);
+            null, "llama3.2", null, null, null);
 
         workspaceLlmConfigService.testConnection(WORKSPACE_ID, request);
 
@@ -228,7 +228,7 @@ class WorkspaceLlmConfigServiceTest {
     void testConnection_shouldUseApiKeyFromRequestWhenProvided() {
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
             WORKSPACE_ID, LlmProvider.OLLAMA, "http://localhost:11434",
-            "sk-explicit-key", "llama3.2", null, null);
+            "sk-explicit-key", "llama3.2", null, null, null);
 
         workspaceLlmConfigService.testConnection(WORKSPACE_ID, request);
 
@@ -242,7 +242,7 @@ class WorkspaceLlmConfigServiceTest {
     void testConnection_shouldSkipConfigLookupWhenWorkspaceIdIsNull() {
         WorkspaceLlmConfigRequest request = new WorkspaceLlmConfigRequest(
             null, LlmProvider.OLLAMA, "http://localhost:11434",
-            null, "llama3.2", null, null);
+            null, "llama3.2", null, null, null);
 
         workspaceLlmConfigService.testConnection(null, request);
 

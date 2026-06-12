@@ -3,6 +3,8 @@ import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PublicArticleService } from '../../services/public-article.service';
 import { ArticleSearchResult, ArticleSearchTag } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -14,11 +16,13 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
   templateUrl: './article-search.component.html',
 })
 export class ArticleSearchComponent implements OnInit {
+  private http = inject(HttpClient);
   private publicArticleService = inject(PublicArticleService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
+  private sanitizer = inject(DomSanitizer);
 
   query = signal('');
   availableTags = signal<ArticleSearchTag[]>([]);
@@ -30,10 +34,12 @@ export class ArticleSearchComponent implements OnInit {
   totalResults = signal(0);
   currentPage = signal(0);
   totalPages = signal(0);
+  categories = signal<{ id: string; nameEn: string; nameFr: string }[]>([]);
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
     this.loadSearchTags();
+    this.loadCategories();
 
     this.destroyRef.onDestroy(() => {
       if (this.debounceTimer != null) {
@@ -64,6 +70,15 @@ export class ArticleSearchComponent implements OnInit {
         this.totalPages.set(0);
         this.currentPage.set(0);
       }
+    });
+  }
+
+  loadCategories(): void {
+    this.http.get<{ id: string; nameEn: string; nameFr: string }[]>('/api/admin/categories').pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (cats) => this.categories.set(cats),
+      error: () => { /* categories are non-critical, silently ignore */ },
     });
   }
 
@@ -151,11 +166,13 @@ export class ArticleSearchComponent implements OnInit {
     this.doSearch(this.query(), page, this.selectedTags());
   }
 
-  sanitizeHeadline(html: string): string {
+  sanitizeHeadline(html: string): SafeHtml {
     if (html === '') return '';
     // Keep only mark tags and remove any attributes from opening mark tags.
-    return html
+    const cleaned = html
       .replace(/<(?!\/?mark(?=>|\s[^>]*>))[^>]*>/gi, '')
       .replace(/<mark\b[^>]*>/gi, '<mark>');
+    const sanitized = this.sanitizer.sanitize(1 /* SecurityContext.HTML */, cleaned);
+    return this.sanitizer.bypassSecurityTrustHtml(sanitized ?? cleaned);
   }
 }

@@ -1,18 +1,22 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { DocumentService } from './document.service';
 import { DocumentDto, DocumentStatus } from './document.model';
+import { CategoryService } from '../taxonomy/category.service';
+import { CategoryDto } from '../taxonomy/category.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-document-list',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, FormsModule],
   templateUrl: './document-list.component.html',
 })
 export class DocumentListComponent implements OnInit {
   private documentService = inject(DocumentService);
+  private categoryService = inject(CategoryService);
   private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
@@ -23,11 +27,20 @@ export class DocumentListComponent implements OnInit {
   protected isDragging = signal(false);
   protected isUploading = signal(false);
   protected uploadQueue = signal<{ filename: string; status: string }[]>([]);
+  protected categories = signal<CategoryDto[]>([]);
+  protected selectedCategoryId = signal<string | null>(null);
 
   protected readonly acceptedTypes = '.md,.txt,.pdf';
 
   ngOnInit(): void {
     this.loadDocuments();
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (cats) => this.categories.set(cats),
+    });
   }
 
   loadDocuments(): void {

@@ -1,5 +1,6 @@
 package com.shiftleft.hub.article.domain;
 
+import com.shiftleft.hub.category.domain.Category;
 import com.shiftleft.hub.common.domain.WorkspaceAwareEntity;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.user.domain.User;
@@ -7,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -88,6 +90,10 @@ public class Article extends WorkspaceAwareEntity {
     @ManyToOne
     @JoinColumn(name = "last_editor_id")
     private User lastEditor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToMany
     @JoinTable(

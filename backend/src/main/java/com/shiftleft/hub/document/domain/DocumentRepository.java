@@ -1,6 +1,9 @@
 package com.shiftleft.hub.document.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +23,25 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
     List<Document> findByWorkspaceIdAndStatus(UUID workspaceId, DocumentStatus status);
 
     long countByWorkspaceIdAndStatus(UUID workspaceId, DocumentStatus status);
+
+    List<Document> findByCategoryId(UUID categoryId);
+
+    /**
+     * Counts documents assigned to a given category.
+     *
+     * @param categoryId the category UUID
+     * @return number of documents in the category
+     */
+    long countByCategoryId(UUID categoryId);
+
+    /**
+     * Bulk-reassigns all documents from one category to another.
+     *
+     * @param sourceId   the source category UUID
+     * @param categoryId the target category UUID
+     * @return number of documents updated
+     */
+    @Modifying
+    @Query("UPDATE Document d SET d.category.id = :categoryId WHERE d.category.id = :sourceId")
+    int reassignCategory(@Param("sourceId") UUID sourceId, @Param("categoryId") UUID categoryId);
 }

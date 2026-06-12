@@ -7,6 +7,8 @@ import { TagService } from '../../services/tag.service';
 import { TagDto } from '../../models/tag.models';
 import { CreateArticleRequest, UpdateArticleRequest } from '../../models/article.models';
 import { MarkdownModule } from 'ngx-markdown';
+import { CategoryService } from '../../../admin/taxonomy/category.service';
+import { CategoryDto } from '../../../admin/taxonomy/category.model';
 import { TranslationService } from '../../../../core/i18n/translation.service';
 
 @Component({
@@ -18,6 +20,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
 export class ArticleEditorComponent implements OnInit {
   private articleService = inject(ArticleService);
   private tagService = inject(TagService);
+  private categoryService = inject(CategoryService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
@@ -40,6 +43,8 @@ export class ArticleEditorComponent implements OnInit {
 
   allTags = signal<TagDto[]>([]);
   selectedTagIds = signal<Set<string>>(new Set());
+  categories = signal<CategoryDto[]>([]);
+  selectedCategoryId = signal<string | null>(null);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -49,6 +54,13 @@ export class ArticleEditorComponent implements OnInit {
       this.loadArticle(id);
     }
     this.loadTags();
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (cats) => this.categories.set(cats),
+    });
   }
 
   loadArticle(id: string): void {
@@ -63,6 +75,7 @@ export class ArticleEditorComponent implements OnInit {
         this.contentFr = article.contentFr ?? '';
         this.excerpt = article.excerpt ?? '';
         this.featuredImage = article.featuredImage ?? '';
+        this.selectedCategoryId.set(article.categoryId);
         this.selectedTagIds.set(new Set(article.tags.map(t => t.id)));
         this.isLoading.set(false);
       },
@@ -106,6 +119,7 @@ export class ArticleEditorComponent implements OnInit {
       excerpt: this.excerpt || undefined,
       featuredImage: this.featuredImage || undefined,
       tagIds: Array.from(this.selectedTagIds()),
+      categoryId: this.selectedCategoryId() ?? undefined,
     } satisfies CreateArticleRequest | UpdateArticleRequest;
 
     const id = this.articleId();

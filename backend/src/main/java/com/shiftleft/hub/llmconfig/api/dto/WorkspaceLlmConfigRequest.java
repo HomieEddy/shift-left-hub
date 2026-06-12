@@ -30,6 +30,8 @@ public record WorkspaceLlmConfigRequest(
     String embeddingModelName,
 
     @DecimalMin(value = "0.65", inclusive = false) @DecimalMax("1.0")
-    Double similarityThreshold
+    Double similarityThreshold,
+
+    String systemPrompt
 ) {
 }
