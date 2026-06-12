@@ -1,0 +1,14 @@
+    <button
+      [type]="type()"
+      [disabled]="disabled() || loading()"
+      (click)="clicked.emit()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-disabled]="disabled() || loading()"
+      [class]="iconButtonClasses()"
+    >
+      @if (loading()) {
+        <span class="inline-block w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin"></span>
+      } @else {
+        <ng-content />
+      }
+    </button>

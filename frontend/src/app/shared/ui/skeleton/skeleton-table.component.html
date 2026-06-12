@@ -1,0 +1,13 @@
+    <div class="bg-surface-primary rounded-xl border border-border-default" role="status" aria-label="Loading">
+      <div class="p-4 border-b border-border-default">
+        <div class="animate-pulse bg-surface-tertiary rounded h-4 w-1/4"></div>
+      </div>
+      @for (row of skeletonRows(); track $index) {
+        <div class="px-4 py-3 border-b border-border-default flex items-center gap-4">
+          <div class="animate-pulse bg-surface-tertiary rounded h-4 w-2/5"></div>
+          <div class="animate-pulse bg-surface-tertiary rounded h-4 w-1/4"></div>
+          <div class="animate-pulse bg-surface-tertiary rounded h-4 w-1/6"></div>
+          <div class="animate-pulse bg-surface-tertiary rounded h-4 w-1/12 ml-auto"></div>
+        </div>
+      }
+    </div>
