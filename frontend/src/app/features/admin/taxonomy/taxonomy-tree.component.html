@@ -38,7 +38,7 @@
                  draggable="true"
                  (dragstart)="onDragStart($event, node.category.id)"
                  (dragover)="$event.preventDefault()"
-                 (drop)="draggedCategoryId != null && onDrop(draggedCategoryId, node.category.id)">
+                 (drop)="draggedCategoryId !== null && onDrop(draggedCategoryId, node.category.id)">
               <button type="button" (click)="toggleExpand(node)" (keydown.enter)="toggleExpand(node)"
                       class="w-5 h-5 flex items-center justify-center text-text-tertiary hover:text-text-secondary">
                 @if (node.children.length > 0) {
@@ -105,7 +105,7 @@
   @if (showCreateDialog()) {
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
-         (click)="showCreateDialog.set(false)" (keydown.escape)="showCreateDialog.set(false)">
+         (click)="showCreateDialog.set(false)" (keydown.escape)="showCreateDialog.set(false)" (keydown.enter)="showCreateDialog.set(false)">
       <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.new') }}</h3>
         <div class="space-y-3">
@@ -145,7 +145,7 @@
   @if (showEditDialog()) {
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
-         (click)="showEditDialog.set(false)" (keydown.escape)="showEditDialog.set(false)">
+         (click)="showEditDialog.set(false)" (keydown.escape)="showEditDialog.set(false)" (keydown.enter)="showEditDialog.set(false)">
       <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.edit') }}</h3>
         <div class="space-y-3">
@@ -185,7 +185,7 @@
   @if (showDeleteDialog()) {
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
-         (click)="showDeleteDialog.set(false)" (keydown.escape)="showDeleteDialog.set(false)">
+         (click)="showDeleteDialog.set(false)" (keydown.escape)="showDeleteDialog.set(false)" (keydown.enter)="showDeleteDialog.set(false)">
       <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-2">{{ translationService.translate('admin.taxonomy.deleteConfirm') }}</h3>
         <p class="text-sm text-text-secondary mb-4">{{ deletingCategory()?.nameEn }}</p>
@@ -216,7 +216,7 @@
   @if (showMergeDialog()) {
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
-         (click)="showMergeDialog.set(false)" (keydown.escape)="showMergeDialog.set(false)">
+         (click)="showMergeDialog.set(false)" (keydown.escape)="showMergeDialog.set(false)" (keydown.enter)="showMergeDialog.set(false)">
       <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.merge') }}</h3>
         <div class="space-y-3">
@@ -240,7 +240,7 @@
           </div>
         </div>
         <div class="flex items-center gap-2 mt-6">
-          <button type="button" (click)="mergeCategories()" [disabled]="mergeSourceId == null || mergeTargetId == null || mergeSourceId === mergeTargetId"
+          <button type="button" (click)="mergeCategories()" [disabled]="mergeSourceId === null || mergeTargetId === null || mergeSourceId === mergeTargetId"
                   class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors">
             {{ translationService.translate('admin.taxonomy.merge') }}
           </button>

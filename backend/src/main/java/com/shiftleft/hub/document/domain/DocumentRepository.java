@@ -28,11 +28,17 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
 
     /**
      * Counts documents assigned to a given category.
+     *
+     * @param categoryId the category UUID
+     * @return number of documents in the category
      */
     long countByCategoryId(UUID categoryId);
 
     /**
      * Bulk-reassigns all documents from one category to another.
+     *
+     * @param sourceId   the source category UUID
+     * @param categoryId the target category UUID
      * @return number of documents updated
      */
     @Modifying

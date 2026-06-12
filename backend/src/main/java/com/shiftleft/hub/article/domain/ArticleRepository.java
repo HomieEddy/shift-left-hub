@@ -328,11 +328,17 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     /**
      * Counts articles assigned to a given category.
+     *
+     * @param categoryId the category UUID
+     * @return number of articles in the category
      */
     long countByCategoryId(UUID categoryId);
 
     /**
      * Bulk-reassigns all articles from one category to another.
+     *
+     * @param sourceId   the source category UUID
+     * @param categoryId the target category UUID
      * @return number of articles updated
      */
     @Modifying

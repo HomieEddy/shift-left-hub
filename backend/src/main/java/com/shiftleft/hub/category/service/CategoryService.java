@@ -31,6 +31,8 @@ public class CategoryService {
 
     /**
      * Returns all categories for the current workspace as a flat list.
+     *
+     * @return flat list of category responses
      */
     public List<CategoryResponse> getAllCategories() {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
@@ -41,6 +43,9 @@ public class CategoryService {
 
     /**
      * Returns a single category by ID within the current workspace.
+     *
+     * @param id the category UUID
+     * @return the category response
      */
     public CategoryResponse getCategory(UUID id) {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
@@ -51,6 +56,9 @@ public class CategoryService {
 
     /**
      * Creates a new category with optional parent reference.
+     *
+     * @param request the category creation request
+     * @return the created category response
      */
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request) {
@@ -72,6 +80,10 @@ public class CategoryService {
 
     /**
      * Updates an existing category's name and parent reference.
+     *
+     * @param id      the category UUID
+     * @param request the category update request
+     * @return the updated category response
      */
     @Transactional
     public CategoryResponse updateCategory(UUID id, CategoryRequest request) {
@@ -97,6 +109,9 @@ public class CategoryService {
     /**
      * Deletes a category. If it has content and reassignToId is provided,
      * reassigns all articles and documents to the target category.
+     *
+     * @param id           the category UUID
+     * @param reassignToId the target category UUID for content reassignment, or null
      */
     @Transactional
     public void deleteCategory(UUID id, UUID reassignToId) {
@@ -127,6 +142,10 @@ public class CategoryService {
 
     /**
      * Merges source category into target, reassigning all content and child categories.
+     *
+     * @param sourceId the source category UUID
+     * @param targetId the target category UUID
+     * @return the target category response after merge
      */
     @Transactional
     public CategoryResponse mergeCategories(UUID sourceId, UUID targetId) {

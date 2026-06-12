@@ -30,6 +30,10 @@ public class UnifiedSearchService {
 
     /**
      * Full-text search across document chunks using the tsvector column and GIN index.
+     *
+     * @param query       the search query
+     * @param workspaceId the workspace UUID
+     * @return list of document chunk search results
      */
     public List<DocumentChunkResult> ftsSearchDocumentChunks(String query, UUID workspaceId) {
         var results = documentChunkRepository.ftsSearch(query, workspaceId, TOP_K);
@@ -46,6 +50,11 @@ public class UnifiedSearchService {
 
     /**
      * Vector similarity search across document chunks using pgvector cosine distance.
+     *
+     * @param query       the search query
+     * @param workspaceId the workspace UUID
+     * @param threshold   the similarity threshold
+     * @return list of document chunk search results
      */
     public List<DocumentChunkResult> vectorSearchDocumentChunks(String query, UUID workspaceId, double threshold) {
         float[] queryEmbedding;

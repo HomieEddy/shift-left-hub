@@ -30,7 +30,7 @@
         }
       </select>
     </div>
-    <button type="button" (click)="applyCategory()" [disabled]="selectedCategoryId() == null || isApplying()"
+    <button type="button" (click)="applyCategory()" [disabled]="selectedCategoryId() === null || isApplying()"
             class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors">
       {{ translationService.translate('admin.taxonomy.bulk.apply') }}
     </button>
