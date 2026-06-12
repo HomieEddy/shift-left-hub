@@ -127,13 +127,7 @@ public class CategoryService {
     }
 
     private void reassignContent(UUID sourceId, Category target) {
-        articleRepository.findByCategoryId(sourceId).forEach(article -> {
-            article.setCategory(target);
-            articleRepository.save(article);
-        });
-        documentRepository.findByCategoryId(sourceId).forEach(document -> {
-            document.setCategory(target);
-            documentRepository.save(document);
-        });
+        articleRepository.reassignCategory(sourceId, target.getId());
+        documentRepository.reassignCategory(sourceId, target.getId());
     }
 }

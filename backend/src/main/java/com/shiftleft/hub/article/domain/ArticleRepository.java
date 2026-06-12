@@ -3,6 +3,7 @@ package com.shiftleft.hub.article.domain;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -326,6 +327,10 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     List<Article> findByCategoryId(UUID categoryId);
 
     long countByCategoryId(UUID categoryId);
+
+    @Modifying
+    @Query("UPDATE Article a SET a.category.id = :categoryId WHERE a.category.id = :sourceId")
+    int reassignCategory(@Param("sourceId") UUID sourceId, @Param("categoryId") UUID categoryId);
 
     /**
      * Counts articles that originated from tickets by their status.
