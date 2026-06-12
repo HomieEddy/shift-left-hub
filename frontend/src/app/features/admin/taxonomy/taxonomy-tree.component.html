@@ -106,7 +106,9 @@
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
          (click)="showCreateDialog.set(false)" (keydown.escape)="showCreateDialog.set(false)" (keydown.enter)="showCreateDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+           tabindex="-1"
+           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.new') }}</h3>
         <div class="space-y-3">
           <div>
@@ -146,7 +148,9 @@
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
          (click)="showEditDialog.set(false)" (keydown.escape)="showEditDialog.set(false)" (keydown.enter)="showEditDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+           tabindex="-1"
+           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.edit') }}</h3>
         <div class="space-y-3">
           <div>
@@ -186,7 +190,9 @@
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
          (click)="showDeleteDialog.set(false)" (keydown.escape)="showDeleteDialog.set(false)" (keydown.enter)="showDeleteDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+           tabindex="-1"
+           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-2">{{ translationService.translate('admin.taxonomy.deleteConfirm') }}</h3>
         <p class="text-sm text-text-secondary mb-4">{{ deletingCategory()?.nameEn }}</p>
         <div class="mb-4">
@@ -217,7 +223,9 @@
     <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
          tabindex="0" role="dialog" aria-modal="true"
          (click)="showMergeDialog.set(false)" (keydown.escape)="showMergeDialog.set(false)" (keydown.enter)="showMergeDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+           tabindex="-1"
+           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
         <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.merge') }}</h3>
         <div class="space-y-3">
           <div>

@@ -44,8 +44,4 @@ public interface DocumentRepository extends JpaRepository<Document, UUID> {
     @Modifying
     @Query("UPDATE Document d SET d.category.id = :categoryId WHERE d.category.id = :sourceId")
     int reassignCategory(@Param("sourceId") UUID sourceId, @Param("categoryId") UUID categoryId);
-
-    @Modifying
-    @Query("UPDATE Document d SET d.category.id = :categoryId WHERE d.category.id = :sourceId")
-    int reassignCategory(@Param("sourceId") UUID sourceId, @Param("categoryId") UUID categoryId);
 }
