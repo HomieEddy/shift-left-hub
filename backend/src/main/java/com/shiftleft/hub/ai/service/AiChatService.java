@@ -162,7 +162,7 @@ public class AiChatService {
         final List<HybridSearchResult> ftsResults = ftsSearch(query);
 
         // 2. Vector search — articles (existing)
-        final List<HybridSearchResult> vectorResults;
+        List<HybridSearchResult> vectorResults;
         try {
             vectorResults = vectorSearch(query, threshold);
         } catch (Exception e) {

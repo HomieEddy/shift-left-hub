@@ -65,8 +65,7 @@ public class CategoryService {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         Category.CategoryBuilder builder = Category.builder()
             .nameEn(request.nameEn())
-            .nameFr(request.nameFr())
-            .workspaceId(workspaceId);
+            .nameFr(request.nameFr());
 
         if (request.parentId() != null) {
             Category parent = categoryRepository.findByWorkspaceIdAndId(workspaceId, request.parentId())
@@ -74,7 +73,9 @@ public class CategoryService {
             builder.parent(parent);
         }
 
-        Category saved = categoryRepository.save(builder.build());
+        Category saved = builder.build();
+        saved.setWorkspaceId(workspaceId);
+        saved = categoryRepository.save(saved);
         return CategoryResponse.from(saved, 0L);
     }
 
