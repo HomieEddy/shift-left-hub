@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/auth/auth.service';
@@ -48,7 +48,7 @@ import { LucideChevronsUpDown, LucideCheck, LucideBuilding2 } from '@lucide/angu
     </div>
   `,
 })
-export class WorkspaceSwitcherComponent {
+export class WorkspaceSwitcherComponent implements OnInit {
   private workspaceService = inject(WorkspaceService);
   private authService = inject(AuthService);
   private workspaceRoleService = inject(WorkspaceRoleService);

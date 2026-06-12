@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgClass } from '@angular/common';
@@ -59,7 +59,7 @@ import { WorkspaceSettingsComponent } from './workspace-settings.component';
     </div>
   `,
 })
-export class WorkspaceDetailComponent {
+export class WorkspaceDetailComponent implements OnInit {
   private workspaceService = inject(WorkspaceService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -79,8 +79,9 @@ export class WorkspaceDetailComponent {
   activeTab = signal<'members' | 'llm' | 'documents' | 'settings'>('members');
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (!id) {
+    const idOrNull = this.route.snapshot.paramMap.get('id');
+    const id = idOrNull as string;
+    if (!idOrNull) {
       this.errorMessage.set(this.translationService.translate('admin.workspaces.detail.not-found'));
       this.isLoading.set(false);
       return;
@@ -94,11 +95,11 @@ export class WorkspaceDetailComponent {
   }
 
   switchTab(tabId: string) {
-    this.activeTab.set(tabId as any);
-    this.router.navigate(['/admin/workspaces', this.workspace()?.id], { fragment: tabId });
+    this.activeTab.set(tabId as 'members' | 'llm' | 'documents' | 'settings');
+    void this.router.navigate(['/admin/workspaces', this.workspace()?.id as string], { fragment: tabId });
   }
 
   goBack() {
-    this.router.navigate(['/admin/workspaces']);
+    void this.router.navigate(['/admin/workspaces']);
   }
 }

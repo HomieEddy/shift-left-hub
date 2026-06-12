@@ -1,9 +1,9 @@
-import { Component, DestroyRef, inject, Input, signal } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgClass, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WorkspaceService } from './workspace.service';
-import { WorkspaceMemberDto, InvitationDto, CreateInvitationRequest, WorkspaceUserResponse } from './workspace.model';
+import { WorkspaceMemberDto, InvitationDto, CreateInvitationRequest, ChangeRoleRequest } from './workspace.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
@@ -102,7 +102,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
     </div>
   `,
 })
-export class WorkspaceMembersComponent {
+export class WorkspaceMembersComponent implements OnInit {
   @Input({ required: true }) workspaceId!: string;
 
   private workspaceService = inject(WorkspaceService);
@@ -162,7 +162,8 @@ export class WorkspaceMembersComponent {
   }
 
   changeRole(member: WorkspaceMemberDto, newRole: string) {
-    this.workspaceService.changeMemberRole(this.workspaceId, member.userId, { role: newRole as any })
+    const req: ChangeRoleRequest = { role: newRole as 'ADMIN' | 'MEMBER' | 'READ_ONLY' };
+    this.workspaceService.changeMemberRole(this.workspaceId, member.userId, req)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.loadData());
   }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, Input, signal } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -75,7 +75,7 @@ import { IconPickerComponent } from './icon-picker.component';
     </div>
   `,
 })
-export class WorkspaceSettingsComponent {
+export class WorkspaceSettingsComponent implements OnInit {
   @Input({ required: true }) workspace!: WorkspaceDto;
 
   private workspaceService = inject(WorkspaceService);
@@ -126,7 +126,7 @@ export class WorkspaceSettingsComponent {
   confirmDeleteWorkspace() {
     this.workspaceService.deleteWorkspace(this.workspace.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.router.navigate(['/admin/workspaces']));
+      .subscribe(() => void this.router.navigate(['/admin/workspaces']));
   }
 
   confirmLeaveWorkspace() {

@@ -41,7 +41,7 @@ export class WorkspaceListComponent implements OnInit {
   }
 
   navigateToWorkspace(workspace: WorkspaceDto): void {
-    this.router.navigate(['/admin/workspaces', workspace.id]);
+    void this.router.navigate(['/admin/workspaces', workspace.id]);
   }
 
   loadWorkspaces(): void {
