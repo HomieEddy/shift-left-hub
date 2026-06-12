@@ -62,7 +62,7 @@ import { IconPickerComponent } from './icon-picker.component';
                 [placeholder]="translationService.translate('workspace.action.delete-confirm')"
                 class="w-full rounded-lg border border-border-default px-3 py-2 text-sm bg-surface-primary text-text-primary" />
               <button (click)="confirmDeleteWorkspace()"
-                [disabled]="deleteConfirmName() !== workspace()?.name"
+                [disabled]="deleteConfirmName() !== workspace?.name"
                 class="px-4 py-2 text-sm rounded-lg bg-accent-danger text-white font-medium hover:opacity-90 disabled:opacity-50">
                 {{ translationService.translate('workspace.action.delete') }}
               </button>
@@ -111,7 +111,7 @@ export class WorkspaceSettingsComponent implements OnInit {
     const request: UpdateWorkspaceRequest = {};
     if (this.name() !== this.workspace.name) { request.name = this.name(); }
     if (this.description() !== (this.workspace.description ?? '')) { request.description = this.description(); }
-    if (this.icon() !== this.workspace.icon) { request.icon = this.icon(); }
+    if (this.icon() !== this.workspace.icon) { request.icon = this.icon() ?? undefined; }
     this.workspaceService.updateWorkspace(this.workspace.id, request)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
