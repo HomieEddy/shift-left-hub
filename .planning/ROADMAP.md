@@ -25,7 +25,7 @@
 <summary>🔷 v2.0 Workspace Platform (Phases 9-12) — IN PLANNING</summary>
 
 - [ ] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
-- [ ] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
+- [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
 - [ ] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
 - [ ] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
 
@@ -61,8 +61,14 @@ Plans:
   3. Duplicate content (matching SHA-256 content hash) is detected and reported; user can reprocess a single document after fixing the source file
   4. Workspace admin can configure an OpenAI-compatible endpoint URL with API key encrypted at rest (Spring TextEncryptor), and test connectivity before saving
   5. Workspace admin selects a model name; all AI chat sessions use the workspace's configured ChatModel via a cached WorkspaceChatModelRegistry
-**Plans**: TBD
+**Plans**: 4 plans in 3 waves
 **UI hint**: yes
+
+Plans:
+- [x] 10-01-PLAN.md — Database schema + JPA entities (Flyway V4, Document, DocumentChunk, WorkspaceLlmConfig)
+- [x] 10-02-PLAN.md — Document upload + async ETL pipeline (event-driven)
+- [x] 10-03-PLAN.md — Workspace LLM config + ChatModelRegistry
+- [x] 10-04-PLAN.md — Frontend admin document management + LLM config UI
 
 ### Phase 11: Domain-Agnostic AI
 **Goal**: The AI assistant becomes domain-agnostic — workspaces define their own taxonomy, customize system prompts, and search across both articles and document chunks
@@ -101,11 +107,11 @@ Plans:
 | 6. KCS Auto-Drafting & Admin Review | v1.0 | 3/3 | Complete | 2026-06-05 |
 | 7. Quality, Polish & DevOps | v1.0 | 9/9 | Complete | 2026-06-06 |
 | 8. Testing & CI/CD | v1.0 | 8/8 | Complete | 2026-06-08 |
-| 9. Workspace Foundation | v2.0 | 0/4 | Planning | - |
-| 10. Document Ingestion + BYO LLM | v2.0 | — | Planning | - |
+| 9. Workspace Foundation | v2.0 | 4/4 | Complete | 2026-06-10 |
+| 10. Document Ingestion + BYO LLM | v2.0 | 4/4 | Complete | 2026-06-10 |
 | 11. Domain-Agnostic AI | v2.0 | — | Planning | - |
 | 12. Workspace Management UI | v2.0 | — | Planning | - |
 
 ---
 
-*Last updated: 2026-06-10 — v2.0 roadmap created*
+*Last updated: 2026-06-10 — Phase 10 executed (4 plans in 3 waves — complete)*

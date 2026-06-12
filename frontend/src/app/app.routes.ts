@@ -61,6 +61,11 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
   {
+    path: 'admin/documents',
+    loadComponent: () => import('./features/admin/documents/document-list.component').then(m => m.DocumentListComponent),
+    canActivate: [adminGuard],
+  },
+  {
     path: 'admin/settings/llm',
     loadComponent: () => import('./features/admin/llm-settings/llm-settings.component').then(m => m.LlmSettingsComponent),
     canActivate: [adminGuard],
