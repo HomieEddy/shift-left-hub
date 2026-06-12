@@ -4,6 +4,7 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PublicArticleService } from '../../services/public-article.service';
 import { ArticleSearchResult, ArticleSearchTag } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -21,6 +22,7 @@ export class ArticleSearchComponent implements OnInit {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
+  private sanitizer = inject(DomSanitizer);
 
   query = signal('');
   availableTags = signal<ArticleSearchTag[]>([]);
@@ -164,11 +166,13 @@ export class ArticleSearchComponent implements OnInit {
     this.doSearch(this.query(), page, this.selectedTags());
   }
 
-  sanitizeHeadline(html: string): string {
+  sanitizeHeadline(html: string): SafeHtml {
     if (html === '') return '';
     // Keep only mark tags and remove any attributes from opening mark tags.
-    return html
+    const cleaned = html
       .replace(/<(?!\/?mark(?=>|\s[^>]*>))[^>]*>/gi, '')
       .replace(/<mark\b[^>]*>/gi, '<mark>');
+    const sanitized = this.sanitizer.sanitize(1 /* SecurityContext.HTML */, cleaned);
+    return this.sanitizer.bypassSecurityTrustHtml(sanitized ?? cleaned);
   }
 }
