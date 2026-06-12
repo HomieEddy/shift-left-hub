@@ -24,9 +24,9 @@
 <details>
 <summary>🔷 v2.0 Workspace Platform (Phases 9-12) — IN PLANNING</summary>
 
-- [ ] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
+- [x] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
 - [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
-- [ ] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
+- [x] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
 - [ ] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
 
 </details>
@@ -83,12 +83,12 @@ Plans:
 **Plans**: 6 plans in 4 waves
 
 Plans:
-- [ ] 11-01-PLAN.md — Database schema + JPA entities (Flyway V5, Category entity, category_id FKs, system_prompt column, doc chunk tsvector)
-- [ ] 11-02-PLAN.md — Category admin API + service (AdminCategoryController, CRUD, merge, reassign)
-- [ ] 11-03-PLAN.md — System prompt + AI customization (template variables, buildPrompt refactor)
-- [ ] 11-04-PLAN.md — Unified hybrid search (document chunk FTS + vector, three-way RRF merge)
-- [ ] 11-05-PLAN.md — Taxonomy management UI (tree view, article/doc selectors, bulk management)
-- [ ] 11-06-PLAN.md — AI customization UI + search display (system prompt editor, category badges, doc citations)
+- [x] 11-01-PLAN.md — Database schema + JPA entities (Flyway V5, Category entity, category_id FKs, system_prompt column, doc chunk tsvector)
+- [x] 11-02-PLAN.md — Category admin API + service (AdminCategoryController, CRUD, merge, reassign)
+- [x] 11-03-PLAN.md — System prompt + AI customization (template variables, buildPrompt refactor)
+- [x] 11-04-PLAN.md — Unified hybrid search (document chunk FTS + vector, three-way RRF merge)
+- [x] 11-05-PLAN.md — Taxonomy management UI (tree view, article/doc selectors, bulk management)
+- [x] 11-06-PLAN.md — AI customization UI + search display (system prompt editor, category badges, doc citations)
 
 ### Phase 12: Workspace Management UI
 **Goal**: Users can manage their workspaces end-to-end — switch between workspaces, invite members, administer settings, and handle lifecycle operations
@@ -96,12 +96,19 @@ Plans:
 **Requirements**: WSM-01, WSM-02, WSM-03, WSM-04, WSM-05
 **Success Criteria** (what must be TRUE):
   1. User can switch between workspaces via a dropdown in the navigation bar; all UI state (articles, chats, documents, settings) reloads for the selected workspace
-  2. Workspace admin can invite new members via email with role selection (admin / member / read-only); invited users see and can respond to pending invitations
+  2. Workspace admin can invite new members in-app (no email) with role selection (admin / member / read-only); invited users see and can respond to pending invitations
   3. Workspace-scoped roles are enforced in the UI: read-only users cannot create/edit content, members have standard access, admins can manage workspace settings
-  4. Workspace admin panel provides a unified interface for managing members (roles, removal), LLM configuration, and document management with status badges
-  5. Users can leave a workspace with confirmation; workspace admin can delete a workspace with cascade handling and confirmation
-**Plans**: TBD
+  4. Workspace admin panel provides a unified interface for managing members (roles, removal), LLM configuration, and document management with a tabbed detail page
+  5. Users can leave a workspace with confirmation; workspace admin can delete a workspace with soft-delete and type-to-confirm
+**Plans**: 5 plans in 2 waves
 **UI hint**: yes
+
+Plans:
+- [ ] 12-01-PLAN.md — Backend data model + migration (Flyway V6, workspace_invitation table, workspace.deleted_at/icon)
+- [ ] 12-02-PLAN.md — Backend API endpoints (workspace update/delete, invitations, member mgmt, role, leave, mine)
+- [ ] 12-03-PLAN.md — Frontend foundation (WorkspaceRoleService, workspace service extensions, models, translation keys)
+- [ ] 12-04-PLAN.md — Workspace switcher + invitation badge (header dropdown, workspace icons, accept/reject UI)
+- [ ] 12-05-PLAN.md — Admin detail page + lifecycle (tabbed workspace page, members/LLM/docs/settings, icon picker, delete/leave)
 
 ## Progress
 
@@ -117,9 +124,9 @@ Plans:
 | 8. Testing & CI/CD | v1.0 | 8/8 | Complete | 2026-06-08 |
 | 9. Workspace Foundation | v2.0 | 4/4 | Complete | 2026-06-10 |
 | 10. Document Ingestion + BYO LLM | v2.0 | 4/4 | Complete | 2026-06-10 |
-| 11. Domain-Agnostic AI | v2.0 | 0/6 | Planning | - |
-| 12. Workspace Management UI | v2.0 | — | Planning | - |
+| 11. Domain-Agnostic AI | v2.0 | 6/6 | Complete | 2026-06-12 |
+| 12. Workspace Management UI | v2.0 | — | Planned | - |
 
 ---
 
-*Last updated: 2026-06-12 — Phase 11 planned (6 plans in 4 waves)*
+*Last updated: 2026-06-12 — Phase 12 planned (5 plans in 2 waves)*
