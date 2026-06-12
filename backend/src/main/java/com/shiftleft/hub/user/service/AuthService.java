@@ -10,6 +10,8 @@ import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
+
+import java.util.UUID;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -121,6 +123,24 @@ public class AuthService {
                 // Token already invalid or malformed — no-op
             }
         }
+    }
+
+    /**
+     * Switches the active workspace for a user by re-issuing tokens
+     * with a new workspace_id claim.
+     *
+     * @param userId the user UUID
+     * @param workspaceId the target workspace UUID
+     * @return the auth response with new tokens
+     */
+    public AuthResponse switchWorkspace(UUID userId, UUID workspaceId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BadCredentialsException("User not found"));
+
+        String accessToken = jwtService.generateAccessTokenWithWorkspace(user, workspaceId);
+        String refreshToken = jwtService.generateRefreshTokenWithWorkspace(user, workspaceId);
+
+        return buildAuthResponse(user, accessToken, refreshToken);
     }
 
     private AuthResponse buildAuthResponse(
