@@ -34,10 +34,22 @@ export class TaxonomyBulkComponent implements OnInit {
     const catId = this.selectedCategoryId();
     if (!catId) return;
     this.isApplying.set(true);
-    this.applyMessage.set('Updating...');
-    setTimeout(() => {
-      this.isApplying.set(false);
-      this.applyMessage.set('Categories updated');
-    }, 1000);
+    this.applyMessage.set('');
+    const tab = this.activeTab();
+    const endpoint = tab === 'articles'
+      ? '/api/admin/articles/bulk-category'
+      : '/api/admin/documents/bulk-category';
+    this.http.post(endpoint, { categoryId: catId }).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.isApplying.set(false);
+        this.applyMessage.set('Categories updated');
+      },
+      error: () => {
+        this.isApplying.set(false);
+        this.applyMessage.set('Failed to update categories');
+      },
+    });
   }
 }
