@@ -319,6 +319,8 @@ public class AiChatService {
 
         effectivePrompt = effectivePrompt
             .replace("{workspace_name}", resolveWorkspaceName())
+            // TODO: Resolve {domain} and {categories} from workspace configuration
+            // when workspace domain/category context is available
             .replace("{domain}", "")
             .replace("{categories}", "");
 
