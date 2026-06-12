@@ -20,11 +20,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.ByteBuffer;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 import java.util.Base64;
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 @Service
@@ -113,11 +116,12 @@ public class AiConfigService {
         try {
             String provider = request.llmProvider() != null ? request.llmProvider() : "OLLAMA";
             String model = request.chatModelName() != null ? request.chatModelName() : "llama3.2:3b";
-            String endpointUrl = request.ollamaEndpointUrl() != null ? request.ollamaEndpointUrl() : "http://host.docker.internal:11434";
+            String endpointUrl = request.ollamaEndpointUrl() != null
+                ? request.ollamaEndpointUrl() : "http://host.docker.internal:11434";
             String apiKey = request.openaiApiKey();
 
             ChatModel chatModel;
-            if ("OPENAI".equals(provider) && apiKey != null && !apiKey.isBlank()) {
+            if ("OPENAI_COMPATIBLE".equals(provider) && apiKey != null && !apiKey.isBlank()) {
                 chatModel = OpenAiChatModel.builder()
                     .openAiClient(OpenAIOkHttpClient.builder().apiKey(apiKey).build())
                     .options(OpenAiChatOptions.builder().model(model).build())
@@ -145,46 +149,95 @@ public class AiConfigService {
     }
 
     /**
-     * Builds a ChatClient for the given AI configuration.
+     * Tests a connection with individual provider parameters.
+     * Used by WorkspaceLlmConfigService for workspace-scoped test.
      *
-     * @param config the AI configuration
+     * @param provider    the LLM provider name
+     * @param endpointUrl the endpoint URL
+     * @param apiKey      the API key (may be encrypted for existing configs)
+     * @param modelName   the model name
+     * @return connection test result
+     */
+    public TestConnectionResult testConnection(String provider, String endpointUrl,
+            String apiKey, String modelName) {
+        try {
+            ChatClient chatClient = buildChatClient(provider, endpointUrl, apiKey, modelName);
+            String response = chatClient.prompt()
+                .user("Return only the word hello.")
+                .call()
+                .content();
+            return new TestConnectionResult(true,
+                "Connection successful. Model " + modelName + " responded: "
+                    + (response != null ? response.trim() : ""));
+        } catch (Exception e) {
+            log.warn("Connection test failed: {}", e.getMessage());
+            return new TestConnectionResult(false, "Connection failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Builds a ChatClient from individual provider parameters.
+     * Used by WorkspaceChatModelRegistry for workspace-scoped config.
+     *
+     * @param provider    the LLM provider name (OPENAI or OLLAMA)
+     * @param endpointUrl the endpoint URL (optional, defaults for OLLAMA)
+     * @param apiKey      the API key (may be encrypted)
+     * @param modelName   the model name
      * @return a configured ChatClient
      */
-    public ChatClient buildChatClient(AiConfig config) {
-        String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2:3b";
-
+    public ChatClient buildChatClient(String provider, String endpointUrl, String apiKey, String modelName) {
+        String resolvedModel = modelName != null ? modelName : "llama3.2:3b";
         ChatModel chatModel;
-        if ("OPENAI".equals(config.getLlmProvider())
-                && config.getOpenaiApiKey() != null
-                && !config.getOpenaiApiKey().isEmpty()) {
-            String decryptedKey = decrypt(config.getOpenaiApiKey());
+
+        if ("OPENAI_COMPATIBLE".equals(provider) && apiKey != null && !apiKey.isBlank()) {
+            String decryptedKey = decrypt(apiKey);
             chatModel = OpenAiChatModel.builder()
                 .openAiClient(com.openai.client.okhttp.OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
-                .options(OpenAiChatOptions.builder().model(modelName).build())
+                .options(OpenAiChatOptions.builder().model(resolvedModel).build())
                 .build();
         } else {
-            String baseUrl = config.getOllamaEndpointUrl() != null
-                ? config.getOllamaEndpointUrl()
-                : "http://host.docker.internal:11434";
+            String baseUrl = endpointUrl != null ? endpointUrl : "http://host.docker.internal:11434";
             chatModel = OllamaChatModel.builder()
                 .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
-                .defaultOptions(OllamaChatOptions.builder().model(modelName).build())
+                .defaultOptions(OllamaChatOptions.builder().model(resolvedModel).build())
                 .build();
         }
 
         return ChatClient.builder(chatModel).build();
     }
 
-    String encrypt(String plaintext) {
+    /**
+     * Builds a ChatClient from an AiConfig entity.
+     * Kept for backward compatibility.
+     *
+     * @param config the AI configuration
+     * @return a configured ChatClient
+     */
+    public ChatClient buildChatClient(AiConfig config) {
+        String provider = config.getLlmProvider();
+        String endpointUrl = config.getOllamaEndpointUrl();
+        String apiKey = config.getOpenaiApiKey();
+        String modelName = config.getChatModelName();
+        return buildChatClient(provider, endpointUrl, apiKey, modelName);
+    }
+
+    /**
+     * Encrypts a plaintext string using AES/GCM/NoPadding with a PBKDF2-derived key.
+     * The initialization vector is prepended to the ciphertext for storage.
+     *
+     * @param plaintext the plaintext to encrypt
+     * @return Base64-encoded ciphertext with IV prepended
+     */
+    public String encrypt(String plaintext) {
         try {
-            byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(
-                encryptionKey.getBytes("UTF-8"));
-            SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(encryptionKey.toCharArray(), getSalt(), 65536, 256);
+            SecretKey key = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             byte[] iv = new byte[12];
             secureRandom.nextBytes(iv);
-            GCMParameterSpec spec = new GCMParameterSpec(128, iv);
-            cipher.init(Cipher.ENCRYPT_MODE, key, spec);
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+            cipher.init(Cipher.ENCRYPT_MODE, key, gcmSpec);
             byte[] ciphertext = cipher.doFinal(plaintext.getBytes("UTF-8"));
             ByteBuffer buffer = ByteBuffer.allocate(iv.length + ciphertext.length);
             buffer.put(iv);
@@ -203,20 +256,28 @@ public class AiConfigService {
      */
     public String decrypt(String ciphertext) {
         try {
-            byte[] keyBytes = MessageDigest.getInstance("SHA-256").digest(
-                encryptionKey.getBytes("UTF-8"));
-            SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(encryptionKey.toCharArray(), getSalt(), 65536, 256);
+            SecretKey key = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             ByteBuffer buffer = ByteBuffer.wrap(Base64.getDecoder().decode(ciphertext));
             byte[] iv = new byte[12];
             buffer.get(iv);
             byte[] encrypted = new byte[buffer.remaining()];
             buffer.get(encrypted);
-            GCMParameterSpec spec = new GCMParameterSpec(128, iv);
-            cipher.init(Cipher.DECRYPT_MODE, key, spec);
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+            cipher.init(Cipher.DECRYPT_MODE, key, gcmSpec);
             return new String(cipher.doFinal(encrypted), "UTF-8");
         } catch (Exception e) {
             throw new RuntimeException("Decryption failed", e);
+        }
+    }
+
+    private byte[] getSalt() {
+        try {
+            return "ShiftLeftKBSalt".getBytes("UTF-8");
+        } catch (java.io.UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 not supported", e);
         }
     }
 }

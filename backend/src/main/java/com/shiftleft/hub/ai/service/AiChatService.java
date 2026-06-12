@@ -1,27 +1,23 @@
 package com.shiftleft.hub.ai.service;
 
-import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.shiftleft.hub.ai.api.dto.ChatRequest;
 import com.shiftleft.hub.ai.api.dto.StreamEvent;
-import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
+import com.shiftleft.hub.llmconfig.service.WorkspaceChatModelRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.api.OllamaApi;
-import org.springframework.ai.ollama.api.OllamaChatOptions;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.vectorstore.filter.Filter.Expression;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import reactor.core.Disposable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,6 +35,7 @@ public class AiChatService {
     private final ArticleRepository articleRepository;
     private final VectorStore vectorStore;
     private final AiConfigService aiConfigService;
+    private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
 
     private static final int RRF_K = 60;
     private static final int MAX_HISTORY = 10;
@@ -57,8 +54,11 @@ public class AiChatService {
      */
     public void processChat(ChatRequest request, SseEmitter emitter, String userId) {
         try {
-            AiConfig config = aiConfigService.getConfigEntity();
-            double threshold = config.getSimilarityThreshold();
+            UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+            var wsConfig = workspaceChatModelRegistry.getWorkspaceConfig(workspaceId);
+            double threshold = wsConfig != null
+                ? wsConfig.getSimilarityThreshold()
+                : aiConfigService.getConfigEntity().getSimilarityThreshold();
 
             List<HybridSearchResult> results = hybridSearch(request.message(), threshold);
 
@@ -74,12 +74,13 @@ public class AiChatService {
             List<HybridSearchResult> topResults = results.size() > 5 ? results.subList(0, 5) : results;
             String context = buildContext(topResults);
             String history = formatHistory(request.history());
+
+            ChatClient chatClient = workspaceChatModelRegistry.getChatClient(workspaceId);
             String fullPrompt = buildPrompt(request.message(), context, history);
-
-            ChatClient chatClient = buildChatClient(config);
             AtomicReference<String> fullResponse = new AtomicReference<>("");
+            final Disposable[] subscription = {null};
 
-            chatClient.prompt()
+            var flux = chatClient.prompt()
                 .user(fullPrompt)
                 .stream()
                 .content()
@@ -90,6 +91,10 @@ public class AiChatService {
                         emitter.complete();
                     } catch (IOException e) {
                         emitter.completeWithError(e);
+                    } finally {
+                        if (subscription[0] != null) {
+                            subscription[0].dispose();
+                        }
                     }
                 })
                 .doOnComplete(() -> {
@@ -106,22 +111,30 @@ public class AiChatService {
                         emitter.complete();
                     } catch (IOException e) {
                         emitter.completeWithError(e);
-                    }
-                })
-                .subscribe(
-                    chunk -> {
-                        if (chunk != null && !chunk.isEmpty()) {
-                            fullResponse.updateAndGet(s -> s + chunk);
-                            try {
-                                emitter.send(SseEmitter.event().name("message")
-                                    .data(new StreamEvent("token", chunk, null)));
-                            } catch (IOException e) {
-                                log.debug("Client disconnected, aborting stream");
-                                emitter.completeWithError(e);
-                            }
+                    } finally {
+                        if (subscription[0] != null) {
+                            subscription[0].dispose();
                         }
                     }
-                );
+                });
+
+            subscription[0] = flux.subscribe(
+                chunk -> {
+                    if (chunk != null && !chunk.isEmpty()) {
+                        fullResponse.updateAndGet(s -> s + chunk);
+                        try {
+                            emitter.send(SseEmitter.event().name("message")
+                                .data(new StreamEvent("token", chunk, null)));
+                        } catch (IOException e) {
+                            log.debug("Client disconnected, aborting stream");
+                            if (subscription[0] != null) {
+                                subscription[0].dispose();
+                            }
+                            emitter.completeWithError(e);
+                        }
+                    }
+                }
+            );
 
         } catch (Exception e) {
             log.error("Error processing chat: {}", e.getMessage(), e);
@@ -171,29 +184,6 @@ public class AiChatService {
             .toList();
     }
 
-    private ChatClient buildChatClient(AiConfig config) {
-        String modelName = config.getChatModelName() != null ? config.getChatModelName() : "llama3.2:3b";
-        ChatModel chatModel;
-
-        if ("OPENAI".equals(config.getLlmProvider())
-            && config.getOpenaiApiKey() != null
-            && !config.getOpenaiApiKey().isEmpty()) {
-            String decryptedKey = aiConfigService.decrypt(config.getOpenaiApiKey());
-            chatModel = OpenAiChatModel.builder()
-                .openAiClient(OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
-                .options(OpenAiChatOptions.builder().model(modelName).build())
-                .build();
-        } else {
-            String baseUrl = config.getOllamaEndpointUrl() != null ? config.getOllamaEndpointUrl() : "http://host.docker.internal:11434";
-            chatModel = OllamaChatModel.builder()
-                .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
-                .defaultOptions(OllamaChatOptions.builder().model(modelName).build())
-                .build();
-        }
-
-        return ChatClient.builder(chatModel).build();
-    }
-
     private List<HybridSearchResult> ftsSearch(String query) {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         var page = articleRepository.searchByText(query, workspaceId, PageRequest.of(0, TOP_K));
@@ -216,7 +206,7 @@ public class AiChatService {
                 .query(query)
                 .topK(TOP_K)
                 .similarityThreshold(threshold)
-                .filterExpression("workspace_id == '" + workspaceId + "'")
+                .filterExpression(new FilterExpressionBuilder().eq("workspace_id", workspaceId.toString()).build())
                 .build());
         return docs.stream()
             .map(doc -> {

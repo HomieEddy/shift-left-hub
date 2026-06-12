@@ -1,0 +1,60 @@
+package com.shiftleft.hub.document.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+@Service
+@Slf4j
+public class DocumentParserService {
+
+    /**
+     * Parses a document file and extracts its text content.
+     * Supports markdown, plain text, and PDF formats.
+     *
+     * @param filePath the path to the document file
+     * @param mimeType the MIME type of the document
+     * @return the extracted text content
+     */
+    public String parse(Path filePath, String mimeType) {
+        try {
+            return switch (mimeType) {
+                case "text/markdown", "text/plain" -> Files.readString(filePath);
+                case "application/pdf" -> parsePdf(filePath);
+                default -> throw new IllegalArgumentException("Unsupported MIME type: " + mimeType);
+            };
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse document: " + filePath, e);
+        }
+    }
+
+    private String parsePdf(Path filePath) throws IOException {
+        // Simple PDF text extraction using basic approach
+        // Reads raw bytes and extracts text content
+        byte[] bytes = Files.readAllBytes(filePath);
+        StringBuilder text = new StringBuilder();
+        // Basic PDF text extraction — look for text between parentheses in PDF streams
+        String content = new String(bytes, StandardCharsets.UTF_8);
+        boolean inText = false;
+        for (int i = 0; i < content.length(); i++) {
+            if (content.charAt(i) == '(' && (i == 0 || content.charAt(i - 1) != '\\')) {
+                inText = true;
+            } else if (content.charAt(i) == ')' && inText) {
+                inText = false;
+                text.append(' ');
+            } else if (inText) {
+                text.append(content.charAt(i));
+            }
+        }
+        String result = text.toString().trim();
+        if (result.isEmpty()) {
+            log.warn("No text extracted from PDF, falling back to raw content");
+            result = content;
+        }
+        return result;
+    }
+}
