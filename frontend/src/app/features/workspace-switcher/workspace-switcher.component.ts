@@ -64,7 +64,7 @@ export class WorkspaceSwitcherComponent {
     const list = this.workspaces();
     if (!user) { return null; }
     // Find workspace matching JWT workspace_id from user details
-    return list.find(ws => ws.id === (user as any).workspaceId) || list[0] || null;
+    return list.find(ws => ws.id === user.workspaceId) || list[0] || null;
   });
 
   ngOnInit() {

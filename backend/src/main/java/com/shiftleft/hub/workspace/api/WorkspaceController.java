@@ -2,6 +2,7 @@ package com.shiftleft.hub.workspace.api;
 
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.user.domain.UserRepository;
+import com.shiftleft.hub.workspace.api.dto.WorkspaceInvitationResponse;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceResponse;
 import com.shiftleft.hub.workspace.domain.Workspace;
 import com.shiftleft.hub.workspace.service.WorkspaceInvitationService;
@@ -65,6 +66,47 @@ public class WorkspaceController {
         var user = userRepository.findByEmail(userDetails.getUsername())
             .orElseThrow(() -> new RuntimeException("User not found"));
         workspaceService.leaveWorkspace(id, user.getId());
+        return ResponseEntity.ok().build();
+    }
+}
+
+@RestController
+@RequestMapping("/api/invitations")
+@RequiredArgsConstructor
+public class InvitationController {
+
+    private final WorkspaceInvitationService invitationService;
+    private final UserRepository userRepository;
+
+    /** Lists pending invitations for the current user. */
+    @GetMapping
+    public ResponseEntity<List<WorkspaceInvitationResponse>> listMyInvitations(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        var user = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        var invitations = invitationService.listPendingForUser(user.getId());
+        return ResponseEntity.ok(invitationService.toResponseList(invitations));
+    }
+
+    /** Accepts a pending invitation. */
+    @PostMapping("/{id}/accept")
+    public ResponseEntity<Void> acceptInvitation(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        var user = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        invitationService.acceptInvitation(id, user.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    /** Rejects a pending invitation. */
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<Void> rejectInvitation(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        var user = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        invitationService.rejectInvitation(id, user.getId());
         return ResponseEntity.ok().build();
     }
 }
