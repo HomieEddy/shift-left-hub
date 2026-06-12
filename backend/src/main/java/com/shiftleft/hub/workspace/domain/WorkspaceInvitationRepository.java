@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/** Spring Data repository for WorkspaceInvitation entities. */
 public interface WorkspaceInvitationRepository extends JpaRepository<WorkspaceInvitation, UUID> {
 
     List<WorkspaceInvitation> findByWorkspaceId(UUID workspaceId);

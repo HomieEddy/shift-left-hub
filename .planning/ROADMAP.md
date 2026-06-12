@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Initial MVP** — Phases 1-8 (shipped 2026-06-08)
-- 🔷 **v2.0 Workspace Platform** — Phases 9-12 (in planning)
+- ✅ **v2.0 Workspace Platform** — Phases 9-12 (shipped 2026-06-12)
 
 ## Phases
 
@@ -22,12 +22,12 @@
 </details>
 
 <details>
-<summary>🔷 v2.0 Workspace Platform (Phases 9-12) — IN PLANNING</summary>
+<summary>✅ v2.0 Workspace Platform (Phases 9-12) — SHIPPED 2026-06-12</summary>
 
 - [x] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
 - [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
 - [x] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
-- [ ] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
+- [x] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
 
 </details>
 
@@ -104,11 +104,11 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 12-01-PLAN.md — Backend data model + migration (Flyway V6, workspace_invitation table, workspace.deleted_at/icon)
-- [ ] 12-02-PLAN.md — Backend API endpoints (workspace update/delete, invitations, member mgmt, role, leave, mine)
-- [ ] 12-03-PLAN.md — Frontend foundation (WorkspaceRoleService, workspace service extensions, models, translation keys)
-- [ ] 12-04-PLAN.md — Workspace switcher + invitation badge (header dropdown, workspace icons, accept/reject UI)
-- [ ] 12-05-PLAN.md — Admin detail page + lifecycle (tabbed workspace page, members/LLM/docs/settings, icon picker, delete/leave)
+- [x] 12-01-PLAN.md — Backend data model + migration (Flyway V6, workspace_invitation table, workspace.deleted_at/icon)
+- [x] 12-02-PLAN.md — Backend API endpoints (workspace update/delete, invitations, member mgmt, role, leave, mine)
+- [x] 12-03-PLAN.md — Frontend foundation (WorkspaceRoleService, workspace service extensions, models, translation keys)
+- [x] 12-04-PLAN.md — Workspace switcher + invitation badge (header dropdown, workspace icons, accept/reject UI)
+- [x] 12-05-PLAN.md — Admin detail page + lifecycle (tabbed workspace page, members/LLM/docs/settings, icon picker, delete/leave)
 
 ## Progress
 
@@ -125,8 +125,8 @@ Plans:
 | 9. Workspace Foundation | v2.0 | 4/4 | Complete | 2026-06-10 |
 | 10. Document Ingestion + BYO LLM | v2.0 | 4/4 | Complete | 2026-06-10 |
 | 11. Domain-Agnostic AI | v2.0 | 6/6 | Complete | 2026-06-12 |
-| 12. Workspace Management UI | v2.0 | — | Planned | - |
+| 12. Workspace Management UI | v2.0 | 5/5 | Complete | 2026-06-12 |
 
 ---
 
-*Last updated: 2026-06-12 — Phase 12 planned (5 plans in 2 waves)*
+*Last updated: 2026-06-12 — Phase 12 complete (5/5 plans) — v2.0 shipped*

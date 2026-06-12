@@ -15,6 +15,9 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * JPA entity representing a workspace invitation with PENDING/ACCEPTED/REJECTED lifecycle.
+ */
 @Entity
 @Table(name = "workspace_invitation")
 @Getter
