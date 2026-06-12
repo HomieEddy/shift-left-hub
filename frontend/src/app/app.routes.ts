@@ -57,8 +57,11 @@ export const routes: Routes = [
   },
   {
     path: 'admin/workspaces',
-    loadComponent: () => import('./features/admin/workspaces/workspace-list.component').then(m => m.WorkspaceListComponent),
     canActivate: [adminGuard],
+    children: [
+      { path: '', loadComponent: () => import('./features/admin/workspaces/workspace-list.component').then(m => m.WorkspaceListComponent) },
+      { path: ':id', loadComponent: () => import('./features/admin/workspaces/workspace-detail.component').then(m => m.WorkspaceDetailComponent) },
+    ],
   },
   {
     path: 'admin/documents',

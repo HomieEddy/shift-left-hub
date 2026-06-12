@@ -76,7 +76,7 @@
         </thead>
         <tbody class="divide-y divide-border-light">
           @for (ws of workspaces(); track ws.id) {
-            <tr class="hover:bg-surface-secondary transition-colors">
+            <tr class="cursor-pointer hover:bg-surface-secondary transition-colors" (click)="navigateToWorkspace(ws)">
               <td class="px-4 py-3">
                 <div class="font-medium text-text-primary">{{ ws.name }}</div>
                 @if (ws.description) {
@@ -88,7 +88,7 @@
               <td class="px-4 py-3 text-text-tertiary text-xs">{{ ws.createdAt | date:'mediumDate' }}</td>
               <td class="px-4 py-3">
                 <button
-                  (click)="openUserDialog(ws)"
+                  (click)="openUserDialog(ws); $event.stopPropagation()"
                   class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary transition-colors font-medium">
                   {{ translationService.translate('admin.workspaces.manage-users') }}
                 </button>
