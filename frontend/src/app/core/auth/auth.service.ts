@@ -36,6 +36,12 @@ export class AuthService {
       .pipe(tap(response => this.setSession(response)));
   }
 
+  /** Switch active workspace by re-issuing JWT with new workspace_id claim. */
+  switchWorkspace(workspaceId: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`/api/auth/workspace/${workspaceId}`, {}, { withCredentials: true })
+      .pipe(tap(response => this.setSession(response)));
+  }
+
   /** Log out and clear the session on the server. */
   logout(): Observable<void> {
     return this.http.post<void>('/api/auth/logout', {}, { withCredentials: true })

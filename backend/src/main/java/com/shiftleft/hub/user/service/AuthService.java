@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -123,8 +125,31 @@ public class AuthService {
         }
     }
 
+    /**
+     * Switches the active workspace for a user by re-issuing tokens
+     * with a new workspace_id claim.
+     *
+     * @param userId the user UUID
+     * @param workspaceId the target workspace UUID
+     * @return the auth response with new tokens
+     */
+    public AuthResponse switchWorkspace(UUID userId, UUID workspaceId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BadCredentialsException("User not found"));
+
+        String accessToken = jwtService.generateAccessTokenWithWorkspace(user, workspaceId);
+        String refreshToken = jwtService.generateRefreshTokenWithWorkspace(user, workspaceId);
+
+        return buildAuthResponse(user, accessToken, refreshToken, workspaceId);
+    }
+
     private AuthResponse buildAuthResponse(
             User user, String accessToken, String refreshToken) {
+        return buildAuthResponse(user, accessToken, refreshToken, user.getDefaultWorkspaceId());
+    }
+
+    private AuthResponse buildAuthResponse(
+            User user, String accessToken, String refreshToken, UUID effectiveWorkspaceId) {
         return new AuthResponse(
             accessToken,
             refreshToken,
@@ -132,7 +157,7 @@ public class AuthService {
             user.getEmail(),
             user.getRole().name(),
             user.getDisplayName(),
-            user.getDefaultWorkspaceId() != null ? user.getDefaultWorkspaceId().toString() : null
+            effectiveWorkspaceId != null ? effectiveWorkspaceId.toString() : null
         );
     }
 }

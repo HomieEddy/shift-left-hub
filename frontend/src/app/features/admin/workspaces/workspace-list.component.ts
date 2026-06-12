@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgClass, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceDto, WorkspaceMemberDto } from './workspace.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
@@ -9,11 +10,12 @@ import { TranslationService } from '../../../core/i18n/translation.service';
 @Component({
   selector: 'app-workspace-list',
   standalone: true,
-  imports: [NgClass, DatePipe, FormsModule],
+  imports: [NgClass, DatePipe, FormsModule, RouterLink],
   templateUrl: './workspace-list.component.html',
 })
 export class WorkspaceListComponent implements OnInit {
   private workspaceService = inject(WorkspaceService);
+  private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
@@ -36,6 +38,10 @@ export class WorkspaceListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadWorkspaces();
+  }
+
+  navigateToWorkspace(workspace: WorkspaceDto): void {
+    void this.router.navigate(['/admin/workspaces', workspace.id]);
   }
 
   loadWorkspaces(): void {

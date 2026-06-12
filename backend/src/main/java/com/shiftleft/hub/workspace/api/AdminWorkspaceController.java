@@ -3,11 +3,16 @@ package com.shiftleft.hub.workspace.api;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.workspace.api.dto.AssignUserRequest;
+import com.shiftleft.hub.workspace.api.dto.ChangeRoleRequest;
 import com.shiftleft.hub.workspace.api.dto.CreateWorkspaceRequest;
+import com.shiftleft.hub.workspace.api.dto.InvitationRequest;
+import com.shiftleft.hub.workspace.api.dto.UpdateWorkspaceRequest;
+import com.shiftleft.hub.workspace.api.dto.WorkspaceInvitationResponse;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceResponse;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceUserResponse;
 import com.shiftleft.hub.workspace.domain.Workspace;
 import com.shiftleft.hub.workspace.domain.WorkspaceMember;
+import com.shiftleft.hub.workspace.service.WorkspaceInvitationService;
 import com.shiftleft.hub.workspace.service.WorkspaceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +20,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,13 +32,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-/** REST controller for admin workspace management endpoints. */
 @RestController
 @RequestMapping("/api/admin/workspaces")
 @RequiredArgsConstructor
 public class AdminWorkspaceController {
 
     private final WorkspaceService workspaceService;
+    private final WorkspaceInvitationService invitationService;
     private final UserRepository userRepository;
 
     /**
@@ -49,21 +56,18 @@ public class AdminWorkspaceController {
             .orElseThrow(() -> new RuntimeException("Admin not found"));
         Workspace workspace = workspaceService.createWorkspace(
             request.name(), request.description(), request.logoUrl(), admin.getId());
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(toResponse(workspace));
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(workspace));
     }
 
     /**
-     * Lists all workspaces.
+     * Lists all non-deleted workspaces.
      *
      * @return list of workspace responses
      */
     @GetMapping
     public ResponseEntity<List<WorkspaceResponse>> listWorkspaces() {
-        List<Workspace> workspaces = workspaceService.findAll();
-        List<WorkspaceResponse> responses = workspaces.stream()
-            .map(this::toResponse)
-            .toList();
+        List<Workspace> workspaces = workspaceService.findAllNonDeleted();
+        List<WorkspaceResponse> responses = workspaces.stream().map(this::toResponse).toList();
         return ResponseEntity.ok(responses);
     }
 
@@ -81,6 +85,39 @@ public class AdminWorkspaceController {
     }
 
     /**
+     * Updates workspace name, description, and/or icon.
+     *
+     * @param id the workspace UUID
+     * @param request the update payload
+     * @param userDetails the authenticated admin user
+     * @return the updated workspace
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<WorkspaceResponse> updateWorkspace(
+            @PathVariable UUID id,
+            @Valid @RequestBody UpdateWorkspaceRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Workspace workspace = workspaceService.updateWorkspace(
+            id, request.name(), request.description(), request.icon());
+        return ResponseEntity.ok(toResponse(workspace));
+    }
+
+    /**
+     * Soft-deletes a workspace.
+     *
+     * @param id the workspace UUID
+     * @param userDetails the authenticated admin user
+     * @return 204 No Content
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWorkspace(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        workspaceService.softDeleteWorkspace(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Lists all members of a workspace.
      *
      * @param id the workspace UUID
@@ -91,17 +128,14 @@ public class AdminWorkspaceController {
         List<WorkspaceMember> members = workspaceService.getWorkspaceMembers(id);
         List<WorkspaceUserResponse> responses = members.stream()
             .map(member -> {
-                User user = userRepository.findById(member.getId().getUserId())
-                    .orElse(null);
+                User user = userRepository.findById(member.getId().getUserId()).orElse(null);
                 return new WorkspaceUserResponse(
                     member.getId().getUserId(),
                     user != null ? user.getEmail() : "unknown",
                     user != null ? user.getDisplayName() : "Unknown",
                     member.getRole(),
-                    member.getJoinedAt()
-                );
-            })
-            .toList();
+                    member.getJoinedAt());
+            }).toList();
         return ResponseEntity.ok(responses);
     }
 
@@ -121,6 +155,80 @@ public class AdminWorkspaceController {
     }
 
     /**
+     * Removes a member from a workspace.
+     *
+     * @param id the workspace UUID
+     * @param userId the member user UUID
+     * @return 204 No Content
+     */
+    @DeleteMapping("/{id}/members/{userId}")
+    public ResponseEntity<Void> removeMember(@PathVariable UUID id, @PathVariable UUID userId) {
+        workspaceService.removeMember(id, userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Changes a member's role in a workspace.
+     *
+     * @param id the workspace UUID
+     * @param userId the member user UUID
+     * @param request the new role payload
+     * @return HTTP 200 on success
+     */
+    @PutMapping("/{id}/members/{userId}/role")
+    public ResponseEntity<Void> changeMemberRole(
+            @PathVariable UUID id,
+            @PathVariable UUID userId,
+            @Valid @RequestBody ChangeRoleRequest request) {
+        workspaceService.changeMemberRole(id, userId, request.role());
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Sends a workspace invitation to a user.
+     *
+     * @param id the workspace UUID
+     * @param request the invitation payload with userId and role
+     * @param userDetails the authenticated admin user
+     * @return the created invitation with HTTP 201
+     */
+    @PostMapping("/{id}/invitations")
+    public ResponseEntity<WorkspaceInvitationResponse> sendInvitation(
+            @PathVariable UUID id,
+            @Valid @RequestBody InvitationRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        User admin = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("Admin not found"));
+        var invitation = invitationService.sendInvitation(id, request.userId(), admin.getId(), request.role());
+        return ResponseEntity.status(HttpStatus.CREATED).body(invitationService.toResponse(invitation));
+    }
+
+    /**
+     * Lists all invitations for a workspace.
+     *
+     * @param id the workspace UUID
+     * @return list of invitation responses
+     */
+    @GetMapping("/{id}/invitations")
+    public ResponseEntity<List<WorkspaceInvitationResponse>> listInvitations(@PathVariable UUID id) {
+        var invitations = invitationService.listByWorkspace(id);
+        return ResponseEntity.ok(invitationService.toResponseList(invitations));
+    }
+
+    /**
+     * Revokes a pending workspace invitation.
+     *
+     * @param id the workspace UUID
+     * @param invitationId the invitation UUID
+     * @return 204 No Content
+     */
+    @DeleteMapping("/{id}/invitations/{invitationId}")
+    public ResponseEntity<Void> revokeInvitation(@PathVariable UUID id, @PathVariable UUID invitationId) {
+        invitationService.revokeInvitation(invitationId, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Lists users not yet assigned to this workspace.
      *
      * @param id the workspace UUID
@@ -130,8 +238,7 @@ public class AdminWorkspaceController {
     public ResponseEntity<List<WorkspaceUserResponse>> listAvailableUsers(@PathVariable UUID id) {
         List<User> users = userRepository.findUsersNotInWorkspace(id);
         List<WorkspaceUserResponse> responses = users.stream()
-            .map(u -> new WorkspaceUserResponse(
-                u.getId(), u.getEmail(), u.getDisplayName(), null, null))
+            .map(u -> new WorkspaceUserResponse(u.getId(), u.getEmail(), u.getDisplayName(), null, null))
             .toList();
         return ResponseEntity.ok(responses);
     }
@@ -139,7 +246,7 @@ public class AdminWorkspaceController {
     private WorkspaceResponse toResponse(Workspace w) {
         return new WorkspaceResponse(
             w.getId(), w.getName(), w.getSlug(),
-            w.getDescription(), w.getLogoUrl(),
+            w.getDescription(), w.getLogoUrl(), w.getIcon(),
             workspaceService.getMemberCount(w.getId()),
             w.getCreatedBy(), w.getCreatedAt(), w.getUpdatedAt());
     }

@@ -77,6 +77,51 @@ public class JwtService {
     }
 
     /**
+     * Generates an access token with a custom workspace_id claim.
+     *
+     * @param user the authenticated user
+     * @param workspaceId the workspace UUID to set in the claim
+     * @return the signed access token string
+     */
+    public String generateAccessTokenWithWorkspace(User user, UUID workspaceId) {
+        if (workspaceId == null) {
+            throw new IllegalArgumentException("workspaceId must not be null");
+        }
+        return Jwts.builder()
+                .subject(user.getId().toString())
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole().name())
+                .claim("displayName", user.getDisplayName())
+                .claim("workspace_id", workspaceId.toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + accessExpiration))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    /**
+     * Generates a refresh token with a custom workspace_id claim.
+     *
+     * @param user the authenticated user
+     * @param workspaceId the workspace UUID to set in the claim
+     * @return the signed refresh token string
+     */
+    public String generateRefreshTokenWithWorkspace(User user, UUID workspaceId) {
+        if (workspaceId == null) {
+            throw new IllegalArgumentException("workspaceId must not be null");
+        }
+        return Jwts.builder()
+                .subject(user.getId().toString())
+                .claim("type", "refresh")
+                .claim("tokenId", UUID.randomUUID().toString())
+                .claim("workspace_id", workspaceId.toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    /**
      * Generates a signed JWT refresh token for the given user.
      *
      * @param user the authenticated user

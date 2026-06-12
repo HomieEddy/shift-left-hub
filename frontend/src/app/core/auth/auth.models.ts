@@ -5,6 +5,7 @@ export interface AuthResponse {
   email: string;
   role: string;
   displayName: string;
+  workspaceId: string | null;
 }
 
 export interface RegisterRequest {
