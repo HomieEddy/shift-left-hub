@@ -30,6 +30,7 @@ public record WorkspaceLlmConfigResponse(
     String embeddingModelName,
     Double similarityThreshold,
     Integer embeddingDimension,
+    String systemPrompt,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
@@ -53,6 +54,7 @@ public record WorkspaceLlmConfigResponse(
             config.getEmbeddingModelName(),
             config.getSimilarityThreshold(),
             config.getEmbeddingDimension(),
+            config.getSystemPrompt(),
             config.getCreatedAt(),
             config.getUpdatedAt()
         );

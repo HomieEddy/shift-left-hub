@@ -59,6 +59,12 @@ public class WorkspaceChatModelRegistry {
         return workspaceLlmConfigRepository.findByWorkspaceId(workspaceId).orElse(null);
     }
 
+    public String getSystemPrompt(UUID workspaceId) {
+        return workspaceLlmConfigRepository.findByWorkspaceId(workspaceId)
+            .map(WorkspaceLlmConfig::getSystemPrompt)
+            .orElse(null);
+    }
+
     /**
      * Evicts the cached ChatClient for a workspace.
      * Called after workspace LLM config is updated.

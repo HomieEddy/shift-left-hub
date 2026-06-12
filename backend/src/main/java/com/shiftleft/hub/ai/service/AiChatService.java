@@ -76,7 +76,8 @@ public class AiChatService {
             String history = formatHistory(request.history());
 
             ChatClient chatClient = workspaceChatModelRegistry.getChatClient(workspaceId);
-            String fullPrompt = buildPrompt(request.message(), context, history);
+            String systemPrompt = workspaceChatModelRegistry.getSystemPrompt(workspaceId);
+            String fullPrompt = buildPrompt(request.message(), context, history, systemPrompt);
             AtomicReference<String> fullResponse = new AtomicReference<>("");
             final Disposable[] subscription = {null};
 
@@ -250,26 +251,30 @@ public class AiChatService {
         return sb.toString();
     }
 
-    private String buildPrompt(String userMessage, String context, String history) {
+    private String buildPrompt(String userMessage, String context, String history, String systemPrompt) {
+        String effectivePrompt = (systemPrompt != null && !systemPrompt.isBlank())
+            ? systemPrompt
+            : "You are a helpful assistant using the workspace knowledge base. Answer based on the workspace's knowledge base articles and uploaded documents. Use Markdown formatting with clear sections.";
+
+        effectivePrompt = effectivePrompt
+            .replace("{workspace_name}", resolveWorkspaceName())
+            .replace("{domain}", "")
+            .replace("{categories}", "");
+
         return """
-You are an IT support assistant. Use the following knowledge base articles to answer the user's question.
-Provide step-by-step resolution guides based on the articles. If the articles don't answer the question,
-say you couldn't find relevant information and offer to escalate.
+    %s
 
-Formatting rules for every response:
-- Use Markdown.
-- Start with a short summary sentence.
-- Use a section titled "### Steps" with a numbered list for actions.
-- Use bullet points for notes, prerequisites, warnings, or alternatives.
-- Add blank lines between sections and between paragraphs.
-- Keep each step concise and on its own line.
+    %s
 
-%s
+    Conversation history:
+    %s
 
-Conversation history:
-%s
+    User: %s
+    Assistant:""".formatted(effectivePrompt, context, history, userMessage);
+    }
 
-User: %s
-Assistant:""".formatted(context, history, userMessage);
+    private String resolveWorkspaceName() {
+        UUID wsId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        return wsId != null ? wsId.toString() : "this workspace";
     }
 }
