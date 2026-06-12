@@ -35,7 +35,12 @@ public class AuthController {
     private final WorkspaceService workspaceService;
     private final UserRepository userRepository;
 
-    /** Register a new user. */
+    /**
+     * Register a new user.
+     *
+     * @param request the registration details
+     * @return auth response with tokens
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = authService.register(request);
@@ -45,7 +50,12 @@ public class AuthController {
             .body(response);
     }
 
-    /** Authenticate with email/password. */
+    /**
+     * Authenticate with email/password.
+     *
+     * @param request the login credentials
+     * @return auth response with tokens
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
@@ -55,7 +65,12 @@ public class AuthController {
             .body(response);
     }
 
-    /** Refresh an access token using the refresh cookie. */
+    /**
+     * Refresh an access token using the refresh cookie.
+     *
+     * @param refreshToken the refresh token value
+     * @return auth response with new tokens
+     */
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@CookieValue("refresh_token") String refreshToken) {
         AuthResponse response = authService.refresh(refreshToken);
@@ -65,7 +80,12 @@ public class AuthController {
             .body(response);
     }
 
-    /** Log out and clear session cookies. */
+    /**
+     * Log out and clear session cookies.
+     *
+     * @param refreshToken the refresh token to invalidate
+     * @return success message
+     */
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(
             @CookieValue(value = "refresh_token", defaultValue = "") String refreshToken) {
@@ -76,7 +96,13 @@ public class AuthController {
             .body(Map.of("message", "Logged out"));
     }
 
-    /** Switch active workspace by re-issuing JWT with new workspace_id claim. */
+    /**
+     * Switch active workspace by re-issuing JWT with new workspace_id claim.
+     *
+     * @param id the target workspace UUID
+     * @param userDetails the authenticated user
+     * @return auth response with new tokens
+     */
     @PostMapping("/workspace/{id}")
     public ResponseEntity<AuthResponse> switchWorkspace(
             @PathVariable UUID id,

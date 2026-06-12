@@ -10,12 +10,12 @@ import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
-
-import java.util.UUID;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
