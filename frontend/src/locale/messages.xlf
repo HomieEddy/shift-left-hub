@@ -126,6 +126,10 @@
         <source>Tags</source>
         <target>Tags</target>
       </trans-unit>
+      <trans-unit id="nav.documents">
+        <source>Documents</source>
+        <target>Documents</target>
+      </trans-unit>
       <trans-unit id="admin.articles.title">
         <source>Articles</source>
         <target>Articles</target>
@@ -1349,6 +1353,118 @@
       <trans-unit id="landing.cta.button">
         <source>Get Started Free</source>
         <target>Get Started Free</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.title" datatype="html">
+        <source>Documents</source>
+        <target>Documents</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.drop-zone" datatype="html">
+        <source>Drop files here or click to browse</source>
+        <target>Drop files here or click to browse</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.accepted-types" datatype="html">
+        <source>Accepted: .md, .txt, .pdf</source>
+        <target>Accepted: .md, .txt, .pdf</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.list-title" datatype="html">
+        <source>Uploaded Documents</source>
+        <target>Uploaded Documents</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.loading" datatype="html">
+        <source>Loading documents...</source>
+        <target>Loading documents...</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.empty" datatype="html">
+        <source>No documents uploaded yet</source>
+        <target>No documents uploaded yet</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.filename" datatype="html">
+        <source>Filename</source>
+        <target>Filename</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.type" datatype="html">
+        <source>Type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status" datatype="html">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.size" datatype="html">
+        <source>Size</source>
+        <target>Size</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.date" datatype="html">
+        <source>Uploaded</source>
+        <target>Uploaded</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.actions" datatype="html">
+        <source>Actions</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.reprocess" datatype="html">
+        <source>Reprocess</source>
+        <target>Reprocess</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.delete" datatype="html">
+        <source>Delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.confirm-delete" datatype="html">
+        <source>Delete this document?</source>
+        <target>Delete this document?</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.uploading" datatype="html">
+        <source>Uploading...</source>
+        <target>Uploading...</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.uploaded" datatype="html">
+        <source>Uploaded: </source>
+        <target>Uploaded: </target>
+      </trans-unit>
+      <trans-unit id="admin.documents.unsupported" datatype="html">
+        <source>Unsupported type: </source>
+        <target>Unsupported type: </target>
+      </trans-unit>
+      <trans-unit id="admin.documents.upload-failed" datatype="html">
+        <source>Upload failed: </source>
+        <target>Upload failed: </target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.uploaded" datatype="html">
+        <source>Uploaded</source>
+        <target>Uploaded</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.parsing" datatype="html">
+        <source>Parsing</source>
+        <target>Parsing</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.chunking" datatype="html">
+        <source>Chunking</source>
+        <target>Chunking</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.embedding" datatype="html">
+        <source>Embedding</source>
+        <target>Embedding</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.ready" datatype="html">
+        <source>Ready</source>
+        <target>Ready</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.failed" datatype="html">
+        <source>Failed</source>
+        <target>Failed</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.workspace" datatype="html">
+        <source>Workspace</source>
+        <target>Workspace</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.global-config" datatype="html">
+        <source>Global Configuration</source>
+        <target>Global Configuration</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.workspace-hint" datatype="html">
+        <source>Configuring LLM for this workspace only</source>
+        <target>Configuring LLM for this workspace only</target>
       </trans-unit>
     </body>
   </file>

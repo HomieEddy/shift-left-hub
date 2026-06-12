@@ -9,7 +9,7 @@ import {
   LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare, 
   LucideTicket, LucideLayoutList, LucideUsers, LucideFileText, 
   LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard, 
-  LucideX
+  LucideX, LucideUpload
 } from '@lucide/angular';
 import { ToastContainer } from './shared/ui/toast/toast-container';
 
@@ -21,7 +21,7 @@ import { ToastContainer } from './shared/ui/toast/toast-container';
     LucideMenu, LucideLogOut, LucideBookOpen, LucideMessageSquare,
     LucideTicket, LucideLayoutList, LucideUsers, LucideFileText,
     LucideClipboardList, LucideTag, LucideSettings, LucideLayoutDashboard,
-    LucideX,
+    LucideX, LucideUpload,
     ToastContainer
   ],
   templateUrl: './app.html',

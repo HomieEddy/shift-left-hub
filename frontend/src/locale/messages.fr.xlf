@@ -126,6 +126,10 @@
         <source>Tags</source>
         <target>Étiquettes</target>
       </trans-unit>
+      <trans-unit id="nav.documents">
+        <source>Documents</source>
+        <target>Documents</target>
+      </trans-unit>
       <trans-unit id="admin.articles.title">
         <source>Articles</source>
         <target>Articles</target>
@@ -1349,6 +1353,118 @@
       <trans-unit id="landing.cta.button">
         <source>Get Started Free</source>
         <target>Commencer gratuitement</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.title" datatype="html">
+        <source>Documents</source>
+        <target>Documents</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.drop-zone" datatype="html">
+        <source>Drop files here or click to browse</source>
+        <target>Déposez les fichiers ici ou cliquez pour parcourir</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.accepted-types" datatype="html">
+        <source>Accepted: .md, .txt, .pdf</source>
+        <target>Accepté : .md, .txt, .pdf</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.list-title" datatype="html">
+        <source>Uploaded Documents</source>
+        <target>Documents téléchargés</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.loading" datatype="html">
+        <source>Loading documents...</source>
+        <target>Chargement des documents...</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.empty" datatype="html">
+        <source>No documents uploaded yet</source>
+        <target>Aucun document téléchargé</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.filename" datatype="html">
+        <source>Filename</source>
+        <target>Nom du fichier</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.type" datatype="html">
+        <source>Type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status" datatype="html">
+        <source>Status</source>
+        <target>Statut</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.size" datatype="html">
+        <source>Size</source>
+        <target>Taille</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.date" datatype="html">
+        <source>Uploaded</source>
+        <target>Téléchargé</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.actions" datatype="html">
+        <source>Actions</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.reprocess" datatype="html">
+        <source>Reprocess</source>
+        <target>Retraiter</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.delete" datatype="html">
+        <source>Delete</source>
+        <target>Supprimer</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.confirm-delete" datatype="html">
+        <source>Delete this document?</source>
+        <target>Supprimer ce document ?</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.uploading" datatype="html">
+        <source>Uploading...</source>
+        <target>Téléchargement...</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.uploaded" datatype="html">
+        <source>Uploaded: </source>
+        <target>Téléchargé : </target>
+      </trans-unit>
+      <trans-unit id="admin.documents.unsupported" datatype="html">
+        <source>Unsupported type: </source>
+        <target>Type non supporté : </target>
+      </trans-unit>
+      <trans-unit id="admin.documents.upload-failed" datatype="html">
+        <source>Upload failed: </source>
+        <target>Échec du téléchargement : </target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.uploaded" datatype="html">
+        <source>Uploaded</source>
+        <target>Téléchargé</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.parsing" datatype="html">
+        <source>Parsing</source>
+        <target>Analyse</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.chunking" datatype="html">
+        <source>Chunking</source>
+        <target>Découpage</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.embedding" datatype="html">
+        <source>Embedding</source>
+        <target>Vectorisation</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.ready" datatype="html">
+        <source>Ready</source>
+        <target>Prêt</target>
+      </trans-unit>
+      <trans-unit id="admin.documents.status.failed" datatype="html">
+        <source>Failed</source>
+        <target>Échec</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.workspace" datatype="html">
+        <source>Workspace</source>
+        <target>Espace de travail</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.global-config" datatype="html">
+        <source>Global Configuration</source>
+        <target>Configuration globale</target>
+      </trans-unit>
+      <trans-unit id="admin.settings.llm.workspace-hint" datatype="html">
+        <source>Configuring LLM for this workspace only</source>
+        <target>Configuration LLM pour cet espace de travail uniquement</target>
       </trans-unit>
     </body>
   </file>

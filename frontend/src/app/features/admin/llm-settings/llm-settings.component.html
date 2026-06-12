@@ -4,6 +4,26 @@
       <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
         <h1 class="text-xl font-semibold text-text-primary mb-6">{{ translationService.translate('admin.settings.llm.title') }}</h1>
 
+        @if (workspaces().length > 0) {
+          <div class="mb-6">
+            <label for="workspaceSelector" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.workspace') }}</label>
+            <select
+              id="workspaceSelector"
+              [ngModel]="selectedWorkspaceId()"
+              (ngModelChange)="selectedWorkspaceId.set($event); onWorkspaceChange()"
+              class="w-full rounded-xl border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="">{{ translationService.translate('admin.settings.llm.global-config') }}</option>
+              @for (ws of workspaces(); track ws.id) {
+                <option [value]="ws.id" class="text-text-primary">{{ ws.name }}</option>
+              }
+            </select>
+            @if (isWorkspaceMode()) {
+              <p class="text-xs text-text-tertiary mt-1">{{ translationService.translate('admin.settings.llm.workspace-hint') }}</p>
+            }
+          </div>
+        }
+
         <div class="space-y-4">
           <div>
             <label for="provider" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.provider') }}</label>
@@ -31,7 +51,7 @@
             </div>
           }
 
-          @if (config.llmProvider === 'OPENAI') {
+          @if (config.llmProvider === 'OPENAI_COMPATIBLE') {
             <div>
               <label for="openaiKey" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.openai-key') }}</label>
               <input
@@ -131,6 +151,7 @@
         }
       </div>
 
+      @if (!isWorkspaceMode()) {
       <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
         <h2 class="text-sm font-semibold text-text-secondary mb-3">{{ translationService.translate('admin.settings.llm.reindex') }}</h2>
         <p class="text-accent-warning text-xs mb-3">{{ translationService.translate('admin.settings.llm.reindex-warning') }}</p>
@@ -142,6 +163,7 @@
           {{ isReindexing ? translationService.translate('admin.settings.llm.reindexing') : translationService.translate('admin.settings.llm.reindex') }}
         </button>
       </div>
+      }
     </div>
   }
 </div>
