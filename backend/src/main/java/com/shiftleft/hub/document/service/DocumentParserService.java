@@ -1,6 +1,8 @@
 package com.shiftleft.hub.document.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.parser.Parser;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,6 +27,8 @@ public class DocumentParserService {
             return switch (mimeType) {
                 case "text/markdown", "text/plain" -> Files.readString(filePath);
                 case "application/pdf" -> parsePdf(filePath);
+                case "text/html", "application/xhtml+xml" -> parseHtml(filePath);
+                case "text/xml", "application/xml", "application/rss+xml", "application/atom+xml" -> parseXml(filePath);
                 default -> throw new IllegalArgumentException("Unsupported MIME type: " + mimeType);
             };
         } catch (IOException e) {
@@ -56,5 +60,24 @@ public class DocumentParserService {
             result = content;
         }
         return result;
+    }
+
+    private String parseHtml(Path filePath) throws IOException {
+        org.jsoup.nodes.Document htmlDoc = Jsoup.parse(filePath.toFile(), "UTF-8");
+        htmlDoc.select("script, style, svg, noscript").remove();
+        htmlDoc.outputSettings().outline(true);
+        return htmlDoc.body().text();
+    }
+
+    private String parseXml(Path filePath) throws IOException {
+        String xmlContent = Files.readString(filePath);
+        org.jsoup.nodes.Document xmlDoc = Jsoup.parse(xmlContent, "", Parser.xmlParser());
+        xmlDoc.select("?xml, !DOCTYPE").remove();
+        String text = xmlDoc.text();
+        if (text.isBlank()) {
+            log.warn("No text extracted from XML, falling back to raw content for: {}", filePath);
+            return xmlContent;
+        }
+        return text;
     }
 }
