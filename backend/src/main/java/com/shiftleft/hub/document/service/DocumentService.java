@@ -232,9 +232,13 @@ public class DocumentService {
     }
 
     private String getExtension(String filename) {
-        if (filename == null) return "";
+        if (filename == null) {
+            return "";
+        }
         int lastDot = filename.lastIndexOf('.');
-        if (lastDot < 0) return "";
+        if (lastDot < 0) {
+            return "";
+        }
         return filename.substring(lastDot).toLowerCase();
     }
 
