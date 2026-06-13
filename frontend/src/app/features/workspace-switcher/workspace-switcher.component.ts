@@ -37,7 +37,12 @@ export class WorkspaceSwitcherComponent implements OnInit {
   ngOnInit() {
     this.workspaceService.getMyWorkspaces()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(ws => this.workspaces.set(ws));
+      .subscribe({
+        next: ws => this.workspaces.set(ws),
+        error: () => {
+          this.authService.logout().subscribe();
+        },
+      });
   }
 
   toggleDropdown() {
@@ -58,6 +63,6 @@ export class WorkspaceSwitcherComponent implements OnInit {
   }
 
   isDefaultWorkspace(ws: WorkspaceDto | null): boolean {
-    return ws?.slug === 'default';
+    return ws?.slug === 'public';
   }
 }
