@@ -1,11 +1,14 @@
 package com.shiftleft.hub.document.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +19,7 @@ public class DocumentParserService {
 
     /**
      * Parses a document file and extracts its text content.
-     * Supports markdown, plain text, PDF, HTML, and XML formats.
+     * Supports markdown, plain text, PDF, HTML, XML, and Word documents.
      *
      * @param filePath the path to the document file
      * @param mimeType the MIME type of the document
@@ -29,6 +32,7 @@ public class DocumentParserService {
                 case "application/pdf" -> parsePdf(filePath);
                 case "text/html", "application/xhtml+xml" -> parseHtml(filePath);
                 case "text/xml", "application/xml", "application/rss+xml", "application/atom+xml" -> parseXml(filePath);
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document" -> parseDocx(filePath);
                 default -> throw new IllegalArgumentException("Unsupported MIME type: " + mimeType);
             };
         } catch (IOException e) {
@@ -77,5 +81,19 @@ public class DocumentParserService {
             return xmlContent;
         }
         return text;
+    }
+
+    private String parseDocx(Path filePath) throws IOException {
+        try (InputStream is = Files.newInputStream(filePath);
+             XWPFDocument doc = new XWPFDocument(is);
+             XWPFWordExtractor extractor = new XWPFWordExtractor(doc)) {
+            String text = extractor.getText();
+            if (text.isBlank()) {
+                log.warn("No text extracted from Word document, falling back to raw content for: {}", filePath);
+                byte[] rawBytes = Files.readAllBytes(filePath);
+                return new String(rawBytes, StandardCharsets.UTF_8);
+            }
+            return text;
+        }
     }
 }

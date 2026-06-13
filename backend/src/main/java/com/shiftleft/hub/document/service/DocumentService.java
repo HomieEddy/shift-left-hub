@@ -35,10 +35,11 @@ public class DocumentService {
     private static final List<String> ALLOWED_MIME_TYPES = List.of(
         "text/markdown", "text/plain", "application/pdf",
         "text/html", "application/xhtml+xml",
-        "text/xml", "application/xml", "application/rss+xml", "application/atom+xml"
+        "text/xml", "application/xml", "application/rss+xml", "application/atom+xml",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     );
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of(
-        ".md", ".txt", ".pdf", ".html", ".htm", ".xhtml", ".xml"
+        ".md", ".txt", ".pdf", ".html", ".htm", ".xhtml", ".xml", ".docx"
     );
     private static final long MAX_FILE_SIZE = 50L * 1024 * 1024; // 50MB
 
@@ -60,7 +61,7 @@ public class DocumentService {
         if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType)) {
             if (extension.isEmpty() || !ALLOWED_EXTENSIONS.contains(extension)) {
                 throw new DocumentProcessingException(
-                    "Unsupported file type. Supported: .md, .txt, .pdf, .html, .xml");
+                    "Unsupported file type. Supported: .md, .txt, .pdf, .html, .xml, .docx");
             }
         }
 

@@ -76,6 +76,13 @@
 			<version>1.19.1</version>
 		</dependency>
 
+		<!-- Apache POI — Word document (.docx) parsing -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+
 		<!-- Flyway — Database migration -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>

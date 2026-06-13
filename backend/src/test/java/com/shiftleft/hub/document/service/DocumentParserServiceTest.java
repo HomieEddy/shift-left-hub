@@ -1,8 +1,10 @@
 package com.shiftleft.hub.document.service;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -352,6 +354,41 @@ class DocumentParserServiceTest {
             String result = parser.parse(file, "text/xml");
             assertNotNull(result);
         }, "Empty XML should not throw exception");
+    }
+
+    // ── Word document parsing (Apache POI) ──────────────────────
+
+    @Test
+    void parseDocx_shouldExtractText() throws IOException {
+        Path file = tempDir.resolve("test.docx");
+        try (XWPFDocument doc = new XWPFDocument()) {
+            doc.createParagraph().createRun().setText("Hello from Word");
+            doc.createParagraph().createRun().setText("Second paragraph");
+            try (FileOutputStream out = new FileOutputStream(file.toFile())) {
+                doc.write(out);
+            }
+        }
+
+        String result = parser.parse(file,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        assertTrue(result.contains("Hello from Word"), "Should extract first paragraph");
+        assertTrue(result.contains("Second paragraph"), "Should extract second paragraph");
+    }
+
+    @Test
+    void parseDocx_shouldFallbackOnEmptyDocx() throws IOException {
+        Path file = tempDir.resolve("empty.docx");
+        try (XWPFDocument doc = new XWPFDocument()) {
+            try (FileOutputStream out = new FileOutputStream(file.toFile())) {
+                doc.write(out);
+            }
+        }
+
+        String result = parser.parse(file,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        assertFalse(result.isEmpty(), "Should return fallback content");
     }
 
     // ── IOException handling ────────────────────────────────────
