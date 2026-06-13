@@ -69,6 +69,13 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- Jsoup — HTML and XML parsing for document ingestion -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.19.1</version>
+		</dependency>
+
 		<!-- Flyway — Database migration -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>

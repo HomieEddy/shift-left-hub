@@ -8,7 +8,7 @@
 ## Phases
 
 <details open>
-<summary>🔄 v2.0 Workspace Platform (Phases 9-14) — Extended</summary>
+<summary>🔄 v2.0 Workspace Platform (Phases 9-16) — Extended</summary>
 
 - [x] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
 - [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
@@ -16,16 +16,8 @@
 - [x] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
 - [x] **Phase 13: Frontend Cleanup** — Angular Style Guide compliance: inline templates → external, multi-component files split, filenames renamed
 - [x] **Phase 14: Seeding Revamp** — Workspace-aware seeding with 4 workspaces, 7 users, 40 bilingual articles, workspace-specific tags. Old v1.0 migration code removed.
-
-</details>
-
-<details open>
-<summary>🔄 v2.0 Workspace Platform (Phases 9-14) — Extended</summary>
-
-- [x] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
-- [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
-- [x] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
-- [x] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
+- [ ] **Phase 15: File Upload Format Support** — Extend document ingestion to accept HTML and XML files with format-specific content extraction
+- [ ] **Phase 16: UI Neutralization** — Redesign landing page and general UI from IT-specific to domain-agnostic, neutral branding
 
 </details>
 
@@ -73,6 +65,43 @@ Plans:
 - [x] 14-01-PLAN.md — Master Seeder + infrastructure cleanup
 - [x] 14-02-PLAN.md — HR + Legal workspace seed content (markdown files + seeders)
 - [x] 14-03-PLAN.md — IT + Public workspace seed content (markdown files + seeders)
+
+### Phase 15: File Upload Format Support
+
+**Goal**: Extend the document ingestion pipeline (Phase 10) to support HTML and XML file uploads — users can upload `.html` and `.xml` files via drag-and-drop, and the Spring AI ETL pipeline extracts, chunks, and embeds content using format-specific text extractors.
+
+**Depends on**: Phase 10 (document upload + ETL pipeline infrastructure)
+
+**Success Criteria** (what must be TRUE):
+1. Users can upload `.html` files via drag-and-drop — content is extracted from HTML tags (stripping markup), chunked, and embedded
+2. Users can upload `.xml` files via drag-and-drop — content is extracted from XML elements, chunked, and embedded
+3. Upload processing status tracking works end-to-end for both formats (UPLOADED → PARSING → CHUNKING → EMBEDDING → READY/FAILED)
+4. File type validation rejects unsupported formats and shows clear error messages
+5. Existing markdown, text, and PDF upload functionality remains fully operational
+
+**UI hint**: yes
+
+**Plans**: 2 plans in 1 wave
+
+Plans:
+- [ ] 15-01-PLAN.md — Backend: Jsoup dependency, HTML/XML parser, MIME validation, unit tests
+- [ ] 15-02-PLAN.md — Frontend: accepted types, extension validation, translation updates
+
+### Phase 16: UI Neutralization
+
+**Goal**: Redesign the landing page and general UI to be domain-agnostic — remove IT-specific branding, terminology, and imagery, replacing them with a neutral knowledge-platform identity suitable for any workspace domain.
+
+**Depends on**: Phase 14 (seeding provides neutral workspace content)
+
+**Success Criteria** (what must be TRUE):
+1. Landing page hero section uses neutral knowledge-platform messaging — no IT-specific terms ("helpdesk", "IT support", "ticket")
+2. Navigation and UI labels use neutral language throughout (e.g., "Knowledge Base" instead of "IT Knowledge Base", "Assistant" instead of "IT Assistant")
+3. Default logos, favicon, and branding elements are domain-agnostic
+4. Empty states, error pages, and onboarding flows use neutral messaging
+5. All 4 workspace seeders (HR, Legal, IT, Public) render correctly with their respective domain-appropriate UIs
+6. `ng build` compiles without errors
+
+**UI hint**: yes
 
 ### Phase 9: Workspace Foundation
 **Goal**: Multi-tenant workspace isolation is established — users can create workspaces, all domain data is scoped by workspace_id, and existing v1.0 data is migrated to a default workspace
@@ -169,7 +198,9 @@ Plans:
 | 12. Workspace Management UI | v2.0 | 5/5 | Complete | 2026-06-12 |
 | 13. Frontend Cleanup | v2.0 | 4/4 | Complete | 2026-06-12 |
 | 14. Seeding Revamp | v2.0 | 3/3 | Complete | 2026-06-13 |
+| 15. File Upload Format Support | v2.0 | 0/2 | Planned | — |
+| 16. UI Neutralization | v2.0 | 0/0 | Not started | — |
 
 ---
 
-*Last updated: 2026-06-13 — Phase 14 complete (3/3 plans) — Seeding Revamp — v2.0 milestone complete*
+*Last updated: 2026-06-13 — Phases 15-16 added to v2.0 Extended: file format support + UI neutralization*
