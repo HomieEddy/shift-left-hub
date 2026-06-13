@@ -42,6 +42,7 @@ export class App {
 
   pendingKcsCount = signal(0);
   isMobileMenuOpen = signal(false);
+  showLogoutModal = signal(false);
   private readonly hideRoutes = ['/login', '/register'];
   hideSidebar = signal(this.shouldHideSidebar(this.router.url));
 
@@ -66,7 +67,17 @@ export class App {
   }
 
   switchLanguage(lang: SupportedLanguage): void { this.translationService.switchLanguage(lang); }
+
+  confirmLogout(): void {
+    this.showLogoutModal.set(true);
+  }
+
+  cancelLogout(): void {
+    this.showLogoutModal.set(false);
+  }
+
   logout(): void {
+    this.showLogoutModal.set(false);
     this.authService.logout().pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => { void this.router.navigate(['/']); });

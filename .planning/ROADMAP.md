@@ -7,22 +7,20 @@
 
 ## Phases
 
-<details>
-<summary>✅ v1.0 Initial MVP (Phases 1-8) — SHIPPED 2026-06-08</summary>
+<details open>
+<summary>🔄 v2.0 Workspace Platform (Phases 9-14) — Extended</summary>
 
-- [x] Phase 1: Foundation (4/4 plans) — completed 2026-05-31
-- [x] Phase 2: Knowledge Base (4/4 plans) — completed 2026-06-01
-- [x] Phase 3: AI Self-Service Portal (4/4 plans) — completed 2026-06-02
-- [x] Phase 4: Escalation & Ticketing (4/4 plans) — completed 2026-06-03
-- [x] Phase 5: Agent Dashboard (4/4 plans) — completed 2026-06-04
-- [x] Phase 6: KCS Auto-Drafting & Admin Review (3/3 plans) — completed 2026-06-05
-- [x] Phase 7: Quality, Polish & DevOps (9/9 plans) — completed 2026-06-06
-- [x] Phase 8: Testing & CI/CD (8/8 plans) — completed 2026-06-08
+- [x] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
+- [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
+- [x] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
+- [x] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
+- [x] **Phase 13: Frontend Cleanup** — Angular Style Guide compliance: inline templates → external, multi-component files split, filenames renamed
+- [x] **Phase 14: Seeding Revamp** — Workspace-aware seeding with 4 workspaces, 7 users, 40 bilingual articles, workspace-specific tags. Old v1.0 migration code removed.
 
 </details>
 
-<details>
-<summary>✅ v2.0 Workspace Platform (Phases 9-13) — SHIPPED 2026-06-12</summary>
+<details open>
+<summary>🔄 v2.0 Workspace Platform (Phases 9-14) — Extended</summary>
 
 - [x] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
 - [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration
@@ -51,6 +49,30 @@ Plans:
 - [x] 13-02-PLAN.md — Extract shared UI templates + modal styles to CSS
 - [x] 13-03-PLAN.md — Split skeleton/button, rename toast-container
 - [x] 13-04-PLAN.md — Build & test verification (pnpm build + ng test)
+
+### Phase 14: Seeding Revamp ✅
+
+**Goal**: Replace the existing single-tenant IT-helpdesk seeding with workspace-aware seeding — 4 workspaces (HR, Legal, IT, Public), 7 users with workspace-scoped roles, 40 bilingual seed articles organized by workspace domain, workspace-specific tag sets. Old v1.0 migration code fully removed.
+
+**Depends on**: Phase 12 (workspace service, member roles, workspace CRUD)
+
+**Requirements**: SEED-01, SEED-02, SEED-03, SEED-04, SEED-05, SEED-06
+
+**Success Criteria** (what must be TRUE):
+1. On first application startup with no data, 4 workspaces exist (HR, Legal, IT, Public) with correct slugs and descriptions
+2. 7 seed users exist with correct emails, display names, roles (admin on all workspaces; department users have MEMBER on dept + Public only)
+3. Each workspace has workspace-specific tags with bilingual names and hex colors
+4. Each workspace has 10 published bilingual articles with appropriate tags, authored by admin user
+5. 40 markdown files exist on classpath at `data/seed/kb/{hr,legal,it,public}/` with valid frontmatter and bilingual body
+6. Old `DataSeeder.java`, `KbSeeder.java`, and 9 old IT markdown files are fully removed from the codebase
+7. Re-running seeding produces zero duplicate entities (fully idempotent via slug/email/composite-key checks)
+
+**Plans**: 3 plans in 2 waves
+
+Plans:
+- [x] 14-01-PLAN.md — Master Seeder + infrastructure cleanup
+- [x] 14-02-PLAN.md — HR + Legal workspace seed content (markdown files + seeders)
+- [x] 14-03-PLAN.md — IT + Public workspace seed content (markdown files + seeders)
 
 ### Phase 9: Workspace Foundation
 **Goal**: Multi-tenant workspace isolation is established — users can create workspaces, all domain data is scoped by workspace_id, and existing v1.0 data is migrated to a default workspace
@@ -146,7 +168,8 @@ Plans:
 | 11. Domain-Agnostic AI | v2.0 | 6/6 | Complete | 2026-06-12 |
 | 12. Workspace Management UI | v2.0 | 5/5 | Complete | 2026-06-12 |
 | 13. Frontend Cleanup | v2.0 | 4/4 | Complete | 2026-06-12 |
+| 14. Seeding Revamp | v2.0 | 3/3 | Complete | 2026-06-13 |
 
 ---
 
-*Last updated: 2026-06-12 — Phase 13 complete (4/4 plans) — Frontend Cleanup*
+*Last updated: 2026-06-13 — Phase 14 complete (3/3 plans) — Seeding Revamp — v2.0 milestone complete*

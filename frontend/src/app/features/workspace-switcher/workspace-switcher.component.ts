@@ -24,6 +24,7 @@ export class WorkspaceSwitcherComponent implements OnInit {
 
   workspaces = signal<WorkspaceDto[]>([]);
   isOpen = signal(false);
+  pendingSwitch = signal<WorkspaceDto | null>(null);
 
   currentWorkspace = computed(() => {
     const user = this.authService.user();
@@ -37,27 +38,43 @@ export class WorkspaceSwitcherComponent implements OnInit {
   ngOnInit() {
     this.workspaceService.getMyWorkspaces()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(ws => this.workspaces.set(ws));
+      .subscribe({
+        next: ws => this.workspaces.set(ws),
+        error: () => {
+          this.authService.logout().subscribe();
+        },
+      });
   }
 
   toggleDropdown() {
     this.isOpen.update(v => !v);
   }
 
-  switchWorkspace(workspace: WorkspaceDto) {
-    this.authService.switchWorkspace(workspace.id)
+  promptSwitch(workspace: WorkspaceDto) {
+    this.isOpen.set(false);
+    this.pendingSwitch.set(workspace);
+  }
+
+  confirmSwitch() {
+    const ws = this.pendingSwitch();
+    if (!ws) return;
+    this.pendingSwitch.set(null);
+    this.authService.switchWorkspace(ws.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.workspaceRoleService.refreshRole();
-          this.isOpen.set(false);
           void this.router.navigateByUrl('/');
         },
-        error: () => this.isOpen.set(false),
+        error: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
       });
   }
 
+  cancelSwitch() {
+    this.pendingSwitch.set(null);
+  }
+
   isDefaultWorkspace(ws: WorkspaceDto | null): boolean {
-    return ws?.slug === 'default';
+    return ws?.slug === 'public';
   }
 }

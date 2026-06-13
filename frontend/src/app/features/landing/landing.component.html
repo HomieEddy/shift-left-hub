@@ -5,18 +5,35 @@
         <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
           <div class="max-w-6xl mx-auto px-4 py-10 sm:py-14">
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-10">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
-                {{ firstLetter }}
-              </div>
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-accent-info-muted text-accent-info">{{ translationService.translate('admin.users.role.admin') }}</span>
+            @if (currentWorkspace(); as ws) {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ ws.icon ? (ws.icon.length <= 2 ? ws.icon : ws.icon.charAt(0).toUpperCase()) : 'W' }}
                 </div>
-                <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h1 class="text-2xl font-bold text-text-primary">{{ ws.name }}</h1>
+                    <span class="text-xs text-text-tertiary">· {{ ws.slug }}</span>
+                  </div>
+                  <p class="text-text-secondary text-sm">{{ ws.description }}</p>
+                  <div class="flex items-center gap-2 mt-2 text-xs text-text-tertiary">
+                    <span>{{ authService.user()?.displayName }}</span>
+                    <span>·</span>
+                    <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-accent-info-muted text-accent-info">{{ translationService.translate('admin.users.role.admin') }}</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            } @else {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ firstLetter }}
+                </div>
+                <div>
+                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
+                  <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
+                </div>
+              </div>
+            }
 
             <h2 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('nav.section.admin') }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
@@ -105,18 +122,35 @@
         <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
           <div class="max-w-5xl mx-auto px-4 py-10 sm:py-14">
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-10">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
-                {{ firstLetter }}
-              </div>
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-accent-warning-muted text-accent-warning">{{ translationService.translate('admin.users.role.agent') }}</span>
+            @if (currentWorkspace(); as ws) {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ ws.icon ? (ws.icon.length <= 2 ? ws.icon : ws.icon.charAt(0).toUpperCase()) : 'W' }}
                 </div>
-                <p class="text-text-secondary">{{ translationService.translate('nav.section.agent') }} — {{ translationService.translate('landing.hero.subtitle') }}</p>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h1 class="text-2xl font-bold text-text-primary">{{ ws.name }}</h1>
+                    <span class="text-xs text-text-tertiary">· {{ ws.slug }}</span>
+                  </div>
+                  <p class="text-text-secondary text-sm">{{ ws.description }}</p>
+                  <div class="flex items-center gap-2 mt-2 text-xs text-text-tertiary">
+                    <span>{{ authService.user()?.displayName }}</span>
+                    <span>·</span>
+                    <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-accent-warning-muted text-accent-warning">{{ translationService.translate('admin.users.role.agent') }}</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            } @else {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ firstLetter }}
+                </div>
+                <div>
+                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
+                  <p class="text-text-secondary">{{ translationService.translate('nav.section.agent') }} — {{ translationService.translate('landing.hero.subtitle') }}</p>
+                </div>
+              </div>
+            }
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
               <a routerLink="/agent/tickets" class="relative overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 text-white shadow-md hover:shadow-lg transition-shadow group">
@@ -196,17 +230,33 @@
         <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
           <div class="max-w-5xl mx-auto px-4 py-10 sm:py-14">
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-10">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
-                {{ firstLetter }}
+            @if (currentWorkspace(); as ws) {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ ws.icon ? (ws.icon.length <= 2 ? ws.icon : ws.icon.charAt(0).toUpperCase()) : 'W' }}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h1 class="text-2xl font-bold text-text-primary">{{ ws.name }}</h1>
+                    <span class="text-xs text-text-tertiary">· {{ ws.slug }}</span>
+                  </div>
+                  <p class="text-text-secondary text-sm">{{ ws.description }}</p>
+                  <div class="flex items-center gap-2 mt-2 text-xs text-text-tertiary">
+                    <span>{{ translationService.translate('landing.signedInAs') }}, {{ authService.user()?.displayName }}</span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h1 class="text-2xl font-bold text-text-primary mb-1">
-                  {{ translationService.translate('landing.signedInAs') }}, {{ authService.user()?.displayName }}
-                </h1>
-                <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
+            } @else {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ firstLetter }}
+                </div>
+                <div>
+                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
+                  <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
+                </div>
               </div>
-            </div>
+            }
 
             <div class="bg-gradient-to-br from-primary-500 to-indigo-600 rounded-2xl p-6 sm:p-8 text-white shadow-md mb-10">
               <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
