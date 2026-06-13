@@ -74,6 +74,7 @@ class HrSeederTest {
         when(userRepository.findByRole(UserRole.ROLE_ADMIN)).thenReturn(List.of(adminUser));
         when(workspaceService.findBySlug("human-resources")).thenReturn(Optional.of(hrWs));
         when(tagRepository.findAll()).thenReturn(List.of());
+        when(articleRepository.findBySlug(anyString())).thenReturn(Optional.empty());
 
         seeder.seed();
 
@@ -90,6 +91,7 @@ class HrSeederTest {
         when(userRepository.findByRole(UserRole.ROLE_ADMIN)).thenReturn(List.of(adminUser));
         when(workspaceService.findBySlug("human-resources")).thenReturn(Optional.of(hrWs));
         when(tagRepository.findAll()).thenReturn(List.of(recruitmentTag, benefitsTag));
+        when(articleRepository.findBySlug(anyString())).thenReturn(Optional.empty());
 
         seeder.seed();
 
