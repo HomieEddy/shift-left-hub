@@ -19,6 +19,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -32,7 +33,12 @@ public class DocumentService {
     private final ApplicationEventPublisher eventPublisher;
 
     private static final List<String> ALLOWED_MIME_TYPES = List.of(
-        "text/markdown", "text/plain", "application/pdf"
+        "text/markdown", "text/plain", "application/pdf",
+        "text/html", "application/xhtml+xml",
+        "text/xml", "application/xml", "application/rss+xml", "application/atom+xml"
+    );
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of(
+        ".md", ".txt", ".pdf", ".html", ".htm", ".xhtml", ".xml"
     );
     private static final long MAX_FILE_SIZE = 50L * 1024 * 1024; // 50MB
 
@@ -49,9 +55,13 @@ public class DocumentService {
     public Document uploadDocument(MultipartFile file) {
         String mimeType = file.getContentType();
 
-        // Validate MIME type
+        // Validate MIME type with extension fallback
+        String extension = getExtension(file.getOriginalFilename());
         if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType)) {
-            throw new DocumentProcessingException("Unsupported file type: " + mimeType);
+            if (extension.isEmpty() || !ALLOWED_EXTENSIONS.contains(extension)) {
+                throw new DocumentProcessingException(
+                    "Unsupported file type. Supported: .md, .txt, .pdf, .html, .xml");
+            }
         }
 
         // Validate file size
@@ -219,6 +229,13 @@ public class DocumentService {
         // Delete document record
         documentRepository.delete(document);
         log.info("Document deleted: {} (id: {})", document.getFilename(), documentId);
+    }
+
+    private String getExtension(String filename) {
+        if (filename == null) return "";
+        int lastDot = filename.lastIndexOf('.');
+        if (lastDot < 0) return "";
+        return filename.substring(lastDot).toLowerCase();
     }
 
     /**
