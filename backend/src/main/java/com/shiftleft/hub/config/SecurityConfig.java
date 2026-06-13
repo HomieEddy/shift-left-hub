@@ -19,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -145,19 +146,25 @@ public class SecurityConfig {
                             var user = userRepository.findById(userId);
                             if (user.isPresent()) {
                                 var u = user.get();
-                                var authorities =
+                                var principal = new User(
+                                    u.getEmail(), "",
                                     List.of(new SimpleGrantedAuthority(
-                                        u.getRole().name()));
-                                var authentication =
-                                    new UsernamePasswordAuthenticationToken(
-                                        u.getEmail(), null, authorities);
+                                        u.getRole().name())));
                                 SecurityContextHolder.getContext()
-                                    .setAuthentication(authentication);
-                            }
-
-                            UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
-                            if (workspaceId != null) {
-                                WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+                                    .setAuthentication(
+                                        new UsernamePasswordAuthenticationToken(
+                                            principal, null,
+                                            principal.getAuthorities()));
+                                UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
+                                if (workspaceId != null) {
+                                    WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+                                }
+                            } else {
+                                log.debug("JWT user not found in DB — clearing auth context");
+                                SecurityContextHolder.clearContext();
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.getWriter().write("{\"error\":\"Session expired — please log in again\"}");
+                                return;
                             }
                         } catch (Exception e) {
                             log.warn("JWT validation failed", e);
