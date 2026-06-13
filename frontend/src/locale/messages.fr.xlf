@@ -71,8 +71,8 @@
         <target>Déconnexion</target>
       </trans-unit>
       <trans-unit id="app.title">
-        <source>SL Knowledge Hub</source>
-        <target>SL Knowledge Hub</target>
+        <source>Knowledge Hub</source>
+        <target>Knowledge Hub</target>
       </trans-unit>
       <trans-unit id="error.invalid-credentials">
         <source>Invalid email or password.</source>
@@ -331,12 +331,12 @@
         <target>Assistant IA</target>
       </trans-unit>
       <trans-unit id="chat.subtitle">
-        <source>Ask me anything about IT issues</source>
-        <target>Posez-moi une question sur vos problèmes IT</target>
+        <source>Ask me anything about your workspace</source>
+        <target>Posez-moi une question sur votre espace de travail</target>
       </trans-unit>
       <trans-unit id="chat.input-placeholder">
-        <source>Describe your IT issue...</source>
-        <target>Décrivez votre problème IT...</target>
+        <source>Ask a question...</source>
+        <target>Posez une question...</target>
       </trans-unit>
       <trans-unit id="chat.send">
         <source>Send</source>
@@ -379,12 +379,12 @@
         <target>Assistant IA</target>
       </trans-unit>
       <trans-unit id="nav.my-tickets">
-        <source>My Tickets</source>
-        <target>Mes Tickets</target>
+        <source>My Requests</source>
+        <target>Mes Demandes</target>
       </trans-unit>
       <trans-unit id="tickets.title">
-        <source>My Tickets</source>
-        <target>Mes Tickets</target>
+        <source>My Requests</source>
+        <target>Mes Demandes</target>
       </trans-unit>
       <trans-unit id="tickets.loading">
         <source>Loading tickets...</source>
@@ -547,28 +547,28 @@
         <target>Numéro de ticket</target>
       </trans-unit>
       <trans-unit id="tickets.modal.myTickets">
-        <source>My Tickets</source>
-        <target>Mes tickets</target>
+        <source>My Requests</source>
+        <target>Mes Demandes</target>
       </trans-unit>
       <trans-unit id="tickets.modal.newChat">
         <source>Start New Chat</source>
         <target>Nouvelle discussion</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.title" datatype="html">
-        <source>KCS Drafts</source>
-        <target>Brouillons KCS</target>
+        <source>Drafts</source>
+        <target>Brouillons</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.description" datatype="html">
-        <source>Review and manage AI-drafted knowledge base articles</source>
-        <target>Révisez et gérez les articles de la base de connaissances générés par l'IA</target>
+        <source>Review and manage knowledge base article drafts</source>
+        <target>Révisez et gérez les brouillons d'articles de la base de connaissances</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.loading" datatype="html">
         <source>Loading drafts...</source>
         <target>Chargement des brouillons...</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.empty" datatype="html">
-        <source>No KCS drafts pending review</source>
-        <target>Aucun brouillon KCS en attente de révision</target>
+        <source>No drafts pending review</source>
+        <target>Aucun brouillon en attente de révision</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.col.title" datatype="html">
         <source>Title</source>
@@ -1059,16 +1059,16 @@
         <target>Aller à l'Assistant IA</target>
       </trans-unit>
       <trans-unit id="landing.hero.description">
-        <source>AI-powered knowledge base that intercepts Level 0/1 tickets and eliminates the documentation burden on IT agents.</source>
-        <target>Base de connaissances alimentée par l'IA qui intercepte les tickets de niveau 0/1 et élimine la charge de documentation des agents IT.</target>
+        <source>Empower your teams with an AI-powered knowledge base that captures answers, reduces repeat questions, and makes expertise accessible to everyone.</source>
+        <target>Donnez à vos équipes les moyens d'agir avec une base de connaissances alimentée par l'IA qui capture les réponses, réduit les questions répétitives et rend l'expertise accessible à tous.</target>
       </trans-unit>
       <trans-unit id="landing.hero.subtitle">
-        <source>Resolve issues before they reach the queue.</source>
-        <target>Résolvez les problèmes avant qu'ils n'atteignent la file d'attente.</target>
+        <source>Your intelligent knowledge platform for every team</source>
+        <target>Votre plateforme de connaissances intelligente pour chaque équipe</target>
       </trans-unit>
       <trans-unit id="landing.hero.title">
-        <source>Shift-Left Knowledge Hub</source>
-        <target>Shift-Left Knowledge Hub</target>
+        <source>Find Answers. Share Knowledge.</source>
+        <target>Trouvez des Réponses. Partagez le Savoir.</target>
       </trans-unit>
       <trans-unit id="landing.signedInAs">
         <source>You're signed in as</source>
@@ -1091,8 +1091,8 @@
         <target>S'inscrire</target>
       </trans-unit>
       <trans-unit id="nav.kcs-drafts">
-        <source>KCS Drafts</source>
-        <target>Brouillons KCS</target>
+        <source>Drafts</source>
+        <target>Brouillons</target>
       </trans-unit>
       <trans-unit id="nav.register">
         <source>Register</source>
@@ -1259,96 +1259,96 @@
         <target>Une erreur inattendue s'est produite. Veuillez réessayer.</target>
       </trans-unit>
       <trans-unit id="landing.hero.badge">
-        <source>Shift-Left Support Platform</source>
-        <target>Plateforme de support Shift-Left</target>
+        <source>Knowledge Platform</source>
+        <target>Plateforme de Connaissances</target>
       </trans-unit>
       <trans-unit id="landing.stats.response">
-        <source>Agent Productivity Boost</source>
-        <target>Gain de productivité agent</target>
+        <source>Time Saved</source>
+        <target>Temps économisé</target>
       </trans-unit>
       <trans-unit id="landing.stats.accuracy">
-        <source>Resolution Accuracy</source>
-        <target>Précision de résolution</target>
+        <source>Knowledge Coverage</source>
+        <target>Couverture des connaissances</target>
       </trans-unit>
       <trans-unit id="landing.stats.intercepted">
-        <source>Tickets Intercepted Before Queue</source>
-        <target>Tickets interceptés avant la file</target>
+        <source>Answers Found</source>
+        <target>Réponses trouvées</target>
       </trans-unit>
       <trans-unit id="landing.stats.response">
-        <source>Average AI Response Time</source>
-        <target>Temps de réponse IA moyen</target>
+        <source>Average Response Time</source>
+        <target>Temps de réponse moyen</target>
       </trans-unit>
       <trans-unit id="landing.how.title">
         <source>How It Works</source>
         <target>Comment ça fonctionne</target>
       </trans-unit>
       <trans-unit id="landing.how.subtitle">
-        <source>From ticket submission to self-service knowledge in three steps</source>
-        <target>De la soumission de ticket à la connaissance en libre-service en trois étapes</target>
+        <source>From question to knowledge in three simple steps</source>
+        <target>De la question à la connaissance en trois étapes simples</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.title">
-        <source>User Submits Issue</source>
-        <target>L'utilisateur soumet un problème</target>
+        <source>User Submits Question</source>
+        <target>L'utilisateur pose une question</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.desc">
-        <source>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</source>
-        <target>L'utilisateur décrit son problème IT via l'assistant IA ou le formulaire de ticket. Le système capture le contexte, la catégorie et l'urgence automatiquement.</target>
+        <source>A team member describes their question through the AI assistant. The system captures context and intent automatically.</source>
+        <target>Un membre de l'équipe décrit sa question via l'assistant IA. Le système capture le contexte et l'intention automatiquement.</target>
       </trans-unit>
       <trans-unit id="landing.how.step2.title">
-        <source>AI Matches or Escalates</source>
-        <target>L'IA associe ou transfère</target>
+        <source>AI Matches or Routes</source>
+        <target>L'IA associe ou achemine</target>
       </trans-unit>
       <trans-unit id="landing.how.step2.desc">
-        <source>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</source>
-        <target>L'IA recherche dans la base de connaissances des solutions pertinentes. Trouvée, l'utilisateur obtient une réponse instantanée. Sinon, un ticket est créé et assigné à un agent automatiquement.</target>
+        <source>The AI searches the knowledge base for relevant answers. If found, the user gets an instant response. If not, a request is created and routed to the appropriate team member.</source>
+        <target>L'IA recherche dans la base de connaissances des réponses pertinentes. Trouvée, l'utilisateur obtient une réponse instantanée. Sinon, une demande est créée et acheminée vers le bon membre de l'équipe.</target>
       </trans-unit>
       <trans-unit id="landing.how.step3.desc">
-        <source>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</source>
-        <target>Quand un agent résout un ticket, un article de connaissance est rédigé automatiquement via KCS. La base de connaissances grandit organiquement, réduisant les futurs tickets et la charge de travail des agents.</target>
+        <source>When a team member resolves a request, a knowledge article is drafted automatically. The knowledge base grows organically, reducing future workload.</source>
+        <target>Quand un membre de l'équipe résout une demande, un article de connaissance est rédigé automatiquement. La base de connaissances grandit organiquement, réduisant la charge de travail future.</target>
       </trans-unit>
       <trans-unit id="landing.features.subtitle">
-        <source>Built for IT service desks that want to shift left using KCS methodology</source>
-        <target>Conçu pour les services desk IT qui veulent shift-left avec la méthodologie KCS</target>
+        <source>Built for teams that value knowledge sharing and collaboration</source>
+        <target>Conçu pour les équipes qui valorisent le partage de connaissances et la collaboration</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.title">
-        <source>User Describes Issue</source>
-        <target>L'utilisateur décrit le problème</target>
+        <source>Ask a Question</source>
+        <target>Posez une question</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.desc">
-        <source>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</source>
-        <target>L'utilisateur décrit son problème IT en langage naturel. Notre IA comprend instantanément le contexte et recherche des solutions pertinentes.</target>
+        <source>A team member asks a question through the AI assistant or search. The system understands the context and searches all available knowledge.</source>
+        <target>Un membre de l'équipe pose une question via l'assistant IA ou la recherche. Le système comprend le contexte et recherche dans toutes les connaissances disponibles.</target>
       </trans-unit>
       <trans-unit id="landing.how.step2.title">
-        <source>AI Resolves or Escalates</source>
-        <target>L'IA résout ou transfère</target>
+        <source>AI Finds or Routes</source>
+        <target>L'IA trouve ou achemine</target>
       </trans-unit>
       <trans-unit id="landing.how.step2.desc">
-        <source>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</source>
-        <target>L'IA compare le problème à la base de connaissances. Résolu, l'utilisateur obtient une réponse instantanée. Sinon, le ticket est transféré à un agent.</target>
+        <source>The AI searches the knowledge base for relevant answers. If found, the team member gets an instant response. If not, a request is created and assigned to the right person.</source>
+        <target>L'IA recherche dans la base de connaissances des réponses pertinentes. Trouvée, le membre obtient une réponse instantanée. Sinon, une demande est créée et assignée à la bonne personne.</target>
       </trans-unit>
       <trans-unit id="landing.how.step3.title">
         <source>Knowledge Grows Automatically</source>
         <target>La connaissance grandit automatiquement</target>
       </trans-unit>
       <trans-unit id="landing.how.step3.desc">
-        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</source>
-        <target>Chaque résolution devient un article de connaissance. Le système devient plus intelligent, réduisant les futurs tickets et la charge de travail des agents.</target>
+        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future workload.</source>
+        <target>Chaque résolution devient un article de connaissance. Le système devient plus intelligent, réduisant la charge de travail future.</target>
       </trans-unit>
       <trans-unit id="landing.features.title">
         <source>Everything You Need</source>
         <target>Tout ce dont vous avez besoin</target>
       </trans-unit>
       <trans-unit id="landing.features.subtitle">
-        <source>Built for IT teams that want to shift left without the documentation burden</source>
-        <target>Conçu pour les équipes IT qui veulent shift-left sans la charge de documentation</target>
+        <source>Built for teams that want to work smarter, not harder</source>
+        <target>Conçu pour les équipes qui veulent travailler plus intelligemment</target>
       </trans-unit>
       <trans-unit id="landing.cta.title">
-        <source>Ready to Shift Left?</source>
-        <target>Prêt à passer à Shift-Left?</target>
+        <source>Start Building Your Knowledge Base</source>
+        <target>Commencez à construire votre base de connaissances</target>
       </trans-unit>
       <trans-unit id="landing.cta.desc">
-        <source>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</source>
-        <target>Commencez à résoudre les problèmes IT avant qu'ils n'atteignent la file d'attente. Sans surcharge de documentation. Sans complexité.</target>
+        <source>Create a workspace, invite your team, and start capturing knowledge that works for everyone.</source>
+        <target>Créez un espace de travail, invitez votre équipe et commencez à capturer des connaissances qui profitent à tous.</target>
       </trans-unit>
       <trans-unit id="landing.cta.button">
         <source>Get Started Free</source>
