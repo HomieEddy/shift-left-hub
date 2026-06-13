@@ -77,6 +77,8 @@ export const translations: Record<string, { en: string; fr: string }> = {
   "nav.signin": { en: "Sign in", fr: "Se connecter" },
   "nav.register": { en: "Register", fr: "S'inscrire" },
   "nav.logout": { en: "Logout", fr: "Déconnexion" },
+  "app.cancel": { en: "Cancel", fr: "Annuler" },
+  "auth.logout.confirm": { en: "Are you sure you want to log out?", fr: "Êtes-vous sûr de vouloir vous déconnecter?" },
   "nav.knowledge-base": { en: "Knowledge Base", fr: "Base de connaissances" },
   "nav.ai-assistant": { en: "AI Assistant", fr: "Assistant IA" },
   "nav.my-tickets": { en: "My Tickets", fr: "Mes Tickets" },

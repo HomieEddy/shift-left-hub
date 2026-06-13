@@ -140,7 +140,7 @@
         @if (authService.isAuthenticated()) {
           <app-invitation-badge />
           <button
-            (click)="logout()"
+            (click)="confirmLogout()"
             data-testid="nav-logout"
             class="p-2 rounded-lg text-text-secondary hover:text-accent-danger hover:bg-surface-tertiary transition-colors"
             [attr.title]="translationService.translate('nav.logout')"
@@ -261,3 +261,23 @@
 }
 
 <app-toast-container />
+
+@if (showLogoutModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <button type="button" class="absolute inset-0 bg-black/50 animate-in border-0 cursor-default" (click)="cancelLogout()"></button>
+    <div class="relative bg-surface-primary rounded-xl shadow-xl border border-border-default p-6 w-full max-w-sm mx-4 animate-in slide-in-from-bottom-4">
+      <h3 class="text-lg font-semibold text-text-primary mb-2">{{ translationService.translate('nav.logout') }}</h3>
+      <p class="text-sm text-text-secondary mb-6">{{ translationService.translate('auth.logout.confirm') }}</p>
+      <div class="flex items-center justify-end gap-3">
+        <button
+          (click)="cancelLogout()"
+          class="px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-surface-tertiary transition-colors"
+        >{{ translationService.translate('app.cancel') }}</button>
+        <button
+          (click)="logout()"
+          class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-accent-danger hover:opacity-90 transition-opacity"
+        >{{ translationService.translate('nav.logout') }}</button>
+      </div>
+    </div>
+  </div>
+}
