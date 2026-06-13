@@ -3,7 +3,7 @@
     <aside class="sidebar hidden lg:flex flex-col bg-surface-secondary border-r border-border-light overflow-y-auto overflow-x-hidden flex-shrink-0 h-full sticky top-0">
       <div class="flex items-center h-14 px-3 border-b border-border-light">
         <a routerLink="/" class="flex items-center gap-3 no-underline">
-          <div class="sidebar-icon w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm flex-shrink-0">SL</div>
+          <div class="sidebar-icon w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm flex-shrink-0"><svg lucideBookOpen class="w-4 h-4" /></div>
           <span class="sidebar-label text-text-primary font-semibold text-sm">{{ translationService.translate('app.title') }}</span>
         </a>
       </div>
@@ -108,7 +108,7 @@
         }
         @if (hideSidebar()) {
           <a routerLink="/" class="flex items-center gap-2 no-underline">
-            <div class="w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm">SL</div>
+            <div class="w-8 h-8 rounded-lg bg-accent-info flex items-center justify-center text-white font-bold text-sm"><svg lucideBookOpen class="w-4 h-4" /></div>
             <span class="font-semibold text-sm text-text-primary">{{ translationService.translate('app.title') }}</span>
           </a>
         }
