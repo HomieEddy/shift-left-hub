@@ -5,30 +5,32 @@
         <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
           <div class="max-w-6xl mx-auto px-4 py-10 sm:py-14">
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
-                {{ firstLetter }}
-              </div>
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-accent-info-muted text-accent-info">{{ translationService.translate('admin.users.role.admin') }}</span>
-                </div>
-                <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
-              </div>
-            </div>
-
             @if (currentWorkspace(); as ws) {
-              <div class="flex items-center gap-3 px-4 py-3 mb-8 bg-surface-primary rounded-xl border border-border-default shadow-sm">
-                <div class="w-9 h-9 rounded-lg bg-accent-info-muted flex items-center justify-center flex-shrink-0 text-lg">
-                  {{ ws.icon || '🔲' }}
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ ws.icon ? (ws.icon.length <= 2 ? ws.icon : ws.icon.charAt(0).toUpperCase()) : 'W' }}
                 </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold text-text-primary text-sm">{{ ws.name }}</span>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h1 class="text-2xl font-bold text-text-primary">{{ ws.name }}</h1>
                     <span class="text-xs text-text-tertiary">· {{ ws.slug }}</span>
                   </div>
-                  <p class="text-xs text-text-secondary truncate">{{ ws.description }}</p>
+                  <p class="text-text-secondary text-sm">{{ ws.description }}</p>
+                  <div class="flex items-center gap-2 mt-2 text-xs text-text-tertiary">
+                    <span>{{ authService.user()?.displayName }}</span>
+                    <span>·</span>
+                    <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-accent-info-muted text-accent-info">{{ translationService.translate('admin.users.role.admin') }}</span>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ firstLetter }}
+                </div>
+                <div>
+                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
+                  <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
                 </div>
               </div>
             }
@@ -120,30 +122,32 @@
         <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
           <div class="max-w-5xl mx-auto px-4 py-10 sm:py-14">
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
-                {{ firstLetter }}
-              </div>
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-accent-warning-muted text-accent-warning">{{ translationService.translate('admin.users.role.agent') }}</span>
-                </div>
-                <p class="text-text-secondary">{{ translationService.translate('nav.section.agent') }} — {{ translationService.translate('landing.hero.subtitle') }}</p>
-              </div>
-            </div>
-
             @if (currentWorkspace(); as ws) {
-              <div class="flex items-center gap-3 px-4 py-3 mb-8 bg-surface-primary rounded-xl border border-border-default shadow-sm">
-                <div class="w-9 h-9 rounded-lg bg-accent-warning-muted flex items-center justify-center flex-shrink-0 text-lg">
-                  {{ ws.icon || '🔲' }}
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ ws.icon ? (ws.icon.length <= 2 ? ws.icon : ws.icon.charAt(0).toUpperCase()) : 'W' }}
                 </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold text-text-primary text-sm">{{ ws.name }}</span>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h1 class="text-2xl font-bold text-text-primary">{{ ws.name }}</h1>
                     <span class="text-xs text-text-tertiary">· {{ ws.slug }}</span>
                   </div>
-                  <p class="text-xs text-text-secondary truncate">{{ ws.description }}</p>
+                  <p class="text-text-secondary text-sm">{{ ws.description }}</p>
+                  <div class="flex items-center gap-2 mt-2 text-xs text-text-tertiary">
+                    <span>{{ authService.user()?.displayName }}</span>
+                    <span>·</span>
+                    <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-accent-warning-muted text-accent-warning">{{ translationService.translate('admin.users.role.agent') }}</span>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ firstLetter }}
+                </div>
+                <div>
+                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
+                  <p class="text-text-secondary">{{ translationService.translate('nav.section.agent') }} — {{ translationService.translate('landing.hero.subtitle') }}</p>
                 </div>
               </div>
             }
@@ -226,29 +230,30 @@
         <div class="min-h-[calc(100vh-3.5rem)] bg-surface-secondary">
           <div class="max-w-5xl mx-auto px-4 py-10 sm:py-14">
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
-                {{ firstLetter }}
-              </div>
-              <div>
-                <h1 class="text-2xl font-bold text-text-primary mb-1">
-                  {{ translationService.translate('landing.signedInAs') }}, {{ authService.user()?.displayName }}
-                </h1>
-                <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
-              </div>
-            </div>
-
             @if (currentWorkspace(); as ws) {
-              <div class="flex items-center gap-3 px-4 py-3 mb-8 bg-surface-primary rounded-xl border border-border-default shadow-sm">
-                <div class="w-9 h-9 rounded-lg bg-primary-100 flex items-center justify-center flex-shrink-0 text-lg">
-                  {{ ws.icon || '🔲' }}
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ ws.icon ? (ws.icon.length <= 2 ? ws.icon : ws.icon.charAt(0).toUpperCase()) : 'W' }}
                 </div>
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold text-text-primary text-sm">{{ ws.name }}</span>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h1 class="text-2xl font-bold text-text-primary">{{ ws.name }}</h1>
                     <span class="text-xs text-text-tertiary">· {{ ws.slug }}</span>
                   </div>
-                  <p class="text-xs text-text-secondary truncate">{{ ws.description }}</p>
+                  <p class="text-text-secondary text-sm">{{ ws.description }}</p>
+                  <div class="flex items-center gap-2 mt-2 text-xs text-text-tertiary">
+                    <span>{{ translationService.translate('landing.signedInAs') }}, {{ authService.user()?.displayName }}</span>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0">
+                  {{ firstLetter }}
+                </div>
+                <div>
+                  <h1 class="text-2xl font-bold text-text-primary">{{ authService.user()?.displayName }}</h1>
+                  <p class="text-text-secondary">{{ translationService.translate('landing.hero.description') }}</p>
                 </div>
               </div>
             }
