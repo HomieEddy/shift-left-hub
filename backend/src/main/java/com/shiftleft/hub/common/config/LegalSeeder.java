@@ -144,7 +144,7 @@ public class LegalSeeder {
                 String contentFr = bodyParts.length > 1 ? bodyParts[1] : contentEn;
 
                 // Resolve tags from frontmatter
-                Set<Tag> resolvedTags = resolveTags(tagByNameEn, tagsStr);
+                Set<Tag> resolvedTags = resolveTags(tagsStr, tagByNameEn);
 
                 // Idempotent article creation/update
                 Optional<Article> existing = articleRepository.findBySlug(slug);
@@ -227,9 +227,9 @@ public class LegalSeeder {
 
     /**
      * Resolves comma-separated tag names from frontmatter into Tag entities.
-     * Unknown tag names are silently ignored.
+     * Logs a warning for unknown tag names.
      */
-    private Set<Tag> resolveTags(Map<String, Tag> tagByNameEn, String tagsStr) {
+    private Set<Tag> resolveTags(String tagsStr, Map<String, Tag> tagByNameEn) {
         if (tagsStr == null || tagsStr.isBlank()) {
             return Collections.emptySet();
         }
@@ -239,6 +239,8 @@ public class LegalSeeder {
             Tag tag = tagByNameEn.get(trimmed);
             if (tag != null) {
                 resolved.add(tag);
+            } else {
+                log.warn("Tag '{}' not found in Legal workspace tags", trimmed);
             }
         }
         return resolved;
