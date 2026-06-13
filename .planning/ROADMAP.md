@@ -22,7 +22,7 @@
 </details>
 
 <details>
-<summary>✅ v2.0 Workspace Platform (Phases 9-12) — SHIPPED 2026-06-12</summary>
+<summary>✅ v2.0 Workspace Platform (Phases 9-13) — SHIPPED 2026-06-12</summary>
 
 - [x] **Phase 9: Workspace Foundation** — Multi-tenant workspace isolation with data model, JWT claims, Hibernate filters, and pgvector metadata filtering
 - [x] **Phase 10: Document Ingestion + BYO LLM** — Upload documents (markdown/text/PDF) via drag-and-drop with async ETL pipeline and per-workspace LLM configuration

@@ -51,6 +51,10 @@ export class WorkspaceSettingsComponent implements OnInit {
     if (this.name() !== this.workspace.name) { request.name = this.name(); }
     if (this.description() !== (this.workspace.description ?? '')) { request.description = this.description(); }
     if (this.icon() !== this.workspace.icon) { request.icon = this.icon() ?? undefined; }
+    if (Object.keys(request).length === 0) {
+      this.isSaving.set(false);
+      return;
+    }
     this.workspaceService.updateWorkspace(this.workspace.id, request)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -73,7 +77,7 @@ export class WorkspaceSettingsComponent implements OnInit {
       title: this.translationService.translate('workspace.action.leave'),
       message: this.translationService.translate('workspace.action.leave-confirm'),
       confirmLabel: this.translationService.translate('workspace.action.leave'),
-    }).subscribe(confirmed => {
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
       if (confirmed) {
         this.workspaceService.leaveWorkspace(this.workspace.id)
           .pipe(takeUntilDestroyed(this.destroyRef))

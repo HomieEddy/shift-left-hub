@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from './toast.service';
-import { ToastMessage } from './toast.model';
+import { ToastMessage, DEFAULT_DURATION } from './toast.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class ToastContainer {
   constructor() {
     this.toastService.toasts$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((toast: ToastMessage) => {
       this.toasts.update((t: ToastMessage[]) => [...t, toast]);
-      const duration = toast.duration ?? 5000;
+      const duration = toast.duration ?? DEFAULT_DURATION;
       setTimeout(() => this.dismissToast(toast.id), duration);
     });
 
