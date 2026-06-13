@@ -55,15 +55,15 @@ public class LegalSeeder {
     private static final String CLASS_PATH_PATTERN = "classpath:data/seed/kb/legal/*.md";
     private static final String FR_BODY_SEPARATOR = "\n<!-- FR -->\n";
 
-    private static final List<TagDef> LEGAL_TAGS = List.of(
-        new TagDef("Compliance", "Conformité", "#7c3aed"),
-        new TagDef("Contracts", "Contrats", "#2563eb"),
-        new TagDef("Intellectual Property", "Propriété intellectuelle", "#ca8a04"),
-        new TagDef("Data Privacy", "Protection des données", "#16a34a"),
-        new TagDef("Employment Law", "Droit du travail", "#dc2626"),
-        new TagDef("Litigation", "Contentieux", "#9333ea"),
-        new TagDef("Regulatory", "Réglementation", "#0891b2"),
-        new TagDef("Corporate Governance", "Gouvernance d'entreprise", "#ea580c")
+    private static final List<TagSeed> LEGAL_TAGS = List.of(
+        new TagSeed("Compliance", "Conformité", "#7c3aed"),
+        new TagSeed("Contracts", "Contrats", "#2563eb"),
+        new TagSeed("Intellectual Property", "Propriété intellectuelle", "#ca8a04"),
+        new TagSeed("Data Privacy", "Protection des données", "#16a34a"),
+        new TagSeed("Employment Law", "Droit du travail", "#dc2626"),
+        new TagSeed("Litigation", "Contentieux", "#9333ea"),
+        new TagSeed("Regulatory", "Réglementation", "#0891b2"),
+        new TagSeed("Corporate Governance", "Gouvernance d'entreprise", "#ea580c")
     );
 
     private final TagRepository tagRepository;
@@ -205,7 +205,7 @@ public class LegalSeeder {
 
         Map<String, Tag> result = new LinkedHashMap<>();
 
-        for (TagDef def : LEGAL_TAGS) {
+        for (TagSeed def : LEGAL_TAGS) {
             Tag tag = existingByNameEn.get(def.nameEn());
             if (tag != null) {
                 result.put(def.nameEn(), tag);
@@ -329,6 +329,6 @@ public class LegalSeeder {
     /**
      * Internal record for tag definition data (English name, French name, color hex).
      */
-    private record TagDef(String nameEn, String nameFr, String color) {
+    private record TagSeed(String nameEn, String nameFr, String color) {
     }
 }

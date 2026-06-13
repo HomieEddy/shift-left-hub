@@ -55,15 +55,15 @@ public class HrSeeder {
     private static final String CLASS_PATH_PATTERN = "classpath:data/seed/kb/hr/*.md";
     private static final String FR_BODY_SEPARATOR = "\n<!-- FR -->\n";
 
-    private static final List<TagDef> HR_TAGS = List.of(
-        new TagDef("Recruitment", "Recrutement", "#2563eb"),
-        new TagDef("Benefits", "Avantages sociaux", "#16a34a"),
-        new TagDef("Policies", "Politiques", "#9333ea"),
-        new TagDef("Onboarding", "Intégration", "#0891b2"),
-        new TagDef("Payroll", "Paie", "#ca8a04"),
-        new TagDef("Performance", "Performance", "#dc2626"),
-        new TagDef("Compliance", "Conformité", "#7c3aed"),
-        new TagDef("Training", "Formation", "#ea580c")
+    private static final List<TagSeed> HR_TAGS = List.of(
+        new TagSeed("Recruitment", "Recrutement", "#2563eb"),
+        new TagSeed("Benefits", "Avantages sociaux", "#16a34a"),
+        new TagSeed("Policies", "Politiques", "#9333ea"),
+        new TagSeed("Onboarding", "Intégration", "#0891b2"),
+        new TagSeed("Payroll", "Paie", "#ca8a04"),
+        new TagSeed("Performance", "Performance", "#dc2626"),
+        new TagSeed("Compliance", "Conformité", "#7c3aed"),
+        new TagSeed("Training", "Formation", "#ea580c")
     );
 
     private final TagRepository tagRepository;
@@ -206,7 +206,7 @@ public class HrSeeder {
 
         Map<String, Tag> result = new LinkedHashMap<>();
 
-        for (TagDef def : HR_TAGS) {
+        for (TagSeed def : HR_TAGS) {
             Tag tag = existingByNameEn.get(def.nameEn());
             if (tag != null) {
                 result.put(def.nameEn(), tag);
@@ -330,6 +330,6 @@ public class HrSeeder {
     /**
      * Internal record for tag definition data (English name, French name, color hex).
      */
-    private record TagDef(String nameEn, String nameFr, String color) {
+    private record TagSeed(String nameEn, String nameFr, String color) {
     }
 }
