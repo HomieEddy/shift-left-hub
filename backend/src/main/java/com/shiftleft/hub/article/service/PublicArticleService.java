@@ -7,6 +7,7 @@ import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleNotFoundException;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.workspace.domain.WorkspaceRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -44,31 +45,41 @@ public class PublicArticleService {
             .ifPresent(ws -> publicWorkspaceId = ws.getId());
     }
 
+    private UUID resolveWorkspaceId() {
+        if (WorkspaceContextHolder.hasCurrentWorkspaceId()) {
+            return WorkspaceContextHolder.getCurrentWorkspaceId();
+        }
+        return publicWorkspaceId;
+    }
+
     /**
-     * Retrieves published articles with pagination.
+     * Retrieves published articles for the current workspace (authenticated user)
+     * or the Public workspace (anonymous).
      *
      * @param page the page index (zero-based)
      * @param size the page size
-     * @return a page of published article responses
+     * @return a page of article responses scoped to the effective workspace
      */
     public Page<ArticleResponse> getPublishedArticles(int page, int size) {
         var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "publishedAt"));
-        if (publicWorkspaceId != null) {
-            return articleRepository.findByStatusAndWorkspaceId(ArticleStatus.PUBLISHED, publicWorkspaceId, pageable)
+        UUID wsId = resolveWorkspaceId();
+        if (wsId != null) {
+            return articleRepository.findByStatusAndWorkspaceId(ArticleStatus.PUBLISHED, wsId, pageable)
                 .map(ArticleResponse::from);
         }
         return articleRepository.findByStatus(ArticleStatus.PUBLISHED, pageable).map(ArticleResponse::from);
     }
 
     /**
-     * Retrieves a published article by its ID.
+     * Retrieves a published article by ID, scoped to the effective workspace.
      *
      * @param id the article UUID
      * @return the published article response
      */
     public ArticleResponse getPublishedArticleById(UUID id) {
-        Optional<Article> article = publicWorkspaceId != null
-            ? articleRepository.findByIdAndWorkspaceId(id, publicWorkspaceId)
+        UUID wsId = resolveWorkspaceId();
+        Optional<Article> article = wsId != null
+            ? articleRepository.findByIdAndWorkspaceId(id, wsId)
             : articleRepository.findById(id);
         Article found = article.filter(a -> a.getStatus() == ArticleStatus.PUBLISHED)
             .orElseThrow(() -> new ArticleNotFoundException(id));
@@ -76,7 +87,7 @@ public class PublicArticleService {
     }
 
     /**
-     * Full-text search across published articles, optionally filtered by tags.
+     * Full-text search across published articles in the effective workspace.
      *
      * @param query    the search query
      * @param page     the page index (zero-based)
@@ -93,10 +104,11 @@ public class PublicArticleService {
                 .map(String::trim)
                 .toList();
 
-        var results = publicWorkspaceId != null
+        UUID wsId = resolveWorkspaceId();
+        var results = wsId != null
             ? (normalizedTags.isEmpty()
-                ? articleRepository.searchByText(query, publicWorkspaceId, pageRequest)
-                : articleRepository.searchByTextAndTagNames(query, normalizedTags, publicWorkspaceId, pageRequest))
+                ? articleRepository.searchByText(query, wsId, pageRequest)
+                : articleRepository.searchByTextAndTagNames(query, normalizedTags, wsId, pageRequest))
             : (normalizedTags.isEmpty()
                 ? articleRepository.searchByText(query, pageRequest)
                 : articleRepository.searchByTextAndTagNames(query, normalizedTags, pageRequest));
@@ -113,7 +125,6 @@ public class PublicArticleService {
                 var headlineFr = (String) row[7];
                 var tagArray = (Object[]) row[8];
 
-                // Return English headline by default; frontend can switch
                 var title = titleEn != null ? titleEn : titleFr;
                 var headline = headlineEn != null ? headlineEn : headlineFr;
 
@@ -134,13 +145,14 @@ public class PublicArticleService {
     }
 
     /**
-     * Retrieves tag facets for published articles.
+     * Retrieves tag facets for published articles in the effective workspace.
      *
      * @return the list of tag search facets
      */
     public List<ArticleSearchTag> getSearchTags() {
-        var facets = publicWorkspaceId != null
-            ? articleRepository.findPublishedTagFacets(publicWorkspaceId)
+        UUID wsId = resolveWorkspaceId();
+        var facets = wsId != null
+            ? articleRepository.findPublishedTagFacets(wsId)
             : articleRepository.findPublishedTagFacets();
         return facets.stream()
             .map(row -> new ArticleSearchTag(
