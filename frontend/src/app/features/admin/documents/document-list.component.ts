@@ -30,7 +30,7 @@ export class DocumentListComponent implements OnInit {
   protected categories = signal<CategoryDto[]>([]);
   protected selectedCategoryId = signal<string | null>(null);
 
-  protected readonly acceptedTypes = '.md,.txt,.pdf';
+  protected readonly acceptedTypes = '.md,.txt,.pdf,.html,.htm,.xhtml,.xml';
 
   ngOnInit(): void {
     this.loadDocuments();
@@ -83,7 +83,7 @@ export class DocumentListComponent implements OnInit {
 
   private handleFiles(files: File[]): void {
     const validFiles = files.filter(f => {
-      const valid = ['.md', '.txt', '.pdf'].some(ext => f.name.toLowerCase().endsWith(ext));
+      const valid = ['.md', '.txt', '.pdf', '.html', '.htm', '.xhtml', '.xml'].some(ext => f.name.toLowerCase().endsWith(ext));
       if (!valid) {
         this.uploadQueue.update(q => [...q, { filename: f.name, status: 'unsupported' }]);
       }
