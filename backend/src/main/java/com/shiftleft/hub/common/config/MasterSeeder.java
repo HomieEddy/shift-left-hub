@@ -61,7 +61,7 @@ public class MasterSeeder {
     private static final String PUBLIC_SLUG = "public";
 
     private static final List<UserSeed> USERS = List.of(
-        new UserSeed("admin@company.com", "System Admin", UserRole.ROLE_ADMIN),
+        new UserSeed(ADMIN_EMAIL, "System Admin", UserRole.ROLE_ADMIN),
         new UserSeed("hr.user@company.com", "HR User", UserRole.ROLE_USER),
         new UserSeed("hr.tech@company.com", "HR Tech", UserRole.ROLE_AGENT),
         new UserSeed("legal.user@company.com", "Legal User", UserRole.ROLE_USER),
