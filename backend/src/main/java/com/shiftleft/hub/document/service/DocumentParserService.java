@@ -72,7 +72,6 @@ public class DocumentParserService {
     private String parseXml(Path filePath) throws IOException {
         String xmlContent = Files.readString(filePath);
         org.jsoup.nodes.Document xmlDoc = Jsoup.parse(xmlContent, "", Parser.xmlParser());
-        xmlDoc.select("?xml, !DOCTYPE").remove();
         String text = xmlDoc.text();
         if (text.isBlank()) {
             log.warn("No text extracted from XML, falling back to raw content for: {}", filePath);

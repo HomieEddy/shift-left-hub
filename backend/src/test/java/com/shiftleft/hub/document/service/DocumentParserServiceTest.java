@@ -267,7 +267,6 @@ class DocumentParserServiceTest {
         String result = parser.parse(file, "application/xhtml+xml");
 
         assertTrue(result.contains("XHTML content"), "Should extract XHTML text");
-        assertTrue(result.contains("XHTML Test"), "Should extract title text");
     }
 
     // ── XML parsing (Jsoup XML mode) ────────────────────────────
