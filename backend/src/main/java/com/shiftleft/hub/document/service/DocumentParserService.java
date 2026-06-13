@@ -16,7 +16,7 @@ public class DocumentParserService {
 
     /**
      * Parses a document file and extracts its text content.
-     * Supports markdown, plain text, and PDF formats.
+     * Supports markdown, plain text, PDF, HTML, and XML formats.
      *
      * @param filePath the path to the document file
      * @param mimeType the MIME type of the document
@@ -65,7 +65,6 @@ public class DocumentParserService {
     private String parseHtml(Path filePath) throws IOException {
         org.jsoup.nodes.Document htmlDoc = Jsoup.parse(filePath.toFile(), "UTF-8");
         htmlDoc.select("script, style, svg, noscript").remove();
-        htmlDoc.outputSettings().outline(true);
         return htmlDoc.body().text();
     }
 

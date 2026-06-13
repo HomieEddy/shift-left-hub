@@ -112,7 +112,7 @@ public class DocumentService {
             if (safeFilename != null) {
                 Path fileNamePath = Paths.get(safeFilename).getFileName();
                 safeFilename = fileNamePath != null ? fileNamePath.toString() : safeFilename;
-                safeFilename = safeFilename.replaceAll("[^a-zA-Z0-9._-]", "_");  // sanitize chars
+                safeFilename = safeFilename.replaceAll("[^a-zA-Z0-9_.-]", "_");  // sanitize chars
             } else {
                 safeFilename = document.getId().toString();
             }
