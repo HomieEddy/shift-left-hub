@@ -3,9 +3,12 @@ package com.shiftleft.hub.article.service;
 import com.shiftleft.hub.article.api.dto.ArticleResponse;
 import com.shiftleft.hub.article.api.dto.ArticleSearchResult;
 import com.shiftleft.hub.article.api.dto.ArticleSearchTag;
+import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleNotFoundException;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.workspace.domain.WorkspaceRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,7 +31,18 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class PublicArticleService {
 
+    private static final String PUBLIC_SLUG = "public";
+
     private final ArticleRepository articleRepository;
+    private final WorkspaceRepository workspaceRepository;
+
+    private UUID publicWorkspaceId;
+
+    @PostConstruct
+    void init() {
+        workspaceRepository.findBySlug(PUBLIC_SLUG)
+            .ifPresent(ws -> publicWorkspaceId = ws.getId());
+    }
 
     /**
      * Retrieves published articles with pagination.
@@ -37,10 +52,12 @@ public class PublicArticleService {
      * @return a page of published article responses
      */
     public Page<ArticleResponse> getPublishedArticles(int page, int size) {
-        return articleRepository.findByStatus(
-                ArticleStatus.PUBLISHED,
-                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "publishedAt")))
-            .map(ArticleResponse::from);
+        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "publishedAt"));
+        if (publicWorkspaceId != null) {
+            return articleRepository.findByStatusAndWorkspaceId(ArticleStatus.PUBLISHED, publicWorkspaceId, pageable)
+                .map(ArticleResponse::from);
+        }
+        return articleRepository.findByStatus(ArticleStatus.PUBLISHED, pageable).map(ArticleResponse::from);
     }
 
     /**
@@ -50,12 +67,12 @@ public class PublicArticleService {
      * @return the published article response
      */
     public ArticleResponse getPublishedArticleById(UUID id) {
-        var article = articleRepository.findById(id)
+        Optional<Article> article = publicWorkspaceId != null
+            ? articleRepository.findByIdAndWorkspaceId(id, publicWorkspaceId)
+            : articleRepository.findById(id);
+        Article found = article.filter(a -> a.getStatus() == ArticleStatus.PUBLISHED)
             .orElseThrow(() -> new ArticleNotFoundException(id));
-        if (article.getStatus() != ArticleStatus.PUBLISHED) {
-            throw new ArticleNotFoundException(id);
-        }
-        return ArticleResponse.from(article);
+        return ArticleResponse.from(found);
     }
 
     /**
@@ -76,9 +93,13 @@ public class PublicArticleService {
                 .map(String::trim)
                 .toList();
 
-        var results = normalizedTags.isEmpty()
-            ? articleRepository.searchByText(query, pageRequest)
-            : articleRepository.searchByTextAndTagNames(query, normalizedTags, pageRequest);
+        var results = publicWorkspaceId != null
+            ? (normalizedTags.isEmpty()
+                ? articleRepository.searchByText(query, publicWorkspaceId, pageRequest)
+                : articleRepository.searchByTextAndTagNames(query, normalizedTags, publicWorkspaceId, pageRequest))
+            : (normalizedTags.isEmpty()
+                ? articleRepository.searchByText(query, pageRequest)
+                : articleRepository.searchByTextAndTagNames(query, normalizedTags, pageRequest));
 
         List<ArticleSearchResult> items = results.getContent().stream()
             .map(row -> {
@@ -118,7 +139,10 @@ public class PublicArticleService {
      * @return the list of tag search facets
      */
     public List<ArticleSearchTag> getSearchTags() {
-        return articleRepository.findPublishedTagFacets().stream()
+        var facets = publicWorkspaceId != null
+            ? articleRepository.findPublishedTagFacets(publicWorkspaceId)
+            : articleRepository.findPublishedTagFacets();
+        return facets.stream()
             .map(row -> new ArticleSearchTag(
                 (String) row[0],
                 (String) row[1],
