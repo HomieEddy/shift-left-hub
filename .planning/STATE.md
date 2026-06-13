@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Workspace Platform
 status: complete
-last_updated: "2026-06-13T00:00:00.000Z"
+last_updated: "2026-06-13T16:00:00.000Z"
 progress:
   total_phases: 6
   completed_phases: 6
   total_plans: 35
   completed_plans: 35
   current_phase: 14
-  current_focus: "v2.0 shipped — all 6 phases (9-14) complete, 35/35 plans executed, 9 seeding tests pass."
+  current_focus: "v2.0 shipped — all 6 phases (9-14) complete, 35/35 plans executed, 9 seeding tests pass. PR #18 shipped."
 ---
 
 # Project State
