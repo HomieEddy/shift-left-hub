@@ -25,6 +25,8 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
      */
     Optional<Article> findBySlug(String slug);
 
+    Optional<Article> findByIdAndWorkspaceId(UUID id, UUID workspaceId);
+
     /**
      * Finds articles by their status.
      *
@@ -33,6 +35,16 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
      * @return a page of articles with the given status
      */
     Page<Article> findByStatus(ArticleStatus status, Pageable pageable);
+
+    /**
+     * Finds published articles scoped to a specific workspace.
+     *
+     * @param status       the article status to filter by
+     * @param workspaceId  the workspace UUID to scope results to
+     * @param pageable     the pagination information
+     * @return a page of articles matching the status and workspace
+     */
+    Page<Article> findByStatusAndWorkspaceId(ArticleStatus status, UUID workspaceId, Pageable pageable);
 
     /**
      * Full-text search across published articles.
