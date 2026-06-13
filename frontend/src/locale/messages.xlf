@@ -71,8 +71,8 @@
         <target>Logout</target>
       </trans-unit>
       <trans-unit id="app.title">
-        <source>SL Knowledge Hub</source>
-        <target>SL Knowledge Hub</target>
+        <source>Knowledge Hub</source>
+        <target>Knowledge Hub</target>
       </trans-unit>
       <trans-unit id="error.invalid-credentials">
         <source>Invalid email or password.</source>
@@ -331,12 +331,12 @@
         <target>AI Assistant</target>
       </trans-unit>
       <trans-unit id="chat.subtitle">
-        <source>Ask me anything about IT issues</source>
-        <target>Ask me anything about IT issues</target>
+        <source>Ask me anything about your workspace</source>
+        <target>Ask me anything about your workspace</target>
       </trans-unit>
       <trans-unit id="chat.input-placeholder">
-        <source>Describe your IT issue...</source>
-        <target>Describe your IT issue...</target>
+        <source>Ask a question...</source>
+        <target>Ask a question...</target>
       </trans-unit>
       <trans-unit id="chat.send">
         <source>Send</source>
@@ -379,12 +379,12 @@
         <target>AI Assistant</target>
       </trans-unit>
       <trans-unit id="nav.my-tickets">
-        <source>My Tickets</source>
-        <target>My Tickets</target>
+        <source>My Requests</source>
+        <target>My Requests</target>
       </trans-unit>
       <trans-unit id="tickets.title">
-        <source>My Tickets</source>
-        <target>My Tickets</target>
+        <source>My Requests</source>
+        <target>My Requests</target>
       </trans-unit>
       <trans-unit id="tickets.loading">
         <source>Loading tickets...</source>
@@ -539,8 +539,8 @@
         <target>An agent will review your ticket shortly.</target>
       </trans-unit>
       <trans-unit id="tickets.modal.title">
-        <source>Ticket Submitted</source>
-        <target>Ticket Submitted</target>
+        <source>My Requests</source>
+        <target>My Requests</target>
       </trans-unit>
       <trans-unit id="tickets.modal.ticketNumber">
         <source>Ticket Number</source>
@@ -555,20 +555,20 @@
         <target>Start New Chat</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.title" datatype="html">
-        <source>KCS Drafts</source>
-        <target>KCS Drafts</target>
+        <source>Drafts</source>
+        <target>Drafts</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.description" datatype="html">
-        <source>Review and manage AI-drafted knowledge base articles</source>
-        <target>Review and manage AI-drafted knowledge base articles</target>
+        <source>Review and manage knowledge base article drafts</source>
+        <target>Review and manage knowledge base article drafts</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.loading" datatype="html">
         <source>Loading drafts...</source>
         <target>Loading drafts...</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.empty" datatype="html">
-        <source>No KCS drafts pending review</source>
-        <target>No KCS drafts pending review</target>
+        <source>No drafts pending review</source>
+        <target>No drafts pending review</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.col.title" datatype="html">
         <source>Title</source>
@@ -1067,8 +1067,16 @@
         <target>Resolve issues before they reach the queue.</target>
       </trans-unit>
       <trans-unit id="landing.hero.title">
-        <source>Shift-Left Knowledge Hub</source>
-        <target>Shift-Left Knowledge Hub</target>
+        <source>Find Answers. Share Knowledge.</source>
+        <target>Find Answers. Share Knowledge.</target>
+      </trans-unit>
+      <trans-unit id="landing.hero.subtitle">
+        <source>Your intelligent knowledge platform for every team</source>
+        <target>Your intelligent knowledge platform for every team</target>
+      </trans-unit>
+      <trans-unit id="landing.hero.description">
+        <source>Empower your teams with an AI-powered knowledge base that captures answers, reduces repeat questions, and makes expertise accessible to everyone.</source>
+        <target>Empower your teams with an AI-powered knowledge base that captures answers, reduces repeat questions, and makes expertise accessible to everyone.</target>
       </trans-unit>
       <trans-unit id="landing.signedInAs">
         <source>You're signed in as</source>
@@ -1091,8 +1099,8 @@
         <target>Register</target>
       </trans-unit>
       <trans-unit id="nav.kcs-drafts">
-        <source>KCS Drafts</source>
-        <target>KCS Drafts</target>
+        <source>Drafts</source>
+        <target>Drafts</target>
       </trans-unit>
       <trans-unit id="nav.register">
         <source>Register</source>
@@ -1103,8 +1111,8 @@
         <target>Sign in</target>
       </trans-unit>
       <trans-unit id="nav.ticket-queue">
-        <source>Ticket Queue</source>
-        <target>Ticket Queue</target>
+        <source>Queue</source>
+        <target>Queue</target>
       </trans-unit>
       <trans-unit id="register.backToHome">
         <source>&amp;larr; Back to home</source>
@@ -1259,28 +1267,56 @@
         <target>An unexpected error occurred. Please try again.</target>
       </trans-unit>
       <trans-unit id="landing.hero.badge">
-        <source>Shift-Left Support Platform</source>
-        <target>Shift-Left Support Platform</target>
+        <source>Knowledge Platform</source>
+        <target>Knowledge Platform</target>
       </trans-unit>
       <trans-unit id="landing.stats.response">
-        <source>Agent Productivity Boost</source>
-        <target>Agent Productivity Boost</target>
+        <source>Time Saved</source>
+        <target>Time Saved</target>
       </trans-unit>
       <trans-unit id="landing.stats.accuracy">
-        <source>Resolution Accuracy</source>
-        <target>Resolution Accuracy</target>
+        <source>Knowledge Coverage</source>
+        <target>Knowledge Coverage</target>
       </trans-unit>
       <trans-unit id="landing.stats.intercepted">
-        <source>Tickets Intercepted Before Queue</source>
-        <target>Tickets Intercepted Before Queue</target>
+        <source>Answers Found</source>
+        <target>Answers Found</target>
       </trans-unit>
       <trans-unit id="landing.stats.response">
-        <source>Average AI Response Time</source>
-        <target>Average AI Response Time</target>
+        <source>Average Response Time</source>
+        <target>Average Response Time</target>
       </trans-unit>
       <trans-unit id="landing.how.title">
         <source>How It Works</source>
         <target>How It Works</target>
+      </trans-unit>
+      <trans-unit id="landing.how.subtitle">
+        <source>From question to knowledge in three simple steps</source>
+        <target>From question to knowledge in three simple steps</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.title">
+        <source>User Submits Question</source>
+        <target>User Submits Question</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>A team member describes their question through the AI assistant. The system captures context and intent automatically.</source>
+        <target>A team member describes their question through the AI assistant. The system captures context and intent automatically.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Matches or Routes</source>
+        <target>AI Matches or Routes</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI searches the knowledge base for relevant answers. If found, the user gets an instant response. If not, a request is created and routed to the appropriate team member.</source>
+        <target>The AI searches the knowledge base for relevant answers. If found, the user gets an instant response. If not, a request is created and routed to the appropriate team member.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.title">
+        <source>Knowledge Grows Automatically</source>
+        <target>Knowledge Grows Automatically</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future workload.</source>
+        <target>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future workload.</target>
       </trans-unit>
       <trans-unit id="landing.how.subtitle">
         <source>From ticket submission to self-service knowledge in three steps</source>
@@ -1307,12 +1343,44 @@
         <target>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</target>
       </trans-unit>
       <trans-unit id="landing.features.subtitle">
-        <source>Built for IT service desks that want to shift left using KCS methodology</source>
-        <target>Built for IT service desks that want to shift left using KCS methodology</target>
+        <source>Built for teams that value knowledge sharing and collaboration</source>
+        <target>Built for teams that value knowledge sharing and collaboration</target>
+      </trans-unit>
+      <trans-unit id="landing.features.title">
+        <source>Everything You Need</source>
+        <target>Everything You Need</target>
+      </trans-unit>
+      <trans-unit id="landing.features.subtitle">
+        <source>Built for teams that want to work smarter, not harder</source>
+        <target>Built for teams that want to work smarter, not harder</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.title">
+        <source>Start Building Your Knowledge Base</source>
+        <target>Start Building Your Knowledge Base</target>
+      </trans-unit>
+      <trans-unit id="landing.cta.desc">
+        <source>Create a workspace, invite your team, and start capturing knowledge that works for everyone.</source>
+        <target>Create a workspace, invite your team, and start capturing knowledge that works for everyone.</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.title">
-        <source>User Describes Issue</source>
-        <target>User Describes Issue</target>
+        <source>Ask a Question</source>
+        <target>Ask a Question</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step1.desc">
+        <source>A team member asks a question through the AI assistant or search. The system understands the context and searches all available knowledge.</source>
+        <target>A team member asks a question through the AI assistant or search. The system understands the context and searches all available knowledge.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.title">
+        <source>AI Finds or Routes</source>
+        <target>AI Finds or Routes</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step2.desc">
+        <source>The AI searches the knowledge base for relevant answers. If found, the team member gets an instant response. If not, a request is created and assigned to the right person.</source>
+        <target>The AI searches the knowledge base for relevant answers. If found, the team member gets an instant response. If not, a request is created and assigned to the right person.</target>
+      </trans-unit>
+      <trans-unit id="landing.how.step3.desc">
+        <source>When a team member resolves a request, a knowledge article is drafted automatically. The knowledge base grows organically, reducing future workload.</source>
+        <target>When a team member resolves a request, a knowledge article is drafted automatically. The knowledge base grows organically, reducing future workload.</target>
       </trans-unit>
       <trans-unit id="landing.how.step1.desc">
         <source>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</source>
