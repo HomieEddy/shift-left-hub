@@ -13,7 +13,7 @@ import {
   LucideX, LucideUpload, LucideChevronsUpDown, LucideCheck, LucideBuilding2,
   LucideBell, LucideLoader2
 } from '@lucide/angular';
-import { ToastContainer } from './shared/ui/toast/toast-container';
+import { ToastContainer } from './shared/ui/toast/toast-container.component';
 import { WorkspaceSwitcherComponent } from './features/workspace-switcher/workspace-switcher.component';
 import { InvitationBadgeComponent } from './features/workspace-switcher/invitation-badge.component';
 

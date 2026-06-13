@@ -4,14 +4,7 @@ import { badgeVariantClass, type BadgeVariant } from './badge-utils';
 @Component({
   selector: 'app-badge',
   standalone: true,
-  template: `
-    <span
-      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-      [class]="classes()"
-    >
-      <ng-content />
-    </span>
-  `,
+  templateUrl: './badge.component.html',
 })
 export class BadgeComponent {
   readonly variant = input<BadgeVariant>('default');

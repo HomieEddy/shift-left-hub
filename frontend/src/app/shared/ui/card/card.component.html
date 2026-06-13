@@ -1,0 +1,8 @@
+    <div
+      class="bg-surface-primary rounded-xl shadow-sm border border-border-default"
+      [class.p-6]="padding() === 'default'"
+      [class.p-4]="padding() === 'sm'"
+      [class.p-0]="padding() === 'none'"
+    >
+      <ng-content />
+    </div>
