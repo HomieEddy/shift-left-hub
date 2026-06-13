@@ -1,9 +1,14 @@
 package com.shiftleft.hub.document.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.jsoup.Jsoup;
+import org.jsoup.parser.Parser;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,17 +19,23 @@ public class DocumentParserService {
 
     /**
      * Parses a document file and extracts its text content.
-     * Supports markdown, plain text, and PDF formats.
+     * Supports markdown, plain text, PDF, HTML, XML, and Word documents.
      *
      * @param filePath the path to the document file
      * @param mimeType the MIME type of the document
      * @return the extracted text content
      */
     public String parse(Path filePath, String mimeType) {
+        if (mimeType == null) {
+            throw new IllegalArgumentException("MIME type must not be null");
+        }
         try {
             return switch (mimeType) {
                 case "text/markdown", "text/plain" -> Files.readString(filePath);
                 case "application/pdf" -> parsePdf(filePath);
+                case "text/html", "application/xhtml+xml" -> parseHtml(filePath);
+                case "text/xml", "application/xml", "application/rss+xml", "application/atom+xml" -> parseXml(filePath);
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document" -> parseDocx(filePath);
                 default -> throw new IllegalArgumentException("Unsupported MIME type: " + mimeType);
             };
         } catch (IOException e) {
@@ -56,5 +67,35 @@ public class DocumentParserService {
             result = content;
         }
         return result;
+    }
+
+    private String parseHtml(Path filePath) throws IOException {
+        org.jsoup.nodes.Document htmlDoc = Jsoup.parse(filePath.toFile(), "UTF-8");
+        htmlDoc.select("script, style, svg, noscript").remove();
+        return htmlDoc.body().text();
+    }
+
+    private String parseXml(Path filePath) throws IOException {
+        String xmlContent = Files.readString(filePath);
+        org.jsoup.nodes.Document xmlDoc = Jsoup.parse(xmlContent, "", Parser.xmlParser());
+        String text = xmlDoc.text();
+        if (text.isBlank()) {
+            log.warn("No text extracted from XML, falling back to raw content for: {}", filePath);
+            return xmlContent;
+        }
+        return text;
+    }
+
+    private String parseDocx(Path filePath) throws IOException {
+        try (InputStream is = Files.newInputStream(filePath);
+             XWPFDocument doc = new XWPFDocument(is);
+             XWPFWordExtractor extractor = new XWPFWordExtractor(doc)) {
+            String text = extractor.getText();
+            if (text.isBlank()) {
+                log.warn("No text extracted from Word document, returning empty: {}", filePath);
+                return "";
+            }
+            return text;
+        }
     }
 }

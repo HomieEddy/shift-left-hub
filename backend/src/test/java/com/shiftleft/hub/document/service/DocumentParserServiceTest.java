@@ -1,8 +1,10 @@
 package com.shiftleft.hub.document.service;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -85,8 +87,9 @@ class DocumentParserServiceTest {
         Path file = tempDir.resolve("data.bin");
         Files.writeString(file, "binary data");
 
-        assertThrows(NullPointerException.class,
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
             () -> parser.parse(file, null));
+        assertTrue(ex.getMessage().contains("MIME type must not be null"));
     }
 
     // ── PDF parsing ─────────────────────────────────────────────
@@ -190,6 +193,203 @@ class DocumentParserServiceTest {
 
         assertNotNull(result);
         assertFalse(result.isBlank());
+    }
+
+    // ── HTML parsing (Jsoup) ─────────────────────────────────────
+
+    @Test
+    void parseHtml_shouldExtractTextStrippingMarkup() throws IOException {
+        Path file = tempDir.resolve("test.html");
+        String html = """
+            <html><body>
+            <h1>Heading One</h1>
+            <p>This is a paragraph with <strong>bold</strong> and <em>italic</em> text.</p>
+            <ul>
+              <li>List item A</li>
+              <li>List item B</li>
+            </ul>
+            </body></html>""";
+        Files.writeString(file, html);
+
+        String result = parser.parse(file, "text/html");
+
+        assertTrue(result.contains("Heading One"), "Should contain heading text");
+        assertTrue(result.contains("This is a paragraph with"), "Should contain paragraph text");
+        assertTrue(result.contains("bold"), "Should contain bold text content");
+        assertTrue(result.contains("italic"), "Should contain italic text content");
+        assertTrue(result.contains("List item A"), "Should contain list item text");
+        assertTrue(result.contains("List item B"), "Should contain list item text");
+        assertFalse(result.contains("<h1>"), "Should not contain HTML tags");
+        assertFalse(result.contains("<strong>"), "Should not contain strong tags");
+    }
+
+    @Test
+    void parseHtml_shouldStripScriptAndStyleContent() throws IOException {
+        Path file = tempDir.resolve("scripted.html");
+        String html = """
+            <html><head>
+            <style>.css-rules { color: red; }</style>
+            </head><body>
+            <p>Visible content</p>
+            <script>alert('injected');</script>
+            <p>More visible content</p>
+            </body></html>""";
+        Files.writeString(file, html);
+
+        String result = parser.parse(file, "text/html");
+
+        assertTrue(result.contains("Visible content"), "Should contain visible content");
+        assertTrue(result.contains("More visible content"), "Should contain visible content");
+        assertFalse(result.contains("css-rules"), "Should not contain CSS from style tags");
+        assertFalse(result.contains("alert"), "Should not contain JavaScript from script tags");
+    }
+
+    @Test
+    void parseHtml_shouldHandleEmptyHtml() throws IOException {
+        Path file = tempDir.resolve("empty.html");
+        Files.writeString(file, "<html><body></body></html>");
+
+        String result = parser.parse(file, "text/html");
+
+        assertTrue(result == null || result.isBlank(), "Empty HTML should produce blank result");
+    }
+
+    @Test
+    void parseHtml_shouldHandleXhtml() throws IOException {
+        Path file = tempDir.resolve("test.xhtml");
+        String xhtml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <html xmlns="http://www.w3.org/1999/xhtml">
+            <head><title>XHTML Test</title></head>
+            <body>
+            <p>XHTML content with <br/> line break.</p>
+            </body>
+            </html>""";
+        Files.writeString(file, xhtml);
+
+        String result = parser.parse(file, "application/xhtml+xml");
+
+        assertTrue(result.contains("XHTML content"), "Should extract XHTML text");
+    }
+
+    // ── XML parsing (Jsoup XML mode) ────────────────────────────
+
+    @Test
+    void parseXml_shouldExtractTextFromElements() throws IOException {
+        Path file = tempDir.resolve("test.xml");
+        String xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <catalog>
+                <book>
+                    <title>Effective Java</title>
+                    <author>Joshua Bloch</author>
+                    <description>A programming guide.</description>
+                </book>
+            </catalog>""";
+        Files.writeString(file, xml);
+
+        String result = parser.parse(file, "text/xml");
+
+        assertTrue(result.contains("Effective Java"), "Should extract title text");
+        assertTrue(result.contains("Joshua Bloch"), "Should extract author text");
+        assertTrue(result.contains("A programming guide."), "Should extract description text");
+    }
+
+    @Test
+    void parseXml_shouldStripProcessingInstructions() throws IOException {
+        Path file = tempDir.resolve("with-pi.xml");
+        String xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <?xml-stylesheet type="text/xsl" href="style.xsl"?>
+            <!DOCTYPE catalog SYSTEM "catalog.dtd">
+            <catalog>
+                <item>Content</item>
+            </catalog>""";
+        Files.writeString(file, xml);
+
+        String result = parser.parse(file, "application/xml");
+
+        assertTrue(result.contains("Content"), "Should extract element text");
+        assertFalse(result.contains("<?xml"), "Should not contain XML declaration");
+    }
+
+    @Test
+    void parseXml_shouldHandleDeeplyNestedXml() throws IOException {
+        Path file = tempDir.resolve("deep.xml");
+        String xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <root>
+                <level1>
+                    <level2>
+                        <level3>Deep text</level3>
+                    </level2>
+                </level1>
+                <sibling>Flat text</sibling>
+            </root>""";
+        Files.writeString(file, xml);
+
+        String result = parser.parse(file, "application/rss+xml");
+
+        assertTrue(result.contains("Deep text"), "Should extract deeply nested text");
+        assertTrue(result.contains("Flat text"), "Should extract sibling element text");
+    }
+
+    @Test
+    void parseXml_shouldReturnRawContentWhenNoText() throws IOException {
+        Path file = tempDir.resolve("no-text.xml");
+        String xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <empty><items></items></empty>""";
+        Files.writeString(file, xml);
+
+        String result = parser.parse(file, "application/atom+xml");
+
+        assertFalse(result.isEmpty(), "Should return fallback content");
+    }
+
+    @Test
+    void parseXml_shouldHandleEmptyXml() {
+        assertDoesNotThrow(() -> {
+            Path file = tempDir.resolve("empty.xml");
+            Files.writeString(file, "");
+            String result = parser.parse(file, "text/xml");
+            assertNotNull(result);
+        }, "Empty XML should not throw exception");
+    }
+
+    // ── Word document parsing (Apache POI) ──────────────────────
+
+    @Test
+    void parseDocx_shouldExtractText() throws IOException {
+        Path file = tempDir.resolve("test.docx");
+        try (XWPFDocument doc = new XWPFDocument()) {
+            doc.createParagraph().createRun().setText("Hello from Word");
+            doc.createParagraph().createRun().setText("Second paragraph");
+            try (FileOutputStream out = new FileOutputStream(file.toFile())) {
+                doc.write(out);
+            }
+        }
+
+        String result = parser.parse(file,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        assertTrue(result.contains("Hello from Word"), "Should extract first paragraph");
+        assertTrue(result.contains("Second paragraph"), "Should extract second paragraph");
+    }
+
+    @Test
+    void parseDocx_shouldFallbackOnEmptyDocx() throws IOException {
+        Path file = tempDir.resolve("empty.docx");
+        try (XWPFDocument doc = new XWPFDocument()) {
+            try (FileOutputStream out = new FileOutputStream(file.toFile())) {
+                doc.write(out);
+            }
+        }
+
+        String result = parser.parse(file,
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        assertTrue(result.isEmpty(), "Empty Word document should return empty string");
     }
 
     // ── IOException handling ────────────────────────────────────

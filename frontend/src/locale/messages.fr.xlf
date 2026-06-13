@@ -1363,8 +1363,8 @@
         <target>Déposez les fichiers ici ou cliquez pour parcourir</target>
       </trans-unit>
       <trans-unit id="admin.documents.accepted-types" datatype="html">
-        <source>Accepted: .md, .txt, .pdf</source>
-        <target>Accepté : .md, .txt, .pdf</target>
+        <source>Accepted: .md, .txt, .pdf, .html, .xml, .docx</source>
+        <target>Accepté : .md, .txt, .pdf, .html, .xml, .docx</target>
       </trans-unit>
       <trans-unit id="admin.documents.list-title" datatype="html">
         <source>Uploaded Documents</source>
@@ -1423,8 +1423,8 @@
         <target>Téléchargé : </target>
       </trans-unit>
       <trans-unit id="admin.documents.unsupported" datatype="html">
-        <source>Unsupported type: </source>
-        <target>Type non supporté : </target>
+        <source>Unsupported type. Supported: .md, .txt, .pdf, .html, .xml, .docx</source>
+        <target>Type non supporté. Formats supportés : .md, .txt, .pdf, .html, .xml, .docx</target>
       </trans-unit>
       <trans-unit id="admin.documents.upload-failed" datatype="html">
         <source>Upload failed: </source>
