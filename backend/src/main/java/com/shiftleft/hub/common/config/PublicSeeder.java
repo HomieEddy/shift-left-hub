@@ -62,6 +62,12 @@ public class PublicSeeder {
     @Value("${app.kb.seed-enabled:true}")
     private boolean seedEnabled;
 
+    /**
+     * Main entry point for Public workspace seeding.
+     *
+     * <p>Scans markdown files, creates Public tags and articles in the Public workspace.
+     * Fully idempotent — checks by slug for articles and by name_en+workspaceId for tags.
+     */
     @EventListener(ApplicationReadyEvent.class)
     @Order(2)
     public void seed() {
@@ -98,7 +104,9 @@ public class PublicSeeder {
             Resource[] resources = resolver.getResources(MARKDOWN_PATTERN);
             for (Resource resource : resources) {
                 String filename = resource.getFilename();
-                if (filename == null) continue;
+                if (filename == null) {
+                    continue;
+                }
 
                 String content = readFile(resource);
                 Map<String, String> frontmatter = parseFrontmatter(content);
@@ -150,8 +158,8 @@ public class PublicSeeder {
                         .publishedAt(LocalDateTime.now())
                         .author(admin)
                         .tags(articleTags)
-                        .workspaceId(publicWsId)
                         .build();
+                    article.setWorkspaceId(publicWsId);
                     articleRepository.save(article);
                     created++;
                     log.debug("Created article: {}", slug);
@@ -200,8 +208,8 @@ public class PublicSeeder {
                     .nameEn(seed.nameEn())
                     .nameFr(seed.nameFr())
                     .color(seed.color())
-                    .workspaceId(workspaceId)
                     .build();
+                tag.setWorkspaceId(workspaceId);
                 tag = tagRepository.save(tag);
                 tagByNameEn.put(tag.getNameEn(), tag);
                 log.info("Created Public tag: {} ({})", seed.nameEn(), seed.color());

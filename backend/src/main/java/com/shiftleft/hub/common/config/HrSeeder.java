@@ -175,8 +175,8 @@ public class HrSeeder {
                         .publishedAt(LocalDateTime.now())
                         .author(admin)
                         .tags(resolvedTags)
-                        .workspaceId(wsId)
                         .build();
+                    article.setWorkspaceId(wsId);
                     created++;
                     log.debug("Created HR article: {}", slug);
                 }
@@ -217,8 +217,8 @@ public class HrSeeder {
                     .nameEn(def.nameEn())
                     .nameFr(def.nameFr())
                     .color(def.color())
-                    .workspaceId(workspaceId)
                     .build();
+                newTag.setWorkspaceId(workspaceId);
                 Tag saved = tagRepository.save(newTag);
                 result.put(def.nameEn(), saved);
                 log.info("Created HR tag: {} (workspace: {})", def.nameEn(), workspaceId);

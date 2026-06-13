@@ -173,8 +173,8 @@ public class LegalSeeder {
                         .publishedAt(LocalDateTime.now())
                         .author(admin)
                         .tags(resolvedTags)
-                        .workspaceId(wsId)
                         .build();
+                    article.setWorkspaceId(wsId);
                     created++;
                     log.debug("Created Legal article: {}", slug);
                 }
@@ -214,8 +214,8 @@ public class LegalSeeder {
                     .nameEn(def.nameEn())
                     .nameFr(def.nameFr())
                     .color(def.color())
-                    .workspaceId(workspaceId)
                     .build();
+                newTag.setWorkspaceId(workspaceId);
                 Tag saved = tagRepository.save(newTag);
                 result.put(def.nameEn(), saved);
                 log.info("Created Legal tag: {} (workspace: {})", def.nameEn(), workspaceId);
