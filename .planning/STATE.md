@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Workspace Platform
-status: complete
+status: planning
 last_updated: "2026-06-12T21:42:00.000Z"
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 5
-  total_plans: 29
+  total_plans: 32
   completed_plans: 29
-  current_phase: 13
-  current_focus: "Phase 13 complete — all components use external templates, multi-component files split, code review fixes applied. v2.0 fully shipped with polish."
+  current_phase: 14
+  current_focus: "Phase 14 planned — 3 plans in 1 wave. Master seeder + seed content for 4 workspace domains (HR, Legal, IT, Public)."
 ---
 
 # Project State
@@ -55,6 +55,9 @@ See: `.planning/PROJECT.md`
 | Combined DOC + LLM in one phase (Phase 10) | ETL pipeline and LLM config share embedding infrastructure |
 | Default Workspace migration for v1.0 data | Backward compatibility without data migration scripts |
 | **Phase 13: Extract all inline templates** | Angular Style Guide compliance, improves maintainability and diffs |
+| **Phase 14: Master + per-workspace seeders** | One master (users/workspaces/roles) + four per-workspace seeders (tags/articles) |
+| **Phase 14: Public workspace is default** | New users' `default_workspace_id` points to Public workspace |
+| **Phase 14: 7 seed users with workspace-scoped roles** | Admin has ADMIN on all 4 workspaces; dept users have MEMBER on dept + Public |
 
 ## Accumulated Context
 
@@ -80,7 +83,8 @@ See: `.planning/PROJECT.md`
 12. ✅ Add Phases 13 to roadmap (Frontend Cleanup)
 13. ✅ Plan Phase 13 — 4 plans in 2 waves
 14. ✅ Execute Phase 13 — Frontend Cleanup complete (4 plans, 2 waves)
-15. 🔲 Next: `/gsd-plan-phase 14` — Seeding Revamp
+  15. ✅ Plan Phase 14 — Seeding Revamp (3 plans in 1 wave)
+  16. 🔲 Next: `/gsd-execute-phase 14` — Execute Phase 14
 
 ---
 
