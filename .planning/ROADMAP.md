@@ -15,7 +15,7 @@
 - [x] **Phase 11: Domain-Agnostic AI** — Customizable taxonomy, system prompts, and unified hybrid search across articles and document chunks
 - [x] **Phase 12: Workspace Management UI** — Workspace switcher, member invitation with roles, admin panel, and workspace lifecycle
 - [x] **Phase 13: Frontend Cleanup** — Angular Style Guide compliance: inline templates → external, multi-component files split, filenames renamed
-- [ ] **Phase 14: Seeding Revamp** — Workspace-aware seeding with 4 workspaces, 7 users, 40 bilingual articles, workspace-specific tags. Old v1.0 migration code removed.
+- [x] **Phase 14: Seeding Revamp** — Workspace-aware seeding with 4 workspaces, 7 users, 40 bilingual articles, workspace-specific tags. Old v1.0 migration code removed.
 
 </details>
 
@@ -50,7 +50,7 @@ Plans:
 - [x] 13-03-PLAN.md — Split skeleton/button, rename toast-container
 - [x] 13-04-PLAN.md — Build & test verification (pnpm build + ng test)
 
-### Phase 14: Seeding Revamp
+### Phase 14: Seeding Revamp ✅
 
 **Goal**: Replace the existing single-tenant IT-helpdesk seeding with workspace-aware seeding — 4 workspaces (HR, Legal, IT, Public), 7 users with workspace-scoped roles, 40 bilingual seed articles organized by workspace domain, workspace-specific tag sets. Old v1.0 migration code fully removed.
 
@@ -70,9 +70,9 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 14-01-PLAN.md — Master Seeder + infrastructure cleanup
-- [ ] 14-02-PLAN.md — HR + Legal workspace seed content (markdown files + seeders)
-- [ ] 14-03-PLAN.md — IT + Public workspace seed content (markdown files + seeders)
+- [x] 14-01-PLAN.md — Master Seeder + infrastructure cleanup
+- [x] 14-02-PLAN.md — HR + Legal workspace seed content (markdown files + seeders)
+- [x] 14-03-PLAN.md — IT + Public workspace seed content (markdown files + seeders)
 
 ### Phase 9: Workspace Foundation
 **Goal**: Multi-tenant workspace isolation is established — users can create workspaces, all domain data is scoped by workspace_id, and existing v1.0 data is migrated to a default workspace
@@ -168,8 +168,8 @@ Plans:
 | 11. Domain-Agnostic AI | v2.0 | 6/6 | Complete | 2026-06-12 |
 | 12. Workspace Management UI | v2.0 | 5/5 | Complete | 2026-06-12 |
 | 13. Frontend Cleanup | v2.0 | 4/4 | Complete | 2026-06-12 |
-| 14. Seeding Revamp | v2.0 | 0/3 | Planned | — |
+| 14. Seeding Revamp | v2.0 | 3/3 | Complete | 2026-06-13 |
 
 ---
 
-*Last updated: 2026-06-12 — Phase 14 planned (0/3 plans) — Seeding Revamp*
+*Last updated: 2026-06-13 — Phase 14 complete (3/3 plans) — Seeding Revamp — v2.0 milestone complete*
