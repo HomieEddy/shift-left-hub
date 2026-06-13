@@ -66,7 +66,7 @@ export class WorkspaceSwitcherComponent implements OnInit {
           this.workspaceRoleService.refreshRole();
           void this.router.navigateByUrl('/');
         },
-        error: () => {},
+        error: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
       });
   }
 
