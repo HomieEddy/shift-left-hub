@@ -87,8 +87,9 @@ class DocumentParserServiceTest {
         Path file = tempDir.resolve("data.bin");
         Files.writeString(file, "binary data");
 
-        assertThrows(NullPointerException.class,
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
             () -> parser.parse(file, null));
+        assertTrue(ex.getMessage().contains("MIME type must not be null"));
     }
 
     // ── PDF parsing ─────────────────────────────────────────────
@@ -388,7 +389,7 @@ class DocumentParserServiceTest {
         String result = parser.parse(file,
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
-        assertFalse(result.isEmpty(), "Should return fallback content");
+        assertTrue(result.isEmpty(), "Empty Word document should return empty string");
     }
 
     // ── IOException handling ────────────────────────────────────

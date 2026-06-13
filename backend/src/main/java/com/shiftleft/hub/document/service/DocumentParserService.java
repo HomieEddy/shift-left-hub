@@ -26,6 +26,9 @@ public class DocumentParserService {
      * @return the extracted text content
      */
     public String parse(Path filePath, String mimeType) {
+        if (mimeType == null) {
+            throw new IllegalArgumentException("MIME type must not be null");
+        }
         try {
             return switch (mimeType) {
                 case "text/markdown", "text/plain" -> Files.readString(filePath);
@@ -89,9 +92,8 @@ public class DocumentParserService {
              XWPFWordExtractor extractor = new XWPFWordExtractor(doc)) {
             String text = extractor.getText();
             if (text.isBlank()) {
-                log.warn("No text extracted from Word document, falling back to raw content for: {}", filePath);
-                byte[] rawBytes = Files.readAllBytes(filePath);
-                return new String(rawBytes, StandardCharsets.UTF_8);
+                log.warn("No text extracted from Word document, returning empty: {}", filePath);
+                return "";
             }
             return text;
         }

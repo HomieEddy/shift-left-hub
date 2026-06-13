@@ -61,7 +61,7 @@ public class DocumentService {
         if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType)) {
             if (extension.isEmpty() || !ALLOWED_EXTENSIONS.contains(extension)) {
                 throw new DocumentProcessingException(
-                    "Unsupported file type. Supported: .md, .txt, .pdf, .html, .xml, .docx");
+                    "Unsupported file type. Supported: .md, .txt, .pdf, .html, .htm, .xhtml, .xml, .docx");
             }
         }
 
