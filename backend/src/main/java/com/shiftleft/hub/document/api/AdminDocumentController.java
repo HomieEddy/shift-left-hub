@@ -4,14 +4,19 @@ import com.shiftleft.hub.document.api.dto.DocumentListResponse;
 import com.shiftleft.hub.document.api.dto.DocumentUploadResponse;
 import com.shiftleft.hub.document.domain.Document;
 import com.shiftleft.hub.document.service.DocumentService;
+import com.shiftleft.hub.user.domain.User;
+import com.shiftleft.hub.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,16 +27,20 @@ import java.util.UUID;
 public class AdminDocumentController {
 
     private final DocumentService documentService;
+    private final UserRepository userRepository;
 
     /**
      * Uploads a document file. Starts the async ETL pipeline for processing.
      *
-     * @param file the uploaded multipart file
+     * @param file       the uploaded multipart file
+     * @param categoryId optional category to assign to the document
      * @return the upload response with document metadata
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<DocumentUploadResponse> uploadDocument(@RequestParam("file") MultipartFile file) {
-        Document document = documentService.uploadDocument(file);
+    public ResponseEntity<DocumentUploadResponse> uploadDocument(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(required = false) UUID categoryId) {
+        Document document = documentService.uploadDocument(file, categoryId);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(DocumentUploadResponse.from(document));
     }
@@ -84,5 +93,22 @@ public class AdminDocumentController {
     public ResponseEntity<DocumentUploadResponse> reprocessDocument(@PathVariable UUID id) {
         Document document = documentService.reprocessDocument(id);
         return ResponseEntity.ok(DocumentUploadResponse.from(document));
+    }
+
+    /**
+     * Converts a READY document into a knowledge base article.
+     *
+     * @param id   the document UUID to convert
+     * @param auth the current authentication
+     * @return an object containing the created article ID
+     */
+    @PostMapping("/{id}/convert")
+    public ResponseEntity<Map<String, Object>> convertToArticle(
+            @PathVariable UUID id,
+            Authentication auth) {
+        User author = userRepository.findByEmail(auth.getName())
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + auth.getName()));
+        UUID articleId = documentService.convertToArticle(id, author);
+        return ResponseEntity.ok(Map.of("articleId", articleId));
     }
 }

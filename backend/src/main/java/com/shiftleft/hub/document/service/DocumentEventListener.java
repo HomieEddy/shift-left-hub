@@ -3,10 +3,10 @@ package com.shiftleft.hub.document.service;
 import com.shiftleft.hub.document.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -30,9 +30,8 @@ public class DocumentEventListener {
      *
      * @param event the document uploaded event containing document and workspace IDs
      */
-    @EventListener
-    @Async
-    @Transactional
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
+    @Async("kcsTaskExecutor")
     public void handleDocumentUploaded(DocumentUploadedEvent event) {
         log.info("ETL stage: PARSING document {}", event.documentId());
         try {
@@ -75,7 +74,7 @@ public class DocumentEventListener {
             documentRepository.save(document);
 
             log.info("ETL pipeline complete for document {} — {} chunks embedded", event.documentId(), chunks.size());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             log.error("ETL pipeline failed for document {}: {}", event.documentId(), e.getMessage(), e);
             Document document = documentRepository.findById(event.documentId()).orElse(null);
             if (document != null) {
