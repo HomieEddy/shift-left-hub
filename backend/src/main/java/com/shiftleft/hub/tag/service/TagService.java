@@ -1,5 +1,6 @@
 package com.shiftleft.hub.tag.service;
 
+import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.tag.api.dto.CreateTagRequest;
 import com.shiftleft.hub.tag.api.dto.TagResponse;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final ArticleRepository articleRepository;
 
     /**
      * Retrieves all tags with their article counts.
@@ -106,6 +108,6 @@ public class TagService {
     }
 
     private long getArticleCount(Tag tag) {
-        return tag.getArticles() == null ? 0L : (long) tag.getArticles().size();
+        return articleRepository.countByTagId(tag.getId());
     }
 }
