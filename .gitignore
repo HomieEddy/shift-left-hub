@@ -37,3 +37,6 @@ Thumbs.db
 
 # Temp files
 cookies.txt
+
+# Uploaded documents storage
+backend/uploads/
