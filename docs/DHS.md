@@ -5,7 +5,7 @@ To achieve an enterprise-grade deployment (HTTPS, global edge caching, automated
 
 ### A. Frontend (Angular) -> Vercel
 * **The Strategy:** Angular compiles to static HTML, CSS, and JavaScript. It does not require a running server environment.
-* **The Execution:** Connected directly to the GitHub repository, Vercel automatically builds the application (`npm run build`) and deploys the `dist/frontend/browser` output to its Global Edge CDN.
+* **The Execution:** Connected directly to the GitHub repository, Vercel automatically builds the application (`pnpm build`) and deploys the `dist/frontend/browser` output to its Global Edge CDN.
 * **The Value:** Ensures sub-50ms Time-To-Interactive (TTI) for the initial UI load, regardless of the user's geographic location.
 
 ### B. Backend (Spring Boot / Java 21) -> Railway
@@ -13,9 +13,9 @@ To achieve an enterprise-grade deployment (HTTPS, global edge caching, automated
 * **The Execution:** Railway monitors the `backend/` directory in the repository. Upon changes, it detects the `Dockerfile`, builds the `.jar`, and runs the container.
 * **The Value:** Guarantees the backend environment is completely immutable and perfectly mirrors the local Docker setup.
 
-### C. Database (PostgreSQL) -> Railway Managed Database
+### C. Database (PostgreSQL 16 + pgvector) -> Railway Managed Database
 * **The Strategy:** Keep the database and the backend API within the same private network for security and zero-latency communication.
-* **The Execution:** Provision a managed PostgreSQL service directly within the Railway project environment alongside the backend service.
+* **The Execution:** Provision a managed PostgreSQL 16 service with pgvector extension directly within the Railway project environment alongside the backend service.
 * **The Value:** The Spring Boot API connects to the database internally. The database is not exposed to the public internet, dramatically reducing the security attack surface.
 
 ---
@@ -25,13 +25,18 @@ Continuous Integration and Continuous Deployment (CI/CD) are handled natively by
 
 ### A. Frontend CI/CD (Vercel)
 1. **Trigger:** Pull Request merged into `main` affecting the `frontend/` directory.
-2. **Build:** Vercel provisions a Node.js environment, runs `npm ci`, and executes the Angular production build.
+2. **Build:** Vercel provisions a Node.js environment, runs `pnpm install`, and executes the Angular production build.
 3. **Deploy:** The new static assets are pushed to the Edge CDN, and the previous cache is invalidated automatically.
 
 ### B. Backend CI/CD (Railway)
 1. **Trigger:** Pull Request merged into `main` affecting the `backend/` directory.
-2. **Build:** Railway executes the `Dockerfile`, running the Maven build (`./mvnw clean package`) and creating the Java 21 runtime image.
+2. **Build:** Railway executes the `Dockerfile`, running the Maven build (`./mvnw clean package -DskipTests`) and creating the Java 21 runtime image.
 3. **Deploy:** Railway performs a zero-downtime rollout. The new container spins up, health checks are verified, and traffic is securely seamlessly routed from the old container to the new one.
+
+### C. CI Gatekeeping
+1. **Backend CI:** `mvn test` must pass (JUnit + Testcontainers). Build fails → Railway blocks deploy.
+2. **Frontend CI:** `ng test -- --watch=false` must pass. Vercel aborts deploy on failure.
+3. **Post-Deploy:** Optional Playwright health check against live domain.
 
 ---
 

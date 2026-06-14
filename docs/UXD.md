@@ -1,33 +1,65 @@
 # Shift-Left Knowledge Hub - UX/UI Document (UXD)
 
 ## 1. The Design Philosophy: Functional Animation
-Avoid heavy third-party animation libraries. Leverage **Native Angular Animations** (`@angular/animations`) combined with **Tailwind CSS**. Motion will be used strictly to guide the user's eye, explain state transitions, and reduce cognitive load.
+Avoid heavy third-party animation libraries. Leverage **Native Angular Animations** (`@angular/animations`) combined with **Tailwind CSS**. Motion is used strictly to guide the user's eye, explain state transitions, and reduce cognitive load.
 
-## 2. Key Interaction Signatures (The "Wow" Moments)
+## 2. Brand Identity (v2.0)
 
-### The "Shift-Left" Search Cascade
-* **Tech:** `stagger()`, `query()`, RxJS `debounceTime`
-* **UX:** Article cards gracefully slide in from the bottom with a slight fade, staggered by 50ms, rather than snapping instantly onto the screen.
+### Color Palette
+- **Primary:** Warm slate/charcoal (`slate-50` through `slate-900`) — neutral, professional, domain-agnostic
+- **Accent:** Amber (`amber-600 #d97706`) — warm, approachable, attention-guiding
+- **Success:** Emerald tones for resolution/completion states
+- **Background:** White/off-white surfaces with slate shadows
+
+### Typography
+- **Stack:** System default sans-serif via Tailwind (Inter, SF Pro, Segoe UI)
+- **Headings:** Bold, generous tracking for hierarchy
+- **Body:** Comfortable line-height for knowledge content readability
+
+### Icons
+- **Favicon:** SVG open book in slate-700 on transparent background
+- **UI Icons:** Lucide icon set — consistent, clean, recognizable
+
+## 3. Key Interaction Signatures (The "Wow" Moments)
+
+### The Workspace Switcher
+- **Tech:** Dropdown component, signal-based state, workspace context reload
+- **UX:** Click workspace icon/name in nav → dropdown lists user's workspaces with icons → selection reloads entire UI for new workspace context
+
+### The Search Cascade
+- **Tech:** `stagger()`, `query()`, RxJS `debounceTime`
+- **UX:** Article and document result cards gracefully slide in from the bottom with a slight fade, staggered by 50ms.
 
 ### The Escalation Morph
-* **Tech:** Route Transitions, State Morphing
-* **UX:** Clicking "No, this didn't help" seamlessly morphs the article container into the Ticket Escalation form, keeping the user grounded in the same space.
+- **Tech:** Route Transitions, State Morphing
+- **UX:** Clicking "No, this didn't help" seamlessly morphs the chat container into the Ticket Escalation form.
+
+### The Document Upload Flow
+- **Tech:** Drag-and-drop zone, async status polling, progress indicators
+- **UX:** Drop zone highlights on drag-over. Upload progress shows 5-stage pipeline status. Ready state shows document available for search.
 
 ### The Agent Dashboard Reordering
-* **Tech:** `[@listAnimation]`, `:enter` / `:leave`
-* **UX:** Resolving a ticket causes the row to flash green, shrink, and slide out. Remaining tickets glide up to fill the gap.
+- **Tech:** `[@listAnimation]`, `:enter` / `:leave`
+- **UX:** Resolving a ticket causes the row to flash green, shrink, and slide out. Remaining tickets glide up to fill the gap.
 
-### The AI Assistant Expansion
-* **Tech:** `state('* => void')`, `height: auto`
-* **UX:** Chat interface expands smoothly from an empty state. A CSS typing indicator pulses while the Spring Boot backend streams the LLM response.
+## 4. Layout Structure
 
-## 3. Color & Typography Strategy
-* **Primary Palette:** Deep Slates and Corporate Blues (`slate-800`, `blue-600`) for enterprise trust.
-* **Accent Palette:** Soft Emeralds (`emerald-500`) for resolution/success, Ambers (`amber-500`) for pending KCS drafts.
-* **Typography:** System default sans-serif stack via Tailwind.
+### Navigation Bar
+- **Left:** Logo/name + workspace switcher dropdown
+- **Center (when signed in):** Knowledge Base, Assistant, Tickets
+- **Right:** Language switcher, user menu (profile, settings, logout)
 
-## 4. Bilingual Layout Constraints (i18n)
+### Dashboard (signed-in landing)
+- Unified workspace home with quick-access cards for KB, Assistant, Documents
+- Role-appropriate sections revealed based on workspace role (admin/member/read-only)
+
+### Admin Panel
+- Tabbed workspace detail: Members, LLM Config, Documents, Settings
+- Workspace list with search, icon display, member counts
+
+## 5. Bilingual Layout Constraints (i18n)
 French text strings are often 15-20% longer than English.
 * Avoid fixed-width containers.
 * Use flexible layout strategies (Tailwind utility classes).
 * Ensure Angular native animations are calculated dynamically (`height: '*'`) rather than hardcoded pixel values.
+* All translations managed via `@angular/localize` XLF files.

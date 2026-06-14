@@ -2,37 +2,37 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Workspace Platform
-status: extended
-last_updated: "2026-06-13T23:00:00.000Z"
+status: shipped
+last_updated: "2026-06-14T01:00:00.000Z"
 progress:
-  total_phases: 8
-  completed_phases: 7
-  total_plans: 39
-  completed_plans: 39
-  current_phase: 16
-  current_focus: "Phase 16 (UI Neutralization) complete — 4/4 plans, 3 waves. All tests pass. Code review completed."
+  total_phases: 16
+  completed_phases: 16
+  total_plans: 94
+  completed_plans: 94
+  current_phase: null
+  current_focus: "v2.0 Workspace Platform shipped. Next milestone pending."
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** 🔄 v2.0 Extended — Phase 16 Complete (UI Neutralization)
+**Status:** ✅ v2.0 Workspace Platform — Shipped 2026-06-14
 
 ## Project Reference
 
-See: `.planning/PROJECT.md`
+See: `.planning/PROJECT.md` (updated 2026-06-14)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents.
 
-**Current focus:** v2.0 Extended — Phase 15 (File Upload Format Support) pending execution. Phase 16 (UI Neutralization) complete.
+**Current focus:** Planning next milestone.
 
 ## Milestone Recap
 
 | Milestone | Status |
 |-----------|--------|
 | v1.0 Initial MVP | ✅ Shipped (8 phases, 60 plans, 41 requirements) |
-| v2.0 Workspace Platform | ✅ Shipped (6 phases, 35 plans) |
+| v2.0 Workspace Platform | ✅ Shipped (8 phases, 34 plans, 46 requirements) |
 
 ## Key Decisions (Carried Forward)
 
@@ -46,39 +46,21 @@ See: `.planning/PROJECT.md`
 | Sequential TKT-NNNN numbering | Human-readable ticket IDs vs raw UUIDs | ✓ Shipped v1.0 |
 | JSONB shift_left_context | Flexible schema for AI chat transcript storage | ✓ Shipped v1.0 |
 
-## v2.0 New Decisions
-
-| Decision | Rationale |
-|----------|-----------|
-| Row-level workspace_id isolation (not schema-per-tenant) | Preserves Flyway, Testcontainers, and Spring AI pgvector integration |
-| Hibernate @Filter + AOP for data isolation | Defense-in-depth against cross-tenant leakage |
-| Combined DOC + LLM in one phase (Phase 10) | ETL pipeline and LLM config share embedding infrastructure |
-| Default Workspace migration for v1.0 data | Backward compatibility without data migration scripts |
-| **Phase 13: Extract all inline templates** | Angular Style Guide compliance, improves maintainability and diffs |
-| **Phase 14: Master + per-workspace seeders** | One master (users/workspaces/roles) + four per-workspace seeders (tags/articles) |
-| **Phase 14: Public workspace is default** | New users' `default_workspace_id` points to Public workspace |
-| **Phase 14: 7 seed users with workspace-scoped roles** | Admin has ADMIN on all 4 workspaces; dept users have MEMBER on dept + Public |
-| **Phase 16: Warm slate/charcoal palette** | Moved from indigo/blue tech-primary to warm neutral with amber accent |
-| **Phase 16: SVG favicon** | Book icon in warm slate, replaces old favicon.ico |
-| **Phase 16: Unified dashboard** | Single workspace home replacing role-branched sections |
-
 ## Accumulated Context
 
 - **v1.0 shipped:** 8 phases, 60 plans, 41 requirements
-- **Codebase:** ~8,700 frontend LOC + ~5,500 backend main LOC + ~2,200 test LOC
-- **Coverage:** 112 backend integration tests + 9 backend unit tests (seeders) + 127 frontend tests + Playwright E2E
+- **v2.0 shipped:** 8 phases (9-16), 34 plans, 46 requirements
+- **Total:** 16 phases, 94 plans, 87 requirements
+- **Codebase:** ~9,500 frontend LOC + ~6,200 backend main LOC + ~2,600 test LOC
+- **Coverage:** 112 backend integration tests + 9 backend unit tests + 127 frontend tests + Playwright E2E
 - **Current stack:** Angular 21.2, Spring Boot 3.5, PostgreSQL 16 + pgvector, Spring AI
-- **v2.0 Extended:** 8 phases (9-16), 39 plans executed, 1 phase pending (Phase 15)
+- **v2.0 tech debt:** 10 items across phases 9 and 15 (see `v2.0-MILESTONE-AUDIT.md`)
 
 ## Next Steps
 
-1. ✅ v2.0 shipped — Phases 9-14 complete
-2. ✅ Phase 15 added: File Upload Format Support
-3. ✅ Phase 16 added: UI Neutralization
-4. ✅ Phase 15 planned — 2 plans in 1 wave
-5. 🔲 Execute Phase 15
-6. ✅ Phase 16 executed — 4 plans in 3 waves
+1. ✅ v2.0 shipped — all 8 phases complete
+2. 📋 Plan next milestone via `/gsd-new-milestone`
 
 ---
 
-*Milestone v2.0 — Workspace Platform — Extended with Phases 15-16 on 2026-06-13*
+*Milestone v2.0 — Workspace Platform — shipped 2026-06-14*
