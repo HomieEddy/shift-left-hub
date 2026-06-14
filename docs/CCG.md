@@ -1,5 +1,8 @@
 # Shift-Left Knowledge Hub - Clean Code Guidelines (CCG)
 
+> **Updated:** 2026-06-14 — v2.0 Workspace Platform milestone.
+> All guidelines remain in effect. Key v2.0 patterns: workspace-scoped services use `WorkspaceRoleService` for role checks, new modules use `@Input`/`@Output` Dumb components, and Hibernate `@Filter` + AOP enforce data isolation on the backend.
+
 ## 1. General Architectural Principles
 Before writing framework-specific code, all commits must adhere to these foundational principles:
 * **SOLID Principles:** Follow Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion to ensure the monolith remains modular and testable.

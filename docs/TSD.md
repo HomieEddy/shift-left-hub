@@ -1,5 +1,9 @@
 # Shift-Left Knowledge Hub - Testing Strategy Document (TSD)
 
+> **Updated:** 2026-06-14 — v2.0 Workspace Platform milestone.
+> Current coverage: 112 backend integration tests + 9 backend unit tests + 127 frontend tests + Playwright E2E.
+> The document remains accurate for v2.0. No changes to testing philosophy.
+
 ## The Philosophy: Pragmatic Competency
 To demonstrate engineering maturity without over-engineering a portfolio project, this testing strategy focuses strictly on High-ROI (Return on Investment) tests. We will ignore trivial tests (like testing getters/setters) and focus on the critical paths: business logic in the backend, state management in the frontend, and one "Golden Path" End-to-End (E2E) test.
 

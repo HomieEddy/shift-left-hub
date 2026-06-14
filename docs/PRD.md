@@ -1,47 +1,52 @@
 # Shift-Left Knowledge Hub - Product Requirements Document (PRD)
 
 ## 1. The Overview
-The "Shift-Left Knowledge Hub" is a modern IT Service Management (ITSM) web application designed to rethink how corporate helpdesks operate. Instead of functioning as a passive system where users simply submit tickets and wait, this platform proactively intercepts user issues. It provides an intelligent, automated assistant that guides users through troubleshooting based on approved company documentation. If the issue requires human intervention, it ensures the IT agent receives a ticket packed with context, and eventually uses the agent's fix to automatically write new documentation, creating a continuous loop of improvement.
+The "Shift-Left Knowledge Hub" is a modern, domain-agnostic knowledge platform that turns any collection of documents into an intelligent, AI-powered assistant. Unlike traditional helpdesk systems, it provides a plug-and-play workspace model where any team — IT, HR, Legal, Product — can bring their own knowledge base and their own LLM. Workspaces define the domain, not the application.
 
 ## 2. The "Why" (Problem & Value Proposition)
 
 ### The Core Problem
-IT support teams spend an exorbitant amount of time responding to "Level Zero" and "Level One" tickets—repetitive, easily solvable issues like password resets, VPN disconnections, or printer mappings. While self-service knowledge bases exist, users rarely use them because they are hard to search and often outdated. Conversely, IT agents are too busy closing tickets to write new documentation, leading to a stagnant, unhelpful knowledge base.
+Organizations accumulate vast amounts of documentation but lack intelligent, user-friendly interfaces to surface that knowledge. IT support desks are the canonical use case, but the same pattern repeats in HR (policy lookup), Legal (contract Q&A), Product (documentation search), and every department with a knowledge base. Each team needs an assistant that understands their specific domain, using their specific documents.
 
 ### The Value Proposition
-This product solves both sides of the equation by shifting the resolution process as close to the user as possible (the "Shift-Left" strategy). It empowers users to fix their own problems quickly via an intelligent assistant, dramatically reducing the ticket queue. Simultaneously, it eliminates the friction of documentation by having the system automatically draft new articles based on successful ticket resolutions.
+Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents. The platform is domain-agnostic — any team can adopt it, configure their LLM, upload their documents, and have an intelligent assistant serving their users in minutes.
 
 ## 3. The "What" (Core Product Features)
 
-* **Feature 1: The Intelligent Self-Service Portal:** A conversational interface where users describe their IT issue. The system searches existing documentation and provides a step-by-step resolution guide.
-* **Feature 2: Seamless Contextual Ticketing:** If the automated guide fails, users can escalate to a human agent. The system creates a ticket pre-filled with the user's issue and a log of everything the AI tried.
-* **Feature 3: The IT Agent Dashboard:** A clean, prioritized workspace for IT staff to view incoming tickets, read contextual history, and communicate resolution steps.
-* **Feature 4: The Automated Knowledge Loop (KCS):** When an agent resolves a novel issue and flags it as a "Knowledge Gap," the system's AI drafts a new help article based on the ticket history.
-* **Feature 5: Knowledge Base Administration:** A review queue where IT administrators can review, approve, and publish AI-drafted articles.
+* **Feature 1: Multi-Tenant Workspaces:** Isolated workspaces with their own users, knowledge base, LLM configuration, and taxonomy. Workspace switching via UI dropdown.
+* **Feature 2: Document Ingestion:** Upload markdown, plain text, PDF, HTML, XML, and Word documents via drag-and-drop. Async ETL pipeline extracts, chunks, and embeds content.
+* **Feature 3: BYO LLM:** Each workspace configures its own OpenAI-compatible endpoint (any provider, any model). API keys encrypted at rest.
+* **Feature 4: The Intelligent Assistant:** A conversational interface where users describe their issue. Hybrid search (FTS + vector + RRF) across articles and document chunks provides contextual answers.
+* **Feature 5: Domain-Agnostic Taxonomy:** Workspaces define category/subcategory taxonomies and customize system prompts with template variables.
+* **Feature 6: Seamless Contextual Ticketing:** If the automated guide fails, escalate to a human agent with full AI chat context preserved.
+* **Feature 7: The Automated Knowledge Loop (KCS):** When an agent resolves a novel issue and flags it as a "Knowledge Gap," the system's AI drafts a new help article based on the ticket history.
 
 ## 4. The "How" (User Journeys)
 
-### The End-User Journey (The Requester)
-1. User logs into the portal experiencing an issue.
-2. The system provides a simplified, easy-to-read guide sourced from company files.
-3. The system asks: *"Did this solve your problem?"*
-4. If "Yes," the interaction ends (Ticket Deflected).
-5. If "No," a ticket form appears, pre-filled with context. User hits "Submit."
+### The End-User Journey (Knowledge Seeker)
+1. User logs into the platform and selects or lands in their workspace.
+2. User describes their issue to the AI assistant.
+3. The system searches the workspace's knowledge base (articles + documents) and provides a step-by-step guide.
+4. The system asks: *"Did this solve your problem?"*
+5. If "Yes," the interaction ends (Ticket Deflected).
+6. If "No," a ticket form appears, pre-filled with context. User hits "Submit."
 
-### The IT Agent Journey (The Resolver)
+### The Agent Journey (The Resolver)
 1. Agent opens dashboard and selects the new ticket.
-2. Reads the user's issue alongside the "Deflection Context".
+2. Reads the user's issue alongside the full "Shift-Left Context" (AI chat transcript).
 3. Agent fixes the issue and types final steps into "Resolution Notes."
 4. Agent checks the "Flag as Knowledge Gap" box and closes the ticket.
 
-### The Admin Journey (The Knowledge Manager)
-1. Admin checks the "Drafts" tab.
-2. Reviews the AI-written article based on the recently closed ticket.
-3. Makes formatting tweaks, assigns tags, and clicks "Publish."
-4. Solution is instantly available to the intelligent assistant.
+### The Workspace Admin Journey
+1. Admin manages workspace settings: name, description, icon, members, LLM config.
+2. Admin invites members with role selection (admin / member / read-only).
+3. Admin configures the AI assistant's system prompt with domain-specific instructions.
+4. Admin defines the workspace's knowledge taxonomy (categories and subcategories).
+5. Admin manages uploaded documents and reviews KCS drafts.
 
 ## 5. The End Goal (Success Metrics)
 Demonstrate a functional **Knowledge-Centered Service (KCS)** environment to recruiters. Success is defined by:
 * **Ticket Deflection:** Intercepting simple queries before they reach the queue.
 * **Reduced MTTR:** Providing agents with immediate context.
 * **Organic Documentation Growth:** Eliminating the burden of writing from scratch.
+* **Domain Agnosticism:** The platform is equally useful for IT, HR, Legal, and any other domain.

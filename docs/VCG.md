@@ -1,5 +1,8 @@
 # Shift-Left Knowledge Hub - Version Control Guidelines (VCG)
 
+> **Updated:** 2026-06-14 — v2.0 Workspace Platform milestone.
+> Now enforced: PR branches use the pattern `feat/phase-N-short-description` for milestone-aligned contributions (e.g., `feat/phase-14-seeding-revamp`). All squashed PRs merge to `main`.
+
 ## 1. Branching Strategy (GitHub Flow)
 To maintain a clean and deployable codebase, this project uses a simplified, continuous delivery branching model (GitHub Flow). 
 
