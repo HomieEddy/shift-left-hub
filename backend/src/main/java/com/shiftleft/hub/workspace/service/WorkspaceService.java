@@ -3,6 +3,7 @@ package com.shiftleft.hub.workspace.service;
 import com.shiftleft.hub.workspace.domain.Workspace;
 import com.shiftleft.hub.workspace.domain.WorkspaceMember;
 import com.shiftleft.hub.workspace.domain.WorkspaceMemberRepository;
+import com.shiftleft.hub.workspace.domain.WorkspaceNotFoundException;
 import com.shiftleft.hub.workspace.domain.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,7 +122,7 @@ public class WorkspaceService {
      */
     public Workspace updateWorkspace(UUID id, String name, String description, String icon) {
         Workspace workspace = workspaceRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Workspace not found: " + id));
+            .orElseThrow(() -> new WorkspaceNotFoundException(id));
         if ("default".equals(workspace.getSlug()) && name != null) {
             throw new IllegalArgumentException("Cannot rename the Default Workspace");
         }
@@ -146,7 +147,7 @@ public class WorkspaceService {
      */
     public Workspace softDeleteWorkspace(UUID id) {
         Workspace workspace = workspaceRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Workspace not found: " + id));
+            .orElseThrow(() -> new WorkspaceNotFoundException(id));
         if ("default".equals(workspace.getSlug())) {
             throw new IllegalArgumentException("Cannot delete the Default Workspace");
         }
@@ -163,13 +164,13 @@ public class WorkspaceService {
      */
     public void leaveWorkspace(UUID workspaceId, UUID userId) {
         Workspace workspace = workspaceRepository.findById(workspaceId)
-            .orElseThrow(() -> new RuntimeException("Workspace not found: " + workspaceId));
+            .orElseThrow(() -> new WorkspaceNotFoundException(workspaceId));
         if ("default".equals(workspace.getSlug())) {
             throw new IllegalArgumentException("Cannot leave the Default Workspace");
         }
         WorkspaceMember member = workspaceMemberRepository
             .findByIdWorkspaceIdAndIdUserId(workspaceId, userId)
-            .orElseThrow(() -> new RuntimeException("User is not a member of this workspace"));
+            .orElseThrow(() -> new WorkspaceNotFoundException("User is not a member of this workspace"));
 
         long adminCount = workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN");
         if (adminCount <= 1 && "ADMIN".equals(member.getRole())) {
@@ -189,7 +190,7 @@ public class WorkspaceService {
     public void removeMember(UUID workspaceId, UUID userId) {
         WorkspaceMember member = workspaceMemberRepository
             .findByIdWorkspaceIdAndIdUserId(workspaceId, userId)
-            .orElseThrow(() -> new RuntimeException("Member not found"));
+            .orElseThrow(() -> new WorkspaceNotFoundException("Member not found"));
 
         long adminCount = workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN");
         if (adminCount <= 1 && "ADMIN".equals(member.getRole())) {
@@ -211,7 +212,7 @@ public class WorkspaceService {
     public WorkspaceMember changeMemberRole(UUID workspaceId, UUID userId, String newRole) {
         WorkspaceMember member = workspaceMemberRepository
             .findByIdWorkspaceIdAndIdUserId(workspaceId, userId)
-            .orElseThrow(() -> new RuntimeException("Member not found"));
+            .orElseThrow(() -> new WorkspaceNotFoundException("Member not found"));
 
         long adminCount = workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN");
         if (adminCount <= 1 && "ADMIN".equals(member.getRole()) && !"ADMIN".equals(newRole)) {
