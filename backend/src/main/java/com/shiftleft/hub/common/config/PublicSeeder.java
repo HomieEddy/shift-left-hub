@@ -121,6 +121,7 @@ public class PublicSeeder {
                 String titleEn = frontmatter.get("title_en");
                 String titleFr = frontmatter.get("title_fr");
                 String excerpt = frontmatter.get("excerpt");
+                String excerptFr = frontmatter.getOrDefault("excerpt_fr", "");
                 String contentEn = bodyParts.get("en");
                 String contentFr = bodyParts.get("fr");
                 String tagsStr = frontmatter.get("tags");
@@ -137,6 +138,7 @@ public class PublicSeeder {
                     article.setContentEn(contentEn);
                     article.setContentFr(contentFr);
                     article.setExcerpt(excerpt);
+                    article.setExcerptFr(excerptFr);
                     article.setTags(articleTags);
                     article.setAuthor(admin);
                     article.setWorkspaceId(publicWsId);
@@ -153,6 +155,7 @@ public class PublicSeeder {
                         .contentFr(contentFr)
                         .slug(slug)
                         .excerpt(excerpt)
+                        .excerptFr(excerptFr)
                         .status(ArticleStatus.PUBLISHED)
                         .viewCount(0)
                         .publishedAt(LocalDateTime.now())

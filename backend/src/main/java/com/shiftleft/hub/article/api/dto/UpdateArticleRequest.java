@@ -14,6 +14,7 @@ public record UpdateArticleRequest(
     String titleFr,
     String contentFr,
     String excerpt,
+    String excerptFr,
     String featuredImage,
     Set<UUID> tagIds
 ) {

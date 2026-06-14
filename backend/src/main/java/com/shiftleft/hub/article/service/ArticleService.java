@@ -99,6 +99,7 @@ public class ArticleService {
             .contentFr(request.contentFr())
             .slug(slug)
             .excerpt(request.excerpt())
+            .excerptFr(request.excerptFr())
             .featuredImage(request.featuredImage())
             .status(ArticleStatus.DRAFT)
             .viewCount(0)
@@ -133,6 +134,7 @@ public class ArticleService {
         article.setTitleFr(request.titleFr());
         article.setContentFr(request.contentFr());
         article.setExcerpt(request.excerpt());
+        article.setExcerptFr(request.excerptFr());
         article.setFeaturedImage(request.featuredImage());
         article.setLastEditor(editor);
         article.setTags(resolveTags(request.tagIds()));

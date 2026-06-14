@@ -66,6 +66,9 @@ public class Article extends WorkspaceAwareEntity {
     @Column(columnDefinition = "TEXT")
     private String excerpt;
 
+    @Column(name = "excerpt_fr", columnDefinition = "TEXT")
+    private String excerptFr;
+
     @Column(name = "featured_image")
     private String featuredImage;
 
