@@ -141,6 +141,10 @@ public class AgentTicketService {
      * @return list of work note responses, newest first
      */
     public List<WorkNoteResponse> getWorkNotes(UUID ticketId) {
+        // Verify ticket exists (consistent with getTicketDetail, claimTicket, addWorkNote, resolveTicket)
+        if (!ticketRepository.existsById(ticketId)) {
+            throw new TicketNotFoundException(ticketId);
+        }
         return workNoteRepository.findByTicketIdOrderByCreatedAtDesc(ticketId)
             .stream()
             .map(WorkNoteResponse::from)
