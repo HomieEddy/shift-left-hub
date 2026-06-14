@@ -30,10 +30,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-14)
 ## Current Position
 
 Phase: 18 of 21 (Unit Test Tightening)
-Plan: TBD — not yet planned
-Status: Phase 17 complete — ready for Phase 18 planning
-Last activity: 2026-06-14 — Phase 17 executed (3/3 plans complete)
-Progress: [■■■■■■■■■■■■■■■■■■■■■■■■■□□□] 19% (Phase 17 complete)
+Plan: 5 plans (18-01 through 18-05)
+Status: Phase 18 plans created — ready for execution
+Last activity: 2026-06-14 — Phase 18 planned (5 plans in 2 waves)
+Progress: [■■■■■■■■■■■■■■■■■■■■■■■■■□□□] 19% (Phase 18 planned)
 
 ## Performance Metrics
 
@@ -46,7 +46,7 @@ Progress: [■■■■■■■■■■■■■■■■■■■■■■■
 | Phase | Plans | Status |
 |-------|-------|--------|
 | 17. Codebase Review | 3 | ✓ Complete |
-| 18. Unit Test Tightening | TBD | Not started |
+| 18. Unit Test Tightening | 5 | ◆ Planning complete |
 | 19. E2E Test Coverage | TBD | Not started |
 | 20. Security Audit & Hardening | TBD | Not started |
 | 21. Production Deployment | TBD | Not started |
