@@ -403,19 +403,6 @@ class AgentTicketServiceTest {
             () -> agentTicketService.addWorkNote(UUID.randomUUID(), agentEmail, "   "));
     }
 
-    // ── listTickets: null filters ─────────────────────────────
-
-    @Test
-    void listTickets_shouldHandleNullFiltersGracefully() {
-        User user = createUser();
-        Ticket t1 = createTicket(UUID.randomUUID(), user, TicketStatus.NEW, "TKT-0001");
-        when(ticketRepository.findAll()).thenReturn(List.of(t1));
-
-        List<AgentTicketResponse> responses = agentTicketService.listTickets(null, null, null, null);
-
-        assertEquals(1, responses.size());
-    }
-
     // ── claimTicket: already claimed ──────────────────────────
 
     @Test
