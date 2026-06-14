@@ -41,7 +41,7 @@
 **Milestone Goal:** Harden and deploy the v2.0 Workspace Platform to production through codebase review, test tightening, security audit, and production deployment.
 
 - [x] **Phase 17: Codebase Review** — Full codebase-wide review of frontend, backend, and database
-- [ ] **Phase 18: Unit Test Tightening** — Backend and frontend unit tests expanded with meaningful coverage
+- [x] **Phase 18: Unit Test Tightening** — Backend and frontend unit tests expanded with meaningful coverage
 - [ ] **Phase 19: E2E Test Coverage** — 8 Playwright e2e happy-path tests covering all user-facing features
 - [ ] **Phase 20: Security Audit & Hardening** — Full security audit of backend, frontend, and infrastructure
 - [ ] **Phase 21: Production Deployment** — Deploy frontend (Vercel), backend (Railway), and verify live
@@ -78,11 +78,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 18-01 — Backend test deepening: expand all 18 existing unit test files with edge cases
-- [ ] 18-02 — Backend new test files: add tests for AdminUser, WorkspaceInvitation, AiChat, Embedding, PublicArticle, AiConfig services
-- [ ] 18-03 — Frontend agent + landing tests: agent-ticket-detail, agent-ticket-list, landing
-- [ ] 18-04 — Frontend KB public + admin + remaining tests: 8 additional smart components
-- [ ] 18-05 — Coverage thresholds + verification: update JaCoCo to 60%/50% + full test suite
+- [x] 18-01 — Backend test deepening: 12 files deepened with 33 new edge-case tests ✓ `mvn test: 339 pass`
+- [x] 18-02 — Backend new test files: 6 new test files with 60 tests ✓ `mvn test: 339 pass`
+- [x] 18-03 — Frontend agent + landing tests: 3 spec files, 36 tests ✓ `ng test: 229 pass`
+- [x] 18-04 — Frontend remaining tests: 8 spec files, 65 tests ✓ `ng test: 229 pass`
+- [x] 18-05 — JaCoCo thresholds 40→60%/30→50% + verification ✓ `mvn verify: BUILD SUCCESS`
 
 ### Phase 19: E2E Test Coverage
 **Goal**: All 8 user-facing features are covered by Playwright e2e happy-path tests
@@ -139,7 +139,7 @@ Plans:
 | 15. File Upload Format Support | v2.0 | 2/2 | Complete | 2026-06-13 |
 | 16. UI Neutralization | v2.0 | 4/4 | Complete | 2026-06-14 |
 | 17. Codebase Review | v2.1 | 3/3 | Complete | 2026-06-14 |
-| 18. Unit Test Tightening | v2.1 | 0/5 | Planning complete | 2026-06-14 |
+| 18. Unit Test Tightening | v2.1 | 5/5 | Complete | 2026-06-14 |
 | 19. E2E Test Coverage | v2.1 | 0/0 | Not started | - |
 | 20. Security Audit & Hardening | v2.1 | 0/0 | Not started | - |
 | 21. Production Deployment | v2.1 | 0/0 | Not started | - |
