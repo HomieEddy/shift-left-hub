@@ -254,4 +254,53 @@ class TicketServiceTest {
         assertEquals(6, seq.getNextNumber());
         verify(sequenceRepository).save(seq);
     }
+
+    // ── createTicket: validation ──────────────────────────
+
+    @Test
+    void createTicket_shouldThrowWhenIssueBlank() {
+        CreateTicketRequest request = new CreateTicketRequest(
+            "", TicketCategory.SOFTWARE, TicketUrgency.MEDIUM, null);
+
+        assertThrows(IllegalArgumentException.class,
+            () -> ticketService.createTicket(request, email));
+        verify(ticketRepository, never()).save(any());
+    }
+
+    @Test
+    void createTicket_shouldGenerateSequentialNumbers() {
+        User user = createUser();
+        CreateTicketRequest request = new CreateTicketRequest(
+            "Cannot log in", TicketCategory.SOFTWARE, TicketUrgency.MEDIUM, null);
+        UUID ticketId = UUID.randomUUID();
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(sequenceRepository.findByIdWithLock(1L)).thenReturn(
+            Optional.of(TicketNumberSequence.builder().id(1L).nextNumber(7).build()));
+        when(ticketRepository.save(any(Ticket.class))).thenAnswer(invocation -> {
+            Ticket t = invocation.getArgument(0);
+            return createTicket(ticketId, user, TicketStatus.NEW, t.getTicketNumber());
+        });
+
+        TicketResponse response = ticketService.createTicket(request, email);
+
+        assertNotNull(response);
+        assertTrue(response.ticketNumber().matches("TKT-\\d{4}"));
+        assertEquals("TKT-0007", response.ticketNumber());
+    }
+
+    // ── cancelTicket: edge cases ──────────────────────────
+
+    @Test
+    void cancelTicket_shouldThrowWhenAlreadyCancelled() {
+        User user = createUser();
+        UUID ticketId = UUID.randomUUID();
+        Ticket ticket = createTicket(ticketId, user, TicketStatus.CANCELLED, "TKT-0001");
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
+
+        assertThrows(IllegalStateException.class,
+            () -> ticketService.cancelTicket(ticketId, email, null));
+    }
+
 }

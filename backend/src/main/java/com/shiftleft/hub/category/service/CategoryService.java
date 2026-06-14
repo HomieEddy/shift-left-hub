@@ -62,6 +62,9 @@ public class CategoryService {
      */
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request) {
+        if (request.nameEn() == null || request.nameEn().isBlank()) {
+            throw new IllegalArgumentException("Category name must not be blank");
+        }
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         Category.CategoryBuilder builder = Category.builder()
             .nameEn(request.nameEn())
@@ -96,6 +99,9 @@ public class CategoryService {
         category.setNameFr(request.nameFr());
 
         if (request.parentId() != null) {
+            if (request.parentId().equals(id)) {
+                throw new IllegalArgumentException("Category cannot be its own parent");
+            }
             Category parent = categoryRepository.findByWorkspaceIdAndId(workspaceId, request.parentId())
                 .orElseThrow(() -> new CategoryNotFoundException(request.parentId()));
             category.setParent(parent);

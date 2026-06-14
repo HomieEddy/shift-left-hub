@@ -40,6 +40,9 @@ public class TicketService {
      */
     @Transactional
     public TicketResponse createTicket(CreateTicketRequest request, String email) {
+        if (request.issue() == null || request.issue().isBlank()) {
+            throw new IllegalArgumentException("Issue must not be blank");
+        }
         User user = getUserByEmail(email);
 
         String ticketNumber = generateTicketNumber();
@@ -106,6 +109,10 @@ public class TicketService {
             .orElseThrow(() -> new TicketNotFoundException(id));
         if (!ticket.getUser().getId().equals(user.getId())) {
             throw new TicketNotFoundException(id);
+        }
+        if (ticket.getStatus() == TicketStatus.CANCELLED) {
+            throw new IllegalStateException(
+                "Ticket " + ticket.getTicketNumber() + " is already cancelled");
         }
         if (ticket.getStatus() != TicketStatus.NEW) {
             throw new IllegalStateException(

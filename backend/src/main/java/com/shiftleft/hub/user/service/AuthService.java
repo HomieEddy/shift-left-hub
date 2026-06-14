@@ -33,6 +33,12 @@ public class AuthService {
      * @return the auth response with tokens and user info
      */
     public AuthResponse register(RegisterRequest request) {
+        if (request.email() == null || request.email().isBlank()) {
+            throw new IllegalArgumentException("Email must not be blank");
+        }
+        if (request.password() == null || request.password().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
         if (userRepository.existsByEmail(request.email())) {
             throw new DuplicateEmailException(
                 "Email already registered: " + request.email());

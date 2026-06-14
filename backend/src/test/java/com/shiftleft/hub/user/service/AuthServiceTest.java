@@ -10,6 +10,7 @@ import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -160,6 +161,54 @@ class AuthServiceTest {
     void logout_shouldNotCallInvalidateWhenTokenNull() {
         authService.logout(null);
         verify(jwtService, never()).isTokenValid(any());
+    }
+
+    // ── register: validation ──────────────────────────────
+
+    @Test
+    void register_shouldThrowWhenEmailBlank() {
+        RegisterRequest request = new RegisterRequest("", password, displayName);
+
+        assertThrows(IllegalArgumentException.class, () -> authService.register(request));
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void register_shouldThrowWhenPasswordTooShort() {
+        RegisterRequest request = new RegisterRequest(email, "Short1!", displayName);
+
+        assertThrows(IllegalArgumentException.class, () -> authService.register(request));
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void login_shouldThrowWhenEmailNull() {
+        LoginRequest request = new LoginRequest(null, password);
+
+        assertThrows(BadCredentialsException.class, () -> authService.login(request));
+    }
+
+    @Test
+    void refresh_shouldThrowWhenTokenExpired() {
+        when(jwtService.isTokenValid("expired-token")).thenReturn(false);
+
+        assertThrows(BadCredentialsException.class, () -> authService.refresh("expired-token"));
+    }
+
+    @Test
+    void register_shouldSetCorrectDefaultRole() {
+        RegisterRequest request = new RegisterRequest(email, password, displayName);
+        when(userRepository.existsByEmail(email)).thenReturn(false);
+        when(passwordEncoder.encode(password)).thenReturn("encoded-password");
+        when(userRepository.save(any(User.class))).thenReturn(createUser());
+        when(jwtService.generateAccessToken(any(User.class))).thenReturn("access-token");
+        when(jwtService.generateRefreshToken(any(User.class))).thenReturn("refresh-token");
+
+        authService.register(request);
+
+        var captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        assertEquals(UserRole.ROLE_USER, captor.getValue().getRole());
     }
 
     @Test

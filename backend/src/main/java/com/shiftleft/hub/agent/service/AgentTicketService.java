@@ -117,6 +117,9 @@ public class AgentTicketService {
      */
     @Transactional
     public WorkNoteResponse addWorkNote(UUID ticketId, String agentEmail, String content) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("Work note content must not be blank");
+        }
         User agent = getUserByEmail(agentEmail);
         Ticket ticket = ticketRepository.findById(ticketId)
             .orElseThrow(() -> new TicketNotFoundException(ticketId));
@@ -138,6 +141,10 @@ public class AgentTicketService {
      * @return list of work note responses, newest first
      */
     public List<WorkNoteResponse> getWorkNotes(UUID ticketId) {
+        // Verify ticket exists (consistent with getTicketDetail, claimTicket, addWorkNote, resolveTicket)
+        if (!ticketRepository.existsById(ticketId)) {
+            throw new TicketNotFoundException(ticketId);
+        }
         return workNoteRepository.findByTicketIdOrderByCreatedAtDesc(ticketId)
             .stream()
             .map(WorkNoteResponse::from)

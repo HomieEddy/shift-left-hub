@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { PublicArticleService } from '../../services/public-article.service';
 import { ArticleDto } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -22,9 +23,22 @@ export class ArticleListComponent implements OnInit {
   errorMessage = signal('');
   currentPage = signal(0);
   totalPages = signal(0);
+  private searchInput = new Subject<string>();
 
   ngOnInit(): void {
+    this.searchInput.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => {
+      this.currentPage.set(0);
+      this.loadArticles();
+    });
     this.loadArticles();
+  }
+
+  onSearchInput(query: string): void {
+    this.searchInput.next(query);
   }
 
   loadArticles(): void {

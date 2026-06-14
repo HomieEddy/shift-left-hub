@@ -372,4 +372,13 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
      * @return the count of matching articles
      */
     long countBySourceTicketIdIsNotNullAndStatus(ArticleStatus status);
+
+    /**
+     * Counts articles associated with a given tag.
+     *
+     * @param tagId the tag UUID
+     * @return the number of articles tagged with the given tag
+     */
+    @Query("SELECT COUNT(a) FROM Article a JOIN a.tags t WHERE t.id = :tagId")
+    long countByTagId(@Param("tagId") UUID tagId);
 }

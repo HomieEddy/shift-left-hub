@@ -271,6 +271,7 @@ class AgentTicketServiceTest {
         WorkNote note = WorkNote.builder()
             .id(UUID.randomUUID()).author(agent).content("Note content")
             .createdAt(LocalDateTime.now()).build();
+        when(ticketRepository.existsById(ticketId)).thenReturn(true);
         when(workNoteRepository.findByTicketIdOrderByCreatedAtDesc(ticketId))
             .thenReturn(List.of(note));
 
@@ -283,6 +284,7 @@ class AgentTicketServiceTest {
     @Test
     void getWorkNotes_shouldReturnEmptyList() {
         UUID ticketId = UUID.randomUUID();
+        when(ticketRepository.existsById(ticketId)).thenReturn(true);
         when(workNoteRepository.findByTicketIdOrderByCreatedAtDesc(ticketId))
             .thenReturn(List.of());
 
@@ -391,5 +393,50 @@ class AgentTicketServiceTest {
 
         assertThrows(UsernameNotFoundException.class,
             () -> agentTicketService.claimTicket(ticketId, agentEmail));
+    }
+
+    // ── addWorkNote: validation ───────────────────────────────
+
+    @Test
+    void addWorkNote_shouldThrowWhenContentBlank() {
+        assertThrows(IllegalArgumentException.class,
+            () -> agentTicketService.addWorkNote(UUID.randomUUID(), agentEmail, ""));
+        assertThrows(IllegalArgumentException.class,
+            () -> agentTicketService.addWorkNote(UUID.randomUUID(), agentEmail, "   "));
+    }
+
+    // ── claimTicket: already claimed ──────────────────────────
+
+    @Test
+    void claimTicket_shouldRejectAlreadyClaimedTicket() {
+        User agent = createAgent();
+        User otherAgent = User.builder()
+            .id(UUID.randomUUID()).email("other@example.com").password("pwd")
+            .displayName("Other Agent").role(UserRole.ROLE_AGENT).enabled(true).build();
+        User user = createUser();
+        UUID ticketId = UUID.randomUUID();
+        Ticket ticket = createTicket(ticketId, user, TicketStatus.IN_PROGRESS, "TKT-0001");
+        ticket.setAssignedTo(otherAgent);
+        when(userRepository.findByEmail(agentEmail)).thenReturn(Optional.of(agent));
+        when(ticketRepository.findByIdForUpdate(ticketId)).thenReturn(Optional.of(ticket));
+
+        assertThrows(IllegalStateException.class,
+            () -> agentTicketService.claimTicket(ticketId, agentEmail));
+    }
+
+    // ── resolveTicket: unassigned ────────────────────────────
+
+    @Test
+    void resolveTicket_shouldThrowWhenNotAssignedToAnyAgent() {
+        User agent = createAgent();
+        User user = createUser();
+        UUID ticketId = UUID.randomUUID();
+        Ticket ticket = createTicket(ticketId, user, TicketStatus.IN_PROGRESS, "TKT-0001");
+        // assignedTo is null by default
+        when(userRepository.findByEmail(agentEmail)).thenReturn(Optional.of(agent));
+        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
+
+        assertThrows(IllegalStateException.class,
+            () -> agentTicketService.resolveTicket(ticketId, agentEmail, "Fixed", false));
     }
 }

@@ -37,7 +37,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.AdditionalAnswers.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -355,5 +354,107 @@ class KcsDraftingServiceTest {
         assertNotNull(response);
         assertTrue(response.similarityWarnings().isEmpty());
         verifyNoInteractions(ticketRepository);
+    }
+
+    // ── onTicketResolved: duplicate event ──────────────────────
+
+    @Test
+    void onTicketResolved_shouldSkipWhenDuplicateEvent() {
+        User systemUser = createSystemUser();
+        TicketResolvedEvent event = createEvent();
+        Article existing = createArticle();
+        when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.of(existing));
+
+        Article result = kcsDraftingService.draftArticle(event, systemUser);
+
+        assertSame(existing, result);
+        verify(articleRepository, never()).save(any());
+        verifyNoInteractions(aiConfigService);
+    }
+
+    // ── onTicketResolved: AI failure ───────────────────────────
+
+    @Test
+    void onTicketResolved_shouldHandleAiFailureGracefully() {
+        User systemUser = createSystemUser();
+        TicketResolvedEvent event = createEvent();
+        AiConfig aiConfig = AiConfig.builder()
+            .llmProvider("OLLAMA").ollamaEndpointUrl("http://localhost:11434")
+            .chatModelName("llama3.2:3b").embeddingModelName("nomic-embed-text")
+            .similarityThreshold(0.65).embeddingDimension(768).build();
+
+        when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.empty());
+        when(aiConfigService.getConfigEntity()).thenReturn(aiConfig);
+        ChatClient chatClient = mockChatClient("");
+        when(aiConfigService.buildChatClient(aiConfig)).thenReturn(chatClient);
+        when(articleRepository.findBySlug("user-cannot-connect-to-vpn")).thenReturn(Optional.empty());
+        when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> {
+            Article a = invocation.getArgument(0);
+            return Article.builder()
+                .id(articleId).titleEn(a.getTitleEn()).contentEn(a.getContentEn())
+                .slug(a.getSlug()).status(ArticleStatus.DRAFT).viewCount(0)
+                .author(a.getAuthor()).sourceTicketId(ticketId)
+                .createdAt(LocalDateTime.now()).build();
+        });
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of()));
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
+
+        Article result = kcsDraftingService.draftArticle(event, systemUser);
+
+        assertNotNull(result);
+        assertEquals(event.issue(), result.getTitleEn());
+        assertTrue(result.getContentEn().contains(event.resolutionNotes()));
+    }
+
+    // ── onTicketResolved: article context ──────────────────────
+
+    @Test
+    void onTicketResolved_shouldUseExistingArticleForContext() {
+        User systemUser = createSystemUser();
+        TicketResolvedEvent event = createEvent();
+        String llmResponse = """
+            title_en: VPN Connection Guide
+            title_fr: Guide de connexion VPN
+            excerpt: Guide to resolving VPN connection issues
+            content_en:
+            ## Overview
+            VPN connection steps...
+            content_fr:
+            ## Aperçu
+            Étapes de connexion VPN...
+            suggested_tags: network
+            """;
+        AiConfig aiConfig = AiConfig.builder()
+            .llmProvider("OLLAMA").ollamaEndpointUrl("http://localhost:11434")
+            .chatModelName("llama3.2:3b").embeddingModelName("nomic-embed-text")
+            .similarityThreshold(0.65).embeddingDimension(768).build();
+        ChatClient chatClient = mockChatClient(llmResponse);
+
+        when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.empty());
+        when(aiConfigService.getConfigEntity()).thenReturn(aiConfig);
+        when(aiConfigService.buildChatClient(aiConfig)).thenReturn(chatClient);
+        when(articleRepository.findBySlug("vpn-connection-guide")).thenReturn(Optional.empty());
+        when(tagRepository.findByNameEnIn(anyList())).thenReturn(List.of());
+        when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> {
+            Article a = invocation.getArgument(0);
+            return Article.builder()
+                .id(articleId).titleEn(a.getTitleEn()).contentEn(a.getContentEn())
+                .titleFr(a.getTitleFr()).contentFr(a.getContentFr())
+                .slug(a.getSlug()).excerpt(a.getExcerpt())
+                .status(ArticleStatus.DRAFT).viewCount(0).author(a.getAuthor())
+                .tags(a.getTags()).sourceTicketId(ticketId)
+                .createdAt(LocalDateTime.now()).build();
+        });
+        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of()));
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
+
+        Article result = kcsDraftingService.draftArticle(event, systemUser);
+
+        assertNotNull(result);
+        assertEquals(ticketId, result.getSourceTicketId());
+        assertEquals("VPN Connection Guide", result.getTitleEn());
+        verify(articleRepository).save(any(Article.class));
     }
 }
