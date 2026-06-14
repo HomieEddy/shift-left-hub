@@ -8,11 +8,14 @@ import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleNotFoundException;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagNotFoundException;
 import com.shiftleft.hub.tag.domain.TagRepository;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRole;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,6 +46,17 @@ class ArticleServiceTest {
 
     private final UUID articleId = UUID.randomUUID();
     private final UUID authorId = UUID.randomUUID();
+    private final UUID workspaceId = UUID.randomUUID();
+
+    @BeforeEach
+    void setUp() {
+        WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+    }
+
+    @AfterEach
+    void tearDown() {
+        WorkspaceContextHolder.clear();
+    }
 
     private User createAuthor() {
         return User.builder()
@@ -310,7 +324,8 @@ class ArticleServiceTest {
 
     @Test
     void deleteArticle_shouldSucceed() {
-        when(articleRepository.existsById(articleId)).thenReturn(true);
+        Article article = createArticle(ArticleStatus.PUBLISHED);
+        when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
 
         articleService.deleteArticle(articleId);
 
@@ -319,9 +334,64 @@ class ArticleServiceTest {
 
     @Test
     void deleteArticle_shouldThrowWhenNotFound() {
-        when(articleRepository.existsById(articleId)).thenReturn(false);
+        when(articleRepository.findById(articleId)).thenReturn(Optional.empty());
 
         assertThrows(ArticleNotFoundException.class,
             () -> articleService.deleteArticle(articleId));
+    }
+
+    // ── createArticle: validation ─────────────────────────────
+
+    @Test
+    void createArticle_shouldThrowWhenTitleBlank() {
+        User author = createAuthor();
+        CreateArticleRequest request = new CreateArticleRequest(
+            "", "Content", null, null, null, null, null, Set.of());
+
+        assertThrows(IllegalArgumentException.class,
+            () -> articleService.createArticle(request, author));
+        verify(articleRepository, never()).save(any());
+    }
+
+    @Test
+    void createArticle_shouldThrowWhenContentBlank() {
+        User author = createAuthor();
+        CreateArticleRequest request = new CreateArticleRequest(
+            "Title", "", null, null, null, null, null, Set.of());
+
+        assertThrows(IllegalArgumentException.class,
+            () -> articleService.createArticle(request, author));
+        verify(articleRepository, never()).save(any());
+    }
+
+    // ── getArticle: workspace scoped ───────────────────────────
+
+    @Test
+    void getArticle_shouldThrowWhenWrongWorkspace() {
+        Article article = createArticle(ArticleStatus.PUBLISHED);
+        article.setWorkspaceId(UUID.randomUUID());
+        when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
+
+        assertThrows(ArticleNotFoundException.class,
+            () -> articleService.getArticleById(articleId));
+    }
+
+    // ── updateArticle: partial update ─────────────────────────
+
+    @Test
+    void updateArticle_shouldHandlePartialUpdate() {
+        User editor = createAuthor();
+        Article article = createArticle(ArticleStatus.DRAFT);
+        // Update only French fields; titleEn stays the same so slug doesn't change
+        UpdateArticleRequest request = new UpdateArticleRequest(
+            "Test Article", null, "Titre mis à jour", "Contenu mis à jour",
+            null, null, null, Set.of());
+        when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
+        when(articleRepository.save(any(Article.class))).thenReturn(article);
+
+        ArticleResponse response = articleService.updateArticle(articleId, request, editor);
+
+        assertNotNull(response);
+        verify(articleRepository).save(any(Article.class));
     }
 }

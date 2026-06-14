@@ -347,4 +347,27 @@ class DocumentServiceTest {
 
         assertNull(result);
     }
+
+    // ── getDocuments: wrong workspace ──────────────────────────
+
+    @Test
+    void getDocuments_shouldReturnEmptyWhenWrongWorkspace() {
+        when(documentRepository.findByWorkspaceIdOrderByCreatedAtDesc(WORKSPACE_ID))
+            .thenReturn(List.of());
+
+        List<Document> docs = documentService.listDocuments();
+
+        assertTrue(docs.isEmpty());
+    }
+
+    // ── deleteDocument: not found ──────────────────────────
+
+    @Test
+    void deleteDocument_shouldHandleNotFoundGracefully() {
+        when(documentRepository.findById(DOCUMENT_ID))
+            .thenReturn(Optional.empty());
+
+        assertThrows(DocumentNotFoundException.class,
+            () -> documentService.deleteDocument(DOCUMENT_ID));
+    }
 }

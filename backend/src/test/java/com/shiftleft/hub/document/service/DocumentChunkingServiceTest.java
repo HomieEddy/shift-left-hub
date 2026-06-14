@@ -128,4 +128,31 @@ class DocumentChunkingServiceTest {
             assertEquals(chunk, chunk.trim(), "Each chunk should be trimmed");
         }
     }
+
+    // ── Single word ────────────────────────────────────────────
+
+    @Test
+    void chunk_shouldHandleSingleWord() {
+        String content = "Hello";
+        List<String> chunks = service.chunk(content);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Hello", chunks.getFirst());
+    }
+
+    // ── Token limit ────────────────────────────────────────────
+
+    @Test
+    void chunk_shouldRespectTokenLimit() {
+        // With maxTokens=10 and AVG_CHARS_PER_TOKEN=4, chunkSize = 40
+        // 100 characters should produce 3 chunks of ~40 each
+        String content = "A".repeat(100);
+        List<String> chunks = service.chunk(content);
+
+        assertFalse(chunks.isEmpty());
+        for (String chunk : chunks) {
+            assertTrue(chunk.length() <= 40,
+                "Chunk length " + chunk.length() + " exceeds max chunk size of 40");
+        }
+    }
 }

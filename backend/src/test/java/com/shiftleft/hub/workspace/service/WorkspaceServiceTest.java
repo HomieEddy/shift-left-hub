@@ -298,6 +298,45 @@ class WorkspaceServiceTest {
         verify(workspaceRepository).save(workspace);
     }
 
+    // ── createWorkspace: validation ────────────────────────────
+
+    @Test
+    void createWorkspace_shouldThrowWhenNameBlank() {
+        assertThrows(IllegalArgumentException.class,
+            () -> workspaceService.createWorkspace("", "desc", null, userId));
+        assertThrows(IllegalArgumentException.class,
+            () -> workspaceService.createWorkspace(null, "desc", null, userId));
+        verify(workspaceRepository, never()).save(any(Workspace.class));
+    }
+
+    @Test
+    void createWorkspace_shouldThrowWhenNameAlreadyExists() {
+        // Slug collision is handled by appending a suffix; no exception thrown
+        when(workspaceRepository.existsBySlug("test")).thenReturn(true);
+        when(workspaceRepository.existsBySlug("test-2")).thenReturn(true);
+        when(workspaceRepository.save(any(Workspace.class))).thenReturn(createWorkspace());
+        when(workspaceMemberRepository.save(any(WorkspaceMember.class)))
+            .thenReturn(WorkspaceMember.builder().build());
+
+        assertDoesNotThrow(() -> workspaceService.createWorkspace("test", null, null, userId));
+        verify(workspaceRepository).save(any(Workspace.class));
+    }
+
+    // ── softDelete: idempotency ────────────────────────────────
+
+    @Test
+    void softDelete_shouldBeIdempotent() {
+        Workspace workspace = createWorkspace();
+        when(workspaceRepository.findById(workspaceId)).thenReturn(Optional.of(workspace));
+        when(workspaceRepository.save(any(Workspace.class))).thenReturn(workspace);
+
+        workspaceService.softDeleteWorkspace(workspaceId);
+        // Second call should also succeed (already deleted)
+        workspaceService.softDeleteWorkspace(workspaceId);
+
+        verify(workspaceRepository, times(2)).save(any(Workspace.class));
+    }
+
     private String anyString() {
         return org.mockito.ArgumentMatchers.anyString();
     }

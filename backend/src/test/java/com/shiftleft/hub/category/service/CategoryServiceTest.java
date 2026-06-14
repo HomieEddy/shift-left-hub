@@ -206,4 +206,38 @@ class CategoryServiceTest {
         assertThrows(CategoryNotFoundException.class,
             () -> categoryService.mergeCategories(categoryId, parentId));
     }
+
+    // ── createCategory: validation ─────────────────────────────
+
+    @Test
+    void createCategory_shouldThrowWhenNameBlank() {
+        CategoryRequest request = new CategoryRequest("", "Imprimantes", null);
+
+        assertThrows(IllegalArgumentException.class,
+            () -> categoryService.createCategory(request));
+        verify(categoryRepository, never()).save(any());
+    }
+
+    // ── getCategories: empty ──────────────────────────────────
+
+    @Test
+    void getCategories_shouldReturnEmptyListWhenNoneExist() {
+        when(categoryRepository.findByWorkspaceIdOrderByNameEnAsc(workspaceId)).thenReturn(List.of());
+
+        List<CategoryResponse> responses = categoryService.getAllCategories();
+
+        assertTrue(responses.isEmpty());
+    }
+
+    // ── updateCategory: circular parent ────────────────────────
+
+    @Test
+    void updateCategory_shouldRejectCircularParent() {
+        Category cat = createCategory(categoryId, "Self", "Soi", null);
+        CategoryRequest request = new CategoryRequest("Self", "Soi", categoryId);
+        when(categoryRepository.findByWorkspaceIdAndId(workspaceId, categoryId)).thenReturn(Optional.of(cat));
+
+        assertThrows(IllegalArgumentException.class,
+            () -> categoryService.updateCategory(categoryId, request));
+    }
 }

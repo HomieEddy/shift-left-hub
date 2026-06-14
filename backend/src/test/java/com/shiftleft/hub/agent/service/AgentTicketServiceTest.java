@@ -392,4 +392,62 @@ class AgentTicketServiceTest {
         assertThrows(UsernameNotFoundException.class,
             () -> agentTicketService.claimTicket(ticketId, agentEmail));
     }
+
+    // ── addWorkNote: validation ───────────────────────────────
+
+    @Test
+    void addWorkNote_shouldThrowWhenContentBlank() {
+        assertThrows(IllegalArgumentException.class,
+            () -> agentTicketService.addWorkNote(UUID.randomUUID(), agentEmail, ""));
+        assertThrows(IllegalArgumentException.class,
+            () -> agentTicketService.addWorkNote(UUID.randomUUID(), agentEmail, "   "));
+    }
+
+    // ── listTickets: null filters ─────────────────────────────
+
+    @Test
+    void listTickets_shouldHandleNullFiltersGracefully() {
+        User user = createUser();
+        Ticket t1 = createTicket(UUID.randomUUID(), user, TicketStatus.NEW, "TKT-0001");
+        when(ticketRepository.findAll()).thenReturn(List.of(t1));
+
+        List<AgentTicketResponse> responses = agentTicketService.listTickets(null, null, null, null);
+
+        assertEquals(1, responses.size());
+    }
+
+    // ── claimTicket: already claimed ──────────────────────────
+
+    @Test
+    void claimTicket_shouldRejectAlreadyClaimedTicket() {
+        User agent = createAgent();
+        User otherAgent = User.builder()
+            .id(UUID.randomUUID()).email("other@example.com").password("pwd")
+            .displayName("Other Agent").role(UserRole.ROLE_AGENT).enabled(true).build();
+        User user = createUser();
+        UUID ticketId = UUID.randomUUID();
+        Ticket ticket = createTicket(ticketId, user, TicketStatus.IN_PROGRESS, "TKT-0001");
+        ticket.setAssignedTo(otherAgent);
+        when(userRepository.findByEmail(agentEmail)).thenReturn(Optional.of(agent));
+        when(ticketRepository.findByIdForUpdate(ticketId)).thenReturn(Optional.of(ticket));
+
+        assertThrows(IllegalStateException.class,
+            () -> agentTicketService.claimTicket(ticketId, agentEmail));
+    }
+
+    // ── resolveTicket: unassigned ────────────────────────────
+
+    @Test
+    void resolveTicket_shouldThrowWhenNotAssignedToAnyAgent() {
+        User agent = createAgent();
+        User user = createUser();
+        UUID ticketId = UUID.randomUUID();
+        Ticket ticket = createTicket(ticketId, user, TicketStatus.IN_PROGRESS, "TKT-0001");
+        // assignedTo is null by default
+        when(userRepository.findByEmail(agentEmail)).thenReturn(Optional.of(agent));
+        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
+
+        assertThrows(IllegalStateException.class,
+            () -> agentTicketService.resolveTicket(ticketId, agentEmail, "Fixed", false));
+    }
 }

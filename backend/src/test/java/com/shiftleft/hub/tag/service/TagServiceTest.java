@@ -1,6 +1,7 @@
 package com.shiftleft.hub.tag.service;
 
 import com.shiftleft.hub.article.domain.Article;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.tag.api.dto.CreateTagRequest;
 import com.shiftleft.hub.tag.api.dto.TagResponse;
 import com.shiftleft.hub.tag.api.dto.UpdateTagRequest;
@@ -8,6 +9,8 @@ import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagInUseException;
 import com.shiftleft.hub.tag.domain.TagNotFoundException;
 import com.shiftleft.hub.tag.domain.TagRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,9 +35,20 @@ class TagServiceTest {
     @InjectMocks private TagService tagService;
 
     private final UUID tagId = UUID.randomUUID();
+    private final UUID workspaceId = UUID.randomUUID();
     private final String nameEn = "network";
     private final String nameFr = "réseau";
     private final String color = "#3498db";
+
+    @BeforeEach
+    void setUp() {
+        WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+    }
+
+    @AfterEach
+    void tearDown() {
+        WorkspaceContextHolder.clear();
+    }
 
     private Tag createTag() {
         return Tag.builder()
@@ -163,5 +177,28 @@ class TagServiceTest {
 
         assertThrows(TagNotFoundException.class,
             () -> tagService.deleteTag(tagId));
+    }
+
+    // ── createTag: validation ──────────────────────────────────
+
+    @Test
+    void createTag_shouldThrowWhenNameBlank() {
+        CreateTagRequest request = new CreateTagRequest("", nameFr, color);
+
+        assertThrows(IllegalArgumentException.class,
+            () -> tagService.createTag(request));
+        verify(tagRepository, never()).save(any());
+    }
+
+    @Test
+    void createTag_shouldThrowWhenDuplicateInWorkspace() {
+        Tag existingTag = createTag();
+        existingTag.setWorkspaceId(workspaceId);
+        CreateTagRequest request = new CreateTagRequest(nameEn, nameFr, color);
+        when(tagRepository.findByNameEnIn(List.of(nameEn))).thenReturn(List.of(existingTag));
+
+        assertThrows(IllegalArgumentException.class,
+            () -> tagService.createTag(request));
+        verify(tagRepository, never()).save(any());
     }
 }
