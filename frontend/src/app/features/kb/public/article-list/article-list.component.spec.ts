@@ -120,6 +120,11 @@ describe('ArticleListComponent', () => {
     vi.useFakeTimers();
     publicArticleService.getArticles.mockReturnValue(of(mockPage));
     fixture.detectChanges();
+
+    component.onSearchInput('vpn');
+    expect(component.isLoading()).toBe(false); // debounce not yet fired
+    vi.advanceTimersByTime(300);
+    expect(publicArticleService.getArticles).toHaveBeenCalled();
     vi.useRealTimers();
   });
 
