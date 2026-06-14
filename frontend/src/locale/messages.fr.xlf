@@ -667,8 +667,8 @@
         <target>Agent</target>
       </trans-unit>
 <trans-unit id="admin.users.role.agent.desc">
-        <source>Ticket queue and resolution access</source>
-        <target>Accès à la file d'attente et résolution de tickets</target>
+        <source>Queue and resolution access</source>
+        <target>Accès à la file d'attente et résolution de demandes</target>
       </trans-unit>
 <trans-unit id="admin.users.role.user">
         <source>User</source>
@@ -819,8 +819,8 @@
         <target>Réessayer</target>
       </trans-unit>
 <trans-unit id="agent.detail.shiftLeftContext">
-        <source>Shift-Left Context</source>
-        <target>Contexte Shift-Left</target>
+        <source>Conversation Context</source>
+        <target>Contexte de la conversation</target>
       </trans-unit>
 <trans-unit id="agent.detail.unassigned">
         <source>Unassigned</source>
@@ -907,8 +907,8 @@
         <target>Utilisateur</target>
       </trans-unit>
 <trans-unit id="agent.ticketQueue">
-        <source>Ticket Queue</source>
-        <target>File d'attente</target>
+        <source>Request Queue</source>
+        <target>File des demandes</target>
       </trans-unit>
 <trans-unit id="agent.unassigned">
         <source>Unassigned</source>
@@ -1103,7 +1103,7 @@
         <target>Se connecter</target>
       </trans-unit>
 <trans-unit id="nav.ticket-queue">
-        <source>Ticket Queue</source>
+        <source>Queue</source>
         <target>File d'attente</target>
       </trans-unit>
 <trans-unit id="register.backToHome">

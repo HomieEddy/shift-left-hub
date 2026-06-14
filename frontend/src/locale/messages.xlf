@@ -547,8 +547,9 @@
         <target>Ticket Number</target>
       </trans-unit>
 <trans-unit id="tickets.modal.myTickets">
-        <source>My Tickets</source>
-        <target>My Tickets</target>
+          <source>My Requests</source>
+          <target>My Requests</target>
+        </trans-unit>
       </trans-unit>
 <trans-unit id="tickets.modal.newChat">
         <source>Start New Chat</source>
@@ -667,8 +668,8 @@
         <target>Agent</target>
       </trans-unit>
 <trans-unit id="admin.users.role.agent.desc">
-        <source>Ticket queue and resolution access</source>
-        <target>Ticket queue and resolution access</target>
+        <source>Queue and resolution access</source>
+        <target>Queue and resolution access</target>
       </trans-unit>
 <trans-unit id="admin.users.role.user">
         <source>User</source>
@@ -819,8 +820,8 @@
         <target>Retry</target>
       </trans-unit>
 <trans-unit id="agent.detail.shiftLeftContext">
-        <source>Shift-Left Context</source>
-        <target>Shift-Left Context</target>
+        <source>Conversation Context</source>
+        <target>Conversation Context</target>
       </trans-unit>
 <trans-unit id="agent.detail.unassigned">
         <source>Unassigned</source>
@@ -907,8 +908,8 @@
         <target>User</target>
       </trans-unit>
 <trans-unit id="agent.ticketQueue">
-        <source>Ticket Queue</source>
-        <target>Ticket Queue</target>
+        <source>Request Queue</source>
+        <target>Request Queue</target>
       </trans-unit>
 <trans-unit id="agent.unassigned">
         <source>Unassigned</source>
@@ -1279,48 +1280,48 @@
         <target>How It Works</target>
       </trans-unit>
 <trans-unit id="landing.how.subtitle">
-        <source>From ticket submission to self-service knowledge in three steps</source>
-        <target>From ticket submission to self-service knowledge in three steps</target>
+        <source>From question to knowledge in three simple steps</source>
+        <target>From question to knowledge in three simple steps</target>
       </trans-unit>
 <trans-unit id="landing.how.step1.title">
         <source>Ask a Question</source>
         <target>Ask a Question</target>
       </trans-unit>
 <trans-unit id="landing.how.step1.desc">
-        <source>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</source>
-        <target>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</target>
+        <source>A team member describes their question through the AI assistant. The system captures context and intent automatically.</source>
+        <target>A team member describes their question through the AI assistant. The system captures context and intent automatically.</target>
       </trans-unit>
 <trans-unit id="landing.how.step2.title">
-        <source>AI Resolves or Escalates</source>
-        <target>AI Resolves or Escalates</target>
+        <source>AI Finds or Routes</source>
+        <target>AI Finds or Routes</target>
       </trans-unit>
 <trans-unit id="landing.how.step2.desc">
-        <source>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</source>
-        <target>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</target>
+        <source>The AI searches the knowledge base for relevant answers. If found, the user gets an instant response. If not, a request is created and assigned to the right person.</source>
+        <target>The AI searches the knowledge base for relevant answers. If found, the user gets an instant response. If not, a request is created and assigned to the right person.</target>
       </trans-unit>
 <trans-unit id="landing.how.step3.title">
         <source>Knowledge Grows Automatically</source>
         <target>Knowledge Grows Automatically</target>
       </trans-unit>
 <trans-unit id="landing.how.step3.desc">
-        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</source>
-        <target>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</target>
+        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future workload.</source>
+        <target>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future workload.</target>
       </trans-unit>
 <trans-unit id="landing.features.title">
         <source>Everything You Need</source>
         <target>Everything You Need</target>
       </trans-unit>
 <trans-unit id="landing.features.subtitle">
-        <source>Built for IT teams that want to shift left without the documentation burden</source>
-        <target>Built for IT teams that want to shift left without the documentation burden</target>
+        <source>Built for teams that want to work smarter, not harder</source>
+        <target>Built for teams that want to work smarter, not harder</target>
       </trans-unit>
 <trans-unit id="landing.cta.title">
-        <source>Ready to Shift Left?</source>
-        <target>Ready to Shift Left?</target>
+        <source>Start Building Your Knowledge Base</source>
+        <target>Start Building Your Knowledge Base</target>
       </trans-unit>
 <trans-unit id="landing.cta.desc">
-        <source>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</source>
-        <target>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</target>
+        <source>Create a workspace, invite your team, and start capturing knowledge that works for everyone.</source>
+        <target>Create a workspace, invite your team, and start capturing knowledge that works for everyone.</target>
       </trans-unit>
 <trans-unit id="landing.cta.button">
         <source>Get Started Free</source>
