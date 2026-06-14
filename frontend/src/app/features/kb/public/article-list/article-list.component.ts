@@ -57,8 +57,13 @@ export class ArticleListComponent implements OnInit {
   }
 
   displayExcerpt(article: ArticleDto): string {
-    if (article.excerpt != null) return article.excerpt;
-    const content = this.translationService.currentLang() === 'fr'
+    const isFr = this.translationService.currentLang() === 'fr';
+    if (isFr && article.excerptFr != null) return article.excerptFr;
+    if (!isFr && article.excerpt != null) return article.excerpt;
+    if (isFr && article.excerpt == null && article.excerptFr == null) {
+      return this.translationService.translate('kb.no-excerpt-fr');
+    }
+    const content = isFr
       ? (article.contentFr ?? article.contentEn)
       : article.contentEn;
     return content != null && content.length > 0 ? content.substring(0, 150) + '...' : '';

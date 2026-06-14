@@ -49,20 +49,34 @@ export class ArticleListComponent implements OnInit {
   }
 
   publish(id: string): void {
-    this.articleService.publishArticle(id).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: () => this.loadArticles(),
-      error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.publish')),
+    this.confirmationDialog.confirm({
+      title: this.translationService.translate('confirm.title.publish'),
+      message: this.translationService.translate('confirm.message.publish-article'),
+      confirmLabel: this.translationService.translate('confirm.label.publish'),
+    }).subscribe((confirmed) => {
+      if (!confirmed) return;
+      this.articleService.publishArticle(id).pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
+        next: () => this.loadArticles(),
+        error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.publish')),
+      });
     });
   }
 
   archive(id: string): void {
-    this.articleService.archiveArticle(id).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: () => this.loadArticles(),
-      error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.archive')),
+    this.confirmationDialog.confirm({
+      title: this.translationService.translate('confirm.title.archive'),
+      message: this.translationService.translate('confirm.message.archive-article'),
+      confirmLabel: this.translationService.translate('confirm.label.archive'),
+    }).subscribe((confirmed) => {
+      if (!confirmed) return;
+      this.articleService.archiveArticle(id).pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
+        next: () => this.loadArticles(),
+        error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.archive')),
+      });
     });
   }
 
@@ -90,6 +104,10 @@ export class ArticleListComponent implements OnInit {
       case 'ARCHIVED': return 'danger';
       default: return 'default';
     }
+  }
+
+  statusLabel(status: ArticleStatus): string {
+    return this.translationService.translate('admin.articles.status.' + status.toLowerCase());
   }
 
   protected getTagName(tag: { nameEn: string; nameFr: string }): string {

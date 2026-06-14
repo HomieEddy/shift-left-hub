@@ -1,23 +1,28 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DocumentService } from './document.service';
 import { DocumentDto, DocumentStatus } from './document.model';
 import { CategoryService } from '../taxonomy/category.service';
 import { CategoryDto } from '../taxonomy/category.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
+import { ToastService } from '../../../shared/ui/toast/toast.service';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 
 @Component({
   selector: 'app-document-list',
   standalone: true,
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, ModalComponent],
   templateUrl: './document-list.component.html',
 })
 export class DocumentListComponent implements OnInit {
   private documentService = inject(DocumentService);
   private categoryService = inject(CategoryService);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
   protected translationService = inject(TranslationService);
 
   protected documents = signal<DocumentDto[]>([]);
@@ -29,6 +34,10 @@ export class DocumentListComponent implements OnInit {
   protected uploadQueue = signal<{ filename: string; status: string }[]>([]);
   protected categories = signal<CategoryDto[]>([]);
   protected selectedCategoryId = signal<string | null>(null);
+  protected confirmDeleteOpen = signal(false);
+  protected pendingDeleteId = signal<string | null>(null);
+  protected pendingDeleteFilename = signal('');
+  protected convertedDocIds = signal<Set<string>>(new Set());
 
   protected readonly acceptedTypes = '.md,.txt,.pdf,.html,.htm,.xhtml,.xml,.docx';
 
@@ -95,7 +104,7 @@ export class DocumentListComponent implements OnInit {
 
     validFiles.forEach(file => {
       this.uploadQueue.update(q => [...q, { filename: file.name, status: 'uploading' }]);
-      this.documentService.uploadFile(file).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      this.documentService.uploadFile(file, this.selectedCategoryId()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.uploadQueue.update(q => q.map(item =>
             item.filename === file.name ? { ...item, status: 'uploaded' } : item
@@ -133,12 +142,44 @@ export class DocumentListComponent implements OnInit {
     });
   }
 
-  deleteDocument(doc: DocumentDto): void {
-    if (!confirm(this.translationService.translate('admin.documents.confirm-delete'))) return;
-    this.documentService.deleteDocument(doc.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => this.loadDocuments(),
+  requestDelete(doc: DocumentDto): void {
+    this.pendingDeleteId.set(doc.id);
+    this.pendingDeleteFilename.set(doc.filename);
+    this.confirmDeleteOpen.set(true);
+  }
+
+  executeDelete(): void {
+    const id = this.pendingDeleteId();
+    if (id == null) return;
+    this.confirmDeleteOpen.set(false);
+    this.documentService.deleteDocument(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.pendingDeleteId.set(null);
+        this.pendingDeleteFilename.set('');
+        this.loadDocuments();
+      },
       error: (err: Error) => {
         this.errorMessage.set(`Failed to delete document: ${err.message}`);
+      },
+    });
+  }
+
+  cancelDelete(): void {
+    this.confirmDeleteOpen.set(false);
+    this.pendingDeleteId.set(null);
+    this.pendingDeleteFilename.set('');
+  }
+
+  convertToArticle(doc: DocumentDto): void {
+    this.convertedDocIds.update(ids => ids.add(doc.id));
+    this.documentService.convertToArticle(doc.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.toastService.success(this.translationService.translate('admin.documents.article-created'));
+        this.router.navigate(['/admin/articles', res.articleId, 'edit']);
+      },
+      error: (err: Error) => {
+        this.convertedDocIds.update(ids => { ids.delete(doc.id); return ids; });
+        this.errorMessage.set(`Failed to convert: ${err.message}`);
       },
     });
   }

@@ -7,9 +7,12 @@ import { DocumentDto, DocumentUploadResponse } from './document.model';
 export class DocumentService {
   private http = inject(HttpClient);
 
-  uploadFile(file: File): Observable<DocumentUploadResponse> {
+  uploadFile(file: File, categoryId?: string | null): Observable<DocumentUploadResponse> {
     const formData = new FormData();
     formData.append('file', file);
+    if (categoryId) {
+      formData.append('categoryId', categoryId);
+    }
     return this.http.post<DocumentUploadResponse>('/api/admin/documents/upload', formData, {
       withCredentials: true,
     });
@@ -29,5 +32,9 @@ export class DocumentService {
 
   reprocessDocument(id: string): Observable<DocumentUploadResponse> {
     return this.http.post<DocumentUploadResponse>(`/api/admin/documents/${id}/reprocess`, {}, { withCredentials: true });
+  }
+
+  convertToArticle(id: string): Observable<{ articleId: string }> {
+    return this.http.post<{ articleId: string }>(`/api/admin/documents/${id}/convert`, {}, { withCredentials: true });
   }
 }
