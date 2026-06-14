@@ -324,8 +324,7 @@ class ArticleServiceTest {
 
     @Test
     void deleteArticle_shouldSucceed() {
-        Article article = createArticle(ArticleStatus.PUBLISHED);
-        when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
+        when(articleRepository.existsById(articleId)).thenReturn(true);
 
         articleService.deleteArticle(articleId);
 
@@ -334,7 +333,7 @@ class ArticleServiceTest {
 
     @Test
     void deleteArticle_shouldThrowWhenNotFound() {
-        when(articleRepository.findById(articleId)).thenReturn(Optional.empty());
+        when(articleRepository.existsById(articleId)).thenReturn(false);
 
         assertThrows(ArticleNotFoundException.class,
             () -> articleService.deleteArticle(articleId));

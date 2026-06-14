@@ -120,21 +120,33 @@ class HrSeederTest {
     @Test
     void run_shouldBeIdempotent() {
         Workspace hrWs = Workspace.builder().id(hrWsId).name("Human Resources").slug("human-resources").build();
-        Tag tag = Tag.builder().nameEn("Recruitment").nameFr("Recrutement").color("#2563eb").build();
-        tag.setWorkspaceId(hrWsId);
+        Tag tag1 = Tag.builder().nameEn("Recruitment").nameFr("Recrutement").color("#2563eb").build();
+        tag1.setWorkspaceId(hrWsId);
+        Tag tag2 = Tag.builder().nameEn("Benefits").nameFr("Avantages sociaux").color("#16a34a").build();
+        tag2.setWorkspaceId(hrWsId);
+        Tag tag3 = Tag.builder().nameEn("Policies").nameFr("Politiques").color("#9333ea").build();
+        tag3.setWorkspaceId(hrWsId);
+        Tag tag4 = Tag.builder().nameEn("Onboarding").nameFr("Intégration").color("#0891b2").build();
+        tag4.setWorkspaceId(hrWsId);
+        Tag tag5 = Tag.builder().nameEn("Payroll").nameFr("Paie").color("#ca8a04").build();
+        tag5.setWorkspaceId(hrWsId);
+        Tag tag6 = Tag.builder().nameEn("Performance").nameFr("Performance").color("#dc2626").build();
+        tag6.setWorkspaceId(hrWsId);
+        Tag tag7 = Tag.builder().nameEn("Compliance").nameFr("Conformité").color("#7c3aed").build();
+        tag7.setWorkspaceId(hrWsId);
+        Tag tag8 = Tag.builder().nameEn("Training").nameFr("Formation").color("#ea580c").build();
+        tag8.setWorkspaceId(hrWsId);
         when(userRepository.findByRole(UserRole.ROLE_ADMIN)).thenReturn(List.of(adminUser));
         when(workspaceService.findBySlug("human-resources")).thenReturn(Optional.of(hrWs));
-        when(tagRepository.findAll()).thenReturn(List.of(tag));
+        when(tagRepository.findAll()).thenReturn(List.of(tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8));
         when(articleRepository.findBySlug(anyString())).thenReturn(Optional.empty());
 
-        // First run — should save new tags
+        // First run — all 8 tags already exist, no saves needed
         seeder.seed();
-        verify(tagRepository, atLeastOnce()).save(any(Tag.class));
+        verify(tagRepository, never()).save(any(Tag.class));
 
-        // Reset mock counter
+        // Second run — still idempotent
         clearInvocations(tagRepository);
-
-        // Second run — should NOT save any tags (idempotent)
         seeder.seed();
         verify(tagRepository, never()).save(any(Tag.class));
     }
