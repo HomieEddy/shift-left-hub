@@ -1,5 +1,6 @@
 package com.shiftleft.hub.tag.service;
 
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.tag.api.dto.CreateTagRequest;
 import com.shiftleft.hub.tag.api.dto.TagResponse;
 import com.shiftleft.hub.tag.api.dto.UpdateTagRequest;
@@ -52,6 +53,14 @@ public class TagService {
      */
     @Transactional
     public TagResponse createTag(CreateTagRequest request) {
+        if (request.nameEn() == null || request.nameEn().isBlank()) {
+            throw new IllegalArgumentException("Tag name must not be blank");
+        }
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        if (workspaceId != null && tagRepository.findByNameEnIn(List.of(request.nameEn()))
+            .stream().anyMatch(t -> workspaceId.equals(t.getWorkspaceId()))) {
+            throw new IllegalArgumentException("Tag already exists in this workspace: " + request.nameEn());
+        }
         Tag tag = Tag.builder()
             .nameEn(request.nameEn())
             .nameFr(request.nameFr())

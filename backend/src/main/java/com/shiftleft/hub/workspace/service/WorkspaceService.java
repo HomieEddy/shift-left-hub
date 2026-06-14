@@ -35,6 +35,9 @@ public class WorkspaceService {
      * @return the created workspace entity
      */
     public Workspace createWorkspace(String name, String description, String logoUrl, UUID createdBy) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Workspace name must not be blank");
+        }
         String slug = generateUniqueSlug(name);
         Workspace workspace = Workspace.builder()
             .name(name)

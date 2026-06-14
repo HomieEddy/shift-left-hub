@@ -8,6 +8,7 @@ import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleNotFoundException;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagNotFoundException;
 import com.shiftleft.hub.tag.domain.TagRepository;
@@ -44,9 +45,14 @@ public class ArticleService {
      * @return the article response
      */
     public ArticleResponse getArticleById(UUID id) {
-        return articleRepository.findById(id)
-            .map(ArticleResponse::from)
+        Article article = articleRepository.findById(id)
             .orElseThrow(() -> new ArticleNotFoundException(id));
+        if (article.getWorkspaceId() != null
+            && WorkspaceContextHolder.hasCurrentWorkspaceId()
+            && !article.getWorkspaceId().equals(WorkspaceContextHolder.getCurrentWorkspaceId())) {
+            throw new ArticleNotFoundException(id);
+        }
+        return ArticleResponse.from(article);
     }
 
     /**
@@ -85,6 +91,12 @@ public class ArticleService {
      */
     @Transactional
     public ArticleResponse createArticle(CreateArticleRequest request, User author) {
+        if (request.titleEn() == null || request.titleEn().isBlank()) {
+            throw new IllegalArgumentException("Title must not be blank");
+        }
+        if (request.contentEn() == null || request.contentEn().isBlank()) {
+            throw new IllegalArgumentException("Content must not be blank");
+        }
         Set<Tag> tags = resolveTags(request.tagIds());
 
         String slug = slugify(request.titleEn());
@@ -193,9 +205,8 @@ public class ArticleService {
      */
     @Transactional
     public void deleteArticle(UUID id) {
-        if (!articleRepository.existsById(id)) {
-            throw new ArticleNotFoundException(id);
-        }
+        articleRepository.findById(id)
+            .orElseThrow(() -> new ArticleNotFoundException(id));
         articleRepository.deleteById(id);
     }
 

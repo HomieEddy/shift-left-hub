@@ -117,6 +117,9 @@ public class AgentTicketService {
      */
     @Transactional
     public WorkNoteResponse addWorkNote(UUID ticketId, String agentEmail, String content) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("Work note content must not be blank");
+        }
         User agent = getUserByEmail(agentEmail);
         Ticket ticket = ticketRepository.findById(ticketId)
             .orElseThrow(() -> new TicketNotFoundException(ticketId));
