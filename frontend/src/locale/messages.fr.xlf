@@ -1466,6 +1466,30 @@
         <source>Configuring LLM for this workspace only</source>
         <target>Configuration LLM pour cet espace de travail uniquement</target>
       </trans-unit>
+      <trans-unit id="dashboard.quick-actions">
+        <source>Quick Actions</source>
+        <target>Actions Rapides</target>
+      </trans-unit>
+      <trans-unit id="dashboard.recent-activity">
+        <source>Recent Activity</source>
+        <target>Activité Récente</target>
+      </trans-unit>
+      <trans-unit id="dashboard.recent-empty">
+        <source>No recent activity</source>
+        <target>Aucune activité récente</target>
+      </trans-unit>
+      <trans-unit id="nav.workspace-settings">
+        <source>Workspace Settings</source>
+        <target>Paramètres</target>
+      </trans-unit>
+      <trans-unit id="dashboard.guest.title">
+        <source>Welcome to Knowledge Hub</source>
+        <target>Bienvenue sur Knowledge Hub</target>
+      </trans-unit>
+      <trans-unit id="dashboard.guest.desc">
+        <source>Your intelligent knowledge platform for every team.</source>
+        <target>Votre plateforme de connaissances intelligente pour chaque équipe.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

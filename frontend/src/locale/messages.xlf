@@ -1534,6 +1534,30 @@
         <source>Configuring LLM for this workspace only</source>
         <target>Configuring LLM for this workspace only</target>
       </trans-unit>
+      <trans-unit id="dashboard.quick-actions">
+        <source>Quick Actions</source>
+        <target>Quick Actions</target>
+      </trans-unit>
+      <trans-unit id="dashboard.recent-activity">
+        <source>Recent Activity</source>
+        <target>Recent Activity</target>
+      </trans-unit>
+      <trans-unit id="dashboard.recent-empty">
+        <source>No recent activity</source>
+        <target>No recent activity</target>
+      </trans-unit>
+      <trans-unit id="nav.workspace-settings">
+        <source>Workspace Settings</source>
+        <target>Workspace Settings</target>
+      </trans-unit>
+      <trans-unit id="dashboard.guest.title">
+        <source>Welcome to Knowledge Hub</source>
+        <target>Welcome to Knowledge Hub</target>
+      </trans-unit>
+      <trans-unit id="dashboard.guest.desc">
+        <source>Your intelligent knowledge platform for every team.</source>
+        <target>Your intelligent knowledge platform for every team.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
