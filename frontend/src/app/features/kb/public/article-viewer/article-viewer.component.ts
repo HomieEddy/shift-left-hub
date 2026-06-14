@@ -35,18 +35,19 @@ export class ArticleViewerComponent implements OnInit {
 
   loadArticle(id: string): void {
     this.isLoading.set(true);
-    this.publicArticleService.getArticleById(id).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (article) => {
-        this.article.set(article);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('kb.not-found'));
-        this.isLoading.set(false);
-      },
-    });
+    this.publicArticleService
+      .getArticleById(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (article) => {
+          this.article.set(article);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('kb.not-found'));
+          this.isLoading.set(false);
+        },
+      });
   }
 
   displayContent = computed(() => {

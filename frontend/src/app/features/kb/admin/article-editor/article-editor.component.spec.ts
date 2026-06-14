@@ -37,7 +37,16 @@ describe('ArticleEditorComponent', () => {
     authorName: 'Admin',
     lastEditorId: null,
     lastEditorName: null,
-    tags: [{ id: 't1', nameEn: 'Networking', nameFr: 'Réseau', color: 'blue', articleCount: 1, createdAt: '2026-01-01T00:00:00Z' }],
+    tags: [
+      {
+        id: 't1',
+        nameEn: 'Networking',
+        nameFr: 'Réseau',
+        color: 'blue',
+        articleCount: 1,
+        createdAt: '2026-01-01T00:00:00Z',
+      },
+    ],
     createdAt: '2026-01-01T00:00:00Z',
     updatedAt: '2026-01-01T00:00:00Z',
   };

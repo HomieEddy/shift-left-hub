@@ -11,9 +11,54 @@ describe('TicketListComponent', () => {
   let ticketService: { getTickets: ReturnType<typeof vi.fn> };
 
   const mockTickets = [
-    { id: '1', ticketNumber: 'TKT-0001', status: 'NEW', category: 'NETWORK', urgency: 'HIGH', issue: 'Cannot connect to VPN', userId: 'u1', userDisplayName: 'Test User', createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z', resolvedAt: null, cancelledAt: null, cancelReason: null, shiftLeftContext: undefined },
-    { id: '2', ticketNumber: 'TKT-0002', status: 'IN_PROGRESS', category: 'SOFTWARE', urgency: 'MEDIUM', issue: 'Excel crash on save', userId: 'u2', userDisplayName: 'User 2', createdAt: '2026-01-02T00:00:00Z', updatedAt: '2026-01-02T00:00:00Z', resolvedAt: null, cancelledAt: null, cancelReason: null, shiftLeftContext: undefined },
-    { id: '3', ticketNumber: 'TKT-0003', status: 'RESOLVED', category: 'HARDWARE', urgency: 'LOW', issue: 'Monitor flickering', userId: 'u1', userDisplayName: 'Test User', createdAt: '2026-01-03T00:00:00Z', updatedAt: '2026-01-03T00:00:00Z', resolvedAt: '2026-01-04T00:00:00Z', cancelledAt: null, cancelReason: null, shiftLeftContext: undefined },
+    {
+      id: '1',
+      ticketNumber: 'TKT-0001',
+      status: 'NEW',
+      category: 'NETWORK',
+      urgency: 'HIGH',
+      issue: 'Cannot connect to VPN',
+      userId: 'u1',
+      userDisplayName: 'Test User',
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-01T00:00:00Z',
+      resolvedAt: null,
+      cancelledAt: null,
+      cancelReason: null,
+      shiftLeftContext: undefined,
+    },
+    {
+      id: '2',
+      ticketNumber: 'TKT-0002',
+      status: 'IN_PROGRESS',
+      category: 'SOFTWARE',
+      urgency: 'MEDIUM',
+      issue: 'Excel crash on save',
+      userId: 'u2',
+      userDisplayName: 'User 2',
+      createdAt: '2026-01-02T00:00:00Z',
+      updatedAt: '2026-01-02T00:00:00Z',
+      resolvedAt: null,
+      cancelledAt: null,
+      cancelReason: null,
+      shiftLeftContext: undefined,
+    },
+    {
+      id: '3',
+      ticketNumber: 'TKT-0003',
+      status: 'RESOLVED',
+      category: 'HARDWARE',
+      urgency: 'LOW',
+      issue: 'Monitor flickering',
+      userId: 'u1',
+      userDisplayName: 'Test User',
+      createdAt: '2026-01-03T00:00:00Z',
+      updatedAt: '2026-01-03T00:00:00Z',
+      resolvedAt: '2026-01-04T00:00:00Z',
+      cancelledAt: null,
+      cancelReason: null,
+      shiftLeftContext: undefined,
+    },
   ];
 
   beforeEach(async () => {
@@ -23,10 +68,7 @@ describe('TicketListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [TicketListComponent],
-      providers: [
-        { provide: TicketService, useValue: ticketService },
-        provideRouter([]),
-      ],
+      providers: [{ provide: TicketService, useValue: ticketService }, provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TicketListComponent);

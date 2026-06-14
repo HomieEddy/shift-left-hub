@@ -48,41 +48,57 @@ export class WorkspaceSettingsComponent implements OnInit {
     this.isSaving.set(true);
     this.saveMessage.set('');
     const request: UpdateWorkspaceRequest = {};
-    if (this.name() !== this.workspace.name) { request.name = this.name(); }
-    if (this.description() !== (this.workspace.description ?? '')) { request.description = this.description(); }
-    if (this.icon() !== this.workspace.icon) { request.icon = this.icon() ?? undefined; }
+    if (this.name() !== this.workspace.name) {
+      request.name = this.name();
+    }
+    if (this.description() !== (this.workspace.description ?? '')) {
+      request.description = this.description();
+    }
+    if (this.icon() !== this.workspace.icon) {
+      request.icon = this.icon() ?? undefined;
+    }
     if (Object.keys(request).length === 0) {
       this.isSaving.set(false);
       return;
     }
-    this.workspaceService.updateWorkspace(this.workspace.id, request)
+    this.workspaceService
+      .updateWorkspace(this.workspace.id, request)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.isSaving.set(false);
-          this.saveMessage.set(this.translationService.translate('admin.workspaces.settings.saved'));
+          this.saveMessage.set(
+            this.translationService.translate('admin.workspaces.settings.saved'),
+          );
         },
-        error: () => { this.isSaving.set(false); },
+        error: () => {
+          this.isSaving.set(false);
+        },
       });
   }
 
   confirmDeleteWorkspace() {
-    this.workspaceService.deleteWorkspace(this.workspace.id)
+    this.workspaceService
+      .deleteWorkspace(this.workspace.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => void this.router.navigate(['/admin/workspaces']));
   }
 
   confirmLeaveWorkspace() {
-    this.confirmationDialog.confirm({
-      title: this.translationService.translate('workspace.action.leave'),
-      message: this.translationService.translate('workspace.action.leave-confirm'),
-      confirmLabel: this.translationService.translate('workspace.action.leave'),
-    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
-      if (confirmed) {
-        this.workspaceService.leaveWorkspace(this.workspace.id)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => void this.router.navigate(['/admin/workspaces']));
-      }
-    });
+    this.confirmationDialog
+      .confirm({
+        title: this.translationService.translate('workspace.action.leave'),
+        message: this.translationService.translate('workspace.action.leave-confirm'),
+        confirmLabel: this.translationService.translate('workspace.action.leave'),
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.workspaceService
+            .leaveWorkspace(this.workspace.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => void this.router.navigate(['/admin/workspaces']));
+        }
+      });
   }
 }

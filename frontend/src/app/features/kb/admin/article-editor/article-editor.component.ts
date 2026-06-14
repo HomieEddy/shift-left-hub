@@ -69,53 +69,58 @@ export class ArticleEditorComponent implements OnInit {
   }
 
   loadCategories(): void {
-    this.categoryService.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (cats) => this.categories.set(cats),
-    });
+    this.categoryService
+      .getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (cats) => this.categories.set(cats),
+      });
   }
 
   loadArticle(id: string): void {
     this.isLoading.set(true);
-    this.articleService.getArticleById(id).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (article) => {
-        this.titleEn = article.titleEn;
-        this.contentEn = article.contentEn;
-        this.titleFr = article.titleFr ?? '';
-        this.contentFr = article.contentFr ?? '';
-        this.excerpt = article.excerpt ?? '';
-        this.excerptFr = article.excerptFr ?? '';
-        this.featuredImage = article.featuredImage ?? '';
-        this.originalTitleEn = this.titleEn;
-        this.originalContentEn = this.contentEn;
-        this.originalTitleFr = this.titleFr;
-        this.originalContentFr = this.contentFr;
-        this.originalExcerpt = this.excerpt;
-        this.originalExcerptFr = this.excerptFr;
-        this.originalFeaturedImage = this.featuredImage;
-        this.selectedCategoryId.set(article.categoryId);
-        this.selectedTagIds.set(new Set(article.tags.map(t => t.id)));
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('kb.articles.error.load'));
-        this.isLoading.set(false);
-      },
-    });
+    this.articleService
+      .getArticleById(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (article) => {
+          this.titleEn = article.titleEn;
+          this.contentEn = article.contentEn;
+          this.titleFr = article.titleFr ?? '';
+          this.contentFr = article.contentFr ?? '';
+          this.excerpt = article.excerpt ?? '';
+          this.excerptFr = article.excerptFr ?? '';
+          this.featuredImage = article.featuredImage ?? '';
+          this.originalTitleEn = this.titleEn;
+          this.originalContentEn = this.contentEn;
+          this.originalTitleFr = this.titleFr;
+          this.originalContentFr = this.contentFr;
+          this.originalExcerpt = this.excerpt;
+          this.originalExcerptFr = this.excerptFr;
+          this.originalFeaturedImage = this.featuredImage;
+          this.selectedCategoryId.set(article.categoryId);
+          this.selectedTagIds.set(new Set(article.tags.map((t) => t.id)));
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('kb.articles.error.load'));
+          this.isLoading.set(false);
+        },
+      });
   }
 
   loadTags(): void {
-    this.tagService.getTags().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (tags) => this.allTags.set(tags),
-      error: () => this.errorMessage.set(this.translationService.translate('kb.tags.error.load')),
-    });
+    this.tagService
+      .getTags()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (tags) => this.allTags.set(tags),
+        error: () => this.errorMessage.set(this.translationService.translate('kb.tags.error.load')),
+      });
   }
 
   toggleTag(tagId: string): void {
-    this.selectedTagIds.update(ids => {
+    this.selectedTagIds.update((ids) => {
       const newIds = new Set(ids);
       if (newIds.has(tagId)) {
         newIds.delete(tagId);
@@ -143,13 +148,12 @@ export class ArticleEditorComponent implements OnInit {
     } satisfies CreateArticleRequest | UpdateArticleRequest;
 
     const id = this.articleId();
-    const action = this.isEdit() && id !== null
-      ? this.articleService.updateArticle(id, request)
-      : this.articleService.createArticle(request);
+    const action =
+      this.isEdit() && id !== null
+        ? this.articleService.updateArticle(id, request)
+        : this.articleService.createArticle(request);
 
-    action.pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
+    action.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.isSaving.set(false);
         void this.router.navigate(['/admin/articles']);
@@ -163,26 +167,30 @@ export class ArticleEditorComponent implements OnInit {
 
   cancel(): void {
     if (this.isDirty()) {
-      this.confirmationDialog.confirm({
-        title: this.translationService.translate('admin.articles.discard-title'),
-        message: this.translationService.translate('admin.articles.discard-message'),
-        confirmLabel: this.translationService.translate('admin.articles.discard-confirm'),
-      }).subscribe((confirmed) => {
-        if (confirmed) void this.router.navigate(['/admin/articles']);
-      });
+      this.confirmationDialog
+        .confirm({
+          title: this.translationService.translate('admin.articles.discard-title'),
+          message: this.translationService.translate('admin.articles.discard-message'),
+          confirmLabel: this.translationService.translate('admin.articles.discard-confirm'),
+        })
+        .subscribe((confirmed) => {
+          if (confirmed) void this.router.navigate(['/admin/articles']);
+        });
     } else {
       void this.router.navigate(['/admin/articles']);
     }
   }
 
   private isDirty(): boolean {
-    return this.titleEn !== this.originalTitleEn
-      || this.contentEn !== this.originalContentEn
-      || this.titleFr !== this.originalTitleFr
-      || this.contentFr !== this.originalContentFr
-      || this.excerpt !== this.originalExcerpt
-      || this.excerptFr !== this.originalExcerptFr
-      || this.featuredImage !== this.originalFeaturedImage;
+    return (
+      this.titleEn !== this.originalTitleEn ||
+      this.contentEn !== this.originalContentEn ||
+      this.titleFr !== this.originalTitleFr ||
+      this.contentFr !== this.originalContentFr ||
+      this.excerpt !== this.originalExcerpt ||
+      this.excerptFr !== this.originalExcerptFr ||
+      this.featuredImage !== this.originalFeaturedImage
+    );
   }
 
   protected getTagName(tag: { nameEn: string; nameFr: string }): string {

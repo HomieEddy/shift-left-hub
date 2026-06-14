@@ -26,7 +26,9 @@ export class KcsDraftListComponent implements OnInit {
   totalPages = signal(0);
   displayPage = computed(() => this.currentPage() + 1);
   actionLoading = signal<string | null>(null); // tracks which draft ID is being processed
-  confirmActionTitle = computed(() => this.translationService.translate('kcs.drafts.confirm.title'));
+  confirmActionTitle = computed(() =>
+    this.translationService.translate('kcs.drafts.confirm.title'),
+  );
   confirmModalOpen = signal(false);
   pendingAction = signal<{ type: 'approve' | 'reject'; id: string; title: string } | null>(null);
 
@@ -37,19 +39,20 @@ export class KcsDraftListComponent implements OnInit {
   loadDrafts(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
-    this.kcsDraftService.getDrafts(this.currentPage()).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (page) => {
-        this.drafts.set(page.content);
-        this.totalPages.set(page.totalPages);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('kcs.drafts.error.load'));
-        this.isLoading.set(false);
-      },
-    });
+    this.kcsDraftService
+      .getDrafts(this.currentPage())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (page) => {
+          this.drafts.set(page.content);
+          this.totalPages.set(page.totalPages);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('kcs.drafts.error.load'));
+          this.isLoading.set(false);
+        },
+      });
   }
 
   requestApprove(draft: KcsDraft): void {
@@ -69,22 +72,27 @@ export class KcsDraftListComponent implements OnInit {
     this.actionLoading.set(action.id);
     this.errorMessage.set('');
     this.successMessage.set('');
-    const request$ = action.type === 'approve'
-      ? this.kcsDraftService.approveDraft(action.id)
-      : this.kcsDraftService.rejectDraft(action.id);
+    const request$ =
+      action.type === 'approve'
+        ? this.kcsDraftService.approveDraft(action.id)
+        : this.kcsDraftService.rejectDraft(action.id);
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.successMessage.set(action.type === 'approve'
-          ? this.translationService.translate('kcs.drafts.success.approved')
-          : this.translationService.translate('kcs.drafts.success.rejected'));
+        this.successMessage.set(
+          action.type === 'approve'
+            ? this.translationService.translate('kcs.drafts.success.approved')
+            : this.translationService.translate('kcs.drafts.success.rejected'),
+        );
         this.actionLoading.set(null);
         this.pendingAction.set(null);
         this.loadDrafts();
       },
       error: () => {
-        this.errorMessage.set(action.type === 'approve'
-          ? this.translationService.translate('kcs.drafts.error.approve')
-          : this.translationService.translate('kcs.drafts.error.reject'));
+        this.errorMessage.set(
+          action.type === 'approve'
+            ? this.translationService.translate('kcs.drafts.error.approve')
+            : this.translationService.translate('kcs.drafts.error.reject'),
+        );
         this.actionLoading.set(null);
         this.pendingAction.set(null);
       },

@@ -11,6 +11,16 @@ v2.0 Extended: file upload format support (HTML, XML, Word), UI neutralization t
 
 Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents.
 
+## Current Milestone: v2.1 Deployment
+
+**Goal:** Harden and deploy the v2.0 Workspace Platform to production.
+
+**Target features:**
+- Codebase-wide review (frontend, backend, database)
+- Tightening unit tests + happy-path e2e tests
+- Full security audit
+- Deploy on Vercel (frontend) and Railway (backend/db)
+
 ## Current State
 
 **v2.0 Workspace Platform** — Shipped 2026-06-14
@@ -49,7 +59,7 @@ The application has been fully transformed from an IT-specific helpdesk into a g
 
 ### Active
 
-(Next milestone requirements to be defined — see `.planning/REQUIREMENTS.md` after `/gsd-new-milestone`)
+(Next milestone requirements to be defined — see `.planning/REQUIREMENTS.md`)
 
 ### Out of Scope
 
@@ -126,4 +136,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-*Last updated: 2026-06-14 after milestone v2.0 Workspace Platform*
+*Last updated: 2026-06-14 after milestone v2.1 Deployment*

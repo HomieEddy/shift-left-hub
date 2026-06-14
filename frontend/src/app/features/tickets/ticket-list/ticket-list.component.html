@@ -1,14 +1,22 @@
 <div class="max-w-4xl mx-auto px-4 py-6">
-  <h1 class="text-2xl font-bold text-text-primary mb-6">{{ translationService.translate('tickets.title') }}</h1>
+  <h1 class="text-2xl font-bold text-text-primary mb-6">
+    {{ translationService.translate('tickets.title') }}
+  </h1>
 
   @if (isLoading()) {
-    <div class="text-center py-12 text-text-secondary">{{ translationService.translate('tickets.loading') }}</div>
+    <div class="text-center py-12 text-text-secondary">
+      {{ translationService.translate('tickets.loading') }}
+    </div>
   }
 
   @if (errorMessage()) {
-    <div class="bg-accent-danger-muted border border-accent-danger rounded-lg px-4 py-3 text-sm text-accent-danger mb-4">
+    <div
+      class="bg-accent-danger-muted border border-accent-danger rounded-lg px-4 py-3 text-sm text-accent-danger mb-4"
+    >
       {{ errorMessage() }}
-      <button (click)="loadTickets()" class="ml-2 underline transition-colors">{{ translationService.translate('tickets.retry') }}</button>
+      <button (click)="loadTickets()" class="ml-2 underline transition-colors">
+        {{ translationService.translate('tickets.retry') }}
+      </button>
     </div>
   }
 
@@ -31,25 +39,48 @@
 
     @if (filteredTickets().length === 0) {
       <div class="text-center py-12 text-text-secondary">
-        <svg class="mx-auto mb-3 w-12 h-12 text-text-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3.375m-3.375-3h5.25M3.75 6.75l.75-.75h15l.75.75v9.75a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6.75z" />
+        <svg
+          class="mx-auto mb-3 w-12 h-12 text-text-tertiary"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3.375m-3.375-3h5.25M3.75 6.75l.75-.75h15l.75.75v9.75a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6.75z"
+          />
         </svg>
         <p>{{ translationService.translate('tickets.empty') }}</p>
-        <a routerLink="/chat" class="text-primary-600 hover:text-primary-700 text-sm mt-2 inline-block transition-colors">
+        <a
+          routerLink="/chat"
+          class="text-primary-600 hover:text-primary-700 text-sm mt-2 inline-block transition-colors"
+        >
           {{ translationService.translate('tickets.emptyCTA') }}
         </a>
       </div>
     }
 
     @if (filteredTickets().length > 0) {
-      <div class="bg-surface-primary rounded-xl border border-border-default overflow-hidden transition-shadow">
+      <div
+        class="bg-surface-primary rounded-xl border border-border-default overflow-hidden transition-shadow"
+      >
         <table class="w-full text-sm">
           <thead class="bg-surface-secondary border-b border-border-default">
             <tr>
-              <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('tickets.table.ticket') }}</th>
-              <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('tickets.table.category') }}</th>
-              <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('tickets.table.status') }}</th>
-              <th class="text-left px-4 py-3 font-medium text-text-secondary">{{ translationService.translate('tickets.table.created') }}</th>
+              <th class="text-left px-4 py-3 font-medium text-text-secondary">
+                {{ translationService.translate('tickets.table.ticket') }}
+              </th>
+              <th class="text-left px-4 py-3 font-medium text-text-secondary">
+                {{ translationService.translate('tickets.table.category') }}
+              </th>
+              <th class="text-left px-4 py-3 font-medium text-text-secondary">
+                {{ translationService.translate('tickets.table.status') }}
+              </th>
+              <th class="text-left px-4 py-3 font-medium text-text-secondary">
+                {{ translationService.translate('tickets.table.created') }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -60,16 +91,24 @@
               >
                 <td class="px-4 py-3 font-mono text-primary-600">{{ ticket.ticketNumber }}</td>
                 <td class="px-4 py-3">
-                  <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="categoryBadgeClass(ticket.category)">
+                  <span
+                    class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+                    [class]="categoryBadgeClass(ticket.category)"
+                  >
                     {{ categoryLabels()[ticket.category] || ticket.category }}
                   </span>
                 </td>
                 <td class="px-4 py-3">
-                  <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="statusBadgeClass(ticket.status)">
+                  <span
+                    class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+                    [class]="statusBadgeClass(ticket.status)"
+                  >
                     {{ statusLabels()[ticket.status] || ticket.status }}
                   </span>
                 </td>
-                <td class="px-4 py-3 text-text-secondary">{{ ticket.createdAt | date:'medium' }}</td>
+                <td class="px-4 py-3 text-text-secondary">
+                  {{ ticket.createdAt | date: 'medium' }}
+                </td>
               </tr>
             }
           </tbody>

@@ -1,11 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ArticleDto, CreateArticleRequest, UpdateArticleRequest, PaginatedResponse } from '../models/article.models';
+import {
+  ArticleDto,
+  CreateArticleRequest,
+  UpdateArticleRequest,
+  PaginatedResponse,
+} from '../models/article.models';
 
 @Injectable({ providedIn: 'root' })
 export class ArticleService {
-
   private readonly http = inject(HttpClient);
 
   getArticles(page = 0, size = 20): Observable<PaginatedResponse<ArticleDto>> {
@@ -24,15 +28,25 @@ export class ArticleService {
   }
 
   updateArticle(id: string, request: UpdateArticleRequest): Observable<ArticleDto> {
-    return this.http.put<ArticleDto>(`/api/admin/articles/${id}`, request, { withCredentials: true });
+    return this.http.put<ArticleDto>(`/api/admin/articles/${id}`, request, {
+      withCredentials: true,
+    });
   }
 
   publishArticle(id: string): Observable<ArticleDto> {
-    return this.http.put<ArticleDto>(`/api/admin/articles/${id}/publish`, {}, { withCredentials: true });
+    return this.http.put<ArticleDto>(
+      `/api/admin/articles/${id}/publish`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   archiveArticle(id: string): Observable<ArticleDto> {
-    return this.http.put<ArticleDto>(`/api/admin/articles/${id}/archive`, {}, { withCredentials: true });
+    return this.http.put<ArticleDto>(
+      `/api/admin/articles/${id}/archive`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   deleteArticle(id: string): Observable<void> {

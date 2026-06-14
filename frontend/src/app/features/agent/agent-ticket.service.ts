@@ -1,7 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AgentTicket, AgentTicketFilters, ResolveTicketRequest, WorkNote } from './agent-ticket.model';
+import {
+  AgentTicket,
+  AgentTicketFilters,
+  ResolveTicketRequest,
+  WorkNote,
+} from './agent-ticket.model';
 
 /** Service for interacting with the agent ticket API endpoints. */
 @Injectable({ providedIn: 'root' })
@@ -34,7 +39,11 @@ export class AgentTicketService {
    * @param id the ticket UUID
    */
   claimTicket(id: string): Observable<AgentTicket> {
-    return this.http.post<AgentTicket>(`/api/agent/tickets/${id}/claim`, {}, { withCredentials: true });
+    return this.http.post<AgentTicket>(
+      `/api/agent/tickets/${id}/claim`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   /**
@@ -42,7 +51,9 @@ export class AgentTicketService {
    * @param id the ticket UUID
    */
   getWorkNotes(id: string): Observable<WorkNote[]> {
-    return this.http.get<WorkNote[]>(`/api/agent/tickets/${id}/work-notes`, { withCredentials: true });
+    return this.http.get<WorkNote[]>(`/api/agent/tickets/${id}/work-notes`, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -51,7 +62,11 @@ export class AgentTicketService {
    * @param content the note content
    */
   addWorkNote(id: string, content: string): Observable<WorkNote> {
-    return this.http.post<WorkNote>(`/api/agent/tickets/${id}/work-notes`, { content }, { withCredentials: true });
+    return this.http.post<WorkNote>(
+      `/api/agent/tickets/${id}/work-notes`,
+      { content },
+      { withCredentials: true },
+    );
   }
 
   /**
@@ -60,6 +75,8 @@ export class AgentTicketService {
    * @param request the resolution payload
    */
   resolveTicket(id: string, request: ResolveTicketRequest): Observable<AgentTicket> {
-    return this.http.post<AgentTicket>(`/api/agent/tickets/${id}/resolve`, request, { withCredentials: true });
+    return this.http.post<AgentTicket>(`/api/agent/tickets/${id}/resolve`, request, {
+      withCredentials: true,
+    });
   }
 }

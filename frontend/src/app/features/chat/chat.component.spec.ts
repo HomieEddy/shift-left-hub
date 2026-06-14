@@ -12,8 +12,14 @@ describe('ChatComponent', () => {
   let chatService: { sendMessage: ReturnType<typeof vi.fn> };
   let eventsSubject: Subject<StreamEvent>;
 
-  const mockStreamEvent = (type: StreamEvent['type'], content = '', sources: { articleId: string; title: string; slug: string; score: number }[] = []): StreamEvent => ({
-    type, content, sources,
+  const mockStreamEvent = (
+    type: StreamEvent['type'],
+    content = '',
+    sources: { articleId: string; title: string; slug: string; score: number }[] = [],
+  ): StreamEvent => ({
+    type,
+    content,
+    sources,
   });
 
   beforeEach(async () => {
@@ -81,7 +87,9 @@ describe('ChatComponent', () => {
     component.currentInput = 'Hello';
     component.sendMessage();
 
-    eventsSubject.next(mockStreamEvent('done', '', [{ articleId: '1', title: 'Guide', slug: 'guide', score: 0.9 }]));
+    eventsSubject.next(
+      mockStreamEvent('done', '', [{ articleId: '1', title: 'Guide', slug: 'guide', score: 0.9 }]),
+    );
 
     expect(component.isStreaming()).toBe(false);
     expect(component.showFeedback()).toBe(true);

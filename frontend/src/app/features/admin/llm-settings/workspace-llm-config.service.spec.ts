@@ -43,7 +43,7 @@ describe('WorkspaceLlmConfigService', () => {
 
   describe('getConfig', () => {
     it('should GET /api/admin/workspaces/:id/llm-config', () => {
-      service.getConfig('ws-1').subscribe(config => {
+      service.getConfig('ws-1').subscribe((config) => {
         expect(config.workspaceId).toBe('ws-1');
         expect(config.llmProvider).toBe('OLLAMA');
       });
@@ -63,7 +63,7 @@ describe('WorkspaceLlmConfigService', () => {
         modelName: 'gpt-4',
       };
 
-      service.saveConfig('ws-1', request).subscribe(config => {
+      service.saveConfig('ws-1', request).subscribe((config) => {
         expect(config.id).toBe('cfg-1');
       });
 
@@ -82,7 +82,7 @@ describe('WorkspaceLlmConfigService', () => {
         modelName: 'llama3.2',
       };
 
-      service.testConnection('ws-1', request).subscribe(result => {
+      service.testConnection('ws-1', request).subscribe((result) => {
         expect(result.success).toBe(true);
         expect(result.message).toContain('hello');
       });
@@ -109,8 +109,12 @@ describe('WorkspaceLlmConfigService', () => {
       let errorResponse: unknown = null;
 
       service.getConfig('ws-1').subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/workspaces/ws-1/llm-config');

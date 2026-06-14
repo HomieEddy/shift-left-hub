@@ -18,10 +18,7 @@ describe('LoginComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
-      providers: [
-        { provide: AuthService, useValue: authService },
-        provideRouter([]),
-      ],
+      providers: [{ provide: AuthService, useValue: authService }, provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
@@ -35,7 +32,16 @@ describe('LoginComponent', () => {
   });
 
   it('should call authService.login on submit and navigate on success', () => {
-    authService.login.mockReturnValue(of({ accessToken: 'token', refreshToken: 'refresh', userId: '1', email: 'test@example.com', role: 'ROLE_USER', displayName: 'Test' }));
+    authService.login.mockReturnValue(
+      of({
+        accessToken: 'token',
+        refreshToken: 'refresh',
+        userId: '1',
+        email: 'test@example.com',
+        role: 'ROLE_USER',
+        displayName: 'Test',
+      }),
+    );
     const navigateSpy = vi.spyOn(router, 'navigate');
 
     component.email = 'test@example.com';

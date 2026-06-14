@@ -46,7 +46,7 @@ describe('DocumentService', () => {
 
   describe('getDocuments', () => {
     it('should GET /api/admin/documents', () => {
-      service.getDocuments().subscribe(docs => {
+      service.getDocuments().subscribe((docs) => {
         expect(docs.length).toBe(1);
         expect(docs[0].filename).toBe('guide.md');
         expect(docs[0].status).toBe('READY');
@@ -61,7 +61,7 @@ describe('DocumentService', () => {
 
   describe('getDocument', () => {
     it('should GET /api/admin/documents/:id', () => {
-      service.getDocument('doc-1').subscribe(doc => {
+      service.getDocument('doc-1').subscribe((doc) => {
         expect(doc.id).toBe('doc-1');
         expect(doc.filename).toBe('guide.md');
       });
@@ -76,7 +76,7 @@ describe('DocumentService', () => {
     it('should POST multipart form to /api/admin/documents/upload', () => {
       const file = new File(['test content'], 'test.md', { type: 'text/markdown' });
 
-      service.uploadFile(file).subscribe(response => {
+      service.uploadFile(file).subscribe((response) => {
         expect(response.id).toBe('doc-2');
         expect(response.status).toBe('UPLOADED');
       });
@@ -104,7 +104,7 @@ describe('DocumentService', () => {
 
   describe('reprocessDocument', () => {
     it('should POST to /api/admin/documents/:id/reprocess', () => {
-      service.reprocessDocument('doc-1').subscribe(response => {
+      service.reprocessDocument('doc-1').subscribe((response) => {
         expect(response.id).toBe('doc-2');
       });
 
@@ -120,8 +120,12 @@ describe('DocumentService', () => {
       let errorResponse: unknown = null;
 
       service.getDocuments().subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/documents');
@@ -135,8 +139,12 @@ describe('DocumentService', () => {
       let errorResponse: unknown = null;
 
       service.uploadFile(file).subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/documents/upload');

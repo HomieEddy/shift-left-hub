@@ -16,8 +16,9 @@ export class WorkspaceRoleService {
   readonly isAuthenticated = computed(() => this.role() !== 'NONE');
 
   fetchRole(): Observable<WorkspaceRoleResponse> {
-    return this.http.get<WorkspaceRoleResponse>('/api/workspaces/current/role', { withCredentials: true })
-      .pipe(tap(response => this.roleSignal.set(response.role)));
+    return this.http
+      .get<WorkspaceRoleResponse>('/api/workspaces/current/role', { withCredentials: true })
+      .pipe(tap((response) => this.roleSignal.set(response.role)));
   }
 
   refreshRole(): void {

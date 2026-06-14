@@ -1,24 +1,36 @@
 <div class="min-h-screen flex items-center justify-center bg-surface-secondary px-4">
-  <div class="max-w-md w-full bg-surface-primary rounded-2xl shadow-lg border border-border-default p-8">
+  <div
+    class="max-w-md w-full bg-surface-primary rounded-2xl shadow-lg border border-border-default p-8"
+  >
     <!-- Logo badge -->
     <div class="flex justify-center mb-6">
-      <div class="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm">
+      <div
+        class="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm"
+      >
         SL
       </div>
     </div>
 
-    <h1 class="text-2xl font-bold text-center text-text-primary mb-1">{{ translationService.translate('register.title') }}</h1>
-    <p class="text-center text-text-secondary text-sm mb-6">{{ translationService.translate('register.subtitle') }}</p>
+    <h1 class="text-2xl font-bold text-center text-text-primary mb-1">
+      {{ translationService.translate('register.title') }}
+    </h1>
+    <p class="text-center text-text-secondary text-sm mb-6">
+      {{ translationService.translate('register.subtitle') }}
+    </p>
 
     @if (errorMessage) {
-      <div class="bg-accent-danger-muted border border-accent-danger text-accent-danger text-sm rounded-xl px-4 py-3 mb-6">
+      <div
+        class="bg-accent-danger-muted border border-accent-danger text-accent-danger text-sm rounded-xl px-4 py-3 mb-6"
+      >
         {{ errorMessage }}
       </div>
     }
 
     <form (ngSubmit)="onSubmit()" class="space-y-4">
       <div>
-        <label for="displayName" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.display-name.label') }}</label>
+        <label for="displayName" class="block text-sm font-medium text-text-primary mb-1">{{
+          translationService.translate('auth.display-name.label')
+        }}</label>
         <input
           id="displayName"
           type="text"
@@ -31,7 +43,9 @@
       </div>
 
       <div>
-        <label for="reg-email" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.email.label') }}</label>
+        <label for="reg-email" class="block text-sm font-medium text-text-primary mb-1">{{
+          translationService.translate('auth.email.label')
+        }}</label>
         <input
           id="reg-email"
           type="email"
@@ -44,7 +58,9 @@
       </div>
 
       <div>
-        <label for="reg-password" class="block text-sm font-medium text-text-primary mb-1">{{ translationService.translate('auth.password.label') }}</label>
+        <label for="reg-password" class="block text-sm font-medium text-text-primary mb-1">{{
+          translationService.translate('auth.password.label')
+        }}</label>
         <div class="relative">
           <input
             id="reg-password"
@@ -56,15 +72,35 @@
             class="w-full bg-surface-primary border border-border-default rounded-xl px-4 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent placeholder:text-text-tertiary"
             [placeholder]="translationService.translate('auth.password.placeholder.register')"
           />
-          <button type="button" (click)="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors" tabindex="-1">
+          <button
+            type="button"
+            (click)="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary transition-colors"
+            tabindex="-1"
+          >
             @if (showPassword) {
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                />
               </svg>
             } @else {
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
               </svg>
             }
           </button>
@@ -73,19 +109,34 @@
         <!-- Password strength meter -->
         <div class="mt-2 flex gap-1">
           @for (i of [0, 1, 2]; track i) {
-            <div class="flex-1 h-1.5 rounded-full transition-colors"
+            <div
+              class="flex-1 h-1.5 rounded-full transition-colors"
               [class.bg-accent-success]="passwordStrength > i"
-              [class.bg-surface-tertiary]="passwordStrength <= i">
-            </div>
+              [class.bg-surface-tertiary]="passwordStrength <= i"
+            ></div>
           }
         </div>
 
         @if (showPasswordRules) {
           <ul class="text-xs mt-2 space-y-1">
-            <li class="flex items-center gap-1.5" [class.text-accent-success]="password.length >= 8" [class.text-text-tertiary]="password.length < 8">
+            <li
+              class="flex items-center gap-1.5"
+              [class.text-accent-success]="password.length >= 8"
+              [class.text-text-tertiary]="password.length < 8"
+            >
               @if (password.length >= 8) {
-                <svg class="w-3.5 h-3.5 text-accent-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <svg
+                  class="w-3.5 h-3.5 text-accent-success"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               } @else {
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,10 +145,24 @@
               }
               {{ translationService.translate('register.password.rule.length') }}
             </li>
-            <li class="flex items-center gap-1.5" [class.text-accent-success]="/[A-Z]/.test(password)" [class.text-text-tertiary]="!/[A-Z]/.test(password)">
+            <li
+              class="flex items-center gap-1.5"
+              [class.text-accent-success]="/[A-Z]/.test(password)"
+              [class.text-text-tertiary]="!/[A-Z]/.test(password)"
+            >
               @if (/[A-Z]/.test(password)) {
-                <svg class="w-3.5 h-3.5 text-accent-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <svg
+                  class="w-3.5 h-3.5 text-accent-success"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               } @else {
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,10 +171,24 @@
               }
               {{ translationService.translate('register.password.rule.uppercase') }}
             </li>
-            <li class="flex items-center gap-1.5" [class.text-accent-success]="/[0-9]/.test(password)" [class.text-text-tertiary]="!/[0-9]/.test(password)">
+            <li
+              class="flex items-center gap-1.5"
+              [class.text-accent-success]="/[0-9]/.test(password)"
+              [class.text-text-tertiary]="!/[0-9]/.test(password)"
+            >
               @if (/[0-9]/.test(password)) {
-                <svg class="w-3.5 h-3.5 text-accent-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <svg
+                  class="w-3.5 h-3.5 text-accent-success"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               } @else {
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,8 +208,19 @@
       >
         @if (isLoading) {
           <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            ></path>
           </svg>
           <span>{{ translationService.translate('register.creating') }}</span>
         } @else {
@@ -141,11 +231,17 @@
 
     <p class="text-center text-sm text-text-secondary mt-6">
       {{ translationService.translate('register.has-account') }}
-      <a routerLink="/login" class="text-primary-600 hover:text-primary-700 font-medium">{{ translationService.translate('register.signinLink') }}</a>
+      <a routerLink="/login" class="text-primary-600 hover:text-primary-700 font-medium">{{
+        translationService.translate('register.signinLink')
+      }}</a>
     </p>
 
     <div class="text-center mt-4">
-      <a routerLink="/" class="text-sm text-text-tertiary hover:text-text-primary transition-colors">{{ translationService.translate('register.backToHome') }}</a>
+      <a
+        routerLink="/"
+        class="text-sm text-text-tertiary hover:text-text-primary transition-colors"
+        >{{ translationService.translate('register.backToHome') }}</a
+      >
     </div>
   </div>
 </div>

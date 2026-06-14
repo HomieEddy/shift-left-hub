@@ -6,7 +6,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AgentTicketService } from '../agent-ticket.service';
 import { AgentTicket } from '../agent-ticket.model';
-import { statusBadgeClass, categoryBadgeClass, urgencyBadgeClass } from '../../../shared/ui/badge/badge-utils';
+import {
+  statusBadgeClass,
+  categoryBadgeClass,
+  urgencyBadgeClass,
+} from '../../../shared/ui/badge/badge-utils';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
@@ -47,8 +51,12 @@ export class AgentTicketListComponent implements OnInit {
   readonly urgencyBadgeClass = urgencyBadgeClass;
 
   allLabel = computed(() => this.translationService.translate('agent.filter.all'));
-  allCategoriesLabel = computed(() => this.translationService.translate('agent.filter.allCategories'));
-  allUrgenciesLabel = computed(() => this.translationService.translate('agent.filter.allUrgencies'));
+  allCategoriesLabel = computed(() =>
+    this.translationService.translate('agent.filter.allCategories'),
+  );
+  allUrgenciesLabel = computed(() =>
+    this.translationService.translate('agent.filter.allUrgencies'),
+  );
   searchPlaceholder = computed(() => this.translationService.translate('agent.search.placeholder'));
   loadingLabel = computed(() => this.translationService.translate('agent.loading'));
   errorLabel = computed(() => this.translationService.translate('agent.error.load'));
@@ -64,14 +72,12 @@ export class AgentTicketListComponent implements OnInit {
   claimFailedAlert = computed(() => this.translationService.translate('agent.claim.error'));
 
   constructor() {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe(query => {
-      this.searchQuery.set(query);
-      this.loadTickets();
-    });
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((query) => {
+        this.searchQuery.set(query);
+        this.loadTickets();
+      });
   }
 
   ngOnInit(): void {
@@ -82,22 +88,25 @@ export class AgentTicketListComponent implements OnInit {
   loadTickets(): void {
     this.isLoading.set(true);
     this.isError.set(false);
-    this.agentTicketService.getTickets({
-      status: this.activeStatus() !== 'ALL' ? this.activeStatus() : undefined,
-      category: this.selectedCategory() || undefined,
-      urgency: this.selectedUrgency() || undefined,
-      search: this.searchQuery() || undefined,
-    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (tickets) => {
-        this.tickets.set(tickets);
-        this.filteredTickets.set(tickets);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.isError.set(true);
-      },
-    });
+    this.agentTicketService
+      .getTickets({
+        status: this.activeStatus() !== 'ALL' ? this.activeStatus() : undefined,
+        category: this.selectedCategory() || undefined,
+        urgency: this.selectedUrgency() || undefined,
+        search: this.searchQuery() || undefined,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (tickets) => {
+          this.tickets.set(tickets);
+          this.filteredTickets.set(tickets);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.isError.set(true);
+        },
+      });
   }
 
   /** Handles debounced search input from the search field. */
@@ -133,13 +142,18 @@ export class AgentTicketListComponent implements OnInit {
     if (id == null) return;
     this.claimConfirmOpen.set(false);
     this.claimingTicketId.set(null);
-    this.agentTicketService.claimTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => { void this.router.navigate(['/agent/tickets', id]); },
-      error: () => {
-        console.error('Failed to claim ticket');
-        this.claimError.set('Failed to claim ticket. Please try again.');
-      },
-    });
+    this.agentTicketService
+      .claimTicket(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          void this.router.navigate(['/agent/tickets', id]);
+        },
+        error: () => {
+          console.error('Failed to claim ticket');
+          this.claimError.set('Failed to claim ticket. Please try again.');
+        },
+      });
   }
 
   /** Cancels the claim confirmation dialog. */
@@ -149,23 +163,23 @@ export class AgentTicketListComponent implements OnInit {
   }
 
   statusLabels = computed<Record<string, string>>(() => ({
-    'NEW': this.translationService.translate('tickets.status.new'),
-    'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
-    'RESOLVED': this.translationService.translate('tickets.status.resolved'),
-    'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
+    NEW: this.translationService.translate('tickets.status.new'),
+    IN_PROGRESS: this.translationService.translate('tickets.status.in_progress'),
+    RESOLVED: this.translationService.translate('tickets.status.resolved'),
+    CANCELLED: this.translationService.translate('tickets.status.cancelled'),
   }));
 
   urgencyLabels = computed<Record<string, string>>(() => ({
-    'LOW': this.translationService.translate('agent.urgency.low'),
-    'MEDIUM': this.translationService.translate('agent.urgency.medium'),
-    'HIGH': this.translationService.translate('agent.urgency.high'),
+    LOW: this.translationService.translate('agent.urgency.low'),
+    MEDIUM: this.translationService.translate('agent.urgency.medium'),
+    HIGH: this.translationService.translate('agent.urgency.high'),
   }));
 
   categoryLabels = computed<Record<string, string>>(() => ({
-    'NETWORK': this.translationService.translate('tickets.category.network'),
-    'HARDWARE': this.translationService.translate('tickets.category.hardware'),
-    'SOFTWARE': this.translationService.translate('tickets.category.software'),
-    'ACCESS': this.translationService.translate('tickets.category.access'),
-    'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
+    NETWORK: this.translationService.translate('tickets.category.network'),
+    HARDWARE: this.translationService.translate('tickets.category.hardware'),
+    SOFTWARE: this.translationService.translate('tickets.category.software'),
+    ACCESS: this.translationService.translate('tickets.category.access'),
+    PERIPHERALS: this.translationService.translate('tickets.category.peripherals'),
   }));
 }

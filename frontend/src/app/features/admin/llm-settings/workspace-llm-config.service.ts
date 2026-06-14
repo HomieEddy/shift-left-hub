@@ -36,21 +36,38 @@ export class WorkspaceLlmConfigService {
   private http = inject(HttpClient);
 
   getConfig(workspaceId: string): Observable<WorkspaceLlmConfigResponse> {
-    return this.http.get<WorkspaceLlmConfigResponse>(`/api/admin/workspaces/${workspaceId}/llm-config`, {
-      withCredentials: true,
-    });
+    return this.http.get<WorkspaceLlmConfigResponse>(
+      `/api/admin/workspaces/${workspaceId}/llm-config`,
+      {
+        withCredentials: true,
+      },
+    );
   }
 
-  saveConfig(workspaceId: string, config: WorkspaceLlmConfigRequest): Observable<WorkspaceLlmConfigResponse> {
-    return this.http.put<WorkspaceLlmConfigResponse>(`/api/admin/workspaces/${workspaceId}/llm-config`, config, {
-      withCredentials: true,
-    });
+  saveConfig(
+    workspaceId: string,
+    config: WorkspaceLlmConfigRequest,
+  ): Observable<WorkspaceLlmConfigResponse> {
+    return this.http.put<WorkspaceLlmConfigResponse>(
+      `/api/admin/workspaces/${workspaceId}/llm-config`,
+      config,
+      {
+        withCredentials: true,
+      },
+    );
   }
 
-  testConnection(workspaceId: string, config: WorkspaceLlmConfigRequest): Observable<TestConnectionResult> {
-    return this.http.post<TestConnectionResult>(`/api/admin/workspaces/${workspaceId}/llm-config/test`, config, {
-      withCredentials: true,
-    });
+  testConnection(
+    workspaceId: string,
+    config: WorkspaceLlmConfigRequest,
+  ): Observable<TestConnectionResult> {
+    return this.http.post<TestConnectionResult>(
+      `/api/admin/workspaces/${workspaceId}/llm-config/test`,
+      config,
+      {
+        withCredentials: true,
+      },
+    );
   }
 
   deleteConfig(workspaceId: string): Observable<void> {

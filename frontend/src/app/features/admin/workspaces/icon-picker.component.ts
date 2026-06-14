@@ -8,9 +8,21 @@ import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 })
 export class IconPickerComponent {
   readonly ICONS = [
-    'building2', 'globe', 'rocket', 'heart', 'star', 'cloud',
-    'zap', 'shield', 'book-open', 'settings', 'palette',
-    'compass', 'award', 'lightbulb', 'layers',
+    'building2',
+    'globe',
+    'rocket',
+    'heart',
+    'star',
+    'cloud',
+    'zap',
+    'shield',
+    'book-open',
+    'settings',
+    'palette',
+    'compass',
+    'award',
+    'lightbulb',
+    'layers',
   ];
 
   @Input() set selected(value: string | null) {

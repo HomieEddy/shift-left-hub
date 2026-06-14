@@ -29,17 +29,20 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           return throwError(() => error);
         }
         const body = error.error as { message?: string; error?: string } | null;
-        message = body?.message ?? body?.error ?? translationService.translate('http.error.invalidRequest');
+        message =
+          body?.message ?? body?.error ?? translationService.translate('http.error.invalidRequest');
       } else if (error.status >= 500) {
         message = translationService.translate('http.error.serverError');
       }
 
       if (message != null) {
         toastService.error(message);
-        if (isDevMode()) { console.error(`[HTTP Error ${error.status}]:`, message); }
+        if (isDevMode()) {
+          console.error(`[HTTP Error ${error.status}]:`, message);
+        }
       }
 
       return throwError(() => error);
-    })
+    }),
   );
 };

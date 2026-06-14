@@ -29,19 +29,20 @@ export class ArticleListComponent implements OnInit {
 
   loadArticles(): void {
     this.isLoading.set(true);
-    this.publicArticleService.getArticles(this.currentPage()).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (page) => {
-        this.articles.set(page.content);
-        this.totalPages.set(page.totalPages);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set('Failed to load articles.');
-        this.isLoading.set(false);
-      },
-    });
+    this.publicArticleService
+      .getArticles(this.currentPage())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (page) => {
+          this.articles.set(page.content);
+          this.totalPages.set(page.totalPages);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set('Failed to load articles.');
+          this.isLoading.set(false);
+        },
+      });
   }
 
   changePage(page: number): void {
@@ -63,9 +64,7 @@ export class ArticleListComponent implements OnInit {
     if (isFr && article.excerpt == null && article.excerptFr == null) {
       return this.translationService.translate('kb.no-excerpt-fr');
     }
-    const content = isFr
-      ? (article.contentFr ?? article.contentEn)
-      : article.contentEn;
+    const content = isFr ? (article.contentFr ?? article.contentEn) : article.contentEn;
     return content != null && content.length > 0 ? content.substring(0, 150) + '...' : '';
   }
 }

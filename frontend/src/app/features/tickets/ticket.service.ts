@@ -20,6 +20,9 @@ export class TicketService {
   }
 
   cancelTicket(id: string, cancelReason?: string): Observable<Ticket> {
-    return this.http.post<Ticket>(`/api/tickets/${id}/cancel`, cancelReason != null ? { cancelReason } : {});
+    return this.http.post<Ticket>(
+      `/api/tickets/${id}/cancel`,
+      cancelReason != null ? { cancelReason } : {},
+    );
   }
 }

@@ -19,24 +19,31 @@ export class ToastContainer {
   protected readonly toasts = signal<ToastMessage[]>([]);
 
   constructor() {
-    this.toastService.toasts$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((toast: ToastMessage) => {
-      this.toasts.update((t: ToastMessage[]) => [...t, toast]);
-      const duration = toast.duration ?? DEFAULT_DURATION;
-      setTimeout(() => this.dismissToast(toast.id), duration);
-    });
+    this.toastService.toasts$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((toast: ToastMessage) => {
+        this.toasts.update((t: ToastMessage[]) => [...t, toast]);
+        const duration = toast.duration ?? DEFAULT_DURATION;
+        setTimeout(() => this.dismissToast(toast.id), duration);
+      });
 
     this.toastService.dismiss$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((id: string) => {
-      this.toasts.update((t: ToastMessage[]) => t.filter(toast => toast.id !== id));
+      this.toasts.update((t: ToastMessage[]) => t.filter((toast) => toast.id !== id));
     });
   }
 
   protected toastClass(toast: ToastMessage): string {
     switch (toast.type) {
-      case 'success': return 'bg-accent-success-muted border-accent-success text-accent-success';
-      case 'error': return 'bg-accent-danger-muted border-accent-danger text-accent-danger';
-      case 'warning': return 'bg-accent-warning-muted border-accent-warning text-accent-warning';
-      case 'info': return 'bg-accent-info-muted border-accent-info text-accent-info';
-      default: return 'bg-surface-secondary border-border-default text-text-primary';
+      case 'success':
+        return 'bg-accent-success-muted border-accent-success text-accent-success';
+      case 'error':
+        return 'bg-accent-danger-muted border-accent-danger text-accent-danger';
+      case 'warning':
+        return 'bg-accent-warning-muted border-accent-warning text-accent-warning';
+      case 'info':
+        return 'bg-accent-info-muted border-accent-info text-accent-info';
+      default:
+        return 'bg-surface-secondary border-border-default text-text-primary';
     }
   }
 

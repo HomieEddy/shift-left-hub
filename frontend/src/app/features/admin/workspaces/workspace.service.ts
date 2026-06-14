@@ -2,9 +2,15 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
-  WorkspaceDto, CreateWorkspaceRequest, WorkspaceMemberDto, AssignUserRequest,
-  CreateInvitationRequest, InvitationDto, ChangeRoleRequest, UpdateWorkspaceRequest,
-  WorkspaceRoleResponse
+  WorkspaceDto,
+  CreateWorkspaceRequest,
+  WorkspaceMemberDto,
+  AssignUserRequest,
+  CreateInvitationRequest,
+  InvitationDto,
+  ChangeRoleRequest,
+  UpdateWorkspaceRequest,
+  WorkspaceRoleResponse,
 } from './workspace.model';
 import { SUPPRESS_ERROR_TOAST } from '../../../core/http/http-context-tokens';
 
@@ -48,32 +54,51 @@ export class WorkspaceService {
   }
 
   getInvitations(workspaceId: string): Observable<InvitationDto[]> {
-    return this.http.get<InvitationDto[]>(`${this.apiUrl}/${workspaceId}/invitations`, { withCredentials: true });
+    return this.http.get<InvitationDto[]>(`${this.apiUrl}/${workspaceId}/invitations`, {
+      withCredentials: true,
+    });
   }
 
   sendInvitation(workspaceId: string, request: CreateInvitationRequest): Observable<InvitationDto> {
-    return this.http.post<InvitationDto>(`${this.apiUrl}/${workspaceId}/invitations`, request, { withCredentials: true });
+    return this.http.post<InvitationDto>(`${this.apiUrl}/${workspaceId}/invitations`, request, {
+      withCredentials: true,
+    });
   }
 
   revokeInvitation(workspaceId: string, invitationId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${workspaceId}/invitations/${invitationId}`, { withCredentials: true });
+    return this.http.delete<void>(`${this.apiUrl}/${workspaceId}/invitations/${invitationId}`, {
+      withCredentials: true,
+    });
   }
 
   removeMember(workspaceId: string, userId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${workspaceId}/members/${userId}`, { withCredentials: true });
+    return this.http.delete<void>(`${this.apiUrl}/${workspaceId}/members/${userId}`, {
+      withCredentials: true,
+    });
   }
 
-  changeMemberRole(workspaceId: string, userId: string, request: ChangeRoleRequest): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${workspaceId}/members/${userId}/role`, request, { withCredentials: true });
+  changeMemberRole(
+    workspaceId: string,
+    userId: string,
+    request: ChangeRoleRequest,
+  ): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${workspaceId}/members/${userId}/role`, request, {
+      withCredentials: true,
+    });
   }
 
   getMyWorkspaces(): Observable<WorkspaceDto[]> {
     const context = new HttpContext().set(SUPPRESS_ERROR_TOAST, true);
-    return this.http.get<WorkspaceDto[]>(`${this.userApiUrl}/mine`, { context, withCredentials: true });
+    return this.http.get<WorkspaceDto[]>(`${this.userApiUrl}/mine`, {
+      context,
+      withCredentials: true,
+    });
   }
 
   getMyRole(): Observable<WorkspaceRoleResponse> {
-    return this.http.get<WorkspaceRoleResponse>(`${this.userApiUrl}/current/role`, { withCredentials: true });
+    return this.http.get<WorkspaceRoleResponse>(`${this.userApiUrl}/current/role`, {
+      withCredentials: true,
+    });
   }
 
   leaveWorkspace(id: string): Observable<void> {
@@ -85,10 +110,18 @@ export class WorkspaceService {
   }
 
   acceptInvitation(id: string): Observable<void> {
-    return this.http.post<void>(`${this.invitationsApiUrl}/${id}/accept`, {}, { withCredentials: true });
+    return this.http.post<void>(
+      `${this.invitationsApiUrl}/${id}/accept`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   rejectInvitation(id: string): Observable<void> {
-    return this.http.post<void>(`${this.invitationsApiUrl}/${id}/reject`, {}, { withCredentials: true });
+    return this.http.post<void>(
+      `${this.invitationsApiUrl}/${id}/reject`,
+      {},
+      { withCredentials: true },
+    );
   }
 }

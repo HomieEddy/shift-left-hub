@@ -5,7 +5,6 @@ import { TagDto, CreateTagRequest, UpdateTagRequest } from '../models/tag.models
 
 @Injectable({ providedIn: 'root' })
 export class TagService {
-
   private readonly http = inject(HttpClient);
 
   getTags(): Observable<TagDto[]> {

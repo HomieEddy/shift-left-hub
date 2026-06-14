@@ -1,10 +1,14 @@
 <div class="bg-surface-primary border border-border-default rounded-xl p-4 text-sm">
   @if (!successTicketNumber()) {
-    <h3 class="font-semibold text-text-primary mb-3">{{ translationService.translate('escalation.title') }}</h3>
+    <h3 class="font-semibold text-text-primary mb-3">
+      {{ translationService.translate('escalation.title') }}
+    </h3>
 
     <div class="space-y-3">
       <div>
-        <label for="escalation-issue" class="block text-xs font-medium text-text-secondary mb-1">{{ translationService.translate('escalation.issue') }}</label>
+        <label for="escalation-issue" class="block text-xs font-medium text-text-secondary mb-1">{{
+          translationService.translate('escalation.issue')
+        }}</label>
         <textarea
           id="escalation-issue"
           [(ngModel)]="issue"
@@ -17,7 +21,11 @@
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label for="escalation-category" class="block text-xs font-medium text-text-secondary mb-1">{{ translationService.translate('escalation.category') }}</label>
+          <label
+            for="escalation-category"
+            class="block text-xs font-medium text-text-secondary mb-1"
+            >{{ translationService.translate('escalation.category') }}</label
+          >
           <select
             id="escalation-category"
             [(ngModel)]="category"
@@ -31,7 +39,11 @@
           </select>
         </div>
         <div>
-          <label for="escalation-urgency" class="block text-xs font-medium text-text-secondary mb-1">{{ translationService.translate('escalation.urgency') }}</label>
+          <label
+            for="escalation-urgency"
+            class="block text-xs font-medium text-text-secondary mb-1"
+            >{{ translationService.translate('escalation.urgency') }}</label
+          >
           <select
             id="escalation-urgency"
             [(ngModel)]="urgency"
@@ -58,9 +70,25 @@
           class="rounded-lg bg-accent-warning px-4 py-2 text-sm text-white hover:bg-accent-warning/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           @if (isSubmitting()) {
-            <svg class="animate-spin -ml-1 mr-1.5 h-4 w-4 text-white inline-block" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              class="animate-spin -ml-1 mr-1.5 h-4 w-4 text-white inline-block"
+              fill="none"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             <span>{{ translationService.translate('escalation.submitting') }}</span>
           } @else {
@@ -78,8 +106,16 @@
     </div>
   } @else {
     <div class="text-center py-4">
-      <div class="mx-auto mb-3 w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-        <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <div
+        class="mx-auto mb-3 w-12 h-12 rounded-full bg-green-100 flex items-center justify-center"
+      >
+        <svg
+          class="w-6 h-6 text-green-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
         </svg>
       </div>
@@ -89,7 +125,10 @@
       <p class="text-text-secondary text-xs mb-3">
         {{ translationService.translate('escalation.successMessage') }}
       </p>
-      <a routerLink="/tickets" class="text-primary-600 hover:text-primary-700 text-xs font-medium transition-colors">
+      <a
+        routerLink="/tickets"
+        class="text-primary-600 hover:text-primary-700 text-xs font-medium transition-colors"
+      >
         {{ translationService.translate('tickets.view.link') }}
       </a>
     </div>

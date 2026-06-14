@@ -29,17 +29,20 @@ export class WorkspaceSwitcherComponent implements OnInit {
   currentWorkspace = computed(() => {
     const user = this.authService.user();
     const list = this.workspaces();
-    if (!user) { return null; }
+    if (!user) {
+      return null;
+    }
     // Find workspace matching JWT workspace_id from user details
-    const found = list.find(ws => ws.id === user.workspaceId);
+    const found = list.find((ws) => ws.id === user.workspaceId);
     return found ?? list[0] ?? null;
   });
 
   ngOnInit() {
-    this.workspaceService.getMyWorkspaces()
+    this.workspaceService
+      .getMyWorkspaces()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: ws => this.workspaces.set(ws),
+        next: (ws) => this.workspaces.set(ws),
         error: () => {
           this.authService.logout().subscribe();
         },
@@ -47,7 +50,7 @@ export class WorkspaceSwitcherComponent implements OnInit {
   }
 
   toggleDropdown() {
-    this.isOpen.update(v => !v);
+    this.isOpen.update((v) => !v);
   }
 
   promptSwitch(workspace: WorkspaceDto) {
@@ -59,7 +62,8 @@ export class WorkspaceSwitcherComponent implements OnInit {
     const ws = this.pendingSwitch();
     if (!ws) return;
     this.pendingSwitch.set(null);
-    this.authService.switchWorkspace(ws.id)
+    this.authService
+      .switchWorkspace(ws.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

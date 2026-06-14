@@ -45,7 +45,7 @@ describe('WorkspaceService', () => {
 
   describe('getWorkspaces', () => {
     it('should GET /api/admin/workspaces', () => {
-      service.getWorkspaces().subscribe(workspaces => {
+      service.getWorkspaces().subscribe((workspaces) => {
         expect(workspaces.length).toBe(1);
         expect(workspaces[0].name).toBe('Default Workspace');
       });
@@ -58,7 +58,7 @@ describe('WorkspaceService', () => {
 
   describe('getWorkspace', () => {
     it('should GET /api/admin/workspaces/:id', () => {
-      service.getWorkspace('ws-1').subscribe(workspace => {
+      service.getWorkspace('ws-1').subscribe((workspace) => {
         expect(workspace.id).toBe('ws-1');
         expect(workspace.name).toBe('Default Workspace');
       });
@@ -73,7 +73,7 @@ describe('WorkspaceService', () => {
     it('should POST to /api/admin/workspaces', () => {
       const request = { name: 'New WS', description: 'A new workspace' };
 
-      service.createWorkspace(request).subscribe(workspace => {
+      service.createWorkspace(request).subscribe((workspace) => {
         expect(workspace.name).toBe('Default Workspace');
       });
 
@@ -86,7 +86,7 @@ describe('WorkspaceService', () => {
     it('should create workspace without optional fields', () => {
       const request = { name: 'Minimal WS' };
 
-      service.createWorkspace(request).subscribe(workspace => {
+      service.createWorkspace(request).subscribe((workspace) => {
         expect(workspace.slug).toBe('default');
       });
 
@@ -98,7 +98,7 @@ describe('WorkspaceService', () => {
 
   describe('getMembers', () => {
     it('should GET /api/admin/workspaces/:id/members', () => {
-      service.getMembers('ws-1').subscribe(members => {
+      service.getMembers('ws-1').subscribe((members) => {
         expect(members.length).toBe(1);
         expect(members[0].email).toBe('user@example.com');
       });
@@ -124,7 +124,7 @@ describe('WorkspaceService', () => {
 
   describe('getAvailableUsers', () => {
     it('should GET /api/admin/workspaces/:id/available-users', () => {
-      service.getAvailableUsers('ws-1').subscribe(users => {
+      service.getAvailableUsers('ws-1').subscribe((users) => {
         expect(users.length).toBe(1);
         expect(users[0].displayName).toBe('User One');
       });
@@ -140,8 +140,12 @@ describe('WorkspaceService', () => {
       let errorResponse: unknown = null;
 
       service.getWorkspaces().subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/workspaces');
@@ -154,8 +158,12 @@ describe('WorkspaceService', () => {
       let errorResponse: unknown = null;
 
       service.createWorkspace({ name: '' }).subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/workspaces');

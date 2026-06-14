@@ -19,7 +19,9 @@ export class PaginationComponent {
     const pages: (number | string)[] = [];
 
     if (total <= 7) {
-      for (let i = 0; i < total; i++) { pages.push(i); }
+      for (let i = 0; i < total; i++) {
+        pages.push(i);
+      }
       return pages;
     }
 

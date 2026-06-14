@@ -3,12 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WorkspaceService } from '../admin/workspaces/workspace.service';
 import { InvitationDto } from '../admin/workspaces/workspace.model';
 import { TranslationService } from '../../core/i18n/translation.service';
-import { LucideBell, LucideCheck, LucideX, LucideUsers, LucideLoader2 } from '@lucide/angular';
+import { LucideBell, LucideCheck, LucideX, LucideUsers } from '@lucide/angular';
 
 @Component({
   selector: 'app-invitation-badge',
   standalone: true,
-  imports: [LucideBell, LucideCheck, LucideX, LucideUsers, LucideLoader2],
+  imports: [LucideBell, LucideCheck, LucideX, LucideUsers],
   templateUrl: './invitation-badge.component.html',
 })
 export class InvitationBadgeComponent implements OnInit {
@@ -29,15 +29,16 @@ export class InvitationBadgeComponent implements OnInit {
   }
 
   toggleDropdown() {
-    this.isOpen.update(v => !v);
+    this.isOpen.update((v) => !v);
   }
 
   loadInvitations() {
     this.isLoading.set(true);
-    this.workspaceService.getMyInvitations()
+    this.workspaceService
+      .getMyInvitations()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: invs => {
+        next: (invs) => {
           this.invitations.set(invs);
           this.isLoading.set(false);
         },
@@ -48,28 +49,50 @@ export class InvitationBadgeComponent implements OnInit {
   }
 
   acceptInvitation(inv: InvitationDto) {
-    this.processingIds.update(set => { set.add(inv.id); return new Set(set); });
-    this.workspaceService.acceptInvitation(inv.id)
+    this.processingIds.update((set) => {
+      set.add(inv.id);
+      return new Set(set);
+    });
+    this.workspaceService
+      .acceptInvitation(inv.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.invitations.update(list => list.filter(i => i.id !== inv.id));
-          this.processingIds.update(set => { set.delete(inv.id); return new Set(set); });
+          this.invitations.update((list) => list.filter((i) => i.id !== inv.id));
+          this.processingIds.update((set) => {
+            set.delete(inv.id);
+            return new Set(set);
+          });
         },
-        error: () => this.processingIds.update(set => { set.delete(inv.id); return new Set(set); }),
+        error: () =>
+          this.processingIds.update((set) => {
+            set.delete(inv.id);
+            return new Set(set);
+          }),
       });
   }
 
   rejectInvitation(inv: InvitationDto) {
-    this.processingIds.update(set => { set.add(inv.id); return new Set(set); });
-    this.workspaceService.rejectInvitation(inv.id)
+    this.processingIds.update((set) => {
+      set.add(inv.id);
+      return new Set(set);
+    });
+    this.workspaceService
+      .rejectInvitation(inv.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.invitations.update(list => list.filter(i => i.id !== inv.id));
-          this.processingIds.update(set => { set.delete(inv.id); return new Set(set); });
+          this.invitations.update((list) => list.filter((i) => i.id !== inv.id));
+          this.processingIds.update((set) => {
+            set.delete(inv.id);
+            return new Set(set);
+          });
         },
-        error: () => this.processingIds.update(set => { set.delete(inv.id); return new Set(set); }),
+        error: () =>
+          this.processingIds.update((set) => {
+            set.delete(inv.id);
+            return new Set(set);
+          }),
       });
   }
 }

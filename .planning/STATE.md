@@ -1,23 +1,23 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Workspace Platform
-status: shipped
-last_updated: "2026-06-14T01:00:00.000Z"
+milestone: v2.1
+milestone_name: Deployment
+status: roadmap_created
+last_updated: "2026-06-14T14:00:00.000Z"
 progress:
-  total_phases: 16
-  completed_phases: 16
-  total_plans: 94
-  completed_plans: 94
-  current_phase: null
-  current_focus: "v2.0 Workspace Platform shipped. Next milestone pending."
+  total_phases: 21
+  completed_phases: 17
+  total_plans: 97
+  completed_plans: 97
+  current_phase: 18
+  current_focus: "Phase 18 — Unit Test Tightening"
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** ✅ v2.0 Workspace Platform — Shipped 2026-06-14
+**Status:** ◆ Milestone v2.1 Deployment — Phase 17 complete (3/3 plans), Phase 18 next
 
 ## Project Reference
 
@@ -25,42 +25,63 @@ See: `.planning/PROJECT.md` (updated 2026-06-14)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents.
 
-**Current focus:** Planning next milestone.
+**Current focus:** Phase 18 — Unit Test Tightening
 
-## Milestone Recap
+## Current Position
 
-| Milestone | Status |
-|-----------|--------|
-| v1.0 Initial MVP | ✅ Shipped (8 phases, 60 plans, 41 requirements) |
-| v2.0 Workspace Platform | ✅ Shipped (8 phases, 34 plans, 46 requirements) |
+Phase: 18 of 21 (Unit Test Tightening)
+Plan: TBD — not yet planned
+Status: Phase 17 complete — ready for Phase 18 planning
+Last activity: 2026-06-14 — Phase 17 executed (3/3 plans complete)
+Progress: [■■■■■■■■■■■■■■■■■■■■■■■■■□□□] 19% (Phase 17 complete)
 
-## Key Decisions (Carried Forward)
+## Performance Metrics
 
-| Decision | Rationale | Outcome |
-|----------|-----------|---------|
-| Modular Monolith | Solo dev, no distributed complexity needed | ✓ Shipped v1.0 |
-| PostgreSQL FTS + pgvector | No extra infrastructure needed | ✓ Shipped v1.0 |
-| Angular + Spring Boot | Enterprise standard pairing | ✓ Shipped v1.0 |
-| JWT with HttpOnly cookies | Security best practice vs localStorage | ✓ Shipped v1.0 |
-| Bilingual EN/FR from day one | Rare differentiator, costly to retrofit | ✓ Shipped v1.0 |
-| Sequential TKT-NNNN numbering | Human-readable ticket IDs vs raw UUIDs | ✓ Shipped v1.0 |
-| JSONB shift_left_context | Flexible schema for AI chat transcript storage | ✓ Shipped v1.0 |
+**Velocity:**
+- Total plans completed (all milestones): 94
+- Milestone v2.1: 0 plans started
+
+**By Phase (v2.1):**
+
+| Phase | Plans | Status |
+|-------|-------|--------|
+| 17. Codebase Review | 3 | ✓ Complete |
+| 18. Unit Test Tightening | TBD | Not started |
+| 19. E2E Test Coverage | TBD | Not started |
+| 20. Security Audit & Hardening | TBD | Not started |
+| 21. Production Deployment | TBD | Not started |
 
 ## Accumulated Context
 
-- **v1.0 shipped:** 8 phases, 60 plans, 41 requirements
-- **v2.0 shipped:** 8 phases (9-16), 34 plans, 46 requirements
-- **Total:** 16 phases, 94 plans, 87 requirements
-- **Codebase:** ~9,500 frontend LOC + ~6,200 backend main LOC + ~2,600 test LOC
-- **Coverage:** 112 backend integration tests + 9 backend unit tests + 127 frontend tests + Playwright E2E
-- **Current stack:** Angular 21.2, Spring Boot 3.5, PostgreSQL 16 + pgvector, Spring AI
-- **v2.0 tech debt:** 10 items across phases 9 and 15 (see `v2.0-MILESTONE-AUDIT.md`)
+### Decisions
 
-## Next Steps
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Review-first ordering | Review surfaces quality issues before test tightening and security audit | Phase 17 ✓ |
+| Testing split into two phases (unit + e2e) | 11 testing requirements span distinct concerns — existing unit tightening vs new Playwright scripts | Phases 18-19 |
+| Security before deployment | No production deploy until vulnerabilities are resolved | Phase 20 before 21 |
 
-1. ✅ v2.0 shipped — all 8 phases complete
-2. 📋 Plan next milestone via `/gsd-new-milestone`
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+None yet.
+
+## Deferred Items
+
+| Category | Item | Status | Deferred At |
+|----------|------|--------|-------------|
+| *(none)* | | | |
+
+## Session Continuity
+
+Last session: 2026-06-14
+Stopped at: Phase 17 — Codebase Review executed (3/3 plans)
+Resume file: None
+Next action: `/gsd-plan-phase 18` to plan Phase 18 Unit Test Tightening
 
 ---
 
-*Milestone v2.0 — Workspace Platform — shipped 2026-06-14*
+*Milestone v2.1 — Deployment — roadmap created 2026-06-14*

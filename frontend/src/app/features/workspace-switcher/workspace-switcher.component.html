@@ -1,54 +1,77 @@
-    <div class="relative">
-      <button
-        (click)="toggleDropdown()"
-        class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-surface-tertiary transition-colors text-sm">
-        <span class="text-text-secondary">{{ currentWorkspace()?.name || '...' }}</span>
-        @if (isDefaultWorkspace(currentWorkspace())) {
-          <span class="text-xs text-text-tertiary">{{ translationService.translate('workspace.default-suffix') }}</span>
-        }
-        <svg lucideChevronsUpDown class="w-3.5 h-3.5 text-text-tertiary" />
-      </button>
+<div class="relative">
+  <button
+    (click)="toggleDropdown()"
+    class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-surface-tertiary transition-colors text-sm"
+  >
+    <span class="text-text-secondary">{{ currentWorkspace()?.name || '...' }}</span>
+    @if (isDefaultWorkspace(currentWorkspace())) {
+      <span class="text-xs text-text-tertiary">{{
+        translationService.translate('workspace.default-suffix')
+      }}</span>
+    }
+    <svg lucideChevronsUpDown class="w-3.5 h-3.5 text-text-tertiary" />
+  </button>
 
-      @if (isOpen()) {
-        <div class="absolute right-0 top-full mt-1 w-64 bg-surface-primary rounded-xl shadow-xl border border-border-default py-1 z-50">
-          @for (ws of workspaces(); track ws.id) {
-            <button
-              (click)="promptSwitch(ws)"
-              class="w-full flex items-center gap-3 px-3 py-2 hover:bg-surface-secondary transition-colors text-sm text-left">
-              <span class="text-text-secondary w-5 h-5 flex items-center justify-center">
-                <svg lucideBuilding2 class="w-4 h-4" />
-              </span>
-              <span class="flex-1">{{ ws.name }}</span>
-              @if (isDefaultWorkspace(ws)) {
-                <span class="text-xs text-text-tertiary">{{ translationService.translate('workspace.default-suffix') }}</span>
-              }
-              @if (ws.id === currentWorkspace()?.id) {
-                <svg lucideCheck class="w-4 h-4 text-accent-info" />
-              }
-            </button>
+  @if (isOpen()) {
+    <div
+      class="absolute right-0 top-full mt-1 w-64 bg-surface-primary rounded-xl shadow-xl border border-border-default py-1 z-50"
+    >
+      @for (ws of workspaces(); track ws.id) {
+        <button
+          (click)="promptSwitch(ws)"
+          class="w-full flex items-center gap-3 px-3 py-2 hover:bg-surface-secondary transition-colors text-sm text-left"
+        >
+          <span class="text-text-secondary w-5 h-5 flex items-center justify-center">
+            <svg lucideBuilding2 class="w-4 h-4" />
+          </span>
+          <span class="flex-1">{{ ws.name }}</span>
+          @if (isDefaultWorkspace(ws)) {
+            <span class="text-xs text-text-tertiary">{{
+              translationService.translate('workspace.default-suffix')
+            }}</span>
           }
-        </div>
+          @if (ws.id === currentWorkspace()?.id) {
+            <svg lucideCheck class="w-4 h-4 text-accent-info" />
+          }
+        </button>
       }
     </div>
+  }
+</div>
 
-    @if (pendingSwitch(); as target) {
-      <div class="fixed inset-0 z-50 flex items-center justify-center">
-        <button type="button" class="absolute inset-0 bg-black/50 animate-in border-0 cursor-default" (click)="cancelSwitch()" aria-label="Close"></button>
-        <div class="relative bg-surface-primary rounded-xl shadow-xl border border-border-default p-6 w-full max-w-sm mx-4 animate-in slide-in-from-bottom-4">
-          <h3 class="text-lg font-semibold text-text-primary mb-2">{{ translationService.translate('workspace.switch.title') }}</h3>
-          <p class="text-sm text-text-secondary mb-6">
-            {{ translationService.translate('workspace.switch.confirm') }} <span class="font-semibold text-text-primary">{{ target.name }}</span>?
-          </p>
-          <div class="flex items-center justify-end gap-3">
-            <button
-              (click)="cancelSwitch()"
-              class="px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-surface-tertiary transition-colors"
-            >{{ translationService.translate('app.cancel') }}</button>
-            <button
-              (click)="confirmSwitch()"
-              class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-accent-info hover:opacity-90 transition-opacity"
-            >{{ translationService.translate('workspace.switch.confirmButton') }}</button>
-          </div>
-        </div>
+@if (pendingSwitch(); as target) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center">
+    <button
+      type="button"
+      class="absolute inset-0 bg-black/50 animate-in border-0 cursor-default"
+      (click)="cancelSwitch()"
+      aria-label="Close"
+    ></button>
+    <div
+      class="relative bg-surface-primary rounded-xl shadow-xl border border-border-default p-6 w-full max-w-sm mx-4 animate-in slide-in-from-bottom-4"
+    >
+      <h3 class="text-lg font-semibold text-text-primary mb-2">
+        {{ translationService.translate('workspace.switch.title') }}
+      </h3>
+      <p class="text-sm text-text-secondary mb-6">
+        {{ translationService.translate('workspace.switch.confirm') }}
+        <span class="font-semibold text-text-primary">{{ target.name }}</span
+        >?
+      </p>
+      <div class="flex items-center justify-end gap-3">
+        <button
+          (click)="cancelSwitch()"
+          class="px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-surface-tertiary transition-colors"
+        >
+          {{ translationService.translate('app.cancel') }}
+        </button>
+        <button
+          (click)="confirmSwitch()"
+          class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-accent-info hover:opacity-90 transition-opacity"
+        >
+          {{ translationService.translate('workspace.switch.confirmButton') }}
+        </button>
       </div>
-    }
+    </div>
+  </div>
+}

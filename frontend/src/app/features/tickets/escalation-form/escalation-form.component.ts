@@ -31,7 +31,10 @@ export class EscalationFormComponent {
     { value: 'HARDWARE', label: this.translationService.translate('tickets.category.hardware') },
     { value: 'SOFTWARE', label: this.translationService.translate('tickets.category.software') },
     { value: 'ACCESS', label: this.translationService.translate('tickets.category.access') },
-    { value: 'PERIPHERALS', label: this.translationService.translate('tickets.category.peripherals') },
+    {
+      value: 'PERIPHERALS',
+      label: this.translationService.translate('tickets.category.peripherals'),
+    },
   ]);
   urgencies = computed(() => [
     { value: 'LOW', label: this.translationService.translate('agent.urgency.low') },
@@ -46,32 +49,36 @@ export class EscalationFormComponent {
     this.errorMessage.set(null);
 
     const payload = this.escalationPayload();
-    const shiftLeftContext = payload ? JSON.stringify({
-      issue: payload.issue,
-      category: this.category(),
-      urgency: this.urgency(),
-      transcript: payload.transcript,
-      sources: payload.sources,
-      aiSummary: '',
-      confidenceScore: 0,
-    }) : undefined;
+    const shiftLeftContext = payload
+      ? JSON.stringify({
+          issue: payload.issue,
+          category: this.category(),
+          urgency: this.urgency(),
+          transcript: payload.transcript,
+          sources: payload.sources,
+          aiSummary: '',
+          confidenceScore: 0,
+        })
+      : undefined;
 
-    this.ticketService.createTicket({
-      issue: this.issue(),
-      category: this.category(),
-      urgency: this.urgency(),
-      shiftLeftContext,
-    }).subscribe({
-      next: (ticket) => {
-        this.isSubmitting.set(false);
-        this.successTicketNumber.set(ticket.ticketNumber);
-        this.ticketCreated.emit(ticket.ticketNumber);
-      },
-      error: () => {
-        this.isSubmitting.set(false);
-        this.errorMessage.set(this.translationService.translate('escalation.error.create'));
-      },
-    });
+    this.ticketService
+      .createTicket({
+        issue: this.issue(),
+        category: this.category(),
+        urgency: this.urgency(),
+        shiftLeftContext,
+      })
+      .subscribe({
+        next: (ticket) => {
+          this.isSubmitting.set(false);
+          this.successTicketNumber.set(ticket.ticketNumber);
+          this.ticketCreated.emit(ticket.ticketNumber);
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.errorMessage.set(this.translationService.translate('escalation.error.create'));
+        },
+      });
   }
 
   dismiss(): void {
