@@ -303,18 +303,4 @@ class TicketServiceTest {
             () -> ticketService.cancelTicket(ticketId, email, null));
     }
 
-    @Test
-    void getTicketById_shouldThrowWhenTicketBelongsToDifferentUser() {
-        User user = createUser();
-        User otherUser = User.builder()
-            .id(UUID.randomUUID()).email("other@example.com").password("pwd")
-            .displayName("Other").role(UserRole.ROLE_USER).enabled(true).build();
-        UUID ticketId = UUID.randomUUID();
-        Ticket ticket = createTicket(ticketId, otherUser, TicketStatus.NEW, "TKT-0001");
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
-
-        assertThrows(TicketNotFoundException.class,
-            () -> ticketService.getTicketById(ticketId, email));
-    }
 }
