@@ -127,14 +127,15 @@ class HrSeederTest {
         when(tagRepository.findAll()).thenReturn(List.of(tag));
         when(articleRepository.findBySlug(anyString())).thenReturn(Optional.empty());
 
-        // Run twice
+        // First run — should save new tags
         seeder.seed();
-        seeder.seed();
-
-        // Running a second time should not attempt to re-create existing data
         verify(tagRepository, atLeastOnce()).save(any(Tag.class));
-        // Total tags saved = 7 new tags (8 total - 1 existing = 7 new) + 0 from second run
-        // But since findByNameEnIn is used internally, let's just verify it runs without error
-        assertDoesNotThrow(() -> seeder.seed());
+
+        // Reset mock counter
+        clearInvocations(tagRepository);
+
+        // Second run — should NOT save any tags (idempotent)
+        seeder.seed();
+        verify(tagRepository, never()).save(any(Tag.class));
     }
 }
