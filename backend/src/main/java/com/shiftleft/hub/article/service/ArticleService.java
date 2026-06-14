@@ -205,8 +205,9 @@ public class ArticleService {
      */
     @Transactional
     public void deleteArticle(UUID id) {
-        articleRepository.findById(id)
-            .orElseThrow(() -> new ArticleNotFoundException(id));
+        if (!articleRepository.existsById(id)) {
+            throw new ArticleNotFoundException(id);
+        }
         articleRepository.deleteById(id);
     }
 
