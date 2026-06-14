@@ -10,7 +10,7 @@ export class DocumentService {
   uploadFile(file: File, categoryId?: string | null): Observable<DocumentUploadResponse> {
     const formData = new FormData();
     formData.append('file', file);
-    if (categoryId) {
+    if (categoryId != null) {
       formData.append('categoryId', categoryId);
     }
     return this.http.post<DocumentUploadResponse>('/api/admin/documents/upload', formData, {

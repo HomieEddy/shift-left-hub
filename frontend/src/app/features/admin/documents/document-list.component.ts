@@ -175,7 +175,7 @@ export class DocumentListComponent implements OnInit {
     this.documentService.convertToArticle(doc.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.toastService.success(this.translationService.translate('admin.documents.article-created'));
-        this.router.navigate(['/admin/articles', res.articleId, 'edit']);
+        void this.router.navigate(['/admin/articles', res.articleId, 'edit']);
       },
       error: (err: Error) => {
         this.convertedDocIds.update(ids => { ids.delete(doc.id); return ids; });
