@@ -1007,8 +1007,8 @@
         <target>Failed to approve draft.</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.error.load">
-        <source>Failed to load KCS drafts.</source>
-        <target>Failed to load KCS drafts.</target>
+        <source>Failed to load drafts.</source>
+        <target>Failed to load drafts.</target>
       </trans-unit>
       <trans-unit id="kcs.drafts.error.reject">
         <source>Failed to reject draft.</source>
