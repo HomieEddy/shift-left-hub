@@ -1,6 +1,7 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { TranslationService } from '../../core/i18n/translation.service';
 import { WorkspaceService } from '../admin/workspaces/workspace.service';
@@ -53,13 +54,14 @@ export class LandingComponent implements OnInit {
 
   ngOnInit() {
     this.workspaceService.getMyWorkspaces()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: ws => this.workspaces.set(ws),
-        error: () => {
-          console.error('Failed to load workspaces');
-        },
-      });
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.workspaces.set([]);
+          return [];
+        }),
+      )
+      .subscribe(ws => this.workspaces.set(ws));
   }
 
   protected get firstLetter(): string {
