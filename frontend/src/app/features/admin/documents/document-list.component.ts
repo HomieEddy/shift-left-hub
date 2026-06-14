@@ -57,7 +57,7 @@ export class DocumentListComponent implements OnInit {
     this.errorMessage.set('');
     this.documentService.getDocuments().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (docs) => { this.documents.set(docs); this.isLoading.set(false); },
-      error: () => { this.errorMessage.set('Failed to load documents'); this.isLoading.set(false); },
+      error: () => { this.errorMessage.set(this.translationService.translate('admin.documents.error.load')); this.isLoading.set(false); },
     });
   }
 

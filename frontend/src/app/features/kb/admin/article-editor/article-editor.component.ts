@@ -99,7 +99,7 @@ export class ArticleEditorComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load article.');
+        this.errorMessage.set(this.translationService.translate('kb.articles.error.load'));
         this.isLoading.set(false);
       },
     });
@@ -110,7 +110,7 @@ export class ArticleEditorComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (tags) => this.allTags.set(tags),
-      error: () => this.errorMessage.set('Failed to load tags.'),
+      error: () => this.errorMessage.set(this.translationService.translate('kb.tags.error.load')),
     });
   }
 
@@ -155,7 +155,7 @@ export class ArticleEditorComponent implements OnInit {
         void this.router.navigate(['/admin/articles']);
       },
       error: () => {
-        this.errorMessage.set('Failed to save article. Please try again.');
+        this.errorMessage.set(this.translationService.translate('kb.articles.error.save'));
         this.isSaving.set(false);
       },
     });
