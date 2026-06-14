@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   WorkspaceDto, CreateWorkspaceRequest, WorkspaceMemberDto, AssignUserRequest,
   CreateInvitationRequest, InvitationDto, ChangeRoleRequest, UpdateWorkspaceRequest,
   WorkspaceRoleResponse
 } from './workspace.model';
+import { SUPPRESS_ERROR_TOAST } from '../../../core/http/http-context-tokens';
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceService {
@@ -67,7 +68,8 @@ export class WorkspaceService {
   }
 
   getMyWorkspaces(): Observable<WorkspaceDto[]> {
-    return this.http.get<WorkspaceDto[]>(`${this.userApiUrl}/mine`, { withCredentials: true });
+    const context = new HttpContext().set(SUPPRESS_ERROR_TOAST, true);
+    return this.http.get<WorkspaceDto[]>(`${this.userApiUrl}/mine`, { context, withCredentials: true });
   }
 
   getMyRole(): Observable<WorkspaceRoleResponse> {

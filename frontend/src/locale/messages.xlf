@@ -1178,9 +1178,9 @@
         <source>Français</source>
         <target>Français</target>
       </trans-unit>
-<trans-unit id="app.footer">
-        <source>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</source>
-        <target>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</target>
+      <trans-unit id="app.footer">
+        <source>&amp;copy; 2026 Knowledge Hub. All rights reserved.</source>
+        <target>&amp;copy; 2026 Knowledge Hub. All rights reserved.</target>
       </trans-unit>
 <trans-unit id="admin.settings.llm.model-config">
         <source>Model Configuration</source>

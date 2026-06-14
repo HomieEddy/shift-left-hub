@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { ToastService } from '../../shared/ui/toast/toast.service';
 import { TranslationService } from '../i18n/translation.service';
+import { SUPPRESS_ERROR_TOAST } from './http-context-tokens';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
@@ -12,6 +13,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      if (req.context.get(SUPPRESS_ERROR_TOAST)) {
+        return throwError(() => error);
+      }
+
       let message: string | null = null;
 
       if (error.status === 401) {
