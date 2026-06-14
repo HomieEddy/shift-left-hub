@@ -4,6 +4,7 @@
 
 - ✅ **v1.0 Initial MVP** — Phases 1-8 (shipped 2026-06-08)
 - ✅ **v2.0 Workspace Platform** — Phases 9-16 (shipped 2026-06-14)
+- 🚧 **v2.1 Deployment** — Phases 17-21 (in progress)
 
 ## Phases
 
@@ -35,10 +36,85 @@
 
 </details>
 
+### 🚧 v2.1 Deployment (In Progress)
+
+**Milestone Goal:** Harden and deploy the v2.0 Workspace Platform to production through codebase review, test tightening, security audit, and production deployment.
+
+- [x] **Phase 17: Codebase Review** — Full codebase-wide review of frontend, backend, and database
+- [ ] **Phase 18: Unit Test Tightening** — Backend and frontend unit tests expanded with meaningful coverage
+- [ ] **Phase 19: E2E Test Coverage** — 8 Playwright e2e happy-path tests covering all user-facing features
+- [ ] **Phase 20: Security Audit & Hardening** — Full security audit of backend, frontend, and infrastructure
+- [ ] **Phase 21: Production Deployment** — Deploy frontend (Vercel), backend (Railway), and verify live
+
+## Phase Details
+
+### Phase 17: Codebase Review
+**Goal**: Codebase-wide review identifies and resolves quality issues across frontend TypeScript/Angular, backend Java/Spring Boot, and database schema
+**Depends on**: Phase 16
+**Requirements**: REV-01, REV-02, REV-03, REV-04
+**Success Criteria** (what must be TRUE):
+   1. Frontend TypeScript/Angular code has zero lint errors, no type safety issues, no dead code, and no unused imports
+   2. Backend Java/Spring Boot code has zero lint errors, no type safety issues, no dead code, and no unused imports
+   3. Database schema has no missing indexes, no unused migrations, and normalization is correct
+   4. All issues found during review are either fixed or documented as tech debt with acceptance rationale
+**Plans**: 3 plans
+
+Plans:
+- [x] 17-01 — Frontend Codebase Review ✓ `pnpm lint clean, build clean, 127 tests pass`
+- [x] 17-02 — Backend Codebase Review ✓ `Checkstyle 0, SpotBugs 0, 246 tests pass`
+- [x] 17-03 — Database Schema Review ✓ `V8 migration, REV-04 audit complete`
+
+**Completed:** 2026-06-14
+
+### Phase 18: Unit Test Tightening
+**Goal**: Backend and frontend unit tests are tightened with meaningful, business-logic-focused coverage
+**Depends on**: Phase 17
+**Requirements**: TST-06, TST-07
+**Success Criteria** (what must be TRUE):
+  1. Backend service-layer unit tests are expanded beyond 9 with meaningful test cases covering core business logic
+  2. Frontend smart component and service unit tests are expanded with meaningful coverage (not trivial/trivial tests)
+  3. `mvn test` passes — all backend unit + integration tests pass consistently
+  4. `npm run test -- --watch=false` passes — all frontend unit tests pass consistently
+**Plans**: TBD
+
+### Phase 19: E2E Test Coverage
+**Goal**: All 8 user-facing features are covered by Playwright e2e happy-path tests
+**Depends on**: Phase 18
+**Requirements**: TST-08, TST-09, TST-10, TST-11, TST-12, TST-13, TST-14, TST-15, TST-16
+**Success Criteria** (what must be TRUE):
+  1. Playwright e2e covers auth happy path: register, login, logout, protected route redirect
+  2. Playwright e2e covers knowledge base, AI self-service, escalation, agent dashboard, workspace management, admin, and document ingestion happy paths
+  3. All 8 Playwright e2e tests pass consistently across multiple runs
+  4. All three test suites pass consistently: backend (`mvn test`), frontend (`npm run test -- --watch=false`), and e2e (Playwright)
+**Plans**: TBD
+
+### Phase 20: Security Audit & Hardening
+**Goal**: Application is audited for security vulnerabilities across backend, frontend, and infrastructure, with all findings resolved
+**Depends on**: Phase 19
+**Requirements**: SEC-01, SEC-02, SEC-03, SEC-04
+**Success Criteria** (what must be TRUE):
+  1. Backend security audit covers JWT authentication, RBAC authorization, injection vulnerabilities (SQL, NoSQL, command), secrets exposure, and dependency vulnerabilities
+  2. Frontend security audit covers XSS, CSRF, secure cookie handling, and dependency vulnerabilities
+  3. Infrastructure security audit covers CORS headers, CSP headers, HTTPS enforcement, and environment variable management
+  4. All discovered vulnerabilities are fixed or documented with risk acceptance rationale
+**Plans**: TBD
+
+### Phase 21: Production Deployment
+**Goal**: Application is deployed to production on Vercel (frontend) and Railway (backend/database) with correct Docker configuration and passing health checks
+**Depends on**: Phase 20
+**Requirements**: DEP-01, DEP-02, DEP-03, DEP-04, DEP-05
+**Success Criteria** (what must be TRUE):
+  1. Frontend Angular SPA is deployed and accessible on Vercel with custom domain
+  2. Backend Spring Boot API + PostgreSQL database are deployed and accessible on Railway with custom domain
+  3. Production Docker configuration uses multi-stage builds, minimal images, and excludes dev dependencies
+  4. CI/CD pipeline verifies build, test, lint, and security steps before deploying
+  5. Deployed application passes health checks and smoke tests (login → AI query → escalate → ticket)
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
-|-------|-----------|---------------|--------|-----------|
+|-------|-----------|----------------|--------|-----------|
 | 1. Foundation | v1.0 | 4/4 | Complete | 2026-05-31 |
 | 2. Knowledge Base | v1.0 | 4/4 | Complete | 2026-06-01 |
 | 3. AI Self-Service Portal | v1.0 | 4/4 | Complete | 2026-06-02 |
@@ -55,7 +131,12 @@
 | 14. Seeding Revamp | v2.0 | 3/3 | Complete | 2026-06-13 |
 | 15. File Upload Format Support | v2.0 | 2/2 | Complete | 2026-06-13 |
 | 16. UI Neutralization | v2.0 | 4/4 | Complete | 2026-06-14 |
+| 17. Codebase Review | v2.1 | 3/3 | Complete | 2026-06-14 |
+| 18. Unit Test Tightening | v2.1 | 0/0 | Not started | - |
+| 19. E2E Test Coverage | v2.1 | 0/0 | Not started | - |
+| 20. Security Audit & Hardening | v2.1 | 0/0 | Not started | - |
+| 21. Production Deployment | v2.1 | 0/0 | Not started | - |
 
 ---
 
-*Last updated: 2026-06-14 — v2.0 Workspace Platform shipped*
+*Last updated: 2026-06-14 — v2.1 Deployment phases defined*
