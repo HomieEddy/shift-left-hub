@@ -271,6 +271,7 @@ class AgentTicketServiceTest {
         WorkNote note = WorkNote.builder()
             .id(UUID.randomUUID()).author(agent).content("Note content")
             .createdAt(LocalDateTime.now()).build();
+        when(ticketRepository.existsById(ticketId)).thenReturn(true);
         when(workNoteRepository.findByTicketIdOrderByCreatedAtDesc(ticketId))
             .thenReturn(List.of(note));
 
@@ -283,6 +284,7 @@ class AgentTicketServiceTest {
     @Test
     void getWorkNotes_shouldReturnEmptyList() {
         UUID ticketId = UUID.randomUUID();
+        when(ticketRepository.existsById(ticketId)).thenReturn(true);
         when(workNoteRepository.findByTicketIdOrderByCreatedAtDesc(ticketId))
             .thenReturn(List.of());
 
