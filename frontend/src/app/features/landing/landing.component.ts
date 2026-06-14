@@ -6,7 +6,6 @@ import { TranslationService } from '../../core/i18n/translation.service';
 import { WorkspaceService } from '../admin/workspaces/workspace.service';
 import { WorkspaceDto } from '../admin/workspaces/workspace.model';
 import {
-  LucideBuilding2,
   LucideMessageSquare,
   LucideBookOpen,
   LucideTicket,
@@ -14,17 +13,9 @@ import {
   LucideZap,
   LucideFileText,
   LucideSparkles,
-  LucideUsers,
   LucideArrowRight,
   LucideLayoutDashboard,
-  LucideSettings,
-  LucideClipboardList,
-  LucideTag,
-  LucideShield,
-  LucideCheckCircle,
-  LucideHelpCircle,
   LucideInbox,
-  LucideFolderTree,
 } from '@lucide/angular';
 
 @Component({
@@ -32,7 +23,6 @@ import {
   standalone: true,
   imports: [
     RouterLink,
-    LucideBuilding2,
     LucideMessageSquare,
     LucideBookOpen,
     LucideTicket,
@@ -40,17 +30,9 @@ import {
     LucideZap,
     LucideFileText,
     LucideSparkles,
-    LucideUsers,
     LucideArrowRight,
     LucideLayoutDashboard,
-    LucideSettings,
-    LucideClipboardList,
-    LucideTag,
-    LucideShield,
-    LucideCheckCircle,
-    LucideHelpCircle,
     LucideInbox,
-    LucideFolderTree,
   ],
   templateUrl: './landing.component.html',
 })
@@ -74,12 +56,10 @@ export class LandingComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: ws => this.workspaces.set(ws),
-        error: () => this.authService.logout().subscribe(),
+        error: () => {
+          console.error('Failed to load workspaces');
+        },
       });
-  }
-
-  protected get currentYear(): number {
-    return new Date().getFullYear();
   }
 
   protected get firstLetter(): string {

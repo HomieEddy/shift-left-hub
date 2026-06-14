@@ -88,6 +88,8 @@
     --color-primary-500: #64748b;
     --color-primary-600: #475569;
     --color-primary-700: #334155;
+    --color-accent: #d97706;
+    --color-accent-hover: #b45309;
     --color-surface-primary: var(--surface-primary);
     --color-surface-secondary: var(--surface-secondary);
     --color-surface-tertiary: var(--surface-tertiary);

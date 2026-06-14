@@ -2,1561 +2,1529 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="login.title">
+<trans-unit id="login.title">
         <source>Login</source>
         <target>Login</target>
       </trans-unit>
-      <trans-unit id="login.signin">
+<trans-unit id="login.signin">
         <source>Sign In</source>
         <target>Sign In</target>
       </trans-unit>
-      <trans-unit id="login.signing-in">
+<trans-unit id="login.signing-in">
         <source>Signing in...</source>
         <target>Signing in...</target>
       </trans-unit>
-      <trans-unit id="login.no-account">
+<trans-unit id="login.no-account">
         <source>Don't have an account?</source>
         <target>Don't have an account?</target>
       </trans-unit>
-      <trans-unit id="register.title">
+<trans-unit id="register.title">
         <source>Create Account</source>
         <target>Create Account</target>
       </trans-unit>
-      <trans-unit id="register.create">
+<trans-unit id="register.create">
         <source>Create Account</source>
         <target>Create Account</target>
       </trans-unit>
-      <trans-unit id="register.creating">
+<trans-unit id="register.creating">
         <source>Creating account...</source>
         <target>Creating account...</target>
       </trans-unit>
-      <trans-unit id="register.has-account">
+<trans-unit id="register.has-account">
         <source>Already have an account?</source>
         <target>Already have an account?</target>
       </trans-unit>
-      <trans-unit id="admin.users.title">
+<trans-unit id="admin.users.title">
         <source>User Management</source>
         <target>User Management</target>
       </trans-unit>
-      <trans-unit id="admin.users.refresh">
+<trans-unit id="admin.users.refresh">
         <source>Refresh</source>
         <target>Refresh</target>
       </trans-unit>
-      <trans-unit id="admin.users.loading">
+<trans-unit id="admin.users.loading">
         <source>Loading users...</source>
         <target>Loading users...</target>
       </trans-unit>
-      <trans-unit id="admin.users.no-users">
+<trans-unit id="admin.users.no-users">
         <source>No users found.</source>
         <target>No users found.</target>
       </trans-unit>
-      <trans-unit id="admin.users.edit-role">
+<trans-unit id="admin.users.edit-role">
         <source>Edit Role</source>
         <target>Edit Role</target>
       </trans-unit>
-      <trans-unit id="admin.users.disable">
+<trans-unit id="admin.users.disable">
         <source>Disable</source>
         <target>Disable</target>
       </trans-unit>
-      <trans-unit id="admin.users.enable">
+<trans-unit id="admin.users.enable">
         <source>Enable</source>
         <target>Enable</target>
       </trans-unit>
-      <trans-unit id="nav.users">
+<trans-unit id="nav.users">
         <source>Users</source>
         <target>Users</target>
       </trans-unit>
-      <trans-unit id="nav.logout">
+<trans-unit id="nav.logout">
         <source>Logout</source>
         <target>Logout</target>
       </trans-unit>
-      <trans-unit id="app.title">
+<trans-unit id="app.title">
         <source>Knowledge Hub</source>
         <target>Knowledge Hub</target>
       </trans-unit>
-      <trans-unit id="error.invalid-credentials">
+<trans-unit id="error.invalid-credentials">
         <source>Invalid email or password.</source>
         <target>Invalid email or password.</target>
       </trans-unit>
-      <trans-unit id="error.login-failed">
+<trans-unit id="error.login-failed">
         <source>Login failed. Please try again.</source>
         <target>Login failed. Please try again.</target>
       </trans-unit>
-      <trans-unit id="error.email-exists">
+<trans-unit id="error.email-exists">
         <source>An account with this email already exists.</source>
         <target>An account with this email already exists.</target>
       </trans-unit>
-      <trans-unit id="error.registration-failed">
+<trans-unit id="error.registration-failed">
         <source>Registration failed. Please try again.</source>
         <target>Registration failed. Please try again.</target>
       </trans-unit>
-      <trans-unit id="error.password-rules">
+<trans-unit id="error.password-rules">
         <source>Password must be at least 8 characters with 1 uppercase letter and 1 number.</source>
         <target>Password must be at least 8 characters with 1 uppercase letter and 1 number.</target>
       </trans-unit>
-      <trans-unit id="error.load-users">
+<trans-unit id="error.load-users">
         <source>Failed to load users. Make sure you have admin access.</source>
         <target>Failed to load users. Make sure you have admin access.</target>
       </trans-unit>
-      <trans-unit id="error.update-role">
+<trans-unit id="error.update-role">
         <source>Failed to update role. Please try again.</source>
         <target>Failed to update role. Please try again.</target>
       </trans-unit>
-      <trans-unit id="error.toggle-status">
+<trans-unit id="error.toggle-status">
         <source>Failed to toggle user status.</source>
         <target>Failed to toggle user status.</target>
       </trans-unit>
-      <trans-unit id="auth.email.label">
+<trans-unit id="auth.email.label">
         <source>Email</source>
         <target>Email</target>
       </trans-unit>
-      <trans-unit id="auth.password.label">
+<trans-unit id="auth.password.label">
         <source>Password</source>
         <target>Password</target>
       </trans-unit>
-      <trans-unit id="auth.display-name.label">
+<trans-unit id="auth.display-name.label">
         <source>Display Name</source>
         <target>Display Name</target>
       </trans-unit>
-      <trans-unit id="nav.articles">
+<trans-unit id="nav.articles">
         <source>Articles</source>
         <target>Articles</target>
       </trans-unit>
-      <trans-unit id="nav.tags">
+<trans-unit id="nav.tags">
         <source>Tags</source>
         <target>Tags</target>
       </trans-unit>
-      <trans-unit id="nav.documents">
+<trans-unit id="nav.documents">
         <source>Documents</source>
         <target>Documents</target>
       </trans-unit>
-      <trans-unit id="admin.articles.title">
+<trans-unit id="admin.articles.title">
         <source>Articles</source>
         <target>Articles</target>
       </trans-unit>
-      <trans-unit id="admin.articles.new">
+<trans-unit id="admin.articles.new">
         <source>New Article</source>
         <target>New Article</target>
       </trans-unit>
-      <trans-unit id="admin.articles.edit">
+<trans-unit id="admin.articles.edit">
         <source>Edit Article</source>
         <target>Edit Article</target>
       </trans-unit>
-      <trans-unit id="admin.articles.loading">
+<trans-unit id="admin.articles.loading">
         <source>Loading articles...</source>
         <target>Loading articles...</target>
       </trans-unit>
-      <trans-unit id="admin.articles.no-articles">
+<trans-unit id="admin.articles.no-articles">
         <source>No articles found.</source>
         <target>No articles found.</target>
       </trans-unit>
-      <trans-unit id="admin.articles.publish">
+<trans-unit id="admin.articles.publish">
         <source>Publish</source>
         <target>Publish</target>
       </trans-unit>
-      <trans-unit id="admin.articles.archive">
+<trans-unit id="admin.articles.archive">
         <source>Archive</source>
         <target>Archive</target>
       </trans-unit>
-      <trans-unit id="admin.articles.delete">
+<trans-unit id="admin.articles.delete">
         <source>Delete</source>
         <target>Delete</target>
       </trans-unit>
-      <trans-unit id="admin.articles.saving">
+<trans-unit id="admin.articles.saving">
         <source>Saving...</source>
         <target>Saving...</target>
       </trans-unit>
-      <trans-unit id="admin.articles.cancel">
+<trans-unit id="admin.articles.cancel">
         <source>Cancel</source>
         <target>Cancel</target>
       </trans-unit>
-      <trans-unit id="admin.tags.title">
+<trans-unit id="admin.tags.title">
         <source>Tag Management</source>
         <target>Tag Management</target>
       </trans-unit>
-      <trans-unit id="admin.tags.new">
+<trans-unit id="admin.tags.new">
         <source>New Tag</source>
         <target>New Tag</target>
       </trans-unit>
-      <trans-unit id="admin.tags.loading">
+<trans-unit id="admin.tags.loading">
         <source>Loading tags...</source>
         <target>Loading tags...</target>
       </trans-unit>
-      <trans-unit id="admin.tags.no-tags">
+<trans-unit id="admin.tags.no-tags">
         <source>No tags created yet. Click "New Tag" to add one.</source>
         <target>No tags created yet. Click "New Tag" to add one.</target>
       </trans-unit>
-      <trans-unit id="admin.tags.create">
+<trans-unit id="admin.tags.create">
         <source>Create Tag</source>
         <target>Create Tag</target>
       </trans-unit>
-      <trans-unit id="admin.tags.edit">
+<trans-unit id="admin.tags.edit">
         <source>Edit Tag</source>
         <target>Edit Tag</target>
       </trans-unit>
-      <trans-unit id="admin.tags.update">
+<trans-unit id="admin.tags.update">
         <source>Update</source>
         <target>Update</target>
       </trans-unit>
-      <trans-unit id="nav.knowledge-base">
+<trans-unit id="nav.knowledge-base">
         <source>Knowledge Base</source>
         <target>Knowledge Base</target>
       </trans-unit>
-      <trans-unit id="kb.title">
+<trans-unit id="kb.title">
         <source>Knowledge Base</source>
         <target>Knowledge Base</target>
       </trans-unit>
-      <trans-unit id="kb.search.title">
+<trans-unit id="kb.search.title">
         <source>Search Knowledge Base</source>
         <target>Search Knowledge Base</target>
       </trans-unit>
-      <trans-unit id="kb.search.placeholder">
+<trans-unit id="kb.search.placeholder">
         <source>Search articles...</source>
         <target>Search articles...</target>
       </trans-unit>
-      <trans-unit id="kb.search.no-results">
+<trans-unit id="kb.search.no-results">
         <source>No results found</source>
         <target>No results found</target>
       </trans-unit>
-      <trans-unit id="kb.search.hint">
+<trans-unit id="kb.search.hint">
         <source>Type a query above to search the knowledge base</source>
         <target>Type a query above to search the knowledge base</target>
       </trans-unit>
-      <trans-unit id="kb.search.results">
+<trans-unit id="kb.search.results">
         <source>Found {VAR_PLURAL, plural, one {# result} other {# results}} for "{VAR_QUERY}"</source>
         <target>Found {VAR_PLURAL, plural, one {# result} other {# results}} for "{VAR_QUERY}"</target>
       </trans-unit>
-      <trans-unit id="kb.back">
+<trans-unit id="kb.back">
         <source>Back to articles</source>
         <target>Back to articles</target>
       </trans-unit>
-      <trans-unit id="kb.not-found">
+<trans-unit id="kb.not-found">
         <source>Article not found.</source>
         <target>Article not found.</target>
       </trans-unit>
-      <trans-unit id="kb.invalid-id">
+<trans-unit id="kb.invalid-id">
         <source>Invalid article ID.</source>
         <target>Invalid article ID.</target>
       </trans-unit>
-      <trans-unit id="pagination.page-of">
+<trans-unit id="pagination.page-of">
         <source>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</source>
         <target>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</target>
       </trans-unit>
-      <trans-unit id="kb.fallback-notice">
+<trans-unit id="kb.fallback-notice">
         <source>This article is only available in {VAR_LANG}.</source>
         <target>This article is only available in {VAR_LANG}.</target>
       </trans-unit>
-      <trans-unit id="kb.browse-all">
+<trans-unit id="kb.browse-all">
         <source>Browse all articles</source>
         <target>Browse all articles</target>
       </trans-unit>
-      <trans-unit id="kb.search-articles">
+<trans-unit id="kb.search-articles">
         <source>Search Articles</source>
         <target>Search Articles</target>
       </trans-unit>
-      <trans-unit id="kb.no-articles">
+<trans-unit id="kb.no-articles">
         <source>No articles published yet.</source>
         <target>No articles published yet.</target>
       </trans-unit>
-      <trans-unit id="kb.loading">
+<trans-unit id="kb.loading">
         <source>Loading articles...</source>
         <target>Loading articles...</target>
       </trans-unit>
-      <trans-unit id="kb.views">
+<trans-unit id="kb.views">
         <source>{VAR_COUNT, plural, one {# view} other {# views}}</source>
         <target>{VAR_COUNT, plural, one {# view} other {# views}}</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.title">
+<trans-unit id="admin.settings.llm.title">
         <source>LLM Provider Settings</source>
         <target>LLM Provider Settings</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.provider">
+<trans-unit id="admin.settings.llm.provider">
         <source>Provider</source>
         <target>Provider</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.ollama-endpoint">
+<trans-unit id="admin.settings.llm.ollama-endpoint">
         <source>Ollama Endpoint URL</source>
         <target>Ollama Endpoint URL</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.openai-key">
+<trans-unit id="admin.settings.llm.openai-key">
         <source>OpenAI API Key</source>
         <target>OpenAI API Key</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.chat-model">
+<trans-unit id="admin.settings.llm.chat-model">
         <source>Chat Model</source>
         <target>Chat Model</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.embedding-model">
+<trans-unit id="admin.settings.llm.embedding-model">
         <source>Embedding Model</source>
         <target>Embedding Model</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.threshold">
+<trans-unit id="admin.settings.llm.threshold">
         <source>Similarity Threshold</source>
         <target>Similarity Threshold</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.save">
+<trans-unit id="admin.settings.llm.save">
         <source>Save Settings</source>
         <target>Save Settings</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.test">
+<trans-unit id="admin.settings.llm.test">
         <source>Test Connection</source>
         <target>Test Connection</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.reindex">
+<trans-unit id="admin.settings.llm.reindex">
         <source>Re-Embed All Articles</source>
         <target>Re-Embed All Articles</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.reindex-warning">
+<trans-unit id="admin.settings.llm.reindex-warning">
         <source>This may take a while for large knowledge bases</source>
         <target>This may take a while for large knowledge bases</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.test-success">
+<trans-unit id="admin.settings.llm.test-success">
         <source>Connection successful</source>
         <target>Connection successful</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.saved">
+<trans-unit id="admin.settings.llm.saved">
         <source>Settings saved</source>
         <target>Settings saved</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.reindex-started">
+<trans-unit id="admin.settings.llm.reindex-started">
         <source>Re-embedding started</source>
         <target>Re-embedding started</target>
       </trans-unit>
-      <trans-unit id="nav.ai-settings">
+<trans-unit id="nav.ai-settings">
         <source>AI Settings</source>
         <target>AI Settings</target>
       </trans-unit>
-      <trans-unit id="chat.title">
+<trans-unit id="chat.title">
         <source>AI Assistant</source>
         <target>AI Assistant</target>
       </trans-unit>
-      <trans-unit id="chat.subtitle">
+<trans-unit id="chat.subtitle">
         <source>Ask me anything about your workspace</source>
         <target>Ask me anything about your workspace</target>
       </trans-unit>
-      <trans-unit id="chat.input-placeholder">
+<trans-unit id="chat.input-placeholder">
         <source>Ask a question...</source>
         <target>Ask a question...</target>
       </trans-unit>
-      <trans-unit id="chat.send">
+<trans-unit id="chat.send">
         <source>Send</source>
         <target>Send</target>
       </trans-unit>
-      <trans-unit id="chat.did-this-solve">
+<trans-unit id="chat.did-this-solve">
         <source>Did this solve your problem?</source>
         <target>Did this solve your problem?</target>
       </trans-unit>
-      <trans-unit id="chat.yes">
+<trans-unit id="chat.yes">
         <source>Yes</source>
         <target>Yes</target>
       </trans-unit>
-      <trans-unit id="chat.no">
+<trans-unit id="chat.no">
         <source>No</source>
         <target>No</target>
       </trans-unit>
-      <trans-unit id="chat.fallback-message">
+<trans-unit id="chat.fallback-message">
         <source>I couldn't find a resolution in the knowledge base.</source>
         <target>I couldn't find a resolution in the knowledge base.</target>
       </trans-unit>
-      <trans-unit id="chat.escalate">
+<trans-unit id="chat.escalate">
         <source>Escalate to Human Agent</source>
         <target>Escalate to Human Agent</target>
       </trans-unit>
-      <trans-unit id="chat.escalate-coming">
+<trans-unit id="chat.escalate-coming">
         <source>(Ticket creation coming in Phase 4)</source>
         <target>(Ticket creation coming in Phase 4)</target>
       </trans-unit>
-      <trans-unit id="chat.error-message">
+<trans-unit id="chat.error-message">
         <source>Connection error. Please try again.</source>
         <target>Connection error. Please try again.</target>
       </trans-unit>
-      <trans-unit id="chat.retry">
+<trans-unit id="chat.retry">
         <source>Retry</source>
         <target>Retry</target>
       </trans-unit>
-      <trans-unit id="nav.ai-assistant">
+<trans-unit id="nav.ai-assistant">
         <source>AI Assistant</source>
         <target>AI Assistant</target>
       </trans-unit>
-      <trans-unit id="nav.my-tickets">
+<trans-unit id="nav.my-tickets">
         <source>My Requests</source>
         <target>My Requests</target>
       </trans-unit>
-      <trans-unit id="tickets.title">
+<trans-unit id="tickets.title">
         <source>My Requests</source>
         <target>My Requests</target>
       </trans-unit>
-      <trans-unit id="tickets.loading">
+<trans-unit id="tickets.loading">
         <source>Loading tickets...</source>
         <target>Loading tickets...</target>
       </trans-unit>
-      <trans-unit id="tickets.empty">
+<trans-unit id="tickets.empty">
         <source>No tickets found</source>
         <target>No tickets found</target>
       </trans-unit>
-      <trans-unit id="tickets.emptyCTA">
+<trans-unit id="tickets.emptyCTA">
         <source>Ask the AI Assistant</source>
         <target>Ask the AI Assistant</target>
       </trans-unit>
-      <trans-unit id="tickets.back">
+<trans-unit id="tickets.back">
         <source>&amp;larr; Back to Tickets</source>
         <target>&amp;larr; Back to Tickets</target>
       </trans-unit>
-      <trans-unit id="tickets.view.link">
+<trans-unit id="tickets.view.link">
         <source>View Tickets</source>
         <target>View Tickets</target>
       </trans-unit>
-      <trans-unit id="tickets.issue">
+<trans-unit id="tickets.issue">
         <source>Issue Description</source>
         <target>Issue Description</target>
       </trans-unit>
-      <trans-unit id="tickets.transcript">
+<trans-unit id="tickets.transcript">
         <source>AI Chat Transcript</source>
         <target>AI Chat Transcript</target>
       </trans-unit>
-      <trans-unit id="tickets.created">
+<trans-unit id="tickets.created">
         <source>Created</source>
         <target>Created</target>
       </trans-unit>
-      <trans-unit id="tickets.updated">
+<trans-unit id="tickets.updated">
         <source>Updated</source>
         <target>Updated</target>
       </trans-unit>
-      <trans-unit id="tickets.resolved">
+<trans-unit id="tickets.resolved">
         <source>Resolved</source>
         <target>Resolved</target>
       </trans-unit>
-      <trans-unit id="tickets.cancelled">
+<trans-unit id="tickets.cancelled">
         <source>Cancelled</source>
         <target>Cancelled</target>
       </trans-unit>
-      <trans-unit id="tickets.cancelReason">
+<trans-unit id="tickets.cancelReason">
         <source>Reason</source>
         <target>Reason</target>
       </trans-unit>
-      <trans-unit id="tickets.cancel.button">
+<trans-unit id="tickets.cancel.button">
         <source>Cancel Ticket</source>
         <target>Cancel Ticket</target>
       </trans-unit>
-      <trans-unit id="tickets.cancel.confirm">
+<trans-unit id="tickets.cancel.confirm">
         <source>Are you sure?</source>
         <target>Are you sure?</target>
       </trans-unit>
-      <trans-unit id="tickets.cancel.yes">
+<trans-unit id="tickets.cancel.yes">
         <source>Yes</source>
         <target>Yes</target>
       </trans-unit>
-      <trans-unit id="tickets.cancel.no">
+<trans-unit id="tickets.cancel.no">
         <source>No</source>
         <target>No</target>
       </trans-unit>
-      <trans-unit id="tickets.table.ticket">
+<trans-unit id="tickets.table.ticket">
         <source>Ticket</source>
         <target>Ticket</target>
       </trans-unit>
-      <trans-unit id="tickets.table.category">
+<trans-unit id="tickets.table.category">
         <source>Category</source>
         <target>Category</target>
       </trans-unit>
-      <trans-unit id="tickets.table.status">
+<trans-unit id="tickets.table.status">
         <source>Status</source>
         <target>Status</target>
       </trans-unit>
-      <trans-unit id="tickets.table.created">
+<trans-unit id="tickets.table.created">
         <source>Created</source>
         <target>Created</target>
       </trans-unit>
-      <trans-unit id="tickets.status.new">
+<trans-unit id="tickets.status.new">
         <source>New</source>
         <target>New</target>
       </trans-unit>
-      <trans-unit id="tickets.status.in_progress">
+<trans-unit id="tickets.status.in_progress">
         <source>In Progress</source>
         <target>In Progress</target>
       </trans-unit>
-      <trans-unit id="tickets.status.resolved">
+<trans-unit id="tickets.status.resolved">
         <source>Resolved</source>
         <target>Resolved</target>
       </trans-unit>
-      <trans-unit id="tickets.status.cancelled">
+<trans-unit id="tickets.status.cancelled">
         <source>Cancelled</source>
         <target>Cancelled</target>
       </trans-unit>
-      <trans-unit id="tickets.category.network">
+<trans-unit id="tickets.category.network">
         <source>Network</source>
         <target>Network</target>
       </trans-unit>
-      <trans-unit id="tickets.category.hardware">
+<trans-unit id="tickets.category.hardware">
         <source>Hardware</source>
         <target>Hardware</target>
       </trans-unit>
-      <trans-unit id="tickets.category.software">
+<trans-unit id="tickets.category.software">
         <source>Software</source>
         <target>Software</target>
       </trans-unit>
-      <trans-unit id="tickets.category.access">
+<trans-unit id="tickets.category.access">
         <source>Access</source>
         <target>Access</target>
       </trans-unit>
-      <trans-unit id="tickets.category.peripherals">
+<trans-unit id="tickets.category.peripherals">
         <source>Peripherals</source>
         <target>Peripherals</target>
       </trans-unit>
-      <trans-unit id="escalation.title">
+<trans-unit id="escalation.title">
         <source>Escalate to Human Agent</source>
         <target>Escalate to Human Agent</target>
       </trans-unit>
-      <trans-unit id="escalation.issue">
+<trans-unit id="escalation.issue">
         <source>Issue Description</source>
         <target>Issue Description</target>
       </trans-unit>
-      <trans-unit id="escalation.category">
+<trans-unit id="escalation.category">
         <source>Category</source>
         <target>Category</target>
       </trans-unit>
-      <trans-unit id="escalation.urgency">
+<trans-unit id="escalation.urgency">
         <source>Urgency</source>
         <target>Urgency</target>
       </trans-unit>
-      <trans-unit id="escalation.submit">
+<trans-unit id="escalation.submit">
         <source>Submit Ticket</source>
         <target>Submit Ticket</target>
       </trans-unit>
-      <trans-unit id="escalation.submitting">
+<trans-unit id="escalation.submitting">
         <source>Submitting...</source>
         <target>Submitting...</target>
       </trans-unit>
-      <trans-unit id="escalation.cancel">
+<trans-unit id="escalation.cancel">
         <source>Cancel</source>
         <target>Cancel</target>
       </trans-unit>
-      <trans-unit id="escalation.success">
+<trans-unit id="escalation.success">
         <source>Ticket created!</source>
         <target>Ticket created!</target>
       </trans-unit>
-      <trans-unit id="escalation.successMessage">
+<trans-unit id="escalation.successMessage">
         <source>An agent will review your ticket shortly.</source>
         <target>An agent will review your ticket shortly.</target>
       </trans-unit>
-      <trans-unit id="tickets.modal.title">
+<trans-unit id="tickets.modal.title">
         <source>My Requests</source>
         <target>My Requests</target>
       </trans-unit>
-      <trans-unit id="tickets.modal.ticketNumber">
+<trans-unit id="tickets.modal.ticketNumber">
         <source>Ticket Number</source>
         <target>Ticket Number</target>
       </trans-unit>
-      <trans-unit id="tickets.modal.myTickets">
+<trans-unit id="tickets.modal.myTickets">
         <source>My Tickets</source>
         <target>My Tickets</target>
       </trans-unit>
-      <trans-unit id="tickets.modal.newChat">
+<trans-unit id="tickets.modal.newChat">
         <source>Start New Chat</source>
         <target>Start New Chat</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.title" datatype="html">
+<trans-unit id="kcs.drafts.title" datatype="html">
         <source>Drafts</source>
         <target>Drafts</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.description" datatype="html">
+<trans-unit id="kcs.drafts.description" datatype="html">
         <source>Review and manage knowledge base article drafts</source>
         <target>Review and manage knowledge base article drafts</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.loading" datatype="html">
+<trans-unit id="kcs.drafts.loading" datatype="html">
         <source>Loading drafts...</source>
         <target>Loading drafts...</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.empty" datatype="html">
+<trans-unit id="kcs.drafts.empty" datatype="html">
         <source>No drafts pending review</source>
         <target>No drafts pending review</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.col.title" datatype="html">
+<trans-unit id="kcs.drafts.col.title" datatype="html">
         <source>Title</source>
         <target>Title</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.col.ticket" datatype="html">
+<trans-unit id="kcs.drafts.col.ticket" datatype="html">
         <source>Source Ticket</source>
         <target>Source Ticket</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.col.status" datatype="html">
+<trans-unit id="kcs.drafts.col.status" datatype="html">
         <source>Status</source>
         <target>Status</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.col.date" datatype="html">
+<trans-unit id="kcs.drafts.col.date" datatype="html">
         <source>Created</source>
         <target>Created</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.col.actions" datatype="html">
+<trans-unit id="kcs.drafts.col.actions" datatype="html">
         <source>Actions</source>
         <target>Actions</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.edit" datatype="html">
+<trans-unit id="kcs.drafts.edit" datatype="html">
         <source>Edit</source>
         <target>Edit</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.approve" datatype="html">
+<trans-unit id="kcs.drafts.approve" datatype="html">
         <source>Approve</source>
         <target>Approve</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.reject" datatype="html">
+<trans-unit id="kcs.drafts.reject" datatype="html">
         <source>Reject</source>
         <target>Reject</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.similarityWarning" datatype="html">
+<trans-unit id="kcs.drafts.similarityWarning" datatype="html">
         <source>Potential duplicate</source>
         <target>Potential duplicate</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.pageIndicator" datatype="html">
+<trans-unit id="kcs.drafts.pageIndicator" datatype="html">
         <source>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</source>
         <target>Page {VAR_PLURAL} of {VAR_TOTALPAGES}</target>
       </trans-unit>
-      <trans-unit id="pagination.previous" datatype="html">
+<trans-unit id="pagination.previous" datatype="html">
         <source>Previous</source>
         <target>Previous</target>
       </trans-unit>
-      <trans-unit id="pagination.next" datatype="html">
+<trans-unit id="pagination.next" datatype="html">
         <source>Next</source>
         <target>Next</target>
       </trans-unit>
-      <trans-unit id="admin.users.col.actions">
+<trans-unit id="admin.users.col.actions">
         <source>Actions</source>
         <target>Actions</target>
       </trans-unit>
-      <trans-unit id="admin.users.col.created">
+<trans-unit id="admin.users.col.created">
         <source>Created</source>
         <target>Created</target>
       </trans-unit>
-      <trans-unit id="admin.users.col.email">
+<trans-unit id="admin.users.col.email">
         <source>Email</source>
         <target>Email</target>
       </trans-unit>
-      <trans-unit id="admin.users.col.name">
+<trans-unit id="admin.users.col.name">
         <source>Name</source>
         <target>Name</target>
       </trans-unit>
-      <trans-unit id="admin.users.col.role">
+<trans-unit id="admin.users.col.role">
         <source>Role</source>
         <target>Role</target>
       </trans-unit>
-      <trans-unit id="admin.users.col.status">
+<trans-unit id="admin.users.col.status">
         <source>Status</source>
         <target>Status</target>
       </trans-unit>
-      <trans-unit id="admin.users.dialog.cancel">
+<trans-unit id="admin.users.dialog.cancel">
         <source>Cancel</source>
         <target>Cancel</target>
       </trans-unit>
-      <trans-unit id="admin.users.dialog.changeRole">
+<trans-unit id="admin.users.dialog.changeRole">
         <source>Change role for</source>
         <target>Change role for</target>
       </trans-unit>
-      <trans-unit id="admin.users.dialog.title">
+<trans-unit id="admin.users.dialog.title">
         <source>Edit Role</source>
         <target>Edit Role</target>
       </trans-unit>
-      <trans-unit id="admin.users.role.admin">
+<trans-unit id="admin.users.role.admin">
         <source>Admin</source>
         <target>Admin</target>
       </trans-unit>
-      <trans-unit id="admin.users.role.admin.desc">
+<trans-unit id="admin.users.role.admin.desc">
         <source>Full access to all features</source>
         <target>Full access to all features</target>
       </trans-unit>
-      <trans-unit id="admin.users.role.agent">
+<trans-unit id="admin.users.role.agent">
         <source>Agent</source>
         <target>Agent</target>
       </trans-unit>
-      <trans-unit id="admin.users.role.agent.desc">
+<trans-unit id="admin.users.role.agent.desc">
         <source>Ticket queue and resolution access</source>
         <target>Ticket queue and resolution access</target>
       </trans-unit>
-      <trans-unit id="admin.users.role.user">
+<trans-unit id="admin.users.role.user">
         <source>User</source>
         <target>User</target>
       </trans-unit>
-      <trans-unit id="admin.users.role.user.desc">
+<trans-unit id="admin.users.role.user.desc">
         <source>Standard user access</source>
         <target>Standard user access</target>
       </trans-unit>
-      <trans-unit id="admin.users.status.active">
+<trans-unit id="admin.users.status.active">
         <source>Active</source>
         <target>Active</target>
       </trans-unit>
-      <trans-unit id="admin.users.status.disabled">
+<trans-unit id="admin.users.status.disabled">
         <source>Disabled</source>
         <target>Disabled</target>
       </trans-unit>
-      <trans-unit id="agent.cancel">
+<trans-unit id="agent.cancel">
         <source>Cancel</source>
         <target>Cancel</target>
       </trans-unit>
-      <trans-unit id="agent.claim">
+<trans-unit id="agent.claim">
         <source>Claim</source>
         <target>Claim</target>
       </trans-unit>
-      <trans-unit id="agent.claim.confirm">
+<trans-unit id="agent.claim.confirm">
         <source>Claim this ticket?</source>
         <target>Claim this ticket?</target>
       </trans-unit>
-      <trans-unit id="agent.claim.error">
+<trans-unit id="agent.claim.error">
         <source>Failed to claim ticket.</source>
         <target>Failed to claim ticket.</target>
       </trans-unit>
-      <trans-unit id="agent.confirm">
+<trans-unit id="agent.confirm">
         <source>Confirm</source>
         <target>Confirm</target>
       </trans-unit>
-      <trans-unit id="agent.detail.addNote">
+<trans-unit id="agent.detail.addNote">
         <source>Add Note</source>
         <target>Add Note</target>
       </trans-unit>
-      <trans-unit id="agent.detail.addNoteError">
+<trans-unit id="agent.detail.addNoteError">
         <source>Failed to add work note.</source>
         <target>Failed to add work note.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.addNotePlaceholder">
+<trans-unit id="agent.detail.addNotePlaceholder">
         <source>Add a work note...</source>
         <target>Add a work note...</target>
       </trans-unit>
-      <trans-unit id="agent.detail.adding">
+<trans-unit id="agent.detail.adding">
         <source>Adding...</source>
         <target>Adding...</target>
       </trans-unit>
-      <trans-unit id="agent.detail.assignedTo">
+<trans-unit id="agent.detail.assignedTo">
         <source>Assigned to</source>
         <target>Assigned to</target>
       </trans-unit>
-      <trans-unit id="agent.detail.backToQueue">
+<trans-unit id="agent.detail.backToQueue">
         <source>&amp;larr; Back to Queue</source>
         <target>&amp;larr; Back to Queue</target>
       </trans-unit>
-      <trans-unit id="agent.detail.cancel">
+<trans-unit id="agent.detail.cancel">
         <source>Cancel</source>
         <target>Cancel</target>
       </trans-unit>
-      <trans-unit id="agent.detail.cancelledByUser">
+<trans-unit id="agent.detail.cancelledByUser">
         <source>Cancelled by user</source>
         <target>Cancelled by user</target>
       </trans-unit>
-      <trans-unit id="agent.detail.chatTranscript">
+<trans-unit id="agent.detail.chatTranscript">
         <source>Chat Transcript</source>
         <target>Chat Transcript</target>
       </trans-unit>
-      <trans-unit id="agent.detail.claimError">
+<trans-unit id="agent.detail.claimError">
         <source>Failed to claim ticket.</source>
         <target>Failed to claim ticket.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.claimTicket">
+<trans-unit id="agent.detail.claimTicket">
         <source>Claim Ticket</source>
         <target>Claim Ticket</target>
       </trans-unit>
-      <trans-unit id="agent.detail.claiming">
+<trans-unit id="agent.detail.claiming">
         <source>Claiming...</source>
         <target>Claiming...</target>
       </trans-unit>
-      <trans-unit id="agent.detail.confirm">
+<trans-unit id="agent.detail.confirm">
         <source>Confirm</source>
         <target>Confirm</target>
       </trans-unit>
-      <trans-unit id="agent.detail.confirmResolution">
+<trans-unit id="agent.detail.confirmResolution">
         <source>Confirm resolution for</source>
         <target>Confirm resolution for</target>
       </trans-unit>
-      <trans-unit id="agent.detail.error">
+<trans-unit id="agent.detail.error">
         <source>Failed to load ticket details.</source>
         <target>Failed to load ticket details.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.flagKnowledgeGap">
+<trans-unit id="agent.detail.flagKnowledgeGap">
         <source>Flag as Knowledge Gap</source>
         <target>Flag as Knowledge Gap</target>
       </trans-unit>
-      <trans-unit id="agent.detail.flaggedKnowledgeGap">
+<trans-unit id="agent.detail.flaggedKnowledgeGap">
         <source>Flagged as Knowledge Gap</source>
         <target>Flagged as Knowledge Gap</target>
       </trans-unit>
-      <trans-unit id="agent.detail.issue">
+<trans-unit id="agent.detail.issue">
         <source>Issue</source>
         <target>Issue</target>
       </trans-unit>
-      <trans-unit id="agent.detail.loading">
+<trans-unit id="agent.detail.loading">
         <source>Loading ticket details...</source>
         <target>Loading ticket details...</target>
       </trans-unit>
-      <trans-unit id="agent.detail.noWorkNotes">
+<trans-unit id="agent.detail.noWorkNotes">
         <source>No work notes yet.</source>
         <target>No work notes yet.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.openedBy">
+<trans-unit id="agent.detail.openedBy">
         <source>Opened by</source>
         <target>Opened by</target>
       </trans-unit>
-      <trans-unit id="agent.detail.resolution">
+<trans-unit id="agent.detail.resolution">
         <source>Resolution</source>
         <target>Resolution</target>
       </trans-unit>
-      <trans-unit id="agent.detail.resolutionPlaceholder">
+<trans-unit id="agent.detail.resolutionPlaceholder">
         <source>Describe the resolution steps...</source>
         <target>Describe the resolution steps...</target>
       </trans-unit>
-      <trans-unit id="agent.detail.resolvedBy">
+<trans-unit id="agent.detail.resolvedBy">
         <source>Resolved by</source>
         <target>Resolved by</target>
       </trans-unit>
-      <trans-unit id="agent.detail.resolveError">
+<trans-unit id="agent.detail.resolveError">
         <source>Failed to resolve ticket.</source>
         <target>Failed to resolve ticket.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.resolveTicket">
+<trans-unit id="agent.detail.resolveTicket">
         <source>Resolve Ticket</source>
         <target>Resolve Ticket</target>
       </trans-unit>
-      <trans-unit id="agent.detail.resolving">
+<trans-unit id="agent.detail.resolving">
         <source>Resolving...</source>
         <target>Resolving...</target>
       </trans-unit>
-      <trans-unit id="agent.detail.retry">
+<trans-unit id="agent.detail.retry">
         <source>Retry</source>
         <target>Retry</target>
       </trans-unit>
-      <trans-unit id="agent.detail.shiftLeftContext">
+<trans-unit id="agent.detail.shiftLeftContext">
         <source>Shift-Left Context</source>
         <target>Shift-Left Context</target>
       </trans-unit>
-      <trans-unit id="agent.detail.unassigned">
+<trans-unit id="agent.detail.unassigned">
         <source>Unassigned</source>
         <target>Unassigned</target>
       </trans-unit>
-      <trans-unit id="agent.detail.unclaimed">
+<trans-unit id="agent.detail.unclaimed">
         <source>This ticket has not been claimed yet.</source>
         <target>This ticket has not been claimed yet.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.unknown">
+<trans-unit id="agent.detail.unknown">
         <source>Unknown</source>
         <target>Unknown</target>
       </trans-unit>
-      <trans-unit id="agent.detail.workNotes">
+<trans-unit id="agent.detail.workNotes">
         <source>Work Notes</source>
         <target>Work Notes</target>
       </trans-unit>
-      <trans-unit id="agent.empty">
+<trans-unit id="agent.empty">
         <source>No tickets found matching your filters</source>
         <target>No tickets found matching your filters</target>
       </trans-unit>
-      <trans-unit id="agent.error.load">
+<trans-unit id="agent.error.load">
         <source>Failed to load tickets.</source>
         <target>Failed to load tickets.</target>
       </trans-unit>
-      <trans-unit id="agent.filter.all">
+<trans-unit id="agent.filter.all">
         <source>All</source>
         <target>All</target>
       </trans-unit>
-      <trans-unit id="agent.filter.allCategories">
+<trans-unit id="agent.filter.allCategories">
         <source>All Categories</source>
         <target>All Categories</target>
       </trans-unit>
-      <trans-unit id="agent.filter.allUrgencies">
+<trans-unit id="agent.filter.allUrgencies">
         <source>All Urgencies</source>
         <target>All Urgencies</target>
       </trans-unit>
-      <trans-unit id="agent.loading">
+<trans-unit id="agent.loading">
         <source>Loading tickets...</source>
         <target>Loading tickets...</target>
       </trans-unit>
-      <trans-unit id="agent.resolve">
+<trans-unit id="agent.resolve">
         <source>Resolve</source>
         <target>Resolve</target>
       </trans-unit>
-      <trans-unit id="agent.retry">
+<trans-unit id="agent.retry">
         <source>Retry</source>
         <target>Retry</target>
       </trans-unit>
-      <trans-unit id="agent.search.placeholder">
+<trans-unit id="agent.search.placeholder">
         <source>Search by ticket # or user...</source>
         <target>Search by ticket # or user...</target>
       </trans-unit>
-      <trans-unit id="agent.table.actions">
+<trans-unit id="agent.table.actions">
         <source>Actions</source>
         <target>Actions</target>
       </trans-unit>
-      <trans-unit id="agent.table.assigned">
+<trans-unit id="agent.table.assigned">
         <source>Assigned To</source>
         <target>Assigned To</target>
       </trans-unit>
-      <trans-unit id="agent.table.category">
+<trans-unit id="agent.table.category">
         <source>Category</source>
         <target>Category</target>
       </trans-unit>
-      <trans-unit id="agent.table.created">
+<trans-unit id="agent.table.created">
         <source>Created</source>
         <target>Created</target>
       </trans-unit>
-      <trans-unit id="agent.table.status">
+<trans-unit id="agent.table.status">
         <source>Status</source>
         <target>Status</target>
       </trans-unit>
-      <trans-unit id="agent.table.ticket">
+<trans-unit id="agent.table.ticket">
         <source>Ticket #</source>
         <target>Ticket #</target>
       </trans-unit>
-      <trans-unit id="agent.table.urgency">
+<trans-unit id="agent.table.urgency">
         <source>Urgency</source>
         <target>Urgency</target>
       </trans-unit>
-      <trans-unit id="agent.table.user">
+<trans-unit id="agent.table.user">
         <source>User</source>
         <target>User</target>
       </trans-unit>
-      <trans-unit id="agent.ticketQueue">
+<trans-unit id="agent.ticketQueue">
         <source>Ticket Queue</source>
         <target>Ticket Queue</target>
       </trans-unit>
-      <trans-unit id="agent.unassigned">
+<trans-unit id="agent.unassigned">
         <source>Unassigned</source>
         <target>Unassigned</target>
       </trans-unit>
-      <trans-unit id="agent.urgency.high">
+<trans-unit id="agent.urgency.high">
         <source>High</source>
         <target>High</target>
       </trans-unit>
-      <trans-unit id="agent.urgency.low">
+<trans-unit id="agent.urgency.low">
         <source>Low</source>
         <target>Low</target>
       </trans-unit>
-      <trans-unit id="agent.urgency.medium">
+<trans-unit id="agent.urgency.medium">
         <source>Medium</source>
         <target>Medium</target>
       </trans-unit>
-      <trans-unit id="agent.view">
+<trans-unit id="agent.view">
         <source>View</source>
         <target>View</target>
       </trans-unit>
-      <trans-unit id="auth.display-name.placeholder">
+<trans-unit id="auth.display-name.placeholder">
         <source>John Doe</source>
         <target>John Doe</target>
       </trans-unit>
-      <trans-unit id="auth.email.placeholder">
+<trans-unit id="auth.email.placeholder">
         <source>you@example.com</source>
         <target>you@example.com</target>
       </trans-unit>
-      <trans-unit id="auth.password.placeholder">
+<trans-unit id="auth.password.placeholder">
         <source>Enter your password</source>
         <target>Enter your password</target>
       </trans-unit>
-      <trans-unit id="auth.password.placeholder.register">
+<trans-unit id="auth.password.placeholder.register">
         <source>At least 8 characters</source>
         <target>At least 8 characters</target>
       </trans-unit>
-      <trans-unit id="chat.followUp">
+<trans-unit id="chat.followUp">
         <source>Is there anything else I can help you with?</source>
         <target>Is there anything else I can help you with?</target>
       </trans-unit>
-      <trans-unit id="chat.modal.close">
+<trans-unit id="chat.modal.close">
         <source>Close</source>
         <target>Close</target>
       </trans-unit>
-      <trans-unit id="chat.modal.seeYouSoon">
+<trans-unit id="chat.modal.seeYouSoon">
         <source>See you soon!</source>
         <target>See you soon!</target>
       </trans-unit>
-      <trans-unit id="chat.modal.thankYou">
+<trans-unit id="chat.modal.thankYou">
         <source>Thank You</source>
         <target>Thank You</target>
       </trans-unit>
-      <trans-unit id="http.error.forbidden">
+<trans-unit id="http.error.forbidden">
         <source>You do not have permission to perform this action.</source>
         <target>You do not have permission to perform this action.</target>
       </trans-unit>
-      <trans-unit id="http.error.invalidRequest">
+<trans-unit id="http.error.invalidRequest">
         <source>Invalid request</source>
         <target>Invalid request</target>
       </trans-unit>
-      <trans-unit id="http.error.serverError">
+<trans-unit id="http.error.serverError">
         <source>Server error. Please try again later.</source>
         <target>Server error. Please try again later.</target>
       </trans-unit>
-      <trans-unit id="http.error.sessionExpired">
+<trans-unit id="http.error.sessionExpired">
         <source>Your session has expired. Please log in again.</source>
         <target>Your session has expired. Please log in again.</target>
       </trans-unit>
-      <trans-unit id="http.error.unexpected">
+<trans-unit id="http.error.unexpected">
         <source>An unexpected error occurred</source>
         <target>An unexpected error occurred</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.confirm.approve">
+<trans-unit id="kcs.drafts.confirm.approve">
         <source>Approve this draft? It will be published immediately.</source>
         <target>Approve this draft? It will be published immediately.</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.confirm.cancel">
+<trans-unit id="kcs.drafts.confirm.cancel">
         <source>Cancel</source>
         <target>Cancel</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.confirm.confirm">
+<trans-unit id="kcs.drafts.confirm.confirm">
         <source>Confirm</source>
         <target>Confirm</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.confirm.reject">
+<trans-unit id="kcs.drafts.confirm.reject">
         <source>Reject this draft? It will be archived.</source>
         <target>Reject this draft? It will be archived.</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.confirm.title">
+<trans-unit id="kcs.drafts.confirm.title">
         <source>Confirm Action</source>
         <target>Confirm Action</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.error.approve">
+<trans-unit id="kcs.drafts.error.approve">
         <source>Failed to approve draft.</source>
         <target>Failed to approve draft.</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.error.load">
+<trans-unit id="kcs.drafts.error.load">
         <source>Failed to load drafts.</source>
         <target>Failed to load drafts.</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.error.reject">
+<trans-unit id="kcs.drafts.error.reject">
         <source>Failed to reject draft.</source>
         <target>Failed to reject draft.</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.success.approved">
+<trans-unit id="kcs.drafts.success.approved">
         <source>Draft approved and published.</source>
         <target>Draft approved and published.</target>
       </trans-unit>
-      <trans-unit id="kcs.drafts.success.rejected">
+<trans-unit id="kcs.drafts.success.rejected">
         <source>Draft rejected and archived.</source>
         <target>Draft rejected and archived.</target>
       </trans-unit>
-      <trans-unit id="landing.cta.register">
+<trans-unit id="landing.cta.register">
         <source>Create account</source>
         <target>Create account</target>
       </trans-unit>
-      <trans-unit id="landing.cta.signin">
+<trans-unit id="landing.cta.signin">
         <source>Sign in</source>
         <target>Sign in</target>
       </trans-unit>
-      <trans-unit id="landing.feature.aiDesc">
+<trans-unit id="landing.feature.aiDesc">
         <source>Natural language queries with context-aware replies.</source>
         <target>Natural language queries with context-aware replies.</target>
       </trans-unit>
-      <trans-unit id="landing.feature.aiTitle">
+<trans-unit id="landing.feature.aiTitle">
         <source>AI Assistant</source>
         <target>AI Assistant</target>
       </trans-unit>
-      <trans-unit id="landing.feature.docsDesc">
+<trans-unit id="landing.feature.docsDesc">
         <source>Every resolution becomes a knowledge article.</source>
         <target>Every resolution becomes a knowledge article.</target>
       </trans-unit>
-      <trans-unit id="landing.feature.docsTitle">
+<trans-unit id="landing.feature.docsTitle">
         <source>Auto-Docs</source>
         <target>Auto-Docs</target>
       </trans-unit>
-      <trans-unit id="landing.feature.searchDesc">
+<trans-unit id="landing.feature.searchDesc">
         <source>Hybrid FTS + vector search finds answers instantly.</source>
         <target>Hybrid FTS + vector search finds answers instantly.</target>
       </trans-unit>
-      <trans-unit id="landing.feature.searchTitle">
+<trans-unit id="landing.feature.searchTitle">
         <source>Smart Search</source>
         <target>Smart Search</target>
       </trans-unit>
-      <trans-unit id="landing.goToAiAssistant">
+<trans-unit id="landing.goToAiAssistant">
         <source>Go to AI Assistant</source>
         <target>Go to AI Assistant</target>
       </trans-unit>
-      <trans-unit id="landing.hero.description">
-        <source>AI-powered knowledge base that intercepts Level 0/1 tickets and eliminates the documentation burden on IT agents.</source>
-        <target>AI-powered knowledge base that intercepts Level 0/1 tickets and eliminates the documentation burden on IT agents.</target>
-      </trans-unit>
-      <trans-unit id="landing.hero.subtitle">
-        <source>Resolve issues before they reach the queue.</source>
-        <target>Resolve issues before they reach the queue.</target>
-      </trans-unit>
-      <trans-unit id="landing.hero.title">
+<trans-unit id="landing.hero.title">
         <source>Find Answers. Share Knowledge.</source>
         <target>Find Answers. Share Knowledge.</target>
       </trans-unit>
-      <trans-unit id="landing.hero.subtitle">
+<trans-unit id="landing.hero.subtitle">
         <source>Your intelligent knowledge platform for every team</source>
         <target>Your intelligent knowledge platform for every team</target>
       </trans-unit>
-      <trans-unit id="landing.hero.description">
+<trans-unit id="landing.hero.description">
         <source>Empower your teams with an AI-powered knowledge base that captures answers, reduces repeat questions, and makes expertise accessible to everyone.</source>
         <target>Empower your teams with an AI-powered knowledge base that captures answers, reduces repeat questions, and makes expertise accessible to everyone.</target>
       </trans-unit>
-      <trans-unit id="landing.signedInAs">
+<trans-unit id="landing.signedInAs">
         <source>You're signed in as</source>
         <target>You're signed in as</target>
       </trans-unit>
-      <trans-unit id="lang.en">
+<trans-unit id="lang.en">
         <source>EN</source>
         <target>EN</target>
       </trans-unit>
-      <trans-unit id="lang.fr">
+<trans-unit id="lang.fr">
         <source>FR</source>
         <target>FR</target>
       </trans-unit>
-      <trans-unit id="login.backToHome">
+<trans-unit id="login.backToHome">
         <source>&amp;larr; Back to home</source>
         <target>&amp;larr; Back to home</target>
       </trans-unit>
-      <trans-unit id="login.registerLink">
+<trans-unit id="login.registerLink">
         <source>Register</source>
         <target>Register</target>
       </trans-unit>
-      <trans-unit id="nav.kcs-drafts">
+<trans-unit id="nav.kcs-drafts">
         <source>Drafts</source>
         <target>Drafts</target>
       </trans-unit>
-      <trans-unit id="nav.register">
+<trans-unit id="nav.register">
         <source>Register</source>
         <target>Register</target>
       </trans-unit>
-      <trans-unit id="nav.signin">
+<trans-unit id="nav.signin">
         <source>Sign in</source>
         <target>Sign in</target>
       </trans-unit>
-      <trans-unit id="nav.ticket-queue">
+<trans-unit id="nav.ticket-queue">
         <source>Queue</source>
         <target>Queue</target>
       </trans-unit>
-      <trans-unit id="register.backToHome">
+<trans-unit id="register.backToHome">
         <source>&amp;larr; Back to home</source>
         <target>&amp;larr; Back to home</target>
       </trans-unit>
-      <trans-unit id="register.password.rule.length">
+<trans-unit id="register.password.rule.length">
         <source>At least 8 characters</source>
         <target>At least 8 characters</target>
       </trans-unit>
-      <trans-unit id="register.password.rule.number">
+<trans-unit id="register.password.rule.number">
         <source>One number</source>
         <target>One number</target>
       </trans-unit>
-      <trans-unit id="register.password.rule.uppercase">
+<trans-unit id="register.password.rule.uppercase">
         <source>One uppercase letter</source>
         <target>One uppercase letter</target>
       </trans-unit>
-      <trans-unit id="register.signinLink">
+<trans-unit id="register.signinLink">
         <source>Sign in</source>
         <target>Sign in</target>
       </trans-unit>
-      <trans-unit id="shared.search.placeholder">
+<trans-unit id="shared.search.placeholder">
         <source>Search...</source>
         <target>Search...</target>
       </trans-unit>
-      <trans-unit id="tickets.aiSummary">
+<trans-unit id="tickets.aiSummary">
         <source>AI Summary</source>
         <target>AI Summary</target>
       </trans-unit>
-      <trans-unit id="tickets.detail.error.cancel">
+<trans-unit id="tickets.detail.error.cancel">
         <source>Failed to cancel ticket.</source>
         <target>Failed to cancel ticket.</target>
       </trans-unit>
-      <trans-unit id="tickets.detail.error.load">
+<trans-unit id="tickets.detail.error.load">
         <source>Failed to load ticket.</source>
         <target>Failed to load ticket.</target>
       </trans-unit>
-      <trans-unit id="tickets.error.load">
+<trans-unit id="tickets.error.load">
         <source>Failed to load tickets.</source>
         <target>Failed to load tickets.</target>
       </trans-unit>
-      <trans-unit id="tickets.filter.all">
+<trans-unit id="tickets.filter.all">
         <source>All</source>
         <target>All</target>
       </trans-unit>
-      <trans-unit id="tickets.retry">
+<trans-unit id="tickets.retry">
         <source>Retry</source>
         <target>Retry</target>
       </trans-unit>
-      <trans-unit id="tickets.sources">
+<trans-unit id="tickets.sources">
         <source>Knowledge Base Sources ({INTERPOLATION})</source>
         <target state="new">Knowledge Base Sources ({INTERPOLATION})</target>
       </trans-unit>
-      <trans-unit id="nav.mobile.title">
+<trans-unit id="nav.mobile.title">
         <source>Hub</source>
         <target>Hub</target>
       </trans-unit>
-      <trans-unit id="nav.home">
+<trans-unit id="nav.home">
         <source>Home</source>
         <target>Home</target>
       </trans-unit>
-      <trans-unit id="nav.section.guest">
+<trans-unit id="nav.section.guest">
         <source>Getting Started</source>
         <target>Getting Started</target>
       </trans-unit>
-      <trans-unit id="nav.mobile.lang.en">
+<trans-unit id="nav.mobile.lang.en">
         <source>English</source>
         <target>English</target>
       </trans-unit>
-      <trans-unit id="nav.mobile.lang.fr">
+<trans-unit id="nav.mobile.lang.fr">
         <source>Français</source>
         <target>Français</target>
       </trans-unit>
-      <trans-unit id="app.footer">
+<trans-unit id="app.footer">
         <source>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</source>
         <target>&amp;copy; 2026 Shift-Left Knowledge Hub. All rights reserved.</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.model-config">
+<trans-unit id="admin.settings.llm.model-config">
         <source>Model Configuration</source>
         <target>Model Configuration</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.embedding-dimension">
+<trans-unit id="admin.settings.llm.embedding-dimension">
         <source>Embedding Dimension</source>
         <target>Embedding Dimension</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.provider.ollama">
+<trans-unit id="admin.settings.llm.provider.ollama">
         <source>Ollama</source>
         <target>Ollama</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.provider.openai">
+<trans-unit id="admin.settings.llm.provider.openai">
         <source>OpenAI</source>
         <target>OpenAI</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.save-error">
+<trans-unit id="admin.settings.llm.save-error">
         <source>Failed to save settings</source>
         <target>Failed to save settings</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.test-failure">
+<trans-unit id="admin.settings.llm.test-failure">
         <source>Connection test failed</source>
         <target>Connection test failed</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.reindex-error">
+<trans-unit id="admin.settings.llm.reindex-error">
         <source>Failed to start re-embedding</source>
         <target>Failed to start re-embedding</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.saving">
+<trans-unit id="admin.settings.llm.saving">
         <source>Saving...</source>
         <target>Saving...</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.testing">
+<trans-unit id="admin.settings.llm.testing">
         <source>Testing...</source>
         <target>Testing...</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.reindexing">
+<trans-unit id="admin.settings.llm.reindexing">
         <source>Re-Embedding...</source>
         <target>Re-Embedding...</target>
       </trans-unit>
-      <trans-unit id="escalation.error.create">
+<trans-unit id="escalation.error.create">
         <source>Failed to create ticket. Please try again.</source>
         <target>Failed to create ticket. Please try again.</target>
       </trans-unit>
-      <trans-unit id="agent.claim.error.detail">
+<trans-unit id="agent.claim.error.detail">
         <source>Failed to claim ticket. Please try again.</source>
         <target>Failed to claim ticket. Please try again.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.loadNotesError">
+<trans-unit id="agent.detail.loadNotesError">
         <source>Failed to load work notes.</source>
         <target>Failed to load work notes.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.addNoteError.detail">
+<trans-unit id="agent.detail.addNoteError.detail">
         <source>Failed to add work note. Please try again.</source>
         <target>Failed to add work note. Please try again.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.claimError.detail">
+<trans-unit id="agent.detail.claimError.detail">
         <source>Failed to claim ticket. Please try again.</source>
         <target>Failed to claim ticket. Please try again.</target>
       </trans-unit>
-      <trans-unit id="agent.detail.resolveError.detail">
+<trans-unit id="agent.detail.resolveError.detail">
         <source>Failed to resolve ticket. Please try again.</source>
         <target>Failed to resolve ticket. Please try again.</target>
       </trans-unit>
-      <trans-unit id="shared.table.empty">
+<trans-unit id="shared.table.empty">
         <source>No data found.</source>
         <target>No data found.</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.key-stored">
+<trans-unit id="admin.settings.llm.key-stored">
         <source>A key is currently stored. Enter a new key to replace it.</source>
         <target>A key is currently stored. Enter a new key to replace it.</target>
       </trans-unit>
-      <trans-unit id="confirm.error.generic">
+<trans-unit id="confirm.error.generic">
         <source>An unexpected error occurred. Please try again.</source>
         <target>An unexpected error occurred. Please try again.</target>
       </trans-unit>
-      <trans-unit id="landing.hero.badge">
+<trans-unit id="landing.hero.badge">
         <source>Knowledge Platform</source>
         <target>Knowledge Platform</target>
       </trans-unit>
-      <trans-unit id="landing.stats.response">
-        <source>Time Saved</source>
-        <target>Time Saved</target>
-      </trans-unit>
-      <trans-unit id="landing.stats.accuracy">
+<trans-unit id="landing.stats.accuracy">
         <source>Knowledge Coverage</source>
         <target>Knowledge Coverage</target>
       </trans-unit>
-      <trans-unit id="landing.stats.intercepted">
+<trans-unit id="landing.stats.intercepted">
         <source>Answers Found</source>
         <target>Answers Found</target>
       </trans-unit>
-      <trans-unit id="landing.stats.response">
+<trans-unit id="landing.stats.response">
         <source>Average Response Time</source>
         <target>Average Response Time</target>
       </trans-unit>
-      <trans-unit id="landing.how.title">
+<trans-unit id="landing.how.title">
         <source>How It Works</source>
         <target>How It Works</target>
       </trans-unit>
-      <trans-unit id="landing.how.subtitle">
-        <source>From question to knowledge in three simple steps</source>
-        <target>From question to knowledge in three simple steps</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step1.title">
-        <source>User Submits Question</source>
-        <target>User Submits Question</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step1.desc">
-        <source>A team member describes their question through the AI assistant. The system captures context and intent automatically.</source>
-        <target>A team member describes their question through the AI assistant. The system captures context and intent automatically.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step2.title">
-        <source>AI Matches or Routes</source>
-        <target>AI Matches or Routes</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step2.desc">
-        <source>The AI searches the knowledge base for relevant answers. If found, the user gets an instant response. If not, a request is created and routed to the appropriate team member.</source>
-        <target>The AI searches the knowledge base for relevant answers. If found, the user gets an instant response. If not, a request is created and routed to the appropriate team member.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step3.title">
-        <source>Knowledge Grows Automatically</source>
-        <target>Knowledge Grows Automatically</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step3.desc">
-        <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future workload.</source>
-        <target>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future workload.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.subtitle">
+<trans-unit id="landing.how.subtitle">
         <source>From ticket submission to self-service knowledge in three steps</source>
         <target>From ticket submission to self-service knowledge in three steps</target>
       </trans-unit>
-      <trans-unit id="landing.how.step1.title">
-        <source>User Submits Issue</source>
-        <target>User Submits Issue</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step1.desc">
-        <source>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</source>
-        <target>User describes their IT problem through the AI assistant or ticket form. The system captures context, category, and urgency automatically.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step2.title">
-        <source>AI Matches or Escalates</source>
-        <target>AI Matches or Escalates</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step2.desc">
-        <source>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</source>
-        <target>The AI searches the knowledge base for relevant solutions. If found, the user gets an instant answer. If not, a ticket is created and assigned to an agent automatically.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step3.desc">
-        <source>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</source>
-        <target>When an agent resolves a ticket, a knowledge article is drafted automatically via KCS. The knowledge base grows organically, reducing future tickets and agent workload.</target>
-      </trans-unit>
-      <trans-unit id="landing.features.subtitle">
-        <source>Built for teams that value knowledge sharing and collaboration</source>
-        <target>Built for teams that value knowledge sharing and collaboration</target>
-      </trans-unit>
-      <trans-unit id="landing.features.title">
-        <source>Everything You Need</source>
-        <target>Everything You Need</target>
-      </trans-unit>
-      <trans-unit id="landing.features.subtitle">
-        <source>Built for teams that want to work smarter, not harder</source>
-        <target>Built for teams that want to work smarter, not harder</target>
-      </trans-unit>
-      <trans-unit id="landing.cta.title">
-        <source>Start Building Your Knowledge Base</source>
-        <target>Start Building Your Knowledge Base</target>
-      </trans-unit>
-      <trans-unit id="landing.cta.desc">
-        <source>Create a workspace, invite your team, and start capturing knowledge that works for everyone.</source>
-        <target>Create a workspace, invite your team, and start capturing knowledge that works for everyone.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step1.title">
+<trans-unit id="landing.how.step1.title">
         <source>Ask a Question</source>
         <target>Ask a Question</target>
       </trans-unit>
-      <trans-unit id="landing.how.step1.desc">
-        <source>A team member asks a question through the AI assistant or search. The system understands the context and searches all available knowledge.</source>
-        <target>A team member asks a question through the AI assistant or search. The system understands the context and searches all available knowledge.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step2.title">
-        <source>AI Finds or Routes</source>
-        <target>AI Finds or Routes</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step2.desc">
-        <source>The AI searches the knowledge base for relevant answers. If found, the team member gets an instant response. If not, a request is created and assigned to the right person.</source>
-        <target>The AI searches the knowledge base for relevant answers. If found, the team member gets an instant response. If not, a request is created and assigned to the right person.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step3.desc">
-        <source>When a team member resolves a request, a knowledge article is drafted automatically. The knowledge base grows organically, reducing future workload.</source>
-        <target>When a team member resolves a request, a knowledge article is drafted automatically. The knowledge base grows organically, reducing future workload.</target>
-      </trans-unit>
-      <trans-unit id="landing.how.step1.desc">
+<trans-unit id="landing.how.step1.desc">
         <source>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</source>
         <target>User types their IT problem in natural language. Our AI instantly understands the context and searches for relevant solutions.</target>
       </trans-unit>
-      <trans-unit id="landing.how.step2.title">
+<trans-unit id="landing.how.step2.title">
         <source>AI Resolves or Escalates</source>
         <target>AI Resolves or Escalates</target>
       </trans-unit>
-      <trans-unit id="landing.how.step2.desc">
+<trans-unit id="landing.how.step2.desc">
         <source>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</source>
         <target>The AI matches the issue against the knowledge base. If resolved, the user gets an answer instantly. If not, it's escalated to a human agent.</target>
       </trans-unit>
-      <trans-unit id="landing.how.step3.title">
+<trans-unit id="landing.how.step3.title">
         <source>Knowledge Grows Automatically</source>
         <target>Knowledge Grows Automatically</target>
       </trans-unit>
-      <trans-unit id="landing.how.step3.desc">
+<trans-unit id="landing.how.step3.desc">
         <source>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</source>
         <target>Every resolution becomes a knowledge article. The system gets smarter over time, reducing future tickets and agent workload.</target>
       </trans-unit>
-      <trans-unit id="landing.features.title">
+<trans-unit id="landing.features.title">
         <source>Everything You Need</source>
         <target>Everything You Need</target>
       </trans-unit>
-      <trans-unit id="landing.features.subtitle">
+<trans-unit id="landing.features.subtitle">
         <source>Built for IT teams that want to shift left without the documentation burden</source>
         <target>Built for IT teams that want to shift left without the documentation burden</target>
       </trans-unit>
-      <trans-unit id="landing.cta.title">
+<trans-unit id="landing.cta.title">
         <source>Ready to Shift Left?</source>
         <target>Ready to Shift Left?</target>
       </trans-unit>
-      <trans-unit id="landing.cta.desc">
+<trans-unit id="landing.cta.desc">
         <source>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</source>
         <target>Start resolving IT issues before they reach the queue. No documentation overhead. No setup complexity.</target>
       </trans-unit>
-      <trans-unit id="landing.cta.button">
+<trans-unit id="landing.cta.button">
         <source>Get Started Free</source>
         <target>Get Started Free</target>
       </trans-unit>
-      <trans-unit id="admin.documents.title" datatype="html">
+<trans-unit id="admin.documents.title" datatype="html">
         <source>Documents</source>
         <target>Documents</target>
       </trans-unit>
-      <trans-unit id="admin.documents.drop-zone" datatype="html">
+<trans-unit id="admin.documents.drop-zone" datatype="html">
         <source>Drop files here or click to browse</source>
         <target>Drop files here or click to browse</target>
       </trans-unit>
-      <trans-unit id="admin.documents.accepted-types" datatype="html">
+<trans-unit id="admin.documents.accepted-types" datatype="html">
         <source>Accepted: .md, .txt, .pdf, .html, .xml, .docx</source>
         <target>Accepted: .md, .txt, .pdf, .html, .xml, .docx</target>
       </trans-unit>
-      <trans-unit id="admin.documents.list-title" datatype="html">
+<trans-unit id="admin.documents.list-title" datatype="html">
         <source>Uploaded Documents</source>
         <target>Uploaded Documents</target>
       </trans-unit>
-      <trans-unit id="admin.documents.loading" datatype="html">
+<trans-unit id="admin.documents.loading" datatype="html">
         <source>Loading documents...</source>
         <target>Loading documents...</target>
       </trans-unit>
-      <trans-unit id="admin.documents.empty" datatype="html">
+<trans-unit id="admin.documents.empty" datatype="html">
         <source>No documents uploaded yet</source>
         <target>No documents uploaded yet</target>
       </trans-unit>
-      <trans-unit id="admin.documents.filename" datatype="html">
+<trans-unit id="admin.documents.filename" datatype="html">
         <source>Filename</source>
         <target>Filename</target>
       </trans-unit>
-      <trans-unit id="admin.documents.type" datatype="html">
+<trans-unit id="admin.documents.type" datatype="html">
         <source>Type</source>
         <target>Type</target>
       </trans-unit>
-      <trans-unit id="admin.documents.status" datatype="html">
+<trans-unit id="admin.documents.status" datatype="html">
         <source>Status</source>
         <target>Status</target>
       </trans-unit>
-      <trans-unit id="admin.documents.size" datatype="html">
+<trans-unit id="admin.documents.size" datatype="html">
         <source>Size</source>
         <target>Size</target>
       </trans-unit>
-      <trans-unit id="admin.documents.date" datatype="html">
+<trans-unit id="admin.documents.date" datatype="html">
         <source>Uploaded</source>
         <target>Uploaded</target>
       </trans-unit>
-      <trans-unit id="admin.documents.actions" datatype="html">
+<trans-unit id="admin.documents.actions" datatype="html">
         <source>Actions</source>
         <target>Actions</target>
       </trans-unit>
-      <trans-unit id="admin.documents.reprocess" datatype="html">
+<trans-unit id="admin.documents.reprocess" datatype="html">
         <source>Reprocess</source>
         <target>Reprocess</target>
       </trans-unit>
-      <trans-unit id="admin.documents.delete" datatype="html">
+<trans-unit id="admin.documents.delete" datatype="html">
         <source>Delete</source>
         <target>Delete</target>
       </trans-unit>
-      <trans-unit id="admin.documents.confirm-delete" datatype="html">
+<trans-unit id="admin.documents.confirm-delete" datatype="html">
         <source>Delete this document?</source>
         <target>Delete this document?</target>
       </trans-unit>
-      <trans-unit id="admin.documents.uploading" datatype="html">
+<trans-unit id="admin.documents.uploading" datatype="html">
         <source>Uploading...</source>
         <target>Uploading...</target>
       </trans-unit>
-      <trans-unit id="admin.documents.uploaded" datatype="html">
+<trans-unit id="admin.documents.uploaded" datatype="html">
         <source>Uploaded: </source>
         <target>Uploaded: </target>
       </trans-unit>
-      <trans-unit id="admin.documents.unsupported" datatype="html">
+<trans-unit id="admin.documents.unsupported" datatype="html">
         <source>Unsupported type. Supported: .md, .txt, .pdf, .html, .xml, .docx</source>
         <target>Unsupported type. Supported: .md, .txt, .pdf, .html, .xml, .docx</target>
       </trans-unit>
-      <trans-unit id="admin.documents.upload-failed" datatype="html">
+<trans-unit id="admin.documents.upload-failed" datatype="html">
         <source>Upload failed: </source>
         <target>Upload failed: </target>
       </trans-unit>
-      <trans-unit id="admin.documents.status.uploaded" datatype="html">
+<trans-unit id="admin.documents.status.uploaded" datatype="html">
         <source>Uploaded</source>
         <target>Uploaded</target>
       </trans-unit>
-      <trans-unit id="admin.documents.status.parsing" datatype="html">
+<trans-unit id="admin.documents.status.parsing" datatype="html">
         <source>Parsing</source>
         <target>Parsing</target>
       </trans-unit>
-      <trans-unit id="admin.documents.status.chunking" datatype="html">
+<trans-unit id="admin.documents.status.chunking" datatype="html">
         <source>Chunking</source>
         <target>Chunking</target>
       </trans-unit>
-      <trans-unit id="admin.documents.status.embedding" datatype="html">
+<trans-unit id="admin.documents.status.embedding" datatype="html">
         <source>Embedding</source>
         <target>Embedding</target>
       </trans-unit>
-      <trans-unit id="admin.documents.status.ready" datatype="html">
+<trans-unit id="admin.documents.status.ready" datatype="html">
         <source>Ready</source>
         <target>Ready</target>
       </trans-unit>
-      <trans-unit id="admin.documents.status.failed" datatype="html">
+<trans-unit id="admin.documents.status.failed" datatype="html">
         <source>Failed</source>
         <target>Failed</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.workspace" datatype="html">
+<trans-unit id="admin.settings.llm.workspace" datatype="html">
         <source>Workspace</source>
         <target>Workspace</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.global-config" datatype="html">
+<trans-unit id="admin.settings.llm.global-config" datatype="html">
         <source>Global Configuration</source>
         <target>Global Configuration</target>
       </trans-unit>
-      <trans-unit id="admin.settings.llm.workspace-hint" datatype="html">
+<trans-unit id="admin.settings.llm.workspace-hint" datatype="html">
         <source>Configuring LLM for this workspace only</source>
         <target>Configuring LLM for this workspace only</target>
       </trans-unit>
-      <trans-unit id="dashboard.quick-actions">
+<trans-unit id="dashboard.quick-actions">
         <source>Quick Actions</source>
         <target>Quick Actions</target>
       </trans-unit>
-      <trans-unit id="dashboard.recent-activity">
+<trans-unit id="dashboard.recent-activity">
         <source>Recent Activity</source>
         <target>Recent Activity</target>
       </trans-unit>
-      <trans-unit id="dashboard.recent-empty">
+<trans-unit id="dashboard.recent-empty">
         <source>No recent activity</source>
         <target>No recent activity</target>
       </trans-unit>
-      <trans-unit id="nav.workspace-settings">
+<trans-unit id="nav.workspace-settings">
         <source>Workspace Settings</source>
         <target>Workspace Settings</target>
       </trans-unit>
-      <trans-unit id="dashboard.guest.title">
+<trans-unit id="dashboard.guest.title">
         <source>Welcome to Knowledge Hub</source>
         <target>Welcome to Knowledge Hub</target>
       </trans-unit>
-      <trans-unit id="dashboard.guest.desc">
+<trans-unit id="dashboard.guest.desc">
         <source>Your intelligent knowledge platform for every team.</source>
         <target>Your intelligent knowledge platform for every team.</target>
+      </trans-unit>
+        <trans-unit id="landing.dashboard.admin.usersDesc">
+        <source>Manage workspace users, roles, and permissions</source>
+        <target>Manage workspace users, roles, and permissions</target>
+      </trans-unit>
+      <trans-unit id="landing.dashboard.agent.ticketQueueDesc">
+        <source>View and manage the request queue</source>
+        <target>View and manage the request queue</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.escalateTitle">
+        <source>Smart Routing</source>
+        <target>Smart Routing</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.escalateDesc">
+        <source>Requests are automatically routed to the right person.</source>
+        <target>Requests are automatically routed to the right person.</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.rolesTitle">
+        <source>Role-Based Access</source>
+        <target>Role-Based Access</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.rolesDesc">
+        <source>Granular permissions for admins, resolvers, and members.</source>
+        <target>Granular permissions for admins, resolvers, and members.</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.bilingualTitle">
+        <source>Bilingual by Default</source>
+        <target>Bilingual by Default</target>
+      </trans-unit>
+      <trans-unit id="landing.feature.bilingualDesc">
+        <source>Full English and French support out of the box.</source>
+        <target>Full English and French support out of the box.</target>
+      </trans-unit>
+      <trans-unit id="nav.section.user">
+        <source>General</source>
+        <target>General</target>
+      </trans-unit>
+      <trans-unit id="nav.workspaces">
+        <source>Workspaces</source>
+        <target>Workspaces</target>
+      </trans-unit>
+      <trans-unit id="app.version">
+        <source>v2.0</source>
+        <target>v2.0</target>
+      </trans-unit>
+      <trans-unit id="app.open-menu">
+        <source>Open menu</source>
+        <target>Open menu</target>
+      </trans-unit>
+      <trans-unit id="app.close-menu">
+        <source>Close menu</source>
+        <target>Close menu</target>
+      </trans-unit>
+      <trans-unit id="app.menu">
+        <source>Menu</source>
+        <target>Menu</target>
+      </trans-unit>
+      <trans-unit id="auth.logout.confirm">
+        <source>Are you sure you want to log out?</source>
+        <target>Are you sure you want to log out?</target>
+      </trans-unit>
+      <trans-unit id="app.cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
       </trans-unit>
     </body>
   </file>
