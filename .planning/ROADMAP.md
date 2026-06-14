@@ -103,6 +103,14 @@ Plans:
 
 **UI hint**: yes
 
+**Plans**: 4 plans in 3 waves
+
+Plans:
+- [x] 16-01-PLAN.md — Brand Foundation (favicon, palette, translation keys)
+- [x] 16-02-PLAN.md — Landing Hero + Navigation + Sidebar Branding
+- [x] 16-03-PLAN.md — Unified Dashboard (signed-in landing restructure)
+- [x] 16-04-PLAN.md — Empty States, Error Pages & Onboarding
+
 ### Phase 9: Workspace Foundation
 **Goal**: Multi-tenant workspace isolation is established — users can create workspaces, all domain data is scoped by workspace_id, and existing v1.0 data is migrated to a default workspace
 **Depends on**: Nothing (v1.0 shipped)
@@ -199,7 +207,7 @@ Plans:
 | 13. Frontend Cleanup | v2.0 | 4/4 | Complete | 2026-06-12 |
 | 14. Seeding Revamp | v2.0 | 3/3 | Complete | 2026-06-13 |
 | 15. File Upload Format Support | v2.0 | 0/2 | Planned | — |
-| 16. UI Neutralization | v2.0 | 0/0 | Not started | — |
+| 16. UI Neutralization | v2.0 | 4/4 | Complete | 2026-06-13 |
 
 ---
 

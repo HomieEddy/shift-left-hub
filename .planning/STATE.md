@@ -3,21 +3,21 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Workspace Platform
 status: extended
-last_updated: "2026-06-13T18:00:00.000Z"
+last_updated: "2026-06-13T23:00:00.000Z"
 progress:
   total_phases: 8
-  completed_phases: 6
-  total_plans: 35
-  completed_plans: 35
-  current_phase: 15
-  current_focus: "Phase 15 (File Upload Format Support) planned — 2 plans in 1 wave. Ready to execute."
+  completed_phases: 7
+  total_plans: 39
+  completed_plans: 39
+  current_phase: 16
+  current_focus: "Phase 16 (UI Neutralization) complete — 4/4 plans, 3 waves. All tests pass. Code review completed."
 ---
 
 # Project State
 
 **Project:** Shift-Left Knowledge Hub
 **Initialized:** 2026-05-31
-**Status:** 🔄 v2.0 Extended — Phases 15-16 added (File Upload Format Support + UI Neutralization)
+**Status:** 🔄 v2.0 Extended — Phase 16 Complete (UI Neutralization)
 
 ## Project Reference
 
@@ -25,7 +25,7 @@ See: `.planning/PROJECT.md`
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents.
 
-**Current focus:** v2.0 Extended — Phases 15-16 added. Phase 15 (File Upload Format Support) pending planning.
+**Current focus:** v2.0 Extended — Phase 15 (File Upload Format Support) pending execution. Phase 16 (UI Neutralization) complete.
 
 ## Milestone Recap
 
@@ -58,6 +58,9 @@ See: `.planning/PROJECT.md`
 | **Phase 14: Master + per-workspace seeders** | One master (users/workspaces/roles) + four per-workspace seeders (tags/articles) |
 | **Phase 14: Public workspace is default** | New users' `default_workspace_id` points to Public workspace |
 | **Phase 14: 7 seed users with workspace-scoped roles** | Admin has ADMIN on all 4 workspaces; dept users have MEMBER on dept + Public |
+| **Phase 16: Warm slate/charcoal palette** | Moved from indigo/blue tech-primary to warm neutral with amber accent |
+| **Phase 16: SVG favicon** | Book icon in warm slate, replaces old favicon.ico |
+| **Phase 16: Unified dashboard** | Single workspace home replacing role-branched sections |
 
 ## Accumulated Context
 
@@ -65,21 +68,16 @@ See: `.planning/PROJECT.md`
 - **Codebase:** ~8,700 frontend LOC + ~5,500 backend main LOC + ~2,200 test LOC
 - **Coverage:** 112 backend integration tests + 9 backend unit tests (seeders) + 127 frontend tests + Playwright E2E
 - **Current stack:** Angular 21.2, Spring Boot 3.5, PostgreSQL 16 + pgvector, Spring AI
-- **v2.0 Extended:** 8 phases (9-16), 35 plans executed, 2 phases pending
-
-### Roadmap Evolution
-
-- Phase 15 added: File Upload Format Support (HTML + XML)
-- Phase 16 added: UI Neutralization (IT → domain-agnostic)
+- **v2.0 Extended:** 8 phases (9-16), 39 plans executed, 1 phase pending (Phase 15)
 
 ## Next Steps
 
 1. ✅ v2.0 shipped — Phases 9-14 complete
 2. ✅ Phase 15 added: File Upload Format Support
 3. ✅ Phase 16 added: UI Neutralization
-4. ✅ **Phase 15 planned** — 2 plans in 1 wave
+4. ✅ Phase 15 planned — 2 plans in 1 wave
 5. 🔲 Execute Phase 15
-6. 🔲 Plan + execute Phase 16
+6. ✅ Phase 16 executed — 4 plans in 3 waves
 
 ---
 

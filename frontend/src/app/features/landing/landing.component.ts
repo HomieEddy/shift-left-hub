@@ -1,12 +1,12 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { TranslationService } from '../../core/i18n/translation.service';
 import { WorkspaceService } from '../admin/workspaces/workspace.service';
 import { WorkspaceDto } from '../admin/workspaces/workspace.model';
 import {
-  LucideBuilding2,
   LucideMessageSquare,
   LucideBookOpen,
   LucideTicket,
@@ -14,17 +14,9 @@ import {
   LucideZap,
   LucideFileText,
   LucideSparkles,
-  LucideUsers,
   LucideArrowRight,
   LucideLayoutDashboard,
-  LucideSettings,
-  LucideClipboardList,
-  LucideTag,
-  LucideShield,
-  LucideCheckCircle,
-  LucideHelpCircle,
   LucideInbox,
-  LucideFolderTree,
 } from '@lucide/angular';
 
 @Component({
@@ -32,7 +24,6 @@ import {
   standalone: true,
   imports: [
     RouterLink,
-    LucideBuilding2,
     LucideMessageSquare,
     LucideBookOpen,
     LucideTicket,
@@ -40,17 +31,9 @@ import {
     LucideZap,
     LucideFileText,
     LucideSparkles,
-    LucideUsers,
     LucideArrowRight,
     LucideLayoutDashboard,
-    LucideSettings,
-    LucideClipboardList,
-    LucideTag,
-    LucideShield,
-    LucideCheckCircle,
-    LucideHelpCircle,
     LucideInbox,
-    LucideFolderTree,
   ],
   templateUrl: './landing.component.html',
 })
@@ -71,15 +54,14 @@ export class LandingComponent implements OnInit {
 
   ngOnInit() {
     this.workspaceService.getMyWorkspaces()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: ws => this.workspaces.set(ws),
-        error: () => this.authService.logout().subscribe(),
-      });
-  }
-
-  protected get currentYear(): number {
-    return new Date().getFullYear();
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.workspaces.set([]);
+          return [];
+        }),
+      )
+      .subscribe(ws => this.workspaces.set(ws));
   }
 
   protected get firstLetter(): string {
