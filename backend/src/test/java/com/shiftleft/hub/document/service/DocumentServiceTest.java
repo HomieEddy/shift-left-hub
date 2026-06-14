@@ -92,7 +92,7 @@ class DocumentServiceTest {
         when(file.getContentType()).thenReturn("application/octet-stream");
 
         assertThrows(DocumentProcessingException.class, () ->
-            documentService.uploadDocument(file));
+            documentService.uploadDocument(file, null));
     }
 
     @Test
@@ -102,7 +102,7 @@ class DocumentServiceTest {
         when(file.getSize()).thenReturn(100L * 1024 * 1024); // 100MB > 50MB limit
 
         assertThrows(DocumentProcessingException.class, () ->
-            documentService.uploadDocument(file));
+            documentService.uploadDocument(file, null));
     }
 
     @Test
@@ -116,7 +116,7 @@ class DocumentServiceTest {
             .thenReturn(Optional.of(createDocument(DocumentStatus.READY)));
 
         assertThrows(DuplicateDocumentException.class, () ->
-            documentService.uploadDocument(file));
+            documentService.uploadDocument(file, null));
     }
 
     @Test
@@ -268,7 +268,7 @@ class DocumentServiceTest {
                 .thenThrow(new java.io.IOException("Permission denied"));
 
             assertThrows(DocumentProcessingException.class, () ->
-                documentService.uploadDocument(file));
+                documentService.uploadDocument(file, null));
         }
 
         verify(eventPublisher, never()).publishEvent(any(DocumentUploadedEvent.class));

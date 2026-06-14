@@ -179,7 +179,7 @@ class KbSearchIntegrationTest extends AbstractIntegrationTest {
     }
 
     private UUID createArticle(String titleEn, String contentEn) {
-        var request = new CreateArticleRequest(titleEn, contentEn, null, null, null, null, null);
+        var request = new CreateArticleRequest(titleEn, contentEn, null, null, null, null, null, null);
         ArticleResponse response = client().post().uri("/api/admin/articles")
                 .cookie("access_token", adminAccessToken)
                 .bodyValue(request)

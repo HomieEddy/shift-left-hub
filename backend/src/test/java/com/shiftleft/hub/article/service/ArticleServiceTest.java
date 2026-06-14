@@ -135,7 +135,7 @@ class ArticleServiceTest {
         User author = createAuthor();
         CreateArticleRequest request = new CreateArticleRequest(
             "Test Article", "Content", "Article de test", "Contenu",
-            "Excerpt", null, Set.of());
+            "Excerpt", null, null, Set.of());
         when(articleRepository.findBySlug("test-article")).thenReturn(Optional.empty());
         when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> {
             Article a = invocation.getArgument(0);
@@ -161,7 +161,7 @@ class ArticleServiceTest {
         User author = createAuthor();
         CreateArticleRequest request = new CreateArticleRequest(
             "Test Article", "Content", "Article de test", "Contenu",
-            null, null, Set.of());
+            null, null, null, Set.of());
         when(articleRepository.findBySlug("test-article"))
             .thenReturn(Optional.of(createArticle(ArticleStatus.PUBLISHED)));
         when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> {
@@ -182,7 +182,7 @@ class ArticleServiceTest {
         UUID missingTagId = UUID.randomUUID();
         CreateArticleRequest request = new CreateArticleRequest(
             "Test Article", "Content", null, null,
-            null, null, Set.of(missingTagId));
+            null, null, null, Set.of(missingTagId));
         // resolveTags is called before slug — findByslug isn't reached
         // tagRepository.findAllById returns empty by default — TagNotFoundException thrown
 
@@ -198,7 +198,7 @@ class ArticleServiceTest {
         Article article = createArticle(ArticleStatus.DRAFT);
         UpdateArticleRequest request = new UpdateArticleRequest(
             "Updated Title", "Updated Content", null, null,
-            "Updated excerpt", null, Set.of());
+            "Updated excerpt", null, null, Set.of());
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
         when(articleRepository.findBySlug("updated-title")).thenReturn(Optional.empty());
         when(articleRepository.save(any(Article.class))).thenReturn(article);
@@ -217,7 +217,7 @@ class ArticleServiceTest {
         conflictingArticle.setId(UUID.randomUUID());
         UpdateArticleRequest request = new UpdateArticleRequest(
             "Updated Title", "Updated Content", null, null,
-            null, null, Set.of());
+            null, null, null, Set.of());
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
         when(articleRepository.findBySlug("updated-title"))
             .thenReturn(Optional.of(conflictingArticle));
@@ -237,7 +237,7 @@ class ArticleServiceTest {
     void updateArticle_shouldThrowWhenNotFound() {
         User editor = createAuthor();
         UpdateArticleRequest request = new UpdateArticleRequest(
-            "Title", "Content", null, null, null, null, Set.of());
+            "Title", "Content", null, null, null, null, null, Set.of());
         when(articleRepository.findById(articleId)).thenReturn(Optional.empty());
 
         assertThrows(ArticleNotFoundException.class,
