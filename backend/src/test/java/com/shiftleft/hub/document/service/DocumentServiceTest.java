@@ -236,7 +236,7 @@ class DocumentServiceTest {
 
         mockDocumentSaveWithId();
 
-        Document result = documentService.uploadDocument(file);
+        Document result = documentService.uploadDocument(file, null);
 
         assertNotNull(result);
         assertEquals("test-doc.md", result.getFilename());
@@ -291,7 +291,7 @@ class DocumentServiceTest {
 
         mockDocumentSaveWithId();
 
-        Document result = documentService.uploadDocument(file);
+        Document result = documentService.uploadDocument(file, null);
 
         // With null filename, the document ID should be used as the safe filename
         assertNotNull(result);
@@ -316,7 +316,7 @@ class DocumentServiceTest {
         mockDocumentSaveWithId();
 
         // Should not throw despite empty filename
-        Document result = documentService.uploadDocument(file);
+        Document result = documentService.uploadDocument(file, null);
         assertNotNull(result);
         assertNotNull(result.getFilePath());
         verify(eventPublisher).publishEvent(any(DocumentUploadedEvent.class));
