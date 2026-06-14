@@ -1,5 +1,11 @@
 package com.shiftleft.hub.document.service;
 
+import com.shiftleft.hub.article.domain.Article;
+import com.shiftleft.hub.article.domain.ArticleRepository;
+import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.category.domain.Category;
+import com.shiftleft.hub.category.domain.CategoryRepository;
+import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.document.domain.*;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +25,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,6 +37,9 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final DocumentChunkRepository documentChunkRepository;
+    private final CategoryRepository categoryRepository;
+    private final ArticleRepository articleRepository;
+    private final DocumentParserService documentParserService;
     private final ApplicationEventPublisher eventPublisher;
 
     private static final List<String> ALLOWED_MIME_TYPES = List.of(
@@ -43,6 +53,17 @@ public class DocumentService {
     );
     private static final long MAX_FILE_SIZE = 50L * 1024 * 1024; // 50MB
 
+    private static final Map<String, String> EXTENSION_TO_MIME = Map.ofEntries(
+        Map.entry(".md", "text/markdown"),
+        Map.entry(".txt", "text/plain"),
+        Map.entry(".pdf", "application/pdf"),
+        Map.entry(".html", "text/html"),
+        Map.entry(".htm", "text/html"),
+        Map.entry(".xhtml", "application/xhtml+xml"),
+        Map.entry(".xml", "text/xml"),
+        Map.entry(".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    );
+
     @Value("${app.document.upload.dir:./uploads}")
     private String uploadDir;
 
@@ -51,9 +72,10 @@ public class DocumentService {
      * and publishes an event to start the async processing pipeline.
      *
      * @param file the uploaded multipart file
+     * @param categoryId optional category to assign to this document
      * @return the saved document entity
      */
-    public Document uploadDocument(MultipartFile file) {
+    public Document uploadDocument(MultipartFile file, UUID categoryId) {
         String mimeType = file.getContentType();
 
         // Validate MIME type with extension fallback
@@ -62,6 +84,14 @@ public class DocumentService {
             if (extension.isEmpty() || !ALLOWED_EXTENSIONS.contains(extension)) {
                 throw new DocumentProcessingException(
                     "Unsupported file type. Supported: .md, .txt, .pdf, .html, .htm, .xhtml, .xml, .docx");
+            }
+        }
+
+        // Resolve generic/unknown MIME types to specific type from extension
+        if ((mimeType == null || "application/octet-stream".equals(mimeType)) && !extension.isEmpty()) {
+            String resolved = EXTENSION_TO_MIME.get(extension);
+            if (resolved != null) {
+                mimeType = resolved;
             }
         }
 
@@ -97,6 +127,11 @@ public class DocumentService {
             .fileSize(file.getSize())
             .build();
         document.setWorkspaceId(workspaceId);
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new DocumentProcessingException("Category not found: " + categoryId));
+            document.setCategory(category);
+        }
         try {
             document = documentRepository.save(document);
         } catch (DataIntegrityViolationException e) {
@@ -106,7 +141,9 @@ public class DocumentService {
 
         // Store file on local filesystem
         try {
-            Path uploadPath = Paths.get(uploadDir, workspaceId.toString(), document.getId().toString());
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize()
+                .resolve(workspaceId.toString())
+                .resolve(document.getId().toString());
             Files.createDirectories(uploadPath);
             // Sanitize filename to prevent path traversal
             String safeFilename = file.getOriginalFilename();
@@ -165,6 +202,60 @@ public class DocumentService {
         eventPublisher.publishEvent(new DocumentUploadedEvent(documentId, workspaceId));
         log.info("Document reprocess initiated: {} (id: {})", document.getFilename(), documentId);
         return document;
+    }
+
+    /**
+     * Converts a READY document into a knowledge base article.
+     * Reads the file content, creates a draft article, and returns its ID.
+     *
+     * @param documentId the document UUID to convert
+     * @param author     the user creating the article
+     * @return the created article UUID
+     */
+    @Transactional
+    public UUID convertToArticle(UUID documentId, User author) {
+        Document document = documentRepository.findById(documentId)
+            .orElseThrow(() -> new DocumentNotFoundException(documentId));
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        if (!document.getWorkspaceId().equals(workspaceId)) {
+            throw new DocumentNotFoundException(documentId);
+        }
+        if (document.getStatus() != DocumentStatus.READY) {
+            throw new DocumentProcessingException("Document must be in READY status to convert to article");
+        }
+
+        // Parse the file to get full text content
+        String content;
+        try {
+            content = documentParserService.parse(
+                Paths.get(document.getFilePath()),
+                document.getMimeType()
+            );
+        } catch (Exception e) {
+            throw new DocumentProcessingException("Failed to parse document for article conversion", e);
+        }
+
+        // Derive title and slug from filename (strip extension)
+        String filename = document.getFilename();
+        String title = filename != null ? filename.replaceFirst("\\.[^.]+$", "") : "Untitled";
+        String slug = title.toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("^-|-$", "");
+        if (articleRepository.findBySlug(slug).isPresent()) {
+            slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
+        }
+
+        // Create the article
+        Article article = Article.builder()
+            .titleEn(title)
+            .contentEn(content)
+            .slug(slug)
+            .status(ArticleStatus.DRAFT)
+            .author(author)
+            .build();
+        article.setWorkspaceId(workspaceId);
+        article = articleRepository.save(article);
+
+        log.info("Article created from document {} (article id: {})", documentId, article.getId());
+        return article.getId();
     }
 
     /**
