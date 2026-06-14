@@ -18,6 +18,7 @@ export interface ArticleDto {
   contentFr: string | null;
   slug: string;
   excerpt: string | null;
+  excerptFr: string | null;
   featuredImage: string | null;
   categoryId: string | null;
   status: ArticleStatus;
@@ -38,6 +39,7 @@ export interface CreateArticleRequest {
   titleFr?: string;
   contentFr?: string;
   excerpt?: string;
+  excerptFr?: string;
   featuredImage?: string;
   tagIds?: string[];
   categoryId?: string;
@@ -49,6 +51,7 @@ export interface UpdateArticleRequest {
   titleFr?: string;
   contentFr?: string;
   excerpt?: string;
+  excerptFr?: string;
   featuredImage?: string;
   tagIds?: string[];
   categoryId?: string;

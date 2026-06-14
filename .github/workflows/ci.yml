@@ -55,6 +55,7 @@ jobs:
           -Dsonar.organization=${{ env.SONAR_ORG }}
           -Dsonar.host.url=${{ env.SONAR_HOST_URL }}
           -Dsonar.token=$SONAR_TOKEN
+          -Dsonar.java.binaries=target/classes
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
         working-directory: backend
         continue-on-error: true  # Non-blocking per D-02

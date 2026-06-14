@@ -53,11 +53,13 @@ public class DocumentChunkingService {
             }
 
             chunks.add(content.substring(start, end).trim());
+            if (end == content.length()) {
+                break;
+            }
             int overlapSize = (int) (overlapTokens * AVG_CHARS_PER_TOKEN);
             start = end - overlapSize;
 
-            // Avoid infinite loop for small documents
-            if (start >= content.length() || start < 0) {
+            if (start < 0 || start >= content.length()) {
                 break;
             }
         }

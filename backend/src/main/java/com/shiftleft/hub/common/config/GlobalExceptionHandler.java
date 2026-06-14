@@ -1,6 +1,8 @@
 package com.shiftleft.hub.common.config;
 
 import com.shiftleft.hub.common.DuplicateEmailException;
+import com.shiftleft.hub.document.domain.DocumentProcessingException;
+import com.shiftleft.hub.document.domain.DuplicateDocumentException;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.user.domain.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -127,6 +129,39 @@ public class GlobalExceptionHandler {
         log.warn("Ticket not found: {} — {}", request.getRequestURI(), ex.getMessage());
         return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
             "urn:shiftleft:problem:entity-not-found", request);
+    }
+
+    /**
+     * Handles document processing errors — validation vs internal.
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return a bad request or internal error problem detail
+     */
+    @ExceptionHandler(DocumentProcessingException.class)
+    public ProblemDetail handleDocumentProcessing(DocumentProcessingException ex, HttpServletRequest request) {
+        if (ex.getCause() != null) {
+            log.error("Document processing error: {} — {}", request.getRequestURI(), ex.getMessage(), ex);
+            return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "Document Processing Error",
+                "Failed to process document", "urn:shiftleft:problem:internal-error", request);
+        }
+        log.warn("Document validation error: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.BAD_REQUEST, "Document Validation Error", ex.getMessage(),
+            "urn:shiftleft:problem:validation-error", request);
+    }
+
+    /**
+     * Handles duplicate document uploads (same content hash).
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return a conflict problem detail
+     */
+    @ExceptionHandler(DuplicateDocumentException.class)
+    public ProblemDetail handleDuplicateDocument(DuplicateDocumentException ex, HttpServletRequest request) {
+        log.warn("Duplicate document: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.CONFLICT, "Duplicate Document", ex.getMessage(),
+            "urn:shiftleft:problem:duplicate-entity", request);
     }
 
     /**

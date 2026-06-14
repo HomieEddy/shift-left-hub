@@ -137,6 +137,7 @@ public class LegalSeeder {
                 String titleEn = frontmatter.getOrDefault("title_en", "");
                 String titleFr = frontmatter.getOrDefault("title_fr", "");
                 String excerpt = frontmatter.getOrDefault("excerpt", "");
+                String excerptFr = frontmatter.getOrDefault("excerpt_fr", "");
                 String tagsStr = frontmatter.getOrDefault("tags", "");
 
                 String[] bodyParts = splitBilingualBody(body);
@@ -156,6 +157,7 @@ public class LegalSeeder {
                     article.setContentEn(contentEn);
                     article.setContentFr(contentFr);
                     article.setExcerpt(excerpt);
+                    article.setExcerptFr(excerptFr);
                     article.setStatus(ArticleStatus.PUBLISHED);
                     article.setTags(resolvedTags);
                     updated++;
@@ -168,6 +170,7 @@ public class LegalSeeder {
                         .contentFr(contentFr)
                         .slug(slug)
                         .excerpt(excerpt)
+                        .excerptFr(excerptFr)
                         .status(ArticleStatus.PUBLISHED)
                         .viewCount(0)
                         .publishedAt(LocalDateTime.now())

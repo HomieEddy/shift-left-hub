@@ -10,6 +10,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { CategoryService } from '../../../admin/taxonomy/category.service';
 import { CategoryDto } from '../../../admin/taxonomy/category.model';
 import { TranslationService } from '../../../../core/i18n/translation.service';
+import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-article-editor',
@@ -24,6 +25,7 @@ export class ArticleEditorComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private confirmationDialog = inject(ConfirmationDialogService);
   protected translationService = inject(TranslationService);
 
   isEdit = signal(false);
@@ -39,7 +41,16 @@ export class ArticleEditorComponent implements OnInit {
   titleFr = '';
   contentFr = '';
   excerpt = '';
+  excerptFr = '';
   featuredImage = '';
+
+  private originalTitleEn = '';
+  private originalContentEn = '';
+  private originalTitleFr = '';
+  private originalContentFr = '';
+  private originalExcerpt = '';
+  private originalExcerptFr = '';
+  private originalFeaturedImage = '';
 
   allTags = signal<TagDto[]>([]);
   selectedTagIds = signal<Set<string>>(new Set());
@@ -74,13 +85,21 @@ export class ArticleEditorComponent implements OnInit {
         this.titleFr = article.titleFr ?? '';
         this.contentFr = article.contentFr ?? '';
         this.excerpt = article.excerpt ?? '';
+        this.excerptFr = article.excerptFr ?? '';
         this.featuredImage = article.featuredImage ?? '';
+        this.originalTitleEn = this.titleEn;
+        this.originalContentEn = this.contentEn;
+        this.originalTitleFr = this.titleFr;
+        this.originalContentFr = this.contentFr;
+        this.originalExcerpt = this.excerpt;
+        this.originalExcerptFr = this.excerptFr;
+        this.originalFeaturedImage = this.featuredImage;
         this.selectedCategoryId.set(article.categoryId);
         this.selectedTagIds.set(new Set(article.tags.map(t => t.id)));
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load article.');
+        this.errorMessage.set(this.translationService.translate('kb.articles.error.load'));
         this.isLoading.set(false);
       },
     });
@@ -91,7 +110,7 @@ export class ArticleEditorComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (tags) => this.allTags.set(tags),
-      error: () => this.errorMessage.set('Failed to load tags.'),
+      error: () => this.errorMessage.set(this.translationService.translate('kb.tags.error.load')),
     });
   }
 
@@ -117,6 +136,7 @@ export class ArticleEditorComponent implements OnInit {
       titleFr: this.titleFr || undefined,
       contentFr: this.contentFr || undefined,
       excerpt: this.excerpt || undefined,
+      excerptFr: this.excerptFr || undefined,
       featuredImage: this.featuredImage || undefined,
       tagIds: Array.from(this.selectedTagIds()),
       categoryId: this.selectedCategoryId() ?? undefined,
@@ -135,14 +155,34 @@ export class ArticleEditorComponent implements OnInit {
         void this.router.navigate(['/admin/articles']);
       },
       error: () => {
-        this.errorMessage.set('Failed to save article. Please try again.');
+        this.errorMessage.set(this.translationService.translate('kb.articles.error.save'));
         this.isSaving.set(false);
       },
     });
   }
 
   cancel(): void {
-    void this.router.navigate(['/admin/articles']);
+    if (this.isDirty()) {
+      this.confirmationDialog.confirm({
+        title: this.translationService.translate('admin.articles.discard-title'),
+        message: this.translationService.translate('admin.articles.discard-message'),
+        confirmLabel: this.translationService.translate('admin.articles.discard-confirm'),
+      }).subscribe((confirmed) => {
+        if (confirmed) void this.router.navigate(['/admin/articles']);
+      });
+    } else {
+      void this.router.navigate(['/admin/articles']);
+    }
+  }
+
+  private isDirty(): boolean {
+    return this.titleEn !== this.originalTitleEn
+      || this.contentEn !== this.originalContentEn
+      || this.titleFr !== this.originalTitleFr
+      || this.contentFr !== this.originalContentFr
+      || this.excerpt !== this.originalExcerpt
+      || this.excerptFr !== this.originalExcerptFr
+      || this.featuredImage !== this.originalFeaturedImage;
   }
 
   protected getTagName(tag: { nameEn: string; nameFr: string }): string {

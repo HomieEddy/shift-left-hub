@@ -78,6 +78,16 @@
             ></textarea>
           </div>
           <div>
+            <label for="article-excerpt-en" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.articles.label.excerpt-en') }}</label>
+            <textarea
+              id="article-excerpt-en"
+              [(ngModel)]="excerpt"
+              rows="3"
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              [placeholder]="translationService.translate('admin.articles.placeholder.excerpt-en')"
+            ></textarea>
+          </div>
+          <div>
             <span class="block text-sm font-medium text-text-secondary mb-2">{{ translationService.translate('admin.articles.label.preview') }}</span>
             <div class="border border-border-default rounded-lg p-4 max-w-none">
               <div class="markdown-content">
@@ -112,6 +122,16 @@
             ></textarea>
           </div>
           <div>
+            <label for="article-excerpt-fr" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.articles.label.excerpt-fr') }}</label>
+            <textarea
+              id="article-excerpt-fr"
+              [(ngModel)]="excerptFr"
+              rows="3"
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              [placeholder]="translationService.translate('admin.articles.placeholder.excerpt-fr')"
+            ></textarea>
+          </div>
+          <div>
             <span class="block text-sm font-medium text-text-secondary mb-2">{{ translationService.translate('admin.articles.label.preview') }}</span>
             <div class="border border-border-default rounded-lg p-4 max-w-none">
               <div class="markdown-content">
@@ -122,28 +142,16 @@
         </div>
       }
 
-      <!-- Excerpt & Featured Image -->
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label for="article-excerpt" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.articles.label.excerpt') }}</label>
-          <textarea
-            id="article-excerpt"
-            [(ngModel)]="excerpt"
-            rows="3"
-            class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
-            [placeholder]="translationService.translate('admin.articles.placeholder.excerpt')"
-          ></textarea>
-        </div>
-        <div>
-          <label for="article-featured-image" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.articles.label.featured-image') }}</label>
-          <input
-            id="article-featured-image"
-            type="text"
-            [(ngModel)]="featuredImage"
-            class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
-            [placeholder]="translationService.translate('admin.articles.placeholder.featured-image')"
-          />
-        </div>
+      <!-- Featured Image (shared) -->
+      <div>
+        <label for="article-featured-image" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.articles.label.featured-image') }}</label>
+        <input
+          id="article-featured-image"
+          type="text"
+          [(ngModel)]="featuredImage"
+          class="w-full max-w-md px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+          [placeholder]="translationService.translate('admin.articles.placeholder.featured-image')"
+        />
       </div>
 
       <!-- Tags Multi-Select -->

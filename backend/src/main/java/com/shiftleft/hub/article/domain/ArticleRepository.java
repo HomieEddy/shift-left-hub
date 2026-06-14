@@ -339,6 +339,14 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     List<Article> findByCategoryId(UUID categoryId);
 
     /**
+     * Counts articles with a given status.
+     *
+     * @param status the article status to count
+     * @return the count of matching articles
+     */
+    long countByStatus(ArticleStatus status);
+
+    /**
      * Counts articles assigned to a given category.
      *
      * @param categoryId the category UUID

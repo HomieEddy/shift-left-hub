@@ -50,6 +50,18 @@ export class TicketDetailComponent implements OnInit {
     }
   }
 
+  statusLabel(status: string): string {
+    return this.translationService.translate('tickets.status.' + status);
+  }
+
+  categoryLabel(category: string): string {
+    return this.translationService.translate('tickets.category.' + category);
+  }
+
+  urgencyLabel(urgency: string): string {
+    return this.translationService.translate('tickets.urgency.' + urgency);
+  }
+
   private loadTicket(id: string): void {
     this.isLoading.set(true);
     this.ticketService.getTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({

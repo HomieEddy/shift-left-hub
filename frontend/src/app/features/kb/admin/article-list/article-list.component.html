@@ -35,7 +35,7 @@
             <tr class="hover:bg-surface-secondary">
               <td class="px-4 py-3">
                 <p class="font-medium text-text-primary">{{ translationService.currentLang() === 'fr' && article.titleFr ? article.titleFr : article.titleEn }}</p>
-                <p class="text-xs text-text-tertiary">{{ article.titleFr && translationService.currentLang() === 'en' ? 'FR: ' + article.titleFr : '' }}</p>
+                <p class="text-xs text-text-tertiary">{{ article.titleFr && translationService.currentLang() === 'en' ? (translationService.translate('common.fr-label') + ' ' + article.titleFr) : '' }}</p>
               </td>
               <td class="px-4 py-3">
                 <span
@@ -44,7 +44,7 @@
                            article.status === 'DRAFT' ? 'bg-accent-warning-muted text-accent-warning' :
                            'bg-accent-danger-muted text-accent-danger'"
                 >
-                  {{ article.status }}
+                  {{ statusLabel(article.status) }}
                 </span>
               </td>
               <td class="px-4 py-3">
