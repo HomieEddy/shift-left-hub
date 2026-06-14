@@ -152,7 +152,7 @@ describe('AgentTicketDetailComponent', () => {
     expect(component.isClaiming()).toBe(false);
   });
 
-  it('should handle claim error gracefully', () => {
+  it('should set claiming state on claim', () => {
     agentTicketService.claimTicket.mockReturnValue(of(mockTicket));
 
     component.claimTicket();
