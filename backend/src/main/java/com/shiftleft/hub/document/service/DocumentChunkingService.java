@@ -59,8 +59,8 @@ public class DocumentChunkingService {
             int overlapSize = (int) (overlapTokens * AVG_CHARS_PER_TOKEN);
             start = end - overlapSize;
 
-            if (start < 0) {
-                start = 0;
+            if (start < 0 || start >= end) {
+                break;
             }
         }
 

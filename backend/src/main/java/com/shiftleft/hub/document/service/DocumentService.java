@@ -6,6 +6,7 @@ import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.category.domain.Category;
 import com.shiftleft.hub.category.domain.CategoryRepository;
 import com.shiftleft.hub.user.domain.User;
+import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.document.domain.*;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class DocumentService {
     private final DocumentChunkRepository documentChunkRepository;
     private final CategoryRepository categoryRepository;
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
     private final DocumentParserService documentParserService;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -135,8 +137,12 @@ public class DocumentService {
         try {
             document = documentRepository.save(document);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateDocumentException(
-                file.getOriginalFilename() != null ? file.getOriginalFilename() : "unknown", contentHash);
+            String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+            if (msg.contains("duplicate") || msg.contains("unique") || msg.contains("uq_")) {
+                throw new DuplicateDocumentException(
+                    file.getOriginalFilename() != null ? file.getOriginalFilename() : "unknown", contentHash);
+            }
+            throw new DocumentProcessingException("Data integrity violation during document save", e);
         }
 
         // Store file on local filesystem
@@ -209,11 +215,13 @@ public class DocumentService {
      * Reads the file content, creates a draft article, and returns its ID.
      *
      * @param documentId the document UUID to convert
-     * @param author     the user creating the article
+     * @param authorEmail the email of the user creating the article
      * @return the created article UUID
      */
     @Transactional
-    public UUID convertToArticle(UUID documentId, User author) {
+    public UUID convertToArticle(UUID documentId, String authorEmail) {
+        User author = userRepository.findByEmail(authorEmail)
+            .orElseThrow(() -> new DocumentProcessingException("Author not found: " + authorEmail));
         Document document = documentRepository.findById(documentId)
             .orElseThrow(() -> new DocumentNotFoundException(documentId));
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
@@ -239,6 +247,9 @@ public class DocumentService {
         String filename = document.getFilename();
         String title = filename != null ? filename.replaceFirst("\\.[^.]+$", "") : "Untitled";
         String slug = title.toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("^-|-$", "");
+        if (slug.isEmpty()) {
+            slug = "untitled";
+        }
         if (articleRepository.findBySlug(slug).isPresent()) {
             slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
         }
