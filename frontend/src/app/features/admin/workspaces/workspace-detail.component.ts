@@ -39,11 +39,20 @@ export class WorkspaceDetailComponent implements OnInit {
       this.isLoading.set(false);
       return;
     }
-    this.workspaceService.getWorkspace(idOrNull)
+    this.workspaceService
+      .getWorkspace(idOrNull)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: ws => { this.workspace.set(ws); this.isLoading.set(false); },
-        error: () => { this.errorMessage.set(this.translationService.translate('admin.workspaces.detail.not-found')); this.isLoading.set(false); },
+        next: (ws) => {
+          this.workspace.set(ws);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(
+            this.translationService.translate('admin.workspaces.detail.not-found'),
+          );
+          this.isLoading.set(false);
+        },
       });
   }
 

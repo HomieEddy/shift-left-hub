@@ -47,26 +47,28 @@ export class RegisterComponent {
 
     this.isLoading = true;
 
-    this.authService.register({
-      email: this.email,
-      password: this.password,
-      displayName: this.displayName,
-    }).subscribe({
-      next: () => {
-        // Auto-login per D-18 — AuthService already set session via tap()
-        void this.router.navigate(['/articles']);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
-        if (err.status === 409) {
-          this.errorMessage = this.translationService.translate('error.email-exists');
-        } else {
-          this.errorMessage = this.translationService.translate('error.registration-failed');
-        }
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
-    });
+    this.authService
+      .register({
+        email: this.email,
+        password: this.password,
+        displayName: this.displayName,
+      })
+      .subscribe({
+        next: () => {
+          // Auto-login per D-18 — AuthService already set session via tap()
+          void this.router.navigate(['/articles']);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isLoading = false;
+          if (err.status === 409) {
+            this.errorMessage = this.translationService.translate('error.email-exists');
+          } else {
+            this.errorMessage = this.translationService.translate('error.registration-failed');
+          }
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
+      });
   }
 }

@@ -7,7 +7,8 @@ describe('TranslationService', () => {
 
   // Save original navigator.language descriptor to restore in afterEach
   const originalLanguageDescriptor = Object.getOwnPropertyDescriptor(
-    Object.getPrototypeOf(navigator), 'language'
+    Object.getPrototypeOf(navigator),
+    'language',
   );
 
   beforeEach(() => {

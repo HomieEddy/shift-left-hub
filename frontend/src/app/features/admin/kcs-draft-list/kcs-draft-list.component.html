@@ -1,7 +1,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <!-- Header -->
   <div class="mb-6">
-    <h1 class="text-2xl font-bold text-text-primary">{{ translationService.translate('kcs.drafts.title') }}</h1>
+    <h1 class="text-2xl font-bold text-text-primary">
+      {{ translationService.translate('kcs.drafts.title') }}
+    </h1>
     <p class="text-sm text-text-tertiary mt-1">
       {{ translationService.translate('kcs.drafts.description') }}
     </p>
@@ -9,14 +11,18 @@
 
   <!-- Success message -->
   @if (successMessage()) {
-    <div class="mb-4 p-3 bg-accent-success-muted border border-accent-success text-accent-success rounded-lg text-sm">
+    <div
+      class="mb-4 p-3 bg-accent-success-muted border border-accent-success text-accent-success rounded-lg text-sm"
+    >
       {{ successMessage() }}
     </div>
   }
 
   <!-- Error message -->
   @if (errorMessage()) {
-    <div class="mb-4 p-3 bg-accent-danger-muted border border-accent-danger text-accent-danger rounded-lg text-sm">
+    <div
+      class="mb-4 p-3 bg-accent-danger-muted border border-accent-danger text-accent-danger rounded-lg text-sm"
+    >
       {{ errorMessage() }}
     </div>
   }
@@ -37,31 +43,25 @@
 
   <!-- Draft table -->
   @if (!isLoading() && drafts().length > 0) {
-    <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default overflow-hidden">
+    <div
+      class="bg-surface-primary rounded-xl shadow-sm border border-border-default overflow-hidden"
+    >
       <table class="w-full text-sm">
         <thead class="bg-surface-secondary border-b border-border-default">
           <tr>
-            <th
-              class="text-left px-4 py-3 font-medium text-text-secondary"
-            >
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">
               {{ translationService.translate('kcs.drafts.col.title') }}
             </th>
-            <th
-              class="text-left px-4 py-3 font-medium text-text-secondary"
-            >
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">
               {{ translationService.translate('kcs.drafts.col.ticket') }}
             </th>
-            <th
-              class="text-left px-4 py-3 font-medium text-text-secondary"
-            >
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">
               {{ translationService.translate('kcs.drafts.col.status') }}
             </th>
             <th class="text-left px-4 py-3 font-medium text-text-secondary">
               {{ translationService.translate('kcs.drafts.col.date') }}
             </th>
-            <th
-              class="text-left px-4 py-3 font-medium text-text-secondary"
-            >
+            <th class="text-left px-4 py-3 font-medium text-text-secondary">
               {{ translationService.translate('kcs.drafts.col.actions') }}
             </th>
           </tr>
@@ -79,7 +79,8 @@
                 }
                 @if (draft.similarityWarnings.length > 0) {
                   <div class="mt-1 text-xs text-accent-warning">
-                    ⚠ <span>{{ translationService.translate('kcs.drafts.similarityWarning') }}</span>
+                    ⚠
+                    <span>{{ translationService.translate('kcs.drafts.similarityWarning') }}</span>
                   </div>
                 }
               </td>
@@ -191,9 +192,12 @@
       >
         {{ translationService.translate('pagination.previous') }}
       </button>
-      <span class="text-sm text-text-secondary"
-        >{{ translationService.translate('kcs.drafts.pageIndicator', { VAR_PLURAL: displayPage(), VAR_TOTALPAGES: totalPages() }) }}</span
-      >
+      <span class="text-sm text-text-secondary">{{
+        translationService.translate('kcs.drafts.pageIndicator', {
+          VAR_PLURAL: displayPage(),
+          VAR_TOTALPAGES: totalPages(),
+        })
+      }}</span>
       <button
         (click)="changePage(currentPage() + 1)"
         [disabled]="currentPage() >= totalPages() - 1"

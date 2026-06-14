@@ -48,7 +48,7 @@ describe('ChatService', () => {
       const { events } = service.sendMessage('test', []);
       const tokens: string[] = [];
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             if (event.type === 'token') tokens.push(event.content);
@@ -61,14 +61,12 @@ describe('ChatService', () => {
     });
 
     it('should emit fallback event with sources', async () => {
-      mockFetchStream([
-        'data: {"type":"fallback","content":"No results found","sources":[]}\n\n',
-      ]);
+      mockFetchStream(['data: {"type":"fallback","content":"No results found","sources":[]}\n\n']);
 
       const { events } = service.sendMessage('query', []);
       const received: StreamEvent[] = [];
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             received.push(event);
@@ -88,7 +86,7 @@ describe('ChatService', () => {
       const { events } = service.sendMessage('test', []);
       const received: StreamEvent[] = [];
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             received.push(event);
@@ -112,10 +110,15 @@ describe('ChatService', () => {
       let nextCount = 0;
       let completeCount = 0;
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
-          next: () => { nextCount++; },
-          complete: () => { completeCount++; resolve(); },
+          next: () => {
+            nextCount++;
+          },
+          complete: () => {
+            completeCount++;
+            resolve();
+          },
         });
       });
 
@@ -124,21 +127,22 @@ describe('ChatService', () => {
     });
 
     it('should complete stream after fallback event', async () => {
-      mockFetchStream([
-        'data: {"type":"fallback","content":"Sorry","sources":[]}\n\n',
-      ]);
+      mockFetchStream(['data: {"type":"fallback","content":"Sorry","sources":[]}\n\n']);
 
       const { events } = service.sendMessage('test', []);
       let completeCount = 0;
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             if (event.type === 'fallback') {
               // After fallback, stream should complete
             }
           },
-          complete: () => { completeCount++; resolve(); },
+          complete: () => {
+            completeCount++;
+            resolve();
+          },
         });
       });
 
@@ -169,12 +173,14 @@ describe('ChatService', () => {
       const received: StreamEvent[] = [];
 
       // Give a microtask for the catch block to execute
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             received.push(event);
           },
-          complete: () => { resolve(); },
+          complete: () => {
+            resolve();
+          },
         });
         // The fetch rejection is async, so wait a tick
         setTimeout(resolve, 50);
@@ -198,7 +204,10 @@ describe('ChatService', () => {
       expect(options.method).toBe('POST');
       expect(options.credentials).toBe('include');
 
-      const body = JSON.parse(options.body as string) as { message: string; history: typeof history };
+      const body = JSON.parse(options.body as string) as {
+        message: string;
+        history: typeof history;
+      };
       expect(body.message).toBe('test-message');
       expect(body.history).toEqual(history);
     });
@@ -211,7 +220,7 @@ describe('ChatService', () => {
       const { events } = service.sendMessage('test', []);
       const received: StreamEvent[] = [];
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             received.push(event);
@@ -237,7 +246,7 @@ describe('ChatService', () => {
       const { events } = service.sendMessage('test', []);
       const received: StreamEvent[] = [];
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             received.push(event);
@@ -263,7 +272,7 @@ describe('ChatService', () => {
       const { events } = service.sendMessage('test', []);
       const tokens: string[] = [];
 
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         events.subscribe({
           next: (event) => {
             if (event.type === 'token') tokens.push(event.content);

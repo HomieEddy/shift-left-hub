@@ -2,31 +2,43 @@
   @if (config) {
     <div class="space-y-6">
       <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
-        <h1 class="text-xl font-semibold text-text-primary mb-6">{{ translationService.translate('admin.settings.llm.title') }}</h1>
+        <h1 class="text-xl font-semibold text-text-primary mb-6">
+          {{ translationService.translate('admin.settings.llm.title') }}
+        </h1>
 
         @if (workspaces().length > 0) {
           <div class="mb-6">
-            <label for="workspaceSelector" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.workspace') }}</label>
+            <label
+              for="workspaceSelector"
+              class="block text-sm font-medium text-text-secondary mb-1"
+              >{{ translationService.translate('admin.settings.llm.workspace') }}</label
+            >
             <select
               id="workspaceSelector"
               [ngModel]="selectedWorkspaceId()"
               (ngModelChange)="selectedWorkspaceId.set($event); onWorkspaceChange()"
               class="w-full rounded-xl border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              <option value="">{{ translationService.translate('admin.settings.llm.global-config') }}</option>
+              <option value="">
+                {{ translationService.translate('admin.settings.llm.global-config') }}
+              </option>
               @for (ws of workspaces(); track ws.id) {
                 <option [value]="ws.id" class="text-text-primary">{{ ws.name }}</option>
               }
             </select>
             @if (isWorkspaceMode()) {
-              <p class="text-xs text-text-tertiary mt-1">{{ translationService.translate('admin.settings.llm.workspace-hint') }}</p>
+              <p class="text-xs text-text-tertiary mt-1">
+                {{ translationService.translate('admin.settings.llm.workspace-hint') }}
+              </p>
             }
           </div>
         }
 
         <div class="space-y-4">
           <div>
-            <label for="provider" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.provider') }}</label>
+            <label for="provider" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.settings.llm.provider')
+            }}</label>
             <select
               id="provider"
               [(ngModel)]="config.llmProvider"
@@ -41,7 +53,11 @@
 
           @if (config.llmProvider === 'OLLAMA') {
             <div>
-              <label for="ollamaEndpoint" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.ollama-endpoint') }}</label>
+              <label
+                for="ollamaEndpoint"
+                class="block text-sm font-medium text-text-secondary mb-1"
+                >{{ translationService.translate('admin.settings.llm.ollama-endpoint') }}</label
+              >
               <input
                 id="ollamaEndpoint"
                 [(ngModel)]="config.ollamaEndpointUrl"
@@ -53,7 +69,9 @@
 
           @if (config.llmProvider === 'OPENAI_COMPATIBLE') {
             <div>
-              <label for="openaiKey" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.openai-key') }}</label>
+              <label for="openaiKey" class="block text-sm font-medium text-text-secondary mb-1">{{
+                translationService.translate('admin.settings.llm.openai-key')
+              }}</label>
               <input
                 id="openaiKey"
                 [(ngModel)]="openaiApiKey"
@@ -62,17 +80,23 @@
                 class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               @if (config.hasOpenaiKey) {
-                <p class="text-xs text-text-tertiary mt-1">{{ translationService.translate('admin.settings.llm.key-stored') }}</p>
+                <p class="text-xs text-text-tertiary mt-1">
+                  {{ translationService.translate('admin.settings.llm.key-stored') }}
+                </p>
               }
             </div>
           }
         </div>
 
         <div class="mt-6 space-y-4">
-          <h2 class="text-sm font-semibold text-text-secondary">{{ translationService.translate('admin.settings.llm.model-config') }}</h2>
+          <h2 class="text-sm font-semibold text-text-secondary">
+            {{ translationService.translate('admin.settings.llm.model-config') }}
+          </h2>
 
           <div>
-            <label for="chatModel" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.chat-model') }}</label>
+            <label for="chatModel" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.settings.llm.chat-model')
+            }}</label>
             <input
               id="chatModel"
               list="model-suggestions"
@@ -82,13 +106,17 @@
             />
             <datalist id="model-suggestions">
               @for (m of modelExamples; track m) {
-                <option [value]="m">
+                <option [value]="m"></option>
               }
             </datalist>
           </div>
 
           <div>
-            <label for="embeddingModel" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.embedding-model') }}</label>
+            <label
+              for="embeddingModel"
+              class="block text-sm font-medium text-text-secondary mb-1"
+              >{{ translationService.translate('admin.settings.llm.embedding-model') }}</label
+            >
             <input
               id="embeddingModel"
               list="embedding-suggestions"
@@ -98,13 +126,17 @@
             />
             <datalist id="embedding-suggestions">
               @for (m of embeddingExamples; track m) {
-                <option [value]="m">
+                <option [value]="m"></option>
               }
             </datalist>
           </div>
 
           <div>
-            <label for="similarityThreshold" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.threshold') }}</label>
+            <label
+              for="similarityThreshold"
+              class="block text-sm font-medium text-text-secondary mb-1"
+              >{{ translationService.translate('admin.settings.llm.threshold') }}</label
+            >
             <input
               id="similarityThreshold"
               [(ngModel)]="config.similarityThreshold"
@@ -117,7 +149,11 @@
           </div>
 
           <div>
-            <label for="embeddingDimension" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.settings.llm.embedding-dimension') }}</label>
+            <label
+              for="embeddingDimension"
+              class="block text-sm font-medium text-text-secondary mb-1"
+              >{{ translationService.translate('admin.settings.llm.embedding-dimension') }}</label
+            >
             <input
               id="embeddingDimension"
               [value]="config.embeddingDimension"
@@ -133,83 +169,121 @@
             [disabled]="isSaving"
             class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
           >
-            {{ isSaving ? translationService.translate('admin.settings.llm.saving') : translationService.translate('admin.settings.llm.save') }}
+            {{
+              isSaving
+                ? translationService.translate('admin.settings.llm.saving')
+                : translationService.translate('admin.settings.llm.save')
+            }}
           </button>
           <button
             (click)="testConnection()"
             [disabled]="isTesting"
             class="rounded-lg border border-border-default px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
           >
-            {{ isTesting ? translationService.translate('admin.settings.llm.testing') : translationService.translate('admin.settings.llm.test') }}
+            {{
+              isTesting
+                ? translationService.translate('admin.settings.llm.testing')
+                : translationService.translate('admin.settings.llm.test')
+            }}
           </button>
         </div>
 
         @if (saveMessage) {
-          <div class="mt-3 bg-accent-success-muted border border-accent-success text-accent-success rounded-lg p-3 text-sm">
+          <div
+            class="mt-3 bg-accent-success-muted border border-accent-success text-accent-success rounded-lg p-3 text-sm"
+          >
             {{ saveMessage }}
           </div>
         }
 
         @if (testResult) {
-          <div class="mt-3 border rounded-lg p-3 text-sm"
-               [class.bg-accent-success-muted]="testResult.success"
-               [class.border-accent-success]="testResult.success"
-               [class.text-accent-success]="testResult.success"
-               [class.bg-accent-danger-muted]="!testResult.success"
-               [class.border-accent-danger]="!testResult.success"
-               [class.text-accent-danger]="!testResult.success">
+          <div
+            class="mt-3 border rounded-lg p-3 text-sm"
+            [class.bg-accent-success-muted]="testResult.success"
+            [class.border-accent-success]="testResult.success"
+            [class.text-accent-success]="testResult.success"
+            [class.bg-accent-danger-muted]="!testResult.success"
+            [class.border-accent-danger]="!testResult.success"
+            [class.text-accent-danger]="!testResult.success"
+          >
             {{ testResult.message }}
           </div>
         }
       </div>
 
       @if (isWorkspaceMode()) {
-      <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6 mt-6">
-        <h2 class="text-sm font-semibold text-text-secondary mb-3">{{ translationService.translate('admin.settings.llm.systemPrompt') }}</h2>
-        <p class="text-xs text-text-secondary mb-3">{{ translationService.translate('admin.settings.llm.systemPromptHint') }}</p>
+        <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6 mt-6">
+          <h2 class="text-sm font-semibold text-text-secondary mb-3">
+            {{ translationService.translate('admin.settings.llm.systemPrompt') }}
+          </h2>
+          <p class="text-xs text-text-secondary mb-3">
+            {{ translationService.translate('admin.settings.llm.systemPromptHint') }}
+          </p>
 
-        <div class="flex flex-wrap gap-2 mb-3">
-          <button type="button" (click)="insertTemplateVariable('{workspace_name}')"
-                  class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20">
-            {{ '{' }}workspace_name{{ '}' }}
-          </button>
-          <button type="button" (click)="insertTemplateVariable('{domain}')"
-                  class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20">
-            {{ '{' }}domain{{ '}' }}
-          </button>
-          <button type="button" (click)="insertTemplateVariable('{categories}')"
-                  class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20">
-            {{ '{' }}categories{{ '}' }}
+          <div class="flex flex-wrap gap-2 mb-3">
+            <button
+              type="button"
+              (click)="insertTemplateVariable('{workspace_name}')"
+              class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20"
+            >
+              {{ '{' }}workspace_name{{ '}' }}
+            </button>
+            <button
+              type="button"
+              (click)="insertTemplateVariable('{domain}')"
+              class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20"
+            >
+              {{ '{' }}domain{{ '}' }}
+            </button>
+            <button
+              type="button"
+              (click)="insertTemplateVariable('{categories}')"
+              class="px-2 py-1 text-xs font-mono rounded bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20"
+            >
+              {{ '{' }}categories{{ '}' }}
+            </button>
+          </div>
+
+          <textarea
+            [ngModel]="systemPrompt()"
+            (ngModelChange)="systemPrompt.set($event)"
+            rows="6"
+            class="w-full px-3 py-2 text-sm rounded-lg border border-border-default bg-surface-primary text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-info/50 focus:border-accent-info transition-colors font-mono"
+            [placeholder]="
+              translationService.translate('admin.settings.llm.systemPromptPlaceholder')
+            "
+          ></textarea>
+
+          <button
+            type="button"
+            (click)="systemPrompt.set('')"
+            class="text-xs text-accent-info hover:text-accent-info/80 mt-1 transition-colors"
+          >
+            {{ translationService.translate('admin.settings.llm.systemPromptReset') }}
           </button>
         </div>
-
-        <textarea
-          [ngModel]="systemPrompt()"
-          (ngModelChange)="systemPrompt.set($event)"
-          rows="6"
-          class="w-full px-3 py-2 text-sm rounded-lg border border-border-default bg-surface-primary text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-info/50 focus:border-accent-info transition-colors font-mono"
-          [placeholder]="translationService.translate('admin.settings.llm.systemPromptPlaceholder')"
-        ></textarea>
-
-        <button type="button" (click)="systemPrompt.set('')"
-                class="text-xs text-accent-info hover:text-accent-info/80 mt-1 transition-colors">
-          {{ translationService.translate('admin.settings.llm.systemPromptReset') }}
-        </button>
-      </div>
       }
 
       @if (!isWorkspaceMode()) {
-      <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
-        <h2 class="text-sm font-semibold text-text-secondary mb-3">{{ translationService.translate('admin.settings.llm.reindex') }}</h2>
-        <p class="text-accent-warning text-xs mb-3">{{ translationService.translate('admin.settings.llm.reindex-warning') }}</p>
-        <button
-          (click)="reindex()"
-          [disabled]="isReindexing"
-          class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
-        >
-          {{ isReindexing ? translationService.translate('admin.settings.llm.reindexing') : translationService.translate('admin.settings.llm.reindex') }}
-        </button>
-      </div>
+        <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
+          <h2 class="text-sm font-semibold text-text-secondary mb-3">
+            {{ translationService.translate('admin.settings.llm.reindex') }}
+          </h2>
+          <p class="text-accent-warning text-xs mb-3">
+            {{ translationService.translate('admin.settings.llm.reindex-warning') }}
+          </p>
+          <button
+            (click)="reindex()"
+            [disabled]="isReindexing"
+            class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
+          >
+            {{
+              isReindexing
+                ? translationService.translate('admin.settings.llm.reindexing')
+                : translationService.translate('admin.settings.llm.reindex')
+            }}
+          </button>
+        </div>
       }
     </div>
   }

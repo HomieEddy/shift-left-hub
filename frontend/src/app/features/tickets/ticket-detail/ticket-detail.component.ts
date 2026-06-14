@@ -64,29 +64,35 @@ export class TicketDetailComponent implements OnInit {
 
   private loadTicket(id: string): void {
     this.isLoading.set(true);
-    this.ticketService.getTicket(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (ticket) => {
-        this.ticket.set(ticket);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.errorMessage.set(this.translationService.translate('tickets.detail.error.load'));
-      },
-    });
+    this.ticketService
+      .getTicket(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (ticket) => {
+          this.ticket.set(ticket);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.errorMessage.set(this.translationService.translate('tickets.detail.error.load'));
+        },
+      });
   }
 
   cancelTicket(): void {
     const t = this.ticket();
     if (!t) return;
 
-    this.ticketService.cancelTicket(t.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        void this.router.navigate(['/tickets']);
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('tickets.detail.error.cancel'));
-      },
-    });
+    this.ticketService
+      .cancelTicket(t.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          void this.router.navigate(['/tickets']);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('tickets.detail.error.cancel'));
+        },
+      });
   }
 }

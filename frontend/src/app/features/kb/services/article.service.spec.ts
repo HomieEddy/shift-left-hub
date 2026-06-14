@@ -54,13 +54,13 @@ describe('ArticleService', () => {
 
   describe('getArticles', () => {
     it('should GET /api/admin/articles with pagination params', () => {
-      service.getArticles(0, 20).subscribe(response => {
+      service.getArticles(0, 20).subscribe((response) => {
         expect(response.content.length).toBe(2);
         expect(response.totalElements).toBe(2);
         expect(response.number).toBe(0);
       });
 
-      const req = httpMock.expectOne(r => r.url === '/api/admin/articles');
+      const req = httpMock.expectOne((r) => r.url === '/api/admin/articles');
       expect(req.request.method).toBe('GET');
       expect(req.request.params.get('page')).toBe('0');
       expect(req.request.params.get('size')).toBe('20');
@@ -87,7 +87,7 @@ describe('ArticleService', () => {
 
   describe('getArticleById', () => {
     it('should GET /api/admin/articles/:id', () => {
-      service.getArticleById('article-1').subscribe(article => {
+      service.getArticleById('article-1').subscribe((article) => {
         expect(article.id).toBe('article-1');
         expect(article.titleEn).toBe('How to reset your password');
       });
@@ -106,7 +106,7 @@ describe('ArticleService', () => {
         contentEn: 'Content here',
       };
 
-      service.createArticle(request).subscribe(article => {
+      service.createArticle(request).subscribe((article) => {
         expect(article.id).toBe('article-1');
       });
 
@@ -125,7 +125,7 @@ describe('ArticleService', () => {
         contentEn: 'Updated content',
       };
 
-      service.updateArticle('article-1', request).subscribe(article => {
+      service.updateArticle('article-1', request).subscribe((article) => {
         expect(article.slug).toBe('how-to-reset-your-password');
       });
 
@@ -139,7 +139,7 @@ describe('ArticleService', () => {
 
   describe('publishArticle', () => {
     it('should PUT to /api/admin/articles/:id/publish', () => {
-      service.publishArticle('article-1').subscribe(article => {
+      service.publishArticle('article-1').subscribe((article) => {
         expect(article.status).toBe('PUBLISHED');
       });
 
@@ -152,7 +152,7 @@ describe('ArticleService', () => {
 
   describe('archiveArticle', () => {
     it('should PUT to /api/admin/articles/:id/archive', () => {
-      service.archiveArticle('article-1').subscribe(article => {
+      service.archiveArticle('article-1').subscribe((article) => {
         expect(article.status).toBe('PUBLISHED');
       });
 
@@ -179,8 +179,12 @@ describe('ArticleService', () => {
       let errorResponse: unknown = null;
 
       service.getArticleById('nonexistent').subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/articles/nonexistent');
@@ -193,8 +197,12 @@ describe('ArticleService', () => {
       let errorResponse: unknown = null;
 
       service.createArticle({ titleEn: '', contentEn: '' }).subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/articles');

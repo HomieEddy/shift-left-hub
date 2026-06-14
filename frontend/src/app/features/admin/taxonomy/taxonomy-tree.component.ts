@@ -43,32 +43,37 @@ export class TaxonomyTreeComponent implements OnInit {
 
   loadCategories(): void {
     this.isLoading.set(true);
-    this.categoryService.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (cats) => {
-        this.rawCategories.set(cats);
-        this.treeNodes.set(this.buildTree(cats));
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set('Failed to load categories');
-        this.isLoading.set(false);
-      },
-    });
+    this.categoryService
+      .getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (cats) => {
+          this.rawCategories.set(cats);
+          this.treeNodes.set(this.buildTree(cats));
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set('Failed to load categories');
+          this.isLoading.set(false);
+        },
+      });
   }
 
   private buildTree(categories: CategoryDto[]): TreeNode[] {
     const map = new Map<string, CategoryDto>();
-    categories.forEach(c => map.set(c.id, c));
+    categories.forEach((c) => map.set(c.id, c));
 
-    const roots = categories.filter(c => c.parentId === null || !map.has(c.parentId));
+    const roots = categories.filter((c) => c.parentId === null || !map.has(c.parentId));
     const buildChildren = (parentId: string): TreeNode[] =>
-      categories.filter(c => c.parentId === parentId).map(c => ({
-        category: c,
-        children: buildChildren(c.id),
-        expanded: false,
-      }));
+      categories
+        .filter((c) => c.parentId === parentId)
+        .map((c) => ({
+          category: c,
+          children: buildChildren(c.id),
+          expanded: false,
+        }));
 
-    return roots.map(c => ({
+    return roots.map((c) => ({
       category: c,
       children: buildChildren(c.id),
       expanded: false,
@@ -89,13 +94,20 @@ export class TaxonomyTreeComponent implements OnInit {
   }
 
   createCategory(): void {
-    const request: CategoryRequest = { nameEn: this.formNameEn, nameFr: this.formNameFr, parentId: this.formParentId };
-    this.categoryService.create(request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.showCreateDialog.set(false);
-        this.loadCategories();
-      },
-    });
+    const request: CategoryRequest = {
+      nameEn: this.formNameEn,
+      nameFr: this.formNameFr,
+      parentId: this.formParentId,
+    };
+    this.categoryService
+      .create(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.showCreateDialog.set(false);
+          this.loadCategories();
+        },
+      });
   }
 
   openEdit(cat: CategoryDto): void {
@@ -109,13 +121,20 @@ export class TaxonomyTreeComponent implements OnInit {
   updateCategory(): void {
     const editing = this.editingCategory();
     if (!editing) return;
-    const request: CategoryRequest = { nameEn: this.formNameEn, nameFr: this.formNameFr, parentId: this.formParentId };
-    this.categoryService.update(editing.id, request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.showEditDialog.set(false);
-        this.loadCategories();
-      },
-    });
+    const request: CategoryRequest = {
+      nameEn: this.formNameEn,
+      nameFr: this.formNameFr,
+      parentId: this.formParentId,
+    };
+    this.categoryService
+      .update(editing.id, request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.showEditDialog.set(false);
+          this.loadCategories();
+        },
+      });
   }
 
   confirmDelete(cat: CategoryDto): void {
@@ -127,12 +146,15 @@ export class TaxonomyTreeComponent implements OnInit {
   deleteCategory(): void {
     const cat = this.deletingCategory();
     if (!cat) return;
-    this.categoryService.delete(cat.id, this.reassignTargetId ?? undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.showDeleteDialog.set(false);
-        this.loadCategories();
-      },
-    });
+    this.categoryService
+      .delete(cat.id, this.reassignTargetId ?? undefined)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.showDeleteDialog.set(false);
+          this.loadCategories();
+        },
+      });
   }
 
   openMerge(): void {
@@ -143,13 +165,19 @@ export class TaxonomyTreeComponent implements OnInit {
 
   mergeCategories(): void {
     if (this.mergeSourceId == null || this.mergeTargetId == null) return;
-    const request: MergeRequest = { sourceCategoryId: this.mergeSourceId, targetCategoryId: this.mergeTargetId };
-    this.categoryService.merge(request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.showMergeDialog.set(false);
-        this.loadCategories();
-      },
-    });
+    const request: MergeRequest = {
+      sourceCategoryId: this.mergeSourceId,
+      targetCategoryId: this.mergeTargetId,
+    };
+    this.categoryService
+      .merge(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.showMergeDialog.set(false);
+          this.loadCategories();
+        },
+      });
   }
 
   protected draggedCategoryId: string | null = null;
@@ -159,18 +187,21 @@ export class TaxonomyTreeComponent implements OnInit {
   }
 
   onDrop(draggedId: string, targetId: string): void {
-    const cat = this.rawCategories().find(c => c.id === draggedId);
+    const cat = this.rawCategories().find((c) => c.id === draggedId);
     if (cat == null) return;
     const request: CategoryRequest = { nameEn: cat.nameEn, nameFr: cat.nameFr, parentId: targetId };
-    this.categoryService.update(draggedId, request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => this.loadCategories(),
-    });
+    this.categoryService
+      .update(draggedId, request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.loadCategories(),
+      });
   }
 
   getCategoryFullPath(cat: CategoryDto): string {
     const parts: string[] = [cat.nameEn];
     let current = cat;
-    const map = new Map(this.rawCategories().map(c => [c.id, c]));
+    const map = new Map(this.rawCategories().map((c) => [c.id, c]));
     while (current.parentId != null && map.has(current.parentId)) {
       current = map.get(current.parentId)!;
       parts.unshift(current.nameEn);
@@ -179,13 +210,13 @@ export class TaxonomyTreeComponent implements OnInit {
   }
 
   getOtherCategories(excludeId: string): CategoryDto[] {
-    return this.rawCategories().filter(c => c.id !== excludeId);
+    return this.rawCategories().filter((c) => c.id !== excludeId);
   }
 
   getCategoryDepth(catId: string): number {
     let depth = 0;
-    let current = this.rawCategories().find(c => c.id === catId);
-    const map = new Map(this.rawCategories().map(c => [c.id, c]));
+    let current = this.rawCategories().find((c) => c.id === catId);
+    const map = new Map(this.rawCategories().map((c) => [c.id, c]));
     while (current != null && current.parentId != null && map.has(current.parentId)) {
       current = map.get(current.parentId)!;
       depth++;

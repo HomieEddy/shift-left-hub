@@ -48,14 +48,16 @@ export class ArticleSearchComponent implements OnInit {
       }
     });
 
-    this.route.queryParams.pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(params => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const q = params['q'] as string | undefined;
       const tagsParam = params['tags'] as string | undefined;
-      const tags = tagsParam != null && tagsParam.length > 0
-        ? tagsParam.split(',').map(t => t.trim()).filter(Boolean)
-        : [];
+      const tags =
+        tagsParam != null && tagsParam.length > 0
+          ? tagsParam
+              .split(',')
+              .map((t) => t.trim())
+              .filter(Boolean)
+          : [];
 
       this.selectedTags.set(tags);
 
@@ -74,21 +76,25 @@ export class ArticleSearchComponent implements OnInit {
   }
 
   loadCategories(): void {
-    this.http.get<{ id: string; nameEn: string; nameFr: string }[]>('/api/admin/categories').pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (cats) => this.categories.set(cats),
-      error: () => { /* categories are non-critical, silently ignore */ },
-    });
+    this.http
+      .get<{ id: string; nameEn: string; nameFr: string }[]>('/api/admin/categories')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (cats) => this.categories.set(cats),
+        error: () => {
+          /* categories are non-critical, silently ignore */
+        },
+      });
   }
 
   loadSearchTags(): void {
-    this.publicArticleService.getSearchTags().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (tags) => this.availableTags.set(tags),
-      error: () => this.availableTags.set([]),
-    });
+    this.publicArticleService
+      .getSearchTags()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (tags) => this.availableTags.set(tags),
+        error: () => this.availableTags.set([]),
+      });
   }
 
   onSearchInput(value: string): void {
@@ -120,28 +126,29 @@ export class ArticleSearchComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.currentPage.set(page);
-    this.publicArticleService.search(query, page, 20, tags).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (pageData) => {
-        this.results.set(pageData.content);
-        this.totalResults.set(pageData.totalElements);
-        this.totalPages.set(pageData.totalPages);
-        this.hasSearched.set(true);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.hasSearched.set(false);
-        this.errorMessage.set('Search failed. Please try again.');
-      },
-    });
+    this.publicArticleService
+      .search(query, page, 20, tags)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (pageData) => {
+          this.results.set(pageData.content);
+          this.totalResults.set(pageData.totalElements);
+          this.totalPages.set(pageData.totalPages);
+          this.hasSearched.set(true);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.hasSearched.set(false);
+          this.errorMessage.set('Search failed. Please try again.');
+        },
+      });
   }
 
   toggleTag(tagName: string): void {
-    this.selectedTags.update(current => {
+    this.selectedTags.update((current) => {
       if (current.includes(tagName)) {
-        return current.filter(t => t !== tagName);
+        return current.filter((t) => t !== tagName);
       }
       return [...current, tagName];
     });

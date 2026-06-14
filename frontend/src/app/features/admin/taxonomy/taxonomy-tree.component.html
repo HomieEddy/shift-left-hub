@@ -1,28 +1,50 @@
 <div class="p-6 max-w-4xl mx-auto">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-text-primary">{{ translationService.translate('admin.taxonomy.title') }}</h1>
+    <h1 class="text-2xl font-bold text-text-primary">
+      {{ translationService.translate('admin.taxonomy.title') }}
+    </h1>
     <div class="flex items-center gap-2">
-      <button (click)="openMerge()" (keydown.enter)="openMerge()" type="button" class="px-4 py-2 text-sm border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors">
+      <button
+        (click)="openMerge()"
+        (keydown.enter)="openMerge()"
+        type="button"
+        class="px-4 py-2 text-sm border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors"
+      >
         {{ translationService.translate('admin.taxonomy.merge') }}
       </button>
-      <button (click)="openCreate()" (keydown.enter)="openCreate()" type="button" class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors">
+      <button
+        (click)="openCreate()"
+        (keydown.enter)="openCreate()"
+        type="button"
+        class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
+      >
         {{ translationService.translate('admin.taxonomy.new') }}
       </button>
     </div>
   </div>
 
   @if (errorMessage()) {
-    <p class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</p>
+    <p class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">
+      {{ errorMessage() }}
+    </p>
   }
 
   @if (isLoading()) {
-    <div class="text-center py-12 text-text-tertiary">{{ translationService.translate('admin.taxonomy.loading') }}</div>
+    <div class="text-center py-12 text-text-tertiary">
+      {{ translationService.translate('admin.taxonomy.loading') }}
+    </div>
   }
 
   @if (!isLoading() && treeNodes().length === 0) {
     <div class="text-center py-12 bg-surface-primary rounded-xl border border-border-default">
-      <p class="text-text-secondary mb-4">{{ translationService.translate('admin.taxonomy.empty') }}</p>
-      <button (click)="openCreate()" type="button" class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors">
+      <p class="text-text-secondary mb-4">
+        {{ translationService.translate('admin.taxonomy.empty') }}
+      </p>
+      <button
+        (click)="openCreate()"
+        type="button"
+        class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
+      >
         {{ translationService.translate('admin.taxonomy.new') }}
       </button>
     </div>
@@ -30,37 +52,69 @@
 
   @if (!isLoading() && treeNodes().length > 0) {
     <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-4">
-      <p class="text-xs text-text-tertiary mb-3">{{ translationService.translate('admin.taxonomy.dragHint') }}</p>
+      <p class="text-xs text-text-tertiary mb-3">
+        {{ translationService.translate('admin.taxonomy.dragHint') }}
+      </p>
       <div class="taxonomy-tree">
         @for (node of treeNodes(); track node.category.id) {
           <div class="ml-0">
-            <div class="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-surface-secondary group"
-                 draggable="true"
-                 (dragstart)="onDragStart($event, node.category.id)"
-                 (dragover)="$event.preventDefault()"
-                 (drop)="draggedCategoryId !== null && onDrop(draggedCategoryId, node.category.id)">
-              <button type="button" (click)="toggleExpand(node)" (keydown.enter)="toggleExpand(node)"
-                      class="w-5 h-5 flex items-center justify-center text-text-tertiary hover:text-text-secondary">
+            <div
+              class="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-surface-secondary group"
+              draggable="true"
+              (dragstart)="onDragStart($event, node.category.id)"
+              (dragover)="$event.preventDefault()"
+              (drop)="draggedCategoryId !== null && onDrop(draggedCategoryId, node.category.id)"
+            >
+              <button
+                type="button"
+                (click)="toggleExpand(node)"
+                (keydown.enter)="toggleExpand(node)"
+                class="w-5 h-5 flex items-center justify-center text-text-tertiary hover:text-text-secondary"
+              >
                 @if (node.children.length > 0) {
-                  <svg [class.rotate-90]="node.expanded" class="w-4 h-4 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+                  <svg
+                    [class.rotate-90]="node.expanded"
+                    class="w-4 h-4 transition-transform"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                 } @else {
                   <span class="w-4"></span>
                 }
               </button>
-              <span class="flex-1 text-sm font-medium text-text-primary">{{ node.category.nameEn }}</span>
+              <span class="flex-1 text-sm font-medium text-text-primary">{{
+                node.category.nameEn
+              }}</span>
               <span class="text-xs text-text-tertiary">{{ node.category.nameFr }}</span>
               @if (node.children.length > 0) {
-                <span class="text-xs px-2 py-0.5 rounded-full bg-accent-info-muted text-accent-info">{{ node.children.length }}</span>
+                <span
+                  class="text-xs px-2 py-0.5 rounded-full bg-accent-info-muted text-accent-info"
+                  >{{ node.children.length }}</span
+                >
               }
-              <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button type="button" (click)="openEdit(node.category)" (keydown.enter)="openEdit(node.category)"
-                        class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium">
+              <div
+                class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  type="button"
+                  (click)="openEdit(node.category)"
+                  (keydown.enter)="openEdit(node.category)"
+                  class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium"
+                >
                   {{ translationService.translate('admin.taxonomy.edit') }}
                 </button>
-                <button type="button" (click)="confirmDelete(node.category)" (keydown.enter)="confirmDelete(node.category)"
-                        class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium">
+                <button
+                  type="button"
+                  (click)="confirmDelete(node.category)"
+                  (keydown.enter)="confirmDelete(node.category)"
+                  class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium"
+                >
                   {{ translationService.translate('admin.articles.delete') }}
                 </button>
               </div>
@@ -68,26 +122,53 @@
             @if (node.expanded && node.children.length > 0) {
               <div class="border-l-2 border-border-default ml-3">
                 @for (child of node.children; track child.category.id) {
-                  <div class="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-surface-secondary group ml-4">
-                    <button type="button" (click)="toggleExpand(child)" (keydown.enter)="toggleExpand(child)"
-                            class="w-5 h-5 flex items-center justify-center text-text-tertiary hover:text-text-secondary">
+                  <div
+                    class="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-surface-secondary group ml-4"
+                  >
+                    <button
+                      type="button"
+                      (click)="toggleExpand(child)"
+                      (keydown.enter)="toggleExpand(child)"
+                      class="w-5 h-5 flex items-center justify-center text-text-tertiary hover:text-text-secondary"
+                    >
                       @if (child.children.length > 0) {
-                        <svg [class.rotate-90]="child.expanded" class="w-4 h-4 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/>
+                        <svg
+                          [class.rotate-90]="child.expanded"
+                          class="w-4 h-4 transition-transform"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                            clip-rule="evenodd"
+                          />
                         </svg>
                       } @else {
                         <span class="w-4"></span>
                       }
                     </button>
-                    <span class="flex-1 text-sm text-text-primary">{{ child.category.nameEn }}</span>
+                    <span class="flex-1 text-sm text-text-primary">{{
+                      child.category.nameEn
+                    }}</span>
                     <span class="text-xs text-text-tertiary">{{ child.category.nameFr }}</span>
-                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button type="button" (click)="openEdit(child.category)" (keydown.enter)="openEdit(child.category)"
-                              class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium">
+                    <div
+                      class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <button
+                        type="button"
+                        (click)="openEdit(child.category)"
+                        (keydown.enter)="openEdit(child.category)"
+                        class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium"
+                      >
                         {{ translationService.translate('admin.taxonomy.edit') }}
                       </button>
-                      <button type="button" (click)="confirmDelete(child.category)" (keydown.enter)="confirmDelete(child.category)"
-                              class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium">
+                      <button
+                        type="button"
+                        (click)="confirmDelete(child.category)"
+                        (keydown.enter)="confirmDelete(child.category)"
+                        class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium"
+                      >
                         {{ translationService.translate('admin.articles.delete') }}
                       </button>
                     </div>
@@ -103,26 +184,66 @@
 
   <!-- Create Dialog -->
   @if (showCreateDialog()) {
-    <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
-         tabindex="0" role="dialog" aria-modal="true"
-         (click)="showCreateDialog.set(false)" (keydown.escape)="showCreateDialog.set(false)" (keydown.enter)="showCreateDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
-           tabindex="-1"
-           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
-        <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.new') }}</h3>
+    <div
+      class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+      tabindex="0"
+      role="dialog"
+      aria-modal="true"
+      (click)="showCreateDialog.set(false)"
+      (keydown.escape)="showCreateDialog.set(false)"
+      (keydown.enter)="showCreateDialog.set(false)"
+    >
+      <div
+        class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.escape)="$event.stopPropagation()"
+      >
+        <h3 class="text-lg font-semibold text-text-primary mb-4">
+          {{ translationService.translate('admin.taxonomy.new') }}
+        </h3>
         <div class="space-y-3">
           <div>
-            <label for="create-name-en" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.nameEn') }}</label>
-            <input id="create-name-en" type="text" [(ngModel)]="formNameEn" required class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"/>
+            <label
+              for="create-name-en"
+              class="block text-sm font-medium text-text-secondary mb-1"
+              >{{ translationService.translate('admin.taxonomy.nameEn') }}</label
+            >
+            <input
+              id="create-name-en"
+              type="text"
+              [(ngModel)]="formNameEn"
+              required
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            />
           </div>
           <div>
-            <label for="create-name-fr" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.nameFr') }}</label>
-            <input id="create-name-fr" type="text" [(ngModel)]="formNameFr" required class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"/>
+            <label
+              for="create-name-fr"
+              class="block text-sm font-medium text-text-secondary mb-1"
+              >{{ translationService.translate('admin.taxonomy.nameFr') }}</label
+            >
+            <input
+              id="create-name-fr"
+              type="text"
+              [(ngModel)]="formNameFr"
+              required
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            />
           </div>
           <div>
-            <label for="create-parent" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.parent') }}</label>
-            <select id="create-parent" [(ngModel)]="formParentId" class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
-              <option [ngValue]="null">{{ translationService.translate('admin.taxonomy.none') }}</option>
+            <label for="create-parent" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.taxonomy.parent')
+            }}</label>
+            <select
+              id="create-parent"
+              [(ngModel)]="formParentId"
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            >
+              <option [ngValue]="null">
+                {{ translationService.translate('admin.taxonomy.none') }}
+              </option>
               @for (cat of rawCategories(); track cat.id) {
                 <option [ngValue]="cat.id">{{ getCategoryFullPath(cat) }}</option>
               }
@@ -130,12 +251,19 @@
           </div>
         </div>
         <div class="flex items-center gap-2 mt-6">
-          <button type="button" (click)="createCategory()" [disabled]="!formNameEn || !formNameFr"
-                  class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors">
+          <button
+            type="button"
+            (click)="createCategory()"
+            [disabled]="!formNameEn || !formNameFr"
+            class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
+          >
             {{ translationService.translate('admin.taxonomy.create') }}
           </button>
-          <button type="button" (click)="showCreateDialog.set(false)"
-                  class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors">
+          <button
+            type="button"
+            (click)="showCreateDialog.set(false)"
+            class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors"
+          >
             {{ translationService.translate('admin.documents.cancel') }}
           </button>
         </div>
@@ -145,26 +273,62 @@
 
   <!-- Edit Dialog -->
   @if (showEditDialog()) {
-    <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
-         tabindex="0" role="dialog" aria-modal="true"
-         (click)="showEditDialog.set(false)" (keydown.escape)="showEditDialog.set(false)" (keydown.enter)="showEditDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
-           tabindex="-1"
-           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
-        <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.edit') }}</h3>
+    <div
+      class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+      tabindex="0"
+      role="dialog"
+      aria-modal="true"
+      (click)="showEditDialog.set(false)"
+      (keydown.escape)="showEditDialog.set(false)"
+      (keydown.enter)="showEditDialog.set(false)"
+    >
+      <div
+        class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.escape)="$event.stopPropagation()"
+      >
+        <h3 class="text-lg font-semibold text-text-primary mb-4">
+          {{ translationService.translate('admin.taxonomy.edit') }}
+        </h3>
         <div class="space-y-3">
           <div>
-            <label for="edit-name-en" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.nameEn') }}</label>
-            <input id="edit-name-en" type="text" [(ngModel)]="formNameEn" required class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"/>
+            <label for="edit-name-en" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.taxonomy.nameEn')
+            }}</label>
+            <input
+              id="edit-name-en"
+              type="text"
+              [(ngModel)]="formNameEn"
+              required
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            />
           </div>
           <div>
-            <label for="edit-name-fr" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.nameFr') }}</label>
-            <input id="edit-name-fr" type="text" [(ngModel)]="formNameFr" required class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"/>
+            <label for="edit-name-fr" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.taxonomy.nameFr')
+            }}</label>
+            <input
+              id="edit-name-fr"
+              type="text"
+              [(ngModel)]="formNameFr"
+              required
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            />
           </div>
           <div>
-            <label for="edit-parent" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.parent') }}</label>
-            <select id="edit-parent" [(ngModel)]="formParentId" class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
-              <option [ngValue]="null">{{ translationService.translate('admin.taxonomy.none') }}</option>
+            <label for="edit-parent" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.taxonomy.parent')
+            }}</label>
+            <select
+              id="edit-parent"
+              [(ngModel)]="formParentId"
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            >
+              <option [ngValue]="null">
+                {{ translationService.translate('admin.taxonomy.none') }}
+              </option>
               @for (cat of getOtherCategories(editingCategory()?.id ?? ''); track cat.id) {
                 <option [ngValue]="cat.id">{{ getCategoryFullPath(cat) }}</option>
               }
@@ -172,12 +336,19 @@
           </div>
         </div>
         <div class="flex items-center gap-2 mt-6">
-          <button type="button" (click)="updateCategory()" [disabled]="!formNameEn || !formNameFr"
-                  class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors">
+          <button
+            type="button"
+            (click)="updateCategory()"
+            [disabled]="!formNameEn || !formNameFr"
+            class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
+          >
             {{ translationService.translate('admin.taxonomy.update') }}
           </button>
-          <button type="button" (click)="showEditDialog.set(false)"
-                  class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors">
+          <button
+            type="button"
+            (click)="showEditDialog.set(false)"
+            class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors"
+          >
             {{ translationService.translate('admin.documents.cancel') }}
           </button>
         </div>
@@ -187,17 +358,35 @@
 
   <!-- Delete Dialog -->
   @if (showDeleteDialog()) {
-    <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
-         tabindex="0" role="dialog" aria-modal="true"
-         (click)="showDeleteDialog.set(false)" (keydown.escape)="showDeleteDialog.set(false)" (keydown.enter)="showDeleteDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
-           tabindex="-1"
-           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
-        <h3 class="text-lg font-semibold text-text-primary mb-2">{{ translationService.translate('admin.taxonomy.deleteConfirm') }}</h3>
+    <div
+      class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+      tabindex="0"
+      role="dialog"
+      aria-modal="true"
+      (click)="showDeleteDialog.set(false)"
+      (keydown.escape)="showDeleteDialog.set(false)"
+      (keydown.enter)="showDeleteDialog.set(false)"
+    >
+      <div
+        class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.escape)="$event.stopPropagation()"
+      >
+        <h3 class="text-lg font-semibold text-text-primary mb-2">
+          {{ translationService.translate('admin.taxonomy.deleteConfirm') }}
+        </h3>
         <p class="text-sm text-text-secondary mb-4">{{ deletingCategory()?.nameEn }}</p>
         <div class="mb-4">
-          <label for="reassign-target" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.reassignRequired') }}</label>
-          <select id="reassign-target" [(ngModel)]="reassignTargetId" class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          <label for="reassign-target" class="block text-sm font-medium text-text-secondary mb-1">{{
+            translationService.translate('admin.taxonomy.reassignRequired')
+          }}</label>
+          <select
+            id="reassign-target"
+            [(ngModel)]="reassignTargetId"
+            class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+          >
             <option [ngValue]="null">--</option>
             @for (cat of getOtherCategories(deletingCategory()?.id ?? ''); track cat.id) {
               <option [ngValue]="cat.id">{{ getCategoryFullPath(cat) }}</option>
@@ -205,12 +394,18 @@
           </select>
         </div>
         <div class="flex items-center gap-2">
-          <button type="button" (click)="deleteCategory()"
-                  class="px-4 py-2 text-sm bg-accent-danger text-white rounded-lg hover:bg-accent-danger/80 font-medium transition-colors">
+          <button
+            type="button"
+            (click)="deleteCategory()"
+            class="px-4 py-2 text-sm bg-accent-danger text-white rounded-lg hover:bg-accent-danger/80 font-medium transition-colors"
+          >
             {{ translationService.translate('admin.articles.delete') }}
           </button>
-          <button type="button" (click)="showDeleteDialog.set(false)"
-                  class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors">
+          <button
+            type="button"
+            (click)="showDeleteDialog.set(false)"
+            class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors"
+          >
             {{ translationService.translate('admin.documents.cancel') }}
           </button>
         </div>
@@ -220,40 +415,77 @@
 
   <!-- Merge Dialog -->
   @if (showMergeDialog()) {
-    <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
-         tabindex="0" role="dialog" aria-modal="true"
-         (click)="showMergeDialog.set(false)" (keydown.escape)="showMergeDialog.set(false)" (keydown.enter)="showMergeDialog.set(false)">
-      <div class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
-           tabindex="-1"
-           (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" (keydown.escape)="$event.stopPropagation()">
-        <h3 class="text-lg font-semibold text-text-primary mb-4">{{ translationService.translate('admin.taxonomy.merge') }}</h3>
+    <div
+      class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+      tabindex="0"
+      role="dialog"
+      aria-modal="true"
+      (click)="showMergeDialog.set(false)"
+      (keydown.escape)="showMergeDialog.set(false)"
+      (keydown.enter)="showMergeDialog.set(false)"
+    >
+      <div
+        class="bg-surface-primary rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.escape)="$event.stopPropagation()"
+      >
+        <h3 class="text-lg font-semibold text-text-primary mb-4">
+          {{ translationService.translate('admin.taxonomy.merge') }}
+        </h3>
         <div class="space-y-3">
           <div>
-            <label for="merge-source" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.mergeSource') }}</label>
-            <select id="merge-source" [(ngModel)]="mergeSourceId" class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+            <label for="merge-source" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.taxonomy.mergeSource')
+            }}</label>
+            <select
+              id="merge-source"
+              [(ngModel)]="mergeSourceId"
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            >
               <option [ngValue]="null">--</option>
               @for (cat of rawCategories(); track cat.id) {
-                <option [ngValue]="cat.id" [disabled]="cat.id === mergeTargetId">{{ getCategoryFullPath(cat) }}</option>
+                <option [ngValue]="cat.id" [disabled]="cat.id === mergeTargetId">
+                  {{ getCategoryFullPath(cat) }}
+                </option>
               }
             </select>
           </div>
           <div>
-            <label for="merge-target" class="block text-sm font-medium text-text-secondary mb-1">{{ translationService.translate('admin.taxonomy.mergeTarget') }}</label>
-            <select id="merge-target" [(ngModel)]="mergeTargetId" class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+            <label for="merge-target" class="block text-sm font-medium text-text-secondary mb-1">{{
+              translationService.translate('admin.taxonomy.mergeTarget')
+            }}</label>
+            <select
+              id="merge-target"
+              [(ngModel)]="mergeTargetId"
+              class="w-full px-3 py-2 border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            >
               <option [ngValue]="null">--</option>
               @for (cat of rawCategories(); track cat.id) {
-                <option [ngValue]="cat.id" [disabled]="cat.id === mergeSourceId">{{ getCategoryFullPath(cat) }}</option>
+                <option [ngValue]="cat.id" [disabled]="cat.id === mergeSourceId">
+                  {{ getCategoryFullPath(cat) }}
+                </option>
               }
             </select>
           </div>
         </div>
         <div class="flex items-center gap-2 mt-6">
-          <button type="button" (click)="mergeCategories()" [disabled]="mergeSourceId === null || mergeTargetId === null || mergeSourceId === mergeTargetId"
-                  class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors">
+          <button
+            type="button"
+            (click)="mergeCategories()"
+            [disabled]="
+              mergeSourceId === null || mergeTargetId === null || mergeSourceId === mergeTargetId
+            "
+            class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
+          >
             {{ translationService.translate('admin.taxonomy.merge') }}
           </button>
-          <button type="button" (click)="showMergeDialog.set(false)"
-                  class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors">
+          <button
+            type="button"
+            (click)="showMergeDialog.set(false)"
+            class="px-4 py-2 text-sm text-text-secondary border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors"
+          >
             {{ translationService.translate('admin.documents.cancel') }}
           </button>
         </div>

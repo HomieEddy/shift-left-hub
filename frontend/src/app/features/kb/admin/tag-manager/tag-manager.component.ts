@@ -34,18 +34,19 @@ export class TagManagerComponent implements OnInit {
 
   loadTags(): void {
     this.isLoading.set(true);
-    this.tagService.getTags().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (data) => {
-        this.tags.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('kb.tags.error.load'));
-        this.isLoading.set(false);
-      },
-    });
+    this.tagService
+      .getTags()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.tags.set(data);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('kb.tags.error.load'));
+          this.isLoading.set(false);
+        },
+      });
   }
 
   openCreate(): void {
@@ -73,51 +74,61 @@ export class TagManagerComponent implements OnInit {
     const editing = this.editingTag();
     const request = { nameEn: this.formNameEn, nameFr: this.formNameFr, color: this.formColor };
 
-    const action = editing !== null
-      ? this.tagService.updateTag(editing.id, request)
-      : this.tagService.createTag(request);
+    const action =
+      editing !== null
+        ? this.tagService.updateTag(editing.id, request)
+        : this.tagService.createTag(request);
 
-    action.pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
+    action.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.loadTags();
         this.cancelForm();
       },
       error: (err: unknown) => {
-        const serverError = err !== null && typeof err === 'object'
-          ? (err as Record<string, unknown>)['error']
-          : undefined;
-        const detail = serverError !== null && typeof serverError === 'object'
-          ? (serverError as Record<string, unknown>)['error']
-          : undefined;
+        const serverError =
+          err !== null && typeof err === 'object'
+            ? (err as Record<string, unknown>)['error']
+            : undefined;
+        const detail =
+          serverError !== null && typeof serverError === 'object'
+            ? (serverError as Record<string, unknown>)['error']
+            : undefined;
         this.errorMessage.set(typeof detail === 'string' ? detail : 'Failed to save tag.');
       },
     });
   }
 
   deleteTag(id: string, nameEn: string): void {
-    this.confirmationDialog.confirm({
-      title: this.translationService.translate('confirm.title.delete'),
-      message: this.translationService.translate('confirm.message.delete-tag', { name: nameEn }),
-      confirmLabel: this.translationService.translate('confirm.label.delete'),
-    }).subscribe((confirmed) => {
-      if (confirmed === true) {
-        this.tagService.deleteTag(id).pipe(
-          takeUntilDestroyed(this.destroyRef)
-        ).subscribe({
-          next: () => this.loadTags(),
-          error: (err: unknown) => {
-            const serverError = err !== null && typeof err === 'object'
-              ? (err as Record<string, unknown>)['error']
-              : undefined;
-            const detail = serverError !== null && typeof serverError === 'object'
-              ? (serverError as Record<string, unknown>)['error']
-              : undefined;
-            this.errorMessage.set(typeof detail === 'string' ? detail : this.translationService.translate('kb.tags.error.delete'));
-          },
-        });
-      }
-    });
+    this.confirmationDialog
+      .confirm({
+        title: this.translationService.translate('confirm.title.delete'),
+        message: this.translationService.translate('confirm.message.delete-tag', { name: nameEn }),
+        confirmLabel: this.translationService.translate('confirm.label.delete'),
+      })
+      .subscribe((confirmed) => {
+        if (confirmed === true) {
+          this.tagService
+            .deleteTag(id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => this.loadTags(),
+              error: (err: unknown) => {
+                const serverError =
+                  err !== null && typeof err === 'object'
+                    ? (err as Record<string, unknown>)['error']
+                    : undefined;
+                const detail =
+                  serverError !== null && typeof serverError === 'object'
+                    ? (serverError as Record<string, unknown>)['error']
+                    : undefined;
+                this.errorMessage.set(
+                  typeof detail === 'string'
+                    ? detail
+                    : this.translationService.translate('kb.tags.error.delete'),
+                );
+              },
+            });
+        }
+      });
   }
 }

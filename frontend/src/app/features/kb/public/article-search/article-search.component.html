@@ -1,5 +1,7 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <h1 class="text-3xl font-bold text-text-primary mb-6">{{ translationService.translate('kb.search.title') }}</h1>
+  <h1 class="text-3xl font-bold text-text-primary mb-6">
+    {{ translationService.translate('kb.search.title') }}
+  </h1>
 
   <!-- Search input -->
   <div class="relative mb-8">
@@ -11,15 +13,27 @@
       [placeholder]="translationService.translate('kb.search.placeholder')"
       class="w-full pl-12 pr-4 py-3 text-lg border border-border-default rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface-primary text-text-primary"
     />
-    <svg class="absolute left-4 top-3.5 w-6 h-6 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    <svg
+      class="absolute left-4 top-3.5 w-6 h-6 text-text-tertiary"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      />
     </svg>
   </div>
 
   <!-- Tag filters -->
   @if (availableTags().length > 0) {
     <div class="mb-6">
-      <p class="text-sm text-text-tertiary mb-2">{{ translationService.translate('kb.search.filter-tags') }}</p>
+      <p class="text-sm text-text-tertiary mb-2">
+        {{ translationService.translate('kb.search.filter-tags') }}
+      </p>
       <div class="flex flex-wrap gap-2">
         @for (tag of availableTags(); track tag.nameEn) {
           <button
@@ -39,20 +53,26 @@
 
   <!-- Error message -->
   @if (errorMessage()) {
-    <div class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">{{ errorMessage() }}</div>
+    <div class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">
+      {{ errorMessage() }}
+    </div>
   }
 
   <!-- Loading indicator -->
   @if (isLoading()) {
     <div class="text-center py-8">
-      <div class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
+      <div
+        class="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full mx-auto"
+      ></div>
     </div>
   }
 
   <!-- Results -->
   @if (!isLoading() && hasSearched()) {
     <p class="text-sm text-text-tertiary mb-6">
-      {{ translationService.translate('kb.search.results', { count: totalResults(), query: query() }) }}
+      {{
+        translationService.translate('kb.search.results', { count: totalResults(), query: query() })
+      }}
     </p>
 
     @if (results().length === 0) {
@@ -64,17 +84,25 @@
 
     <div class="space-y-4">
       @for (result of results(); track result.id) {
-        <div data-testid="kb-search-result" class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6 hover:shadow-md transition-shadow">
+        <div
+          data-testid="kb-search-result"
+          class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6 hover:shadow-md transition-shadow"
+        >
           <a [routerLink]="['/articles', result.id]" class="no-underline">
             <h2 class="text-lg font-semibold text-primary-600 hover:text-primary-700 mb-2">
               {{ result.title }}
             </h2>
           </a>
-          <p class="text-sm text-text-secondary mb-3" [innerHTML]="sanitizeHeadline(result.headline)"></p>
+          <p
+            class="text-sm text-text-secondary mb-3"
+            [innerHTML]="sanitizeHeadline(result.headline)"
+          ></p>
           <div class="flex items-center gap-2 text-xs text-text-tertiary">
-            <span>{{ result.publishedAt | date:'mediumDate' }}</span>
+            <span>{{ result.publishedAt | date: 'mediumDate' }}</span>
             @if (categories().length > 0) {
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent-success-muted text-accent-success">
+              <span
+                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent-success-muted text-accent-success"
+              >
                 {{ categories()[0].nameEn }}
               </span>
             }
@@ -99,7 +127,12 @@
         >
           {{ translationService.translate('pagination.previous') }}
         </button>
-        <span class="text-sm text-text-secondary">{{ translationService.translate('pagination.page-of', { VAR_PLURAL: currentPage() + 1, VAR_TOTALPAGES: totalPages() }) }}</span>
+        <span class="text-sm text-text-secondary">{{
+          translationService.translate('pagination.page-of', {
+            VAR_PLURAL: currentPage() + 1,
+            VAR_TOTALPAGES: totalPages(),
+          })
+        }}</span>
         <button
           (click)="changePage(currentPage() + 1)"
           [disabled]="currentPage() >= totalPages() - 1"
@@ -114,8 +147,18 @@
   <!-- Initial state -->
   @if (!hasSearched() && !isLoading()) {
     <div class="text-center py-16 text-text-tertiary">
-      <svg class="w-16 h-16 mx-auto mb-4 text-border-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      <svg
+        class="w-16 h-16 mx-auto mb-4 text-border-default"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
       </svg>
       <p class="text-lg">{{ translationService.translate('kb.search.hint') }}</p>
     </div>

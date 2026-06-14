@@ -6,7 +6,6 @@ import { KcsDraft, PendingCountResponse, PaginatedResponse } from './kcs-draft.m
 /** Service for interacting with the KCS draft admin API endpoints. */
 @Injectable({ providedIn: 'root' })
 export class KcsDraftService {
-
   private readonly http = inject(HttpClient);
 
   /**
@@ -15,10 +14,11 @@ export class KcsDraftService {
    * @param size page size (default 20)
    */
   getDrafts(page = 0, size = 20): Observable<PaginatedResponse<KcsDraft>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    return this.http.get<PaginatedResponse<KcsDraft>>('/api/admin/kcs/drafts', { params, withCredentials: true });
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<PaginatedResponse<KcsDraft>>('/api/admin/kcs/drafts', {
+      params,
+      withCredentials: true,
+    });
   }
 
   /** Gets a single KCS draft by article ID. */
@@ -28,16 +28,26 @@ export class KcsDraftService {
 
   /** Approves a KCS draft (→ PUBLISHED). */
   approveDraft(id: string): Observable<KcsDraft> {
-    return this.http.put<KcsDraft>(`/api/admin/kcs/drafts/${id}/approve`, {}, { withCredentials: true });
+    return this.http.put<KcsDraft>(
+      `/api/admin/kcs/drafts/${id}/approve`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   /** Rejects a KCS draft (→ ARCHIVED). */
   rejectDraft(id: string): Observable<KcsDraft> {
-    return this.http.put<KcsDraft>(`/api/admin/kcs/drafts/${id}/reject`, {}, { withCredentials: true });
+    return this.http.put<KcsDraft>(
+      `/api/admin/kcs/drafts/${id}/reject`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   /** Gets the count of pending (DRAFT) KCS articles for the nav badge. */
   getPendingCount(): Observable<PendingCountResponse> {
-    return this.http.get<PendingCountResponse>('/api/admin/kcs/drafts/pending-count', { withCredentials: true });
+    return this.http.get<PendingCountResponse>('/api/admin/kcs/drafts/pending-count', {
+      withCredentials: true,
+    });
   }
 }

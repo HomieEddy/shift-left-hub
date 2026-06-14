@@ -39,16 +39,19 @@ export class UserListComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.authService.getUsers().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (data) => {
-        this.users.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('error.load-users'));
-        this.isLoading.set(false);
-      },
-    });
+    this.authService
+      .getUsers()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.users.set(data);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('error.load-users'));
+          this.isLoading.set(false);
+        },
+      });
   }
 
   /** Users sorted by the current field and direction. */
@@ -98,47 +101,57 @@ export class UserListComponent implements OnInit {
     const user = this.editingUser();
     if (user == null) return;
 
-    this.authService.updateUserRole(user.id, newRole).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (updated) => {
-        this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
-        this.closeRoleDialog();
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('error.update-role'));
-        this.closeRoleDialog();
-      },
-    });
+    this.authService
+      .updateUserRole(user.id, newRole)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updated) => {
+          this.users.update((users) => users.map((u) => (u.id === updated.id ? updated : u)));
+          this.closeRoleDialog();
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('error.update-role'));
+          this.closeRoleDialog();
+        },
+      });
   }
 
   toggleStatus(user: UserDto): void {
     const action = user.enabled ? 'disable' : 'enable';
-    this.confirmationDialog.confirm({
-      title: this.translationService.translate('admin.users.' + action + '-title'),
-      message: this.translationService.translate('admin.users.' + action + '-message', { VAR_NAME: user.displayName }),
-      confirmLabel: this.translationService.translate('admin.users.' + action + '-confirm'),
-    }).subscribe((confirmed) => {
-      if (!confirmed) return;
-      this.authService.toggleUserStatus(user.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: (updated) => {
-          this.users.update(users => users.map(u => u.id === updated.id ? updated : u));
-        },
-        error: () => {
-          this.errorMessage.set(this.translationService.translate('error.toggle-status'));
-        },
+    this.confirmationDialog
+      .confirm({
+        title: this.translationService.translate('admin.users.' + action + '-title'),
+        message: this.translationService.translate('admin.users.' + action + '-message', {
+          VAR_NAME: user.displayName,
+        }),
+        confirmLabel: this.translationService.translate('admin.users.' + action + '-confirm'),
+      })
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.authService
+          .toggleUserStatus(user.id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: (updated) => {
+              this.users.update((users) => users.map((u) => (u.id === updated.id ? updated : u)));
+            },
+            error: () => {
+              this.errorMessage.set(this.translationService.translate('error.toggle-status'));
+            },
+          });
       });
-    });
   }
 
   /** Translatable labels */
   roleLabels = computed<Record<string, string>>(() => ({
-    'ROLE_ADMIN': this.translationService.translate('admin.users.role.admin'),
-    'ROLE_AGENT': this.translationService.translate('admin.users.role.agent'),
-    'ROLE_USER': this.translationService.translate('admin.users.role.user'),
+    ROLE_ADMIN: this.translationService.translate('admin.users.role.admin'),
+    ROLE_AGENT: this.translationService.translate('admin.users.role.agent'),
+    ROLE_USER: this.translationService.translate('admin.users.role.user'),
   }));
 
   statusLabels = computed<Record<string, string>>(() => ({
-    'active': this.translationService.translate('admin.users.status.active'),
-    'disabled': this.translationService.translate('admin.users.status.disabled'),
+    active: this.translationService.translate('admin.users.status.active'),
+    disabled: this.translationService.translate('admin.users.status.disabled'),
   }));
 
   actionDisable = computed(() => this.translationService.translate('admin.users.disable'));

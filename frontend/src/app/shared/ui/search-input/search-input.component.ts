@@ -22,11 +22,13 @@ export class SearchInputComponent {
   private destroyRef = inject(DestroyRef);
 
   constructor() {
-    this.searchSubject.pipe(
-      debounceTime(this.debounceMs()),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe(value => this.searchChange.emit(value));
+    this.searchSubject
+      .pipe(
+        debounceTime(this.debounceMs()),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((value) => this.searchChange.emit(value));
   }
 
   onInput(value: string): void {

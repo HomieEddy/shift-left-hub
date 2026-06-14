@@ -31,10 +31,18 @@ export class DocumentService {
   }
 
   reprocessDocument(id: string): Observable<DocumentUploadResponse> {
-    return this.http.post<DocumentUploadResponse>(`/api/admin/documents/${id}/reprocess`, {}, { withCredentials: true });
+    return this.http.post<DocumentUploadResponse>(
+      `/api/admin/documents/${id}/reprocess`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   convertToArticle(id: string): Observable<{ articleId: string }> {
-    return this.http.post<{ articleId: string }>(`/api/admin/documents/${id}/convert`, {}, { withCredentials: true });
+    return this.http.post<{ articleId: string }>(
+      `/api/admin/documents/${id}/convert`,
+      {},
+      { withCredentials: true },
+    );
   }
 }

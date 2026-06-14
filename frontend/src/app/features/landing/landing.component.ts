@@ -48,12 +48,15 @@ export class LandingComponent implements OnInit {
   currentWorkspace = computed(() => {
     const user = this.authService.user();
     const list = this.workspaces();
-    if (!user) { return null; }
-    return list.find(ws => ws.id === user.workspaceId) ?? list[0] ?? null;
+    if (!user) {
+      return null;
+    }
+    return list.find((ws) => ws.id === user.workspaceId) ?? list[0] ?? null;
   });
 
   ngOnInit() {
-    this.workspaceService.getMyWorkspaces()
+    this.workspaceService
+      .getMyWorkspaces()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(() => {
@@ -61,7 +64,7 @@ export class LandingComponent implements OnInit {
           return [];
         }),
       )
-      .subscribe(ws => this.workspaces.set(ws));
+      .subscribe((ws) => this.workspaces.set(ws));
   }
 
   protected get firstLetter(): string {

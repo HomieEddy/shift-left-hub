@@ -17,8 +17,24 @@ describe('ArticleSearchComponent', () => {
 
   const mockResults = {
     content: [
-      { id: '1', title: 'Test Article', headline: '<mark>Test</mark> result', slug: 'test-article', excerpt: 'An article', publishedAt: '2026-01-01T00:00:00Z', tagNames: ['tag1'] },
-      { id: '2', title: 'Second Article', headline: 'No match', slug: 'second-article', excerpt: 'Another article', publishedAt: '2026-01-02T00:00:00Z', tagNames: ['tag2'] },
+      {
+        id: '1',
+        title: 'Test Article',
+        headline: '<mark>Test</mark> result',
+        slug: 'test-article',
+        excerpt: 'An article',
+        publishedAt: '2026-01-01T00:00:00Z',
+        tagNames: ['tag1'],
+      },
+      {
+        id: '2',
+        title: 'Second Article',
+        headline: 'No match',
+        slug: 'second-article',
+        excerpt: 'Another article',
+        publishedAt: '2026-01-02T00:00:00Z',
+        tagNames: ['tag2'],
+      },
     ],
     totalPages: 1,
     totalElements: 2,
@@ -77,13 +93,15 @@ describe('ArticleSearchComponent', () => {
   });
 
   it('should show empty state when no results', () => {
-    publicArticleService.search.mockReturnValue(of({
-      content: [],
-      totalPages: 0,
-      totalElements: 0,
-      number: 0,
-      size: 20,
-    }));
+    publicArticleService.search.mockReturnValue(
+      of({
+        content: [],
+        totalPages: 0,
+        totalElements: 0,
+        number: 0,
+        size: 20,
+      }),
+    );
 
     component.doSearch('nonexistent', 0, []);
 

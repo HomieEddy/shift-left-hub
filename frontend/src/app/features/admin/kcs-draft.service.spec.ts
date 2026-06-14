@@ -49,12 +49,12 @@ describe('KcsDraftService', () => {
 
   describe('getDrafts', () => {
     it('should GET /api/admin/kcs/drafts with pagination', () => {
-      service.getDrafts().subscribe(response => {
+      service.getDrafts().subscribe((response) => {
         expect(response.content.length).toBe(2);
         expect(response.totalPages).toBe(1);
       });
 
-      const req = httpMock.expectOne(r => r.url === '/api/admin/kcs/drafts');
+      const req = httpMock.expectOne((r) => r.url === '/api/admin/kcs/drafts');
       expect(req.request.method).toBe('GET');
       expect(req.request.params.get('page')).toBe('0');
       expect(req.request.params.get('size')).toBe('20');
@@ -65,7 +65,7 @@ describe('KcsDraftService', () => {
     it('should GET with custom page and size', () => {
       service.getDrafts(1, 50).subscribe();
 
-      const req = httpMock.expectOne(r => r.url === '/api/admin/kcs/drafts');
+      const req = httpMock.expectOne((r) => r.url === '/api/admin/kcs/drafts');
       expect(req.request.params.get('page')).toBe('1');
       expect(req.request.params.get('size')).toBe('50');
       req.flush(mockPaginatedResponse);
@@ -74,7 +74,7 @@ describe('KcsDraftService', () => {
 
   describe('getDraftDetail', () => {
     it('should GET /api/admin/kcs/drafts/:id', () => {
-      service.getDraftDetail('draft-1').subscribe(draft => {
+      service.getDraftDetail('draft-1').subscribe((draft) => {
         expect(draft.id).toBe('draft-1');
         expect(draft.titleEn).toBe('How to fix network connection');
       });
@@ -88,7 +88,7 @@ describe('KcsDraftService', () => {
 
   describe('approveDraft', () => {
     it('should PUT to /api/admin/kcs/drafts/:id/approve', () => {
-      service.approveDraft('draft-1').subscribe(draft => {
+      service.approveDraft('draft-1').subscribe((draft) => {
         expect(draft.status).toBe('PUBLISHED');
       });
 
@@ -103,7 +103,7 @@ describe('KcsDraftService', () => {
 
   describe('rejectDraft', () => {
     it('should PUT to /api/admin/kcs/drafts/:id/reject', () => {
-      service.rejectDraft('draft-1').subscribe(draft => {
+      service.rejectDraft('draft-1').subscribe((draft) => {
         expect(draft.status).toBe('ARCHIVED');
       });
 
@@ -117,7 +117,7 @@ describe('KcsDraftService', () => {
 
   describe('getPendingCount', () => {
     it('should GET /api/admin/kcs/drafts/pending-count', () => {
-      service.getPendingCount().subscribe(response => {
+      service.getPendingCount().subscribe((response) => {
         expect(response.pendingCount).toBe(5);
       });
 
@@ -133,11 +133,15 @@ describe('KcsDraftService', () => {
       let errorResponse: unknown = null;
 
       service.getDrafts().subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
-      const req = httpMock.expectOne(r => r.url === '/api/admin/kcs/drafts');
+      const req = httpMock.expectOne((r) => r.url === '/api/admin/kcs/drafts');
       req.flush({ message: 'Forbidden' }, { status: 403, statusText: 'Forbidden' });
 
       expect((errorResponse as { status: number }).status).toBe(403);
@@ -147,8 +151,12 @@ describe('KcsDraftService', () => {
       let errorResponse: unknown = null;
 
       service.approveDraft('invalid-id').subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/admin/kcs/drafts/invalid-id/approve');

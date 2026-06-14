@@ -20,31 +20,36 @@ export class AuthService {
 
   /** Register a new user. Session is set automatically on success. */
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/api/auth/register', request, { withCredentials: true })
-      .pipe(tap(response => this.setSession(response)));
+    return this.http
+      .post<AuthResponse>('/api/auth/register', request, { withCredentials: true })
+      .pipe(tap((response) => this.setSession(response)));
   }
 
   /** Authenticate with email/password. Session is set on success. */
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/api/auth/login', request, { withCredentials: true })
-      .pipe(tap(response => this.setSession(response)));
+    return this.http
+      .post<AuthResponse>('/api/auth/login', request, { withCredentials: true })
+      .pipe(tap((response) => this.setSession(response)));
   }
 
   /** Refresh the JWT using the HttpOnly cookie. Called on app init. */
   refresh(): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/api/auth/refresh', {}, { withCredentials: true })
-      .pipe(tap(response => this.setSession(response)));
+    return this.http
+      .post<AuthResponse>('/api/auth/refresh', {}, { withCredentials: true })
+      .pipe(tap((response) => this.setSession(response)));
   }
 
   /** Switch active workspace by re-issuing JWT with new workspace_id claim. */
   switchWorkspace(workspaceId: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`/api/auth/workspace/${workspaceId}`, {}, { withCredentials: true })
-      .pipe(tap(response => this.setSession(response)));
+    return this.http
+      .post<AuthResponse>(`/api/auth/workspace/${workspaceId}`, {}, { withCredentials: true })
+      .pipe(tap((response) => this.setSession(response)));
   }
 
   /** Log out and clear the session on the server. */
   logout(): Observable<void> {
-    return this.http.post<void>('/api/auth/logout', {}, { withCredentials: true })
+    return this.http
+      .post<void>('/api/auth/logout', {}, { withCredentials: true })
       .pipe(tap(() => this.clearSession()));
   }
 
@@ -60,7 +65,11 @@ export class AuthService {
 
   /** Update a user's role (admin only). */
   updateUserRole(id: string, role: string): Observable<UserDto> {
-    return this.http.put<UserDto>(`/api/admin/users/${id}/role`, { role }, { withCredentials: true });
+    return this.http.put<UserDto>(
+      `/api/admin/users/${id}/role`,
+      { role },
+      { withCredentials: true },
+    );
   }
 
   /** Toggle a user's enabled/disabled status (admin only). */

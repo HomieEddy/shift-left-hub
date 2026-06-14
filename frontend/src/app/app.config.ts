@@ -9,9 +9,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(
-      withInterceptors([errorInterceptor])
-    ),
+    provideHttpClient(withInterceptors([errorInterceptor])),
     provideMarkdown({
       markedOptions: {
         provide: MARKED_OPTIONS,
@@ -20,6 +18,6 @@ export const appConfig: ApplicationConfig = {
           breaks: true,
         },
       },
-    })
-  ]
+    }),
+  ],
 };

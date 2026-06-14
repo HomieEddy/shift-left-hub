@@ -24,7 +24,10 @@ describe('TicketService', () => {
     updatedAt: '2024-06-01T10:00:00Z',
   };
 
-  const mockTickets = [mockTicket, { ...mockTicket, id: 'ticket-2', ticketNumber: 'TKT-0002', status: 'IN_PROGRESS' as const }];
+  const mockTickets = [
+    mockTicket,
+    { ...mockTicket, id: 'ticket-2', ticketNumber: 'TKT-0002', status: 'IN_PROGRESS' as const },
+  ];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -50,7 +53,7 @@ describe('TicketService', () => {
         urgency: 'HIGH' as const,
       };
 
-      service.createTicket(request).subscribe(ticket => {
+      service.createTicket(request).subscribe((ticket) => {
         expect(ticket.id).toBe('ticket-1');
         expect(ticket.ticketNumber).toBe('TKT-0001');
         expect(ticket.status).toBe('NEW');
@@ -81,7 +84,7 @@ describe('TicketService', () => {
 
   describe('getTickets', () => {
     it('should GET /api/tickets and return a list', () => {
-      service.getTickets().subscribe(tickets => {
+      service.getTickets().subscribe((tickets) => {
         expect(tickets.length).toBe(2);
         expect(tickets[0].ticketNumber).toBe('TKT-0001');
         expect(tickets[1].ticketNumber).toBe('TKT-0002');
@@ -93,7 +96,7 @@ describe('TicketService', () => {
     });
 
     it('should handle empty list', () => {
-      service.getTickets().subscribe(tickets => {
+      service.getTickets().subscribe((tickets) => {
         expect(tickets.length).toBe(0);
       });
 
@@ -104,7 +107,7 @@ describe('TicketService', () => {
 
   describe('getTicket', () => {
     it('should GET /api/tickets/:id and return a single ticket', () => {
-      service.getTicket('ticket-1').subscribe(ticket => {
+      service.getTicket('ticket-1').subscribe((ticket) => {
         expect(ticket.id).toBe('ticket-1');
         expect(ticket.issue).toBe('My software is broken');
       });
@@ -117,7 +120,7 @@ describe('TicketService', () => {
 
   describe('cancelTicket', () => {
     it('should POST to /api/tickets/:id/cancel with cancelReason', () => {
-      service.cancelTicket('ticket-1', 'Resolved on my own').subscribe(ticket => {
+      service.cancelTicket('ticket-1', 'Resolved on my own').subscribe((ticket) => {
         expect(ticket.status).toBe('CANCELLED');
       });
 
@@ -128,7 +131,7 @@ describe('TicketService', () => {
     });
 
     it('should POST to /api/tickets/:id/cancel without cancelReason', () => {
-      service.cancelTicket('ticket-1').subscribe(ticket => {
+      service.cancelTicket('ticket-1').subscribe((ticket) => {
         expect(ticket.status).toBe('CANCELLED');
       });
 
@@ -144,8 +147,12 @@ describe('TicketService', () => {
       let errorResponse: unknown = null;
 
       service.getTickets().subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/tickets');
@@ -158,8 +165,12 @@ describe('TicketService', () => {
       let errorResponse: unknown = null;
 
       service.getTicket('nonexistent').subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/tickets/nonexistent');

@@ -1,11 +1,26 @@
 <div class="max-w-4xl mx-auto px-4 py-6">
-
   <!-- Loading -->
   @if (isLoading()) {
     <div class="text-center py-12 text-text-secondary">
-      <svg class="animate-spin mx-auto mb-3 w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      <svg
+        class="animate-spin mx-auto mb-3 w-6 h-6 text-primary-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
       </svg>
       {{ loadingLabel() }}
     </div>
@@ -13,32 +28,52 @@
 
   <!-- Error -->
   @if (isError()) {
-    <div class="bg-accent-danger-muted border border-accent-danger rounded-lg px-4 py-3 text-sm text-accent-danger mb-4">
+    <div
+      class="bg-accent-danger-muted border border-accent-danger rounded-lg px-4 py-3 text-sm text-accent-danger mb-4"
+    >
       {{ errorLabel() }}
-      <button (click)="ngOnInit()" class="ml-2 underline transition-colors">{{ retryLabel() }}</button>
+      <button (click)="ngOnInit()" class="ml-2 underline transition-colors">
+        {{ retryLabel() }}
+      </button>
     </div>
   }
 
   @if (!isLoading() && !isError() && ticket(); as t) {
     <!-- Header -->
     <div class="mb-6">
-      <a routerLink="/agent/tickets" class="text-sm text-primary-600 hover:text-primary-700 mb-2 inline-block transition-colors">
+      <a
+        routerLink="/agent/tickets"
+        class="text-sm text-primary-600 hover:text-primary-700 mb-2 inline-block transition-colors"
+      >
         {{ translationService.translate('agent.detail.backToQueue') }}
       </a>
       <div class="flex items-center gap-3 flex-wrap">
         <h1 class="text-2xl font-bold text-text-primary font-mono">{{ t.ticketNumber }}</h1>
-        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="statusBadgeClass(t.status)">
+        <span
+          class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+          [class]="statusBadgeClass(t.status)"
+        >
           {{ statusLabels()[t.status] || t.status }}
         </span>
-        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="categoryBadgeClass(t.category)">
+        <span
+          class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+          [class]="categoryBadgeClass(t.category)"
+        >
           {{ categoryLabels()[t.category] || t.category }}
         </span>
-        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="urgencyBadgeClass(t.urgency)">
+        <span
+          class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+          [class]="urgencyBadgeClass(t.urgency)"
+        >
           {{ urgencyLabels()[t.urgency] || t.urgency }}
         </span>
       </div>
       <div class="mt-1 text-sm text-text-secondary">
-        {{ t.assignedToDisplayName ? (assignedToLabel() + ' ' + t.assignedToDisplayName) : unassignedLabel() }}
+        {{
+          t.assignedToDisplayName
+            ? assignedToLabel() + ' ' + t.assignedToDisplayName
+            : unassignedLabel()
+        }}
         &middot; {{ openedByLabel() }} {{ t.userDisplayName }} ({{ t.userEmail }})
       </div>
     </div>
@@ -55,7 +90,9 @@
       @if (contextExpanded()) {
         <div class="px-4 pb-4 space-y-3">
           <div>
-            <h3 class="text-xs font-medium text-text-secondary uppercase mb-1">{{ issueLabel() }}</h3>
+            <h3 class="text-xs font-medium text-text-secondary uppercase mb-1">
+              {{ issueLabel() }}
+            </h3>
             <p class="text-sm text-text-primary whitespace-pre-wrap">{{ t.issue }}</p>
           </div>
           @if (t.shiftLeftContext) {
@@ -63,28 +100,39 @@
               (click)="transcriptExpanded.set(!transcriptExpanded())"
               class="text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
             >
-              <span class="inline-block transition-transform" [class.rotate-90]="transcriptExpanded()">&#9654;</span> {{ chatTranscriptLabel() }}
+              <span
+                class="inline-block transition-transform"
+                [class.rotate-90]="transcriptExpanded()"
+                >&#9654;</span
+              >
+              {{ chatTranscriptLabel() }}
             </button>
             @if (transcriptExpanded()) {
-              <div class="mt-2 bg-surface-secondary rounded-lg max-h-72 overflow-y-auto space-y-2 p-3">
+              <div
+                class="mt-2 bg-surface-secondary rounded-lg max-h-72 overflow-y-auto space-y-2 p-3"
+              >
                 @for (msg of transcriptMessages(); track $index) {
                   <div
                     class="flex"
                     [class.justify-end]="msg.role === 'user'"
                     [class.justify-start]="msg.role !== 'user'"
                   >
-                    <div class="max-w-[80%] rounded-lg px-3 py-2 text-sm leading-relaxed"
+                    <div
+                      class="max-w-[80%] rounded-lg px-3 py-2 text-sm leading-relaxed"
                       [class.bg-surface-tertiary]="msg.role === 'user'"
                       [class.bg-surface-primary]="msg.role !== 'user'"
                       [class.border]="msg.role !== 'user'"
                       [class.border-border-default]="msg.role !== 'user'"
                       [class.text-text-primary]="true"
-                      [class.text-text-secondary]="msg.role !== 'user'">
+                      [class.text-text-secondary]="msg.role !== 'user'"
+                    >
                       <markdown class="markdown-content" [data]="msg.content"></markdown>
                     </div>
                   </div>
                 } @empty {
-                  <p class="text-xs text-text-tertiary text-center py-2">{{ translationService.translate('agent.no-transcript') }}</p>
+                  <p class="text-xs text-text-tertiary text-center py-2">
+                    {{ translationService.translate('agent.no-transcript') }}
+                  </p>
                 }
               </div>
             }
@@ -108,9 +156,25 @@
             class="bg-primary-600 text-white px-6 py-2 text-sm rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             @if (isClaiming()) {
-              <svg class="animate-spin -ml-1 mr-1.5 h-4 w-4 text-white inline-block" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                class="animate-spin -ml-1 mr-1.5 h-4 w-4 text-white inline-block"
+                fill="none"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               {{ claimingLabel() }}
             } @else {
@@ -131,7 +195,7 @@
           <div class="border-b border-border-light pb-3 last:border-0">
             <div class="flex items-center gap-2 text-xs text-text-secondary mb-1">
               <span class="font-medium text-text-primary">{{ note.authorDisplayName }}</span>
-              <span>{{ note.createdAt | date:'medium' }}</span>
+              <span>{{ note.createdAt | date: 'medium' }}</span>
             </div>
             <p class="text-sm text-text-primary whitespace-pre-wrap">{{ note.content }}</p>
           </div>
@@ -160,9 +224,25 @@
             class="mt-2 text-sm bg-primary-600 text-white px-4 py-1.5 rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             @if (isSubmittingNote()) {
-              <svg class="animate-spin -ml-1 mr-1.5 h-3 w-3 text-white inline-block" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                class="animate-spin -ml-1 mr-1.5 h-3 w-3 text-white inline-block"
+                fill="none"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               {{ addingLabel() }}
             } @else {
@@ -191,7 +271,12 @@
             class="w-full text-sm border border-border-default rounded-lg px-3 py-2 resize-none bg-surface-primary text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-shadow"
           ></textarea>
           <label class="flex items-center gap-2 text-sm text-text-primary cursor-pointer">
-            <input type="checkbox" [(ngModel)]="isKnowledgeGap" data-testid="agent-knowledge-gap" class="rounded border-border-default" />
+            <input
+              type="checkbox"
+              [(ngModel)]="isKnowledgeGap"
+              data-testid="agent-knowledge-gap"
+              class="rounded border-border-default"
+            />
             {{ flagKnowledgeGapLabel() }}
           </label>
           <button
@@ -201,9 +286,25 @@
             class="bg-primary-600 text-white px-4 py-1.5 text-sm rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             @if (isResolving()) {
-              <svg class="animate-spin -ml-1 mr-1.5 h-3 w-3 text-white inline-block" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                class="animate-spin -ml-1 mr-1.5 h-3 w-3 text-white inline-block"
+                fill="none"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               {{ resolvingLabel() }}
             } @else {
@@ -216,11 +317,14 @@
 
     <!-- Resolved state -->
     @if (t.status === 'RESOLVED') {
-      <div data-testid="ticket-resolved" class="bg-surface-secondary border border-border-default rounded-lg px-4 py-3">
+      <div
+        data-testid="ticket-resolved"
+        class="bg-surface-secondary border border-border-default rounded-lg px-4 py-3"
+      >
         <p class="text-sm text-text-primary">
           {{ resolvedByLabel() }} {{ t.resolvedByDisplayName || unknownLabel() }}
           @if (t.resolvedAt) {
-            <span>on {{ t.resolvedAt | date:'medium' }}</span>
+            <span>on {{ t.resolvedAt | date: 'medium' }}</span>
           }
         </p>
         @if (t.isKnowledgeGap) {
@@ -265,8 +369,15 @@
         (keydown.enter)="cancelResolveConfirm()"
         tabindex="0"
       >
-        <div class="bg-surface-primary rounded-xl shadow-xl p-6 max-w-md w-full mx-4" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
-          <p class="text-sm text-text-primary mb-4">{{ confirmResolutionLabel() }} {{ t.ticketNumber }}?</p>
+        <div
+          class="bg-surface-primary rounded-xl shadow-xl p-6 max-w-md w-full mx-4"
+          (click)="$event.stopPropagation()"
+          (keydown.enter)="$event.stopPropagation()"
+          tabindex="0"
+        >
+          <p class="text-sm text-text-primary mb-4">
+            {{ confirmResolutionLabel() }} {{ t.ticketNumber }}?
+          </p>
           <div class="flex gap-2 justify-end">
             <button
               (click)="cancelResolveConfirm()"

@@ -1,4 +1,15 @@
-import { Component, inject, isDevMode, signal, effect, output, DestroyRef, HostListener, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  inject,
+  isDevMode,
+  signal,
+  effect,
+  output,
+  DestroyRef,
+  HostListener,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -13,7 +24,16 @@ import { TranslationService } from '../../core/i18n/translation.service';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule, RouterLink, MarkdownModule, LucideSend, LucideMessageCircle, LucideFileText, ModalComponent, EscalationFormComponent],
+  imports: [
+    FormsModule,
+    RouterLink,
+    MarkdownModule,
+    LucideSend,
+    LucideMessageCircle,
+    LucideFileText,
+    ModalComponent,
+    EscalationFormComponent,
+  ],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
@@ -30,12 +50,20 @@ export class ChatComponent {
   showCloseModal = signal(false);
   showFallback = signal(false);
   showEscalationForm = signal(false);
-  escalationPayload = signal<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] } | null>(null);
+  escalationPayload = signal<{
+    issue: string;
+    transcript: ChatMessage[];
+    sources: { articleId: string; title: string; slug: string; score: number }[];
+  } | null>(null);
   showTicketConfirmation = signal(false);
   createdTicketNumber = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  readonly escalate = output<{ issue: string; transcript: ChatMessage[]; sources: { articleId: string; title: string; slug: string; score: number }[] }>();
+  readonly escalate = output<{
+    issue: string;
+    transcript: ChatMessage[];
+    sources: { articleId: string; title: string; slug: string; score: number }[];
+  }>();
 
   private destroyRef = inject(DestroyRef);
   private nextId = 0;
@@ -59,17 +87,23 @@ export class ChatComponent {
     this.showCloseModal.set(false);
     this.showFallback.set(false);
 
-    const history = this.messages().slice(-10).map(m => ({ role: m.role, content: m.content }));
+    const history = this.messages()
+      .slice(-10)
+      .map((m) => ({ role: m.role, content: m.content }));
 
     const userMsg: ChatMessage = { id: `msg-${++this.nextId}`, role: 'user', content: text };
-    this.messages.update(m => [...m, userMsg]);
+    this.messages.update((m) => [...m, userMsg]);
 
     if (this.abortStream) this.abortStream();
 
     this.isStreaming.set(true);
 
-    const assistantMsg: ChatMessage = { id: `msg-${++this.nextId}`, role: 'assistant', content: '' };
-    this.messages.update(m => [...m, assistantMsg]);
+    const assistantMsg: ChatMessage = {
+      id: `msg-${++this.nextId}`,
+      role: 'assistant',
+      content: '',
+    };
+    this.messages.update((m) => [...m, assistantMsg]);
 
     const { events, abort } = this.chatService.sendMessage(text, history);
     this.abortStream = abort;
@@ -78,16 +112,19 @@ export class ChatComponent {
     this.streamSub = events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (event) => {
         if (event.type === 'token') {
-          this.messages.update(m => {
+          this.messages.update((m) => {
             const updated = [...m];
             const lastIdx = updated.length - 1;
-            updated[lastIdx] = { ...updated[lastIdx], content: updated[lastIdx].content + event.content };
+            updated[lastIdx] = {
+              ...updated[lastIdx],
+              content: updated[lastIdx].content + event.content,
+            };
             return updated;
           });
         } else if (event.type === 'done') {
           this.isStreaming.set(false);
           this.showFeedback.set(true);
-          this.messages.update(m => {
+          this.messages.update((m) => {
             const updated = [...m];
             const lastIdx = updated.length - 1;
             updated[lastIdx] = { ...updated[lastIdx], sources: event.sources };
@@ -96,7 +133,7 @@ export class ChatComponent {
           this.setEscalationPayload(event);
         } else if (event.type === 'fallback') {
           this.isStreaming.set(false);
-          this.messages.update(m => {
+          this.messages.update((m) => {
             const updated = [...m];
             const lastIdx = updated.length - 1;
             updated[lastIdx] = { ...updated[lastIdx], content: event.content };
@@ -107,7 +144,7 @@ export class ChatComponent {
         } else if (event.type === 'error') {
           this.isStreaming.set(false);
           this.errorMessage.set(event.content);
-          this.messages.update(m => m.slice(0, -1));
+          this.messages.update((m) => m.slice(0, -1));
         }
       },
       error: () => {
@@ -123,10 +160,9 @@ export class ChatComponent {
   }
 
   private setEscalationPayload(event: StreamEvent) {
-    const userMessages = this.messages().filter(m => m.role === 'user');
-    const lastUserContent = userMessages.length > 0
-      ? userMessages[userMessages.length - 1].content
-      : '';
+    const userMessages = this.messages().filter((m) => m.role === 'user');
+    const lastUserContent =
+      userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
     this.escalationPayload.set({
       issue: lastUserContent,
       transcript: this.messages(),
@@ -135,10 +171,9 @@ export class ChatComponent {
   }
 
   private setEscalationPayloadOnError() {
-    const userMessages = this.messages().filter(m => m.role === 'user');
-    const lastUserContent = userMessages.length > 0
-      ? userMessages[userMessages.length - 1].content
-      : '';
+    const userMessages = this.messages().filter((m) => m.role === 'user');
+    const lastUserContent =
+      userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
     this.escalationPayload.set({
       issue: lastUserContent,
       transcript: this.messages(),
@@ -153,11 +188,11 @@ export class ChatComponent {
     } else {
       // TODO: When wiring up AI context in Phase 4, include the full conversation transcript
       // as a system instruction rather than injecting a fabricated user message.
-      const userMessages = this.messages().filter(m => m.role === 'user');
-      const lastUserContent = userMessages.length > 0
-        ? userMessages[userMessages.length - 1].content
-        : '';
-      this.currentInput = "The user indicated this did not solve their problem. Original issue: " + lastUserContent;
+      const userMessages = this.messages().filter((m) => m.role === 'user');
+      const lastUserContent =
+        userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
+      this.currentInput =
+        'The user indicated this did not solve their problem. Original issue: ' + lastUserContent;
       this.sendMessage();
     }
   }
@@ -212,11 +247,11 @@ export class ChatComponent {
 
   retry() {
     this.errorMessage.set(null);
-    const lastUserMsg = [...this.messages()].reverse().find(m => m.role === 'user');
+    const lastUserMsg = [...this.messages()].reverse().find((m) => m.role === 'user');
     if (lastUserMsg) {
       this.currentInput = lastUserMsg.content;
       const lastIdx = this.messages().lastIndexOf(lastUserMsg);
-      this.messages.update(m => m.slice(0, lastIdx));
+      this.messages.update((m) => m.slice(0, lastIdx));
       this.sendMessage();
     }
   }
@@ -231,10 +266,9 @@ export class ChatComponent {
         });
       }
     } catch (e) {
-        if (isDevMode()) {
-          console.warn('Scroll failed:', e);
-        }
+      if (isDevMode()) {
+        console.warn('Scroll failed:', e);
       }
+    }
   }
-
 }

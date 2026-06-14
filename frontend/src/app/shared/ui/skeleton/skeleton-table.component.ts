@@ -7,7 +7,5 @@ import { Component, computed, input } from '@angular/core';
 })
 export class SkeletonTableComponent {
   readonly rows = input(5);
-  protected skeletonRows = computed(() =>
-    Array.from({ length: this.rows() }, (_, i) => i)
-  );
+  protected skeletonRows = computed(() => Array.from({ length: this.rows() }, (_, i) => i));
 }

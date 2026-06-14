@@ -47,18 +47,30 @@ export class DocumentListComponent implements OnInit {
   }
 
   loadCategories(): void {
-    this.categoryService.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (cats) => this.categories.set(cats),
-    });
+    this.categoryService
+      .getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (cats) => this.categories.set(cats),
+      });
   }
 
   loadDocuments(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
-    this.documentService.getDocuments().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (docs) => { this.documents.set(docs); this.isLoading.set(false); },
-      error: () => { this.errorMessage.set(this.translationService.translate('admin.documents.error.load')); this.isLoading.set(false); },
-    });
+    this.documentService
+      .getDocuments()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (docs) => {
+          this.documents.set(docs);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('admin.documents.error.load'));
+          this.isLoading.set(false);
+        },
+      });
   }
 
   onDragOver(event: DragEvent): void {
@@ -91,10 +103,12 @@ export class DocumentListComponent implements OnInit {
   }
 
   private handleFiles(files: File[]): void {
-    const validFiles = files.filter(f => {
-      const valid = ['.md', '.txt', '.pdf', '.html', '.htm', '.xhtml', '.xml', '.docx'].some(ext => f.name.toLowerCase().endsWith(ext));
+    const validFiles = files.filter((f) => {
+      const valid = ['.md', '.txt', '.pdf', '.html', '.htm', '.xhtml', '.xml', '.docx'].some(
+        (ext) => f.name.toLowerCase().endsWith(ext),
+      );
       if (!valid) {
-        this.uploadQueue.update(q => [...q, { filename: f.name, status: 'unsupported' }]);
+        this.uploadQueue.update((q) => [...q, { filename: f.name, status: 'unsupported' }]);
       }
       return valid;
     });
@@ -102,30 +116,37 @@ export class DocumentListComponent implements OnInit {
     this.isUploading.set(true);
     let completed = 0;
 
-    validFiles.forEach(file => {
-      this.uploadQueue.update(q => [...q, { filename: file.name, status: 'uploading' }]);
-      this.documentService.uploadFile(file, this.selectedCategoryId()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: () => {
-          this.uploadQueue.update(q => q.map(item =>
-            item.filename === file.name ? { ...item, status: 'uploaded' } : item
-          ));
-          completed++;
-          if (completed === validFiles.length) {
-            this.isUploading.set(false);
-            setTimeout(() => { this.uploadQueue.set([]); }, 3000);
-            this.loadDocuments();
-          }
-        },
-        error: () => {
-          this.uploadQueue.update(q => q.map(item =>
-            item.filename === file.name ? { ...item, status: 'failed' } : item
-          ));
-          completed++;
-          if (completed === validFiles.length) {
-            this.isUploading.set(false);
-          }
-        },
-      });
+    validFiles.forEach((file) => {
+      this.uploadQueue.update((q) => [...q, { filename: file.name, status: 'uploading' }]);
+      this.documentService
+        .uploadFile(file, this.selectedCategoryId())
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            this.uploadQueue.update((q) =>
+              q.map((item) =>
+                item.filename === file.name ? { ...item, status: 'uploaded' } : item,
+              ),
+            );
+            completed++;
+            if (completed === validFiles.length) {
+              this.isUploading.set(false);
+              setTimeout(() => {
+                this.uploadQueue.set([]);
+              }, 3000);
+              this.loadDocuments();
+            }
+          },
+          error: () => {
+            this.uploadQueue.update((q) =>
+              q.map((item) => (item.filename === file.name ? { ...item, status: 'failed' } : item)),
+            );
+            completed++;
+            if (completed === validFiles.length) {
+              this.isUploading.set(false);
+            }
+          },
+        });
     });
 
     if (validFiles.length === 0) {
@@ -134,12 +155,15 @@ export class DocumentListComponent implements OnInit {
   }
 
   reprocessDocument(doc: DocumentDto): void {
-    this.documentService.reprocessDocument(doc.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => this.loadDocuments(),
-      error: (err: Error) => {
-        this.errorMessage.set(`Failed to reprocess document: ${err.message}`);
-      },
-    });
+    this.documentService
+      .reprocessDocument(doc.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.loadDocuments(),
+        error: (err: Error) => {
+          this.errorMessage.set(`Failed to reprocess document: ${err.message}`);
+        },
+      });
   }
 
   requestDelete(doc: DocumentDto): void {
@@ -152,16 +176,19 @@ export class DocumentListComponent implements OnInit {
     const id = this.pendingDeleteId();
     if (id == null) return;
     this.confirmDeleteOpen.set(false);
-    this.documentService.deleteDocument(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
-        this.pendingDeleteId.set(null);
-        this.pendingDeleteFilename.set('');
-        this.loadDocuments();
-      },
-      error: (err: Error) => {
-        this.errorMessage.set(`Failed to delete document: ${err.message}`);
-      },
-    });
+    this.documentService
+      .deleteDocument(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.pendingDeleteId.set(null);
+          this.pendingDeleteFilename.set('');
+          this.loadDocuments();
+        },
+        error: (err: Error) => {
+          this.errorMessage.set(`Failed to delete document: ${err.message}`);
+        },
+      });
   }
 
   cancelDelete(): void {
@@ -171,28 +198,43 @@ export class DocumentListComponent implements OnInit {
   }
 
   convertToArticle(doc: DocumentDto): void {
-    this.convertedDocIds.update(ids => ids.add(doc.id));
-    this.documentService.convertToArticle(doc.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        this.toastService.success(this.translationService.translate('admin.documents.article-created'));
-        void this.router.navigate(['/admin/articles', res.articleId, 'edit']);
-      },
-      error: (err: Error) => {
-        this.convertedDocIds.update(ids => { ids.delete(doc.id); return ids; });
-        this.errorMessage.set(`Failed to convert: ${err.message}`);
-      },
-    });
+    this.convertedDocIds.update((ids) => ids.add(doc.id));
+    this.documentService
+      .convertToArticle(doc.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.toastService.success(
+            this.translationService.translate('admin.documents.article-created'),
+          );
+          void this.router.navigate(['/admin/articles', res.articleId, 'edit']);
+        },
+        error: (err: Error) => {
+          this.convertedDocIds.update((ids) => {
+            ids.delete(doc.id);
+            return ids;
+          });
+          this.errorMessage.set(`Failed to convert: ${err.message}`);
+        },
+      });
   }
 
   statusClass(status: DocumentStatus): string {
     switch (status) {
-      case 'UPLOADED':   return 'bg-surface-secondary text-text-secondary border border-border-default';
-      case 'PARSING':    return 'bg-primary-600 text-white';
-      case 'CHUNKING':   return 'bg-accent-warning-muted text-accent-warning';
-      case 'EMBEDDING':  return 'bg-accent-info-muted text-accent-info border border-accent-info';
-      case 'READY':      return 'bg-accent-success-muted text-accent-success border border-accent-success';
-      case 'FAILED':     return 'bg-accent-danger-muted text-accent-danger';
-      default:           return 'bg-surface-tertiary text-text-secondary';
+      case 'UPLOADED':
+        return 'bg-surface-secondary text-text-secondary border border-border-default';
+      case 'PARSING':
+        return 'bg-primary-600 text-white';
+      case 'CHUNKING':
+        return 'bg-accent-warning-muted text-accent-warning';
+      case 'EMBEDDING':
+        return 'bg-accent-info-muted text-accent-info border border-accent-info';
+      case 'READY':
+        return 'bg-accent-success-muted text-accent-success border border-accent-success';
+      case 'FAILED':
+        return 'bg-accent-danger-muted text-accent-danger';
+      default:
+        return 'bg-surface-tertiary text-text-secondary';
     }
   }
 

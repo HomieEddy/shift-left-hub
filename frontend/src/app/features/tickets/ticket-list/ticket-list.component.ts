@@ -34,17 +34,20 @@ export class TicketListComponent implements OnInit {
   loadTickets(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);
-    this.ticketService.getTickets().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (tickets) => {
-        this.tickets.set(tickets);
-        this.applyFilter(this.activeFilter());
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.errorMessage.set(this.translationService.translate('tickets.error.load'));
-      },
-    });
+    this.ticketService
+      .getTickets()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (tickets) => {
+          this.tickets.set(tickets);
+          this.applyFilter(this.activeFilter());
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.errorMessage.set(this.translationService.translate('tickets.error.load'));
+        },
+      });
   }
 
   applyFilter(status: string): void {
@@ -52,24 +55,24 @@ export class TicketListComponent implements OnInit {
     if (status === 'ALL') {
       this.filteredTickets.set(this.tickets());
     } else {
-      this.filteredTickets.set(this.tickets().filter(t => t.status === status));
+      this.filteredTickets.set(this.tickets().filter((t) => t.status === status));
     }
   }
 
   allLabel = computed(() => this.translationService.translate('tickets.filter.all'));
 
   statusLabels = computed<Record<string, string>>(() => ({
-    'NEW': this.translationService.translate('tickets.status.new'),
-    'IN_PROGRESS': this.translationService.translate('tickets.status.in_progress'),
-    'RESOLVED': this.translationService.translate('tickets.status.resolved'),
-    'CANCELLED': this.translationService.translate('tickets.status.cancelled'),
+    NEW: this.translationService.translate('tickets.status.new'),
+    IN_PROGRESS: this.translationService.translate('tickets.status.in_progress'),
+    RESOLVED: this.translationService.translate('tickets.status.resolved'),
+    CANCELLED: this.translationService.translate('tickets.status.cancelled'),
   }));
 
   categoryLabels = computed<Record<string, string>>(() => ({
-    'NETWORK': this.translationService.translate('tickets.category.network'),
-    'HARDWARE': this.translationService.translate('tickets.category.hardware'),
-    'SOFTWARE': this.translationService.translate('tickets.category.software'),
-    'ACCESS': this.translationService.translate('tickets.category.access'),
-    'PERIPHERALS': this.translationService.translate('tickets.category.peripherals'),
+    NETWORK: this.translationService.translate('tickets.category.network'),
+    HARDWARE: this.translationService.translate('tickets.category.hardware'),
+    SOFTWARE: this.translationService.translate('tickets.category.software'),
+    ACCESS: this.translationService.translate('tickets.category.access'),
+    PERIPHERALS: this.translationService.translate('tickets.category.peripherals'),
   }));
 }

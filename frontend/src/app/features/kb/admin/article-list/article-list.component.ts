@@ -33,76 +33,95 @@ export class ArticleListComponent implements OnInit {
 
   loadArticles(): void {
     this.isLoading.set(true);
-    this.articleService.getArticles(this.currentPage()).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (page) => {
-        this.articles.set(page.content);
-        this.totalPages.set(page.totalPages);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set(this.translationService.translate('kb.articles.error.load'));
-        this.isLoading.set(false);
-      },
-    });
+    this.articleService
+      .getArticles(this.currentPage())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (page) => {
+          this.articles.set(page.content);
+          this.totalPages.set(page.totalPages);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set(this.translationService.translate('kb.articles.error.load'));
+          this.isLoading.set(false);
+        },
+      });
   }
 
   publish(id: string): void {
-    this.confirmationDialog.confirm({
-      title: this.translationService.translate('confirm.title.publish'),
-      message: this.translationService.translate('confirm.message.publish-article'),
-      confirmLabel: this.translationService.translate('confirm.label.publish'),
-    }).subscribe((confirmed) => {
-      if (!confirmed) return;
-      this.articleService.publishArticle(id).pipe(
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: () => this.loadArticles(),
-        error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.publish')),
+    this.confirmationDialog
+      .confirm({
+        title: this.translationService.translate('confirm.title.publish'),
+        message: this.translationService.translate('confirm.message.publish-article'),
+        confirmLabel: this.translationService.translate('confirm.label.publish'),
+      })
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.articleService
+          .publishArticle(id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: () => this.loadArticles(),
+            error: () =>
+              this.errorMessage.set(this.translationService.translate('kb.articles.error.publish')),
+          });
       });
-    });
   }
 
   archive(id: string): void {
-    this.confirmationDialog.confirm({
-      title: this.translationService.translate('confirm.title.archive'),
-      message: this.translationService.translate('confirm.message.archive-article'),
-      confirmLabel: this.translationService.translate('confirm.label.archive'),
-    }).subscribe((confirmed) => {
-      if (!confirmed) return;
-      this.articleService.archiveArticle(id).pipe(
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: () => this.loadArticles(),
-        error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.archive')),
+    this.confirmationDialog
+      .confirm({
+        title: this.translationService.translate('confirm.title.archive'),
+        message: this.translationService.translate('confirm.message.archive-article'),
+        confirmLabel: this.translationService.translate('confirm.label.archive'),
+      })
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.articleService
+          .archiveArticle(id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: () => this.loadArticles(),
+            error: () =>
+              this.errorMessage.set(this.translationService.translate('kb.articles.error.archive')),
+          });
       });
-    });
   }
 
   deleteArticle(id: string): void {
-    this.confirmationDialog.confirm({
-      title: this.translationService.translate('confirm.title.delete'),
-      message: this.translationService.translate('confirm.message.delete-article'),
-      confirmLabel: this.translationService.translate('confirm.label.delete'),
-    }).subscribe((confirmed) => {
-      if (confirmed) {
-        this.articleService.deleteArticle(id).pipe(
-          takeUntilDestroyed(this.destroyRef)
-        ).subscribe({
-          next: () => this.loadArticles(),
-          error: () => this.errorMessage.set(this.translationService.translate('kb.articles.error.delete')),
-        });
-      }
-    });
+    this.confirmationDialog
+      .confirm({
+        title: this.translationService.translate('confirm.title.delete'),
+        message: this.translationService.translate('confirm.message.delete-article'),
+        confirmLabel: this.translationService.translate('confirm.label.delete'),
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.articleService
+            .deleteArticle(id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => this.loadArticles(),
+              error: () =>
+                this.errorMessage.set(
+                  this.translationService.translate('kb.articles.error.delete'),
+                ),
+            });
+        }
+      });
   }
 
   statusBadgeVariant(status: ArticleStatus): string {
     switch (status) {
-      case 'PUBLISHED': return 'success';
-      case 'DRAFT': return 'warning';
-      case 'ARCHIVED': return 'danger';
-      default: return 'default';
+      case 'PUBLISHED':
+        return 'success';
+      case 'DRAFT':
+        return 'warning';
+      case 'ARCHIVED':
+        return 'danger';
+      default:
+        return 'default';
     }
   }
 

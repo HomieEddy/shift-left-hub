@@ -57,7 +57,7 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should POST to /api/auth/login and update signals', () => {
-      service.login({ email: 'test@example.com', password: 'password' }).subscribe(response => {
+      service.login({ email: 'test@example.com', password: 'password' }).subscribe((response) => {
         expect(response.email).toBe('test@example.com');
         expect(service.isAuthenticated()).toBe(true);
         expect(service.user()).toEqual(mockAuthResponse);
@@ -78,15 +78,17 @@ describe('AuthService', () => {
 
   describe('register', () => {
     it('should POST to /api/auth/register and update signals', () => {
-      service.register({
-        email: 'new@example.com',
-        password: 'Pass123!',
-        displayName: 'New User',
-      }).subscribe(response => {
-        expect(response.email).toBe('test@example.com');
-        expect(service.isAuthenticated()).toBe(true);
-        expect(service.user()).toEqual(mockAuthResponse);
-      });
+      service
+        .register({
+          email: 'new@example.com',
+          password: 'Pass123!',
+          displayName: 'New User',
+        })
+        .subscribe((response) => {
+          expect(response.email).toBe('test@example.com');
+          expect(service.isAuthenticated()).toBe(true);
+          expect(service.user()).toEqual(mockAuthResponse);
+        });
 
       const req = httpMock.expectOne('/api/auth/register');
       expect(req.request.method).toBe('POST');
@@ -102,7 +104,7 @@ describe('AuthService', () => {
 
   describe('refresh', () => {
     it('should POST to /api/auth/refresh and update signals', () => {
-      service.refresh().subscribe(response => {
+      service.refresh().subscribe((response) => {
         expect(response.email).toBe('admin@example.com');
         expect(service.isAuthenticated()).toBe(true);
         expect(service.isAdmin()).toBe(true);
@@ -160,11 +162,27 @@ describe('AuthService', () => {
   describe('admin user management', () => {
     it('should GET /api/admin/users', () => {
       const mockUsers = [
-        { id: '1', email: 'user1@example.com', displayName: 'User 1', role: 'ROLE_USER', enabled: true, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
-        { id: '2', email: 'user2@example.com', displayName: 'User 2', role: 'ROLE_ADMIN', enabled: true, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
+        {
+          id: '1',
+          email: 'user1@example.com',
+          displayName: 'User 1',
+          role: 'ROLE_USER',
+          enabled: true,
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+        },
+        {
+          id: '2',
+          email: 'user2@example.com',
+          displayName: 'User 2',
+          role: 'ROLE_ADMIN',
+          enabled: true,
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+        },
       ];
 
-      service.getUsers().subscribe(users => {
+      service.getUsers().subscribe((users) => {
         expect(users.length).toBe(2);
         expect(users[0].email).toBe('user1@example.com');
       });
@@ -176,9 +194,17 @@ describe('AuthService', () => {
     });
 
     it('should GET /api/admin/users/:id', () => {
-      const mockUser = { id: 'user-1', email: 'test@example.com', displayName: 'Test User', role: 'ROLE_USER', enabled: true, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' };
+      const mockUser = {
+        id: 'user-1',
+        email: 'test@example.com',
+        displayName: 'Test User',
+        role: 'ROLE_USER',
+        enabled: true,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+      };
 
-      service.getUserById('user-1').subscribe(user => {
+      service.getUserById('user-1').subscribe((user) => {
         expect(user.id).toBe('user-1');
         expect(user.email).toBe('test@example.com');
       });
@@ -190,9 +216,17 @@ describe('AuthService', () => {
     });
 
     it('should PUT /api/admin/users/:id/role with role body', () => {
-      const updatedUser = { id: 'user-1', email: 'test@example.com', displayName: 'Test User', role: 'ROLE_ADMIN', enabled: true, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' };
+      const updatedUser = {
+        id: 'user-1',
+        email: 'test@example.com',
+        displayName: 'Test User',
+        role: 'ROLE_ADMIN',
+        enabled: true,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+      };
 
-      service.updateUserRole('user-1', 'ROLE_ADMIN').subscribe(user => {
+      service.updateUserRole('user-1', 'ROLE_ADMIN').subscribe((user) => {
         expect(user.role).toBe('ROLE_ADMIN');
       });
 
@@ -204,9 +238,17 @@ describe('AuthService', () => {
     });
 
     it('should PUT /api/admin/users/:id/status', () => {
-      const updatedUser = { id: 'user-1', email: 'test@example.com', displayName: 'Test User', role: 'ROLE_USER', enabled: false, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' };
+      const updatedUser = {
+        id: 'user-1',
+        email: 'test@example.com',
+        displayName: 'Test User',
+        role: 'ROLE_USER',
+        enabled: false,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+      };
 
-      service.toggleUserStatus('user-1').subscribe(user => {
+      service.toggleUserStatus('user-1').subscribe((user) => {
         expect(user.enabled).toBe(false);
       });
 
@@ -222,8 +264,12 @@ describe('AuthService', () => {
       let errorResponse: unknown = null;
 
       service.login({ email: 'bad@example.com', password: 'wrong' }).subscribe({
-        next: () => { throw new Error('should have failed with 401'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed with 401');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/auth/login');
@@ -235,10 +281,16 @@ describe('AuthService', () => {
     it('should propagate HTTP error on register', () => {
       let errorResponse: unknown = null;
 
-      service.register({ email: 'bad@example.com', password: '123', displayName: 'Bad' }).subscribe({
-        next: () => { throw new Error('should have failed with 400'); },
-        error: (error) => { errorResponse = error; },
-      });
+      service
+        .register({ email: 'bad@example.com', password: '123', displayName: 'Bad' })
+        .subscribe({
+          next: () => {
+            throw new Error('should have failed with 400');
+          },
+          error: (error) => {
+            errorResponse = error;
+          },
+        });
 
       const req = httpMock.expectOne('/api/auth/register');
       req.flush({ message: 'Validation error' }, { status: 400, statusText: 'Bad Request' });
@@ -250,8 +302,12 @@ describe('AuthService', () => {
       let errorResponse: unknown = null;
 
       service.logout().subscribe({
-        next: () => { throw new Error('should have failed'); },
-        error: (error) => { errorResponse = error; },
+        next: () => {
+          throw new Error('should have failed');
+        },
+        error: (error) => {
+          errorResponse = error;
+        },
       });
 
       const req = httpMock.expectOne('/api/auth/logout');
