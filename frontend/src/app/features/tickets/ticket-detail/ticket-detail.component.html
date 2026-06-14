@@ -26,13 +26,13 @@
           <h1 class="text-xl font-bold text-text-primary font-mono">{{ t.ticketNumber }}</h1>
           <div class="flex gap-2 mt-1">
             <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium" [class]="statusBadgeClass(t.status)">
-              {{ t.status }}
+              {{ statusLabel(t.status) }}
             </span>
             <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-surface-tertiary text-text-secondary">
-              {{ t.category }}
+              {{ categoryLabel(t.category) }}
             </span>
             <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-surface-tertiary text-text-secondary">
-              {{ t.urgency }}
+              {{ urgencyLabel(t.urgency) }}
             </span>
           </div>
         </div>
