@@ -176,7 +176,7 @@ describe('ArticleEditorComponent', () => {
       errorSubject.error(new Error('Load failed'));
 
       expect(component.isLoading()).toBe(false);
-      expect(component.errorMessage()).toBe('Failed to load article.');
+      expect(component.errorMessage()).toBe('Failed to load articles.');
     });
   });
 });

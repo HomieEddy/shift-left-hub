@@ -5,10 +5,10 @@ import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.category.domain.Category;
 import com.shiftleft.hub.category.domain.CategoryRepository;
-import com.shiftleft.hub.user.domain.User;
-import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.document.domain.*;
+import com.shiftleft.hub.user.domain.User;
+import com.shiftleft.hub.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -220,8 +220,6 @@ public class DocumentService {
      */
     @Transactional
     public UUID convertToArticle(UUID documentId, String authorEmail) {
-        User author = userRepository.findByEmail(authorEmail)
-            .orElseThrow(() -> new DocumentProcessingException("Author not found: " + authorEmail));
         Document document = documentRepository.findById(documentId)
             .orElseThrow(() -> new DocumentNotFoundException(documentId));
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
@@ -253,6 +251,10 @@ public class DocumentService {
         if (articleRepository.findBySlug(slug).isPresent()) {
             slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
         }
+
+        // Look up author
+        User author = userRepository.findByEmail(authorEmail)
+            .orElseThrow(() -> new DocumentProcessingException("Author not found: " + authorEmail));
 
         // Create the article
         Article article = Article.builder()
