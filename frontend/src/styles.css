@@ -1320,6 +1320,9 @@
   .uppercase {
     text-transform: uppercase;
   }
+  .italic {
+    font-style: italic;
+  }
   .no-underline {
     text-decoration-line: none;
   }
@@ -1664,6 +1667,16 @@
         color: var(--color-accent-info);
         @supports (color: color-mix(in lab, red, red)) {
           color: color-mix(in oklab, var(--color-accent-info) 80%, transparent);
+        }
+      }
+    }
+  }
+  .hover\:text-accent-success\/80 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-accent-success);
+        @supports (color: color-mix(in lab, red, red)) {
+          color: color-mix(in oklab, var(--color-accent-success) 80%, transparent);
         }
       }
     }
