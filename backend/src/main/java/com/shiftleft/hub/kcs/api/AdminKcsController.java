@@ -40,8 +40,7 @@ public class AdminKcsController {
     private final KcsDraftingService kcsDraftingService;
 
     /**
-     * Lists all KCS-drafted articles with pagination.
-     * <p>KCS drafts are identified by having a non-null sourceTicketId.</p>
+     * Lists all draft articles with pagination.
      *
      * @param page the page index (zero-based)
      * @param size the page size
@@ -52,12 +51,12 @@ public class AdminKcsController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         return articleRepository
-            .findBySourceTicketIdIsNotNullOrderByCreatedAtDesc(PageRequest.of(page, size))
+            .findByStatus(ArticleStatus.DRAFT, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")))
             .map(kcsDraftingService::enrichDraftResponse);
     }
 
     /**
-     * Gets a single KCS draft by article ID.
+     * Gets a single draft by article ID.
      *
      * @param id the article UUID
      * @return the draft response
@@ -66,9 +65,6 @@ public class AdminKcsController {
     public KcsDraftResponse getDraftDetail(@PathVariable UUID id) {
         Article article = articleRepository.findById(id)
             .orElseThrow(() -> new com.shiftleft.hub.article.domain.ArticleNotFoundException(id));
-        if (article.getSourceTicketId() == null) {
-            throw new com.shiftleft.hub.article.domain.ArticleNotFoundException(id);
-        }
         return kcsDraftingService.enrichDraftResponse(article);
     }
 
@@ -104,14 +100,14 @@ public class AdminKcsController {
     }
 
     /**
-     * Returns the count of pending KCS drafts (DRAFT status).
-     * Used by the frontend for the nav badge. (D-19)
+     * Returns the count of draft articles (DRAFT status).
+     * Used by the frontend for the nav badge.
      *
      * @return map containing the pending count
      */
     @GetMapping("/pending-count")
     public Map<String, Long> getPendingCount() {
-        long count = articleRepository.countBySourceTicketIdIsNotNullAndStatus(ArticleStatus.DRAFT);
+        long count = articleRepository.countByStatus(ArticleStatus.DRAFT);
         return Map.of("pendingCount", count);
     }
 
