@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <title>Sample XML Document</title>
+  <content>This is a test XML document for e2e ingestion testing.</content>
+</document>
