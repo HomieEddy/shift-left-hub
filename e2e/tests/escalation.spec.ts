@@ -10,13 +10,11 @@ test.describe('Escalation', () => {
     const responded = await chatPage.waitForResponse(30000);
 
     if (responded) {
-      try {
-        await page.waitForSelector('[data-testid="chat-feedback-prompt"]', { timeout: 10000 });
+      const feedbackVisible = await page.getByTestId('chat-feedback-prompt').isVisible({ timeout: 10000 }).catch(() => false);
+      if (feedbackVisible) {
         await chatPage.clickDidNotSolve();
-        await chatPage.clickEscalate();
-      } catch {
-        await chatPage.clickEscalate();
       }
+      await chatPage.clickEscalate();
     } else {
       await chatPage.clickEscalate();
     }
@@ -36,16 +34,18 @@ test.describe('Escalation', () => {
 
     await chatPage.sendMessage('How do I reset my password?');
     await chatPage.waitForResponse(30000);
-    try {
-      await page.waitForSelector('[data-testid="chat-feedback-prompt"]', { timeout: 5000 });
+    const feedbackVisible = await page.getByTestId('chat-feedback-prompt').isVisible({ timeout: 5000 }).catch(() => false);
+    if (feedbackVisible) {
       await chatPage.clickDidNotSolve();
-      await chatPage.clickEscalate();
-    } catch {
-      await page.click('[data-testid="chat-escalate"]');
     }
+    await chatPage.clickEscalate();
     await chatPage.submitEscalationForm('ACCESS', 'MEDIUM');
 
-    const agentContext = await context.browser()!.newContext({ storageState: '.auth/agent.json' });
+    const browserInstance = context.browser();
+    if (!browserInstance) {
+      throw new Error('Browser instance not available for agent context');
+    }
+    const agentContext = await browserInstance.newContext({ storageState: '.auth/agent.json' });
     const agentPage = await agentContext.newPage();
     await agentPage.goto('/agent/tickets');
     await agentPage.waitForLoadState('networkidle');

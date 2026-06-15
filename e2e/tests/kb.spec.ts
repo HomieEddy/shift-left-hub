@@ -44,14 +44,18 @@ test.describe('Knowledge Base', () => {
     await expect(page.getByTestId('article-viewer')).toBeVisible({ timeout: 10000 });
 
     const frButton = page.getByText('FR');
-    if (await frButton.isVisible()) {
+    const enButton = page.getByText('EN');
+    const frVisible = await frButton.isVisible().catch(() => false);
+    const enVisible = await enButton.isVisible().catch(() => false);
+    expect(frVisible || enVisible).toBeTruthy();
+
+    if (frVisible) {
       await frButton.click();
       await page.waitForLoadState('networkidle');
       await expect(page.getByTestId('article-viewer')).toBeVisible();
     }
 
-    const enButton = page.getByText('EN');
-    if (await enButton.isVisible()) {
+    if (enVisible) {
       await enButton.click();
       await page.waitForLoadState('networkidle');
       await expect(page.getByTestId('article-viewer')).toBeVisible();

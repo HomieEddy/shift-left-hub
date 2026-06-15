@@ -15,7 +15,11 @@ test.describe('Workspace Management', () => {
   });
 
   test('View workspace members as admin', async ({ page, context }) => {
-    const adminContext = await context.browser()!.newContext({ storageState: '.auth/admin.json' });
+    const browserInstance = context.browser();
+    if (!browserInstance) {
+      throw new Error('Browser instance not available for admin context');
+    }
+    const adminContext = await browserInstance.newContext({ storageState: '.auth/admin.json' });
     const adminPage = await adminContext.newPage();
 
     await adminPage.goto('/admin/users');

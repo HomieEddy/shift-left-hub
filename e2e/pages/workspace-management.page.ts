@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page } from '@playwright/test';
 
 /**
  * Page object for workspace switching and member management.
@@ -24,7 +24,8 @@ export class WorkspaceManagementPage {
 
   /** Select a workspace from the dropdown by its display name. */
   async selectWorkspace(name: string): Promise<void> {
-    await this.page.getByRole('button', { name }).click();
+    const dropdown = this.page.getByTestId('workspace-dropdown');
+    await dropdown.getByRole('button', { name }).click();
   }
 
   /** Confirm the workspace switch in the confirmation modal. */

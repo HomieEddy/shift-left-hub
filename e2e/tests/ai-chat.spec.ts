@@ -24,12 +24,10 @@ test.describe('AI Self-Service', () => {
     const responded = await chatPage.waitForResponse(30000);
 
     if (responded) {
-      try {
-        await page.waitForSelector('[data-testid="chat-feedback-prompt"]', { timeout: 10000 });
+      const feedbackVisible = await page.getByTestId('chat-feedback-prompt').isVisible({ timeout: 10000 }).catch(() => false);
+      if (feedbackVisible) {
         await page.getByTestId('chat-feedback-yes').click();
         await expect(page.getByTestId('chat-feedback-prompt')).not.toBeVisible({ timeout: 5000 });
-      } catch {
-        // Feedback prompt may not appear in all scenarios — test passes gracefully
       }
     } else {
       await expect(page.getByTestId('chat-escalate')).toBeVisible({ timeout: 5000 });

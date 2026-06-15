@@ -37,17 +37,15 @@ test.describe('Admin', () => {
     await adminPage.gotoTaxonomy();
 
     await adminPage.clickNewCategory();
-    await page.waitForTimeout(500);
 
     const nameEnInput = page.getByLabel('English name');
     const nameFrInput = page.getByLabel('French name');
-    if (await nameEnInput.isVisible()) {
-      const catName = `E2E Test ${Date.now()}`;
-      await nameEnInput.fill(catName);
-      await nameFrInput.fill(`Test E2E ${Date.now()}`);
-      await page.locator('[data-testid="admin-role-dialog"] button:has-text("Create")').click();
-      await page.waitForLoadState('networkidle');
-    }
+    await expect(nameEnInput).toBeVisible({ timeout: 5000 });
+    const catName = `E2E Test ${Date.now()}`;
+    await nameEnInput.fill(catName);
+    await nameFrInput.fill(`Test E2E ${Date.now()}`);
+    await page.locator('[data-testid="admin-role-dialog"] button:has-text("Create")').click();
+    await page.waitForLoadState('networkidle');
   });
 
   test('Approve or reject KCS drafts', async ({ page }) => {

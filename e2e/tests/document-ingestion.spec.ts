@@ -16,8 +16,8 @@ test.describe('Document Ingestion', () => {
       await docsPage.waitForIndexed('sample.md', 60000);
       const status = await docsPage.getDocumentStatus('sample.md');
       expect(status).toMatch(/READY|INDEXED/);
-    } catch {
-      // File may still be processing — test passes gracefully
+    } catch (err) {
+      console.warn('waitForIndexed timed out or failed for sample.md:', err instanceof Error ? err.message : err);
       const docRow = docsPage.getDocumentRow('sample.md');
       await expect(docRow).toBeVisible({ timeout: 5000 });
     }
@@ -33,8 +33,8 @@ test.describe('Document Ingestion', () => {
 
     try {
       await docsPage.waitForIndexed('sample.md', 60000);
-    } catch {
-      // Continue even if not indexed yet
+    } catch (err) {
+      console.warn('waitForIndexed timed out for sample.md:', err instanceof Error ? err.message : err);
     }
 
     const chatPage = new ChatPage(page);
@@ -59,8 +59,8 @@ test.describe('Document Ingestion', () => {
 
     try {
       await docsPage.waitForIndexed('sample.md', 30000);
-    } catch {
-      // Continue even if not yet indexed
+    } catch (err) {
+      console.warn('waitForIndexed timed out for cleanup:', err instanceof Error ? err.message : err);
     }
 
     const docRow = docsPage.getDocumentRow('sample.md');
