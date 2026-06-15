@@ -105,6 +105,12 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+		<!-- Caffeine — rate limiting cache -->
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+		</dependency>
+
 		<!-- Spring Modulith (exclude APT — incompatible with Boot 4.x JsonWriter API) -->
 		<dependency>
 			<groupId>org.springframework.modulith</groupId>
@@ -258,6 +264,26 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>12.1.0</version>
+				<configuration>
+					<failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
+					<formats>
+						<format>HTML</format>
+						<format>JSON</format>
+					</formats>
+					<suppressionFiles>
+						<suppressionFile>dependency-check-suppressions.xml</suppressionFile>
+					</suppressionFiles>
+				</configuration>
+				<executions>
+					<execution>
+						<goals><goal>check</goal></goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
 				<version>4.9.8.3</version>
@@ -267,6 +293,13 @@
 					<failOnError>true</failOnError>
 					<includeTests>false</includeTests>
 					<excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+					<plugins>
+						<plugin>
+							<groupId>com.h3xstream.findsecbugs</groupId>
+							<artifactId>findsecbugs-plugin</artifactId>
+							<version>1.13.0</version>
+						</plugin>
+					</plugins>
 				</configuration>
 				<executions>
 					<execution>

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import DOMPurify from 'dompurify';
 import { PublicArticleService } from '../../services/public-article.service';
 import { ArticleSearchResult, ArticleSearchTag } from '../../models/article.models';
 import { TranslationService } from '../../../../core/i18n/translation.service';
@@ -175,11 +176,10 @@ export class ArticleSearchComponent implements OnInit {
 
   sanitizeHeadline(html: string): SafeHtml {
     if (html === '') return '';
-    // Keep only mark tags and remove any attributes from opening mark tags.
-    const cleaned = html
-      .replace(/<(?!\/?mark(?=>|\s[^>]*>))[^>]*>/gi, '')
-      .replace(/<mark\b[^>]*>/gi, '<mark>');
-    const sanitized = this.sanitizer.sanitize(1 /* SecurityContext.HTML */, cleaned);
-    return this.sanitizer.bypassSecurityTrustHtml(sanitized ?? cleaned);
+    const clean = DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ['mark'],
+      ALLOWED_ATTR: [],
+    });
+    return this.sanitizer.bypassSecurityTrustHtml(clean);
   }
 }

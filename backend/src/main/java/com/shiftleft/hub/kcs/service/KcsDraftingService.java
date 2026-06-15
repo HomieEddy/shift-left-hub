@@ -21,6 +21,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,7 +146,7 @@ public class KcsDraftingService {
                     .query(queryText)
                     .topK(DEDUP_TOP_K)
                     .similarityThreshold(DEDUP_SIMILARITY_THRESHOLD)
-                    .filterExpression("workspace_id == '" + workspaceId + "'")
+                    .filterExpression(new FilterExpressionBuilder().eq("workspace_id", workspaceId.toString()).build())
                     .build());
 
             for (Document doc : docs) {

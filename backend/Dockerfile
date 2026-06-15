@@ -17,10 +17,12 @@ RUN ./mvnw package -DskipTests -B
 
 # Stage 2: Run
 FROM eclipse-temurin:21-jre-alpine AS run
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /app
 
-# Copy jar from build stage
 COPY --from=build /app/target/knowledge-hub-0.0.1-SNAPSHOT.jar app.jar
+RUN chown -R appuser:appgroup /app
+USER appuser
 
 EXPOSE 8080
 

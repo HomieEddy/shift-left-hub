@@ -43,7 +43,7 @@
 - [x] **Phase 17: Codebase Review** — Full codebase-wide review of frontend, backend, and database
 - [x] **Phase 18: Unit Test Tightening** — Backend and frontend unit tests expanded with meaningful coverage
 - [x] **Phase 19: E2E Test Coverage** — 8 Playwright e2e happy-path tests covering all user-facing features
-- [ ] **Phase 20: Security Audit & Hardening** — Full security audit of backend, frontend, and infrastructure
+- [x] **Phase 20: Security Audit & Hardening** — Full security audit of backend, frontend, and infrastructure
 - [ ] **Phase 21: Production Deployment** — Deploy frontend (Vercel), backend (Railway), and verify live
 
 ## Phase Details
@@ -110,11 +110,18 @@ Plans:
 **Depends on**: Phase 19
 **Requirements**: SEC-01, SEC-02, SEC-03, SEC-04
 **Success Criteria** (what must be TRUE):
-  1. Backend security audit covers JWT authentication, RBAC authorization, injection vulnerabilities (SQL, NoSQL, command), secrets exposure, and dependency vulnerabilities
-  2. Frontend security audit covers XSS, CSRF, secure cookie handling, and dependency vulnerabilities
-  3. Infrastructure security audit covers CORS headers, CSP headers, HTTPS enforcement, and environment variable management
-  4. All discovered vulnerabilities are fixed or documented with risk acceptance rationale
-**Plans**: TBD
+   1. Backend security audit covers JWT authentication, RBAC authorization, injection vulnerabilities (SQL, NoSQL, command), secrets exposure, and dependency vulnerabilities
+   2. Frontend security audit covers XSS, CSRF, secure cookie handling, and dependency vulnerabilities
+   3. Infrastructure security audit covers CORS headers, CSP headers, HTTPS enforcement, and environment variable management
+   4. All discovered vulnerabilities are fixed or documented with risk acceptance rationale
+**Plans**: 3 plans
+
+Plans:
+- [x] 20-01 — Backend Security Audit ✓ `OWASP + SpotBugs findsecbugs, cookie hardening, rate limiting, CR-02 fix, env var salt`
+- [x] 20-02 — Frontend Security Audit ✓ `ESLint security plugin, DOMPurify XSS fix, 0 lint errors`
+- [x] 20-03 — Infrastructure Hardening ✓ `Docker non-root, CSP meta tag, CI dep scanning, .env.example`
+
+**Completed:** 2026-06-15
 
 ### Phase 21: Production Deployment
 **Goal**: Application is deployed to production on Vercel (frontend) and Railway (backend/database) with correct Docker configuration and passing health checks
@@ -151,9 +158,9 @@ Plans:
 | 17. Codebase Review | v2.1 | 3/3 | Complete | 2026-06-14 |
 | 18. Unit Test Tightening | v2.1 | 5/5 | Complete | 2026-06-14 |
 | 19. E2E Test Coverage | v2.1 | 6/6 | Complete | 2026-06-14 |
-| 20. Security Audit & Hardening | v2.1 | 0/0 | Not started | - |
+| 20. Security Audit & Hardening | v2.1 | 3/3 | Complete | 2026-06-15 |
 | 21. Production Deployment | v2.1 | 0/0 | Not started | - |
 
 ---
 
-*Last updated: 2026-06-14 — v2.1 Deployment: Phase 19 complete*
+*Last updated: 2026-06-15 — v2.1 Deployment: Phase 20 complete*

@@ -12,14 +12,12 @@ env:
   SONAR_HOST_URL: https://sonarcloud.io
 
 jobs:
-  backend:
-    name: Backend (Checkstyle + SpotBugs + Tests + Coverage)
+  backend-lint:
+    name: Backend (Checkstyle + SpotBugs + Compile)
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # SonarQube needs full git history
 
       - name: Set up JDK 21 (Temurin)
         uses: actions/setup-java@v4
@@ -40,13 +38,136 @@ jobs:
         run: chmod +x mvnw
         working-directory: backend
 
-      - name: Run backend verify (Checkstyle + SpotBugs + Unit + Integration Tests + JaCoCo)
-        # Testcontainers starts its own pgvector container on GitHub Actions runners (Docker available)
-        run: ./mvnw verify -B
+      - name: Checkstyle + Compile + SpotBugs
+        run: ./mvnw compile spotbugs:check -B
+        working-directory: backend
+
+  backend-unit-tests:
+    name: Backend (Unit Tests)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('backend/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Fix Maven wrapper permissions
+        run: chmod +x mvnw
+        working-directory: backend
+
+      - name: Run unit tests
+        run: ./mvnw test -B -Dtest='!*IntegrationTest, !KnowledgeHubApplicationTests'
+        working-directory: backend
+
+  backend-integration-tests:
+    name: Backend (Integration Tests)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('backend/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Fix Maven wrapper permissions
+        run: chmod +x mvnw
+        working-directory: backend
+
+      - name: Run integration tests (TestContainers)
+        run: ./mvnw test -B -Dtest='*IntegrationTest, KnowledgeHubApplicationTests'
+        working-directory: backend
+
+  backend-owasp:
+    name: Backend (OWASP Dependency-Check)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('backend/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Fix Maven wrapper permissions
+        run: chmod +x mvnw
+        working-directory: backend
+
+      - name: OWASP Dependency-Check (advisory)
+        run: ./mvnw dependency-check:check -B
+        working-directory: backend
+        continue-on-error: true
+
+  backend-sonar:
+    name: Backend (SonarQube Cloud Scan)
+    needs: [backend-unit-tests, backend-integration-tests]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('backend/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Fix Maven wrapper permissions
+        run: chmod +x mvnw
+        working-directory: backend
+
+      - name: Run unit tests + JaCoCo report (for Sonar coverage)
+        run: ./mvnw test jacoco:report -B -Dtest='!*IntegrationTest, !KnowledgeHubApplicationTests'
         working-directory: backend
 
       - name: SonarQube Cloud Scan
-        if: always()  # Runs even if tests fail (informational per D-02)
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
@@ -58,7 +179,7 @@ jobs:
           -Dsonar.java.binaries=target/classes
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
         working-directory: backend
-        continue-on-error: true  # Non-blocking per D-02
+        continue-on-error: true
 
   frontend:
     name: Frontend (Lint + Test + Build)
@@ -96,6 +217,11 @@ jobs:
       - name: Run unit tests with coverage
         run: pnpm test
         working-directory: frontend
+
+      - name: Audit npm dependencies
+        run: pnpm audit --audit-level=high
+        working-directory: frontend
+        continue-on-error: true
 
       - name: Build
         run: pnpm build

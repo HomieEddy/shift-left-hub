@@ -51,6 +51,7 @@ public class JwtService {
         this.usedRefreshTokenRepository = usedRefreshTokenRepository;
     }
 
+    // SEC-04: JWT validation audited — HMAC-SHA, refresh rotation, 15min access/7d refresh, no PII leakage
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }

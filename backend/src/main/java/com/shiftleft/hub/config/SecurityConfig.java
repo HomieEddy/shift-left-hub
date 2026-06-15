@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,17 +43,7 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
-
-    /**
-     * Creates a new SecurityConfig.
-     *
-     * @param userRepository the user repository
-     * @param jwtService     the JWT service
-     */
-    public SecurityConfig(UserRepository userRepository, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-    }
+    private final RateLimitingFilter rateLimitingFilter;
 
     /**
      * Provides the BCrypt password encoder.
@@ -62,6 +53,20 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Creates a new SecurityConfig.
+     *
+     * @param userRepository       the user repository
+     * @param jwtService           the JWT service
+     * @param rateLimitingFilter   the rate limiting filter
+     */
+    public SecurityConfig(UserRepository userRepository, JwtService jwtService,
+            RateLimitingFilter rateLimitingFilter) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     /**
@@ -75,7 +80,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            // CSRF disabled: stateless JWT API. Mitigated by SameSite=Strict cookies (SEC-04).
             .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers
+                .httpStrictTransportSecurity(hsts -> hsts
+                    .includeSubDomains(true)
+                    .maxAgeInSeconds(31536000))
+                .contentTypeOptions(Customizer.withDefaults())
+                .frameOptions(frame -> frame.deny())
+            )
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
@@ -88,6 +101,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
+            .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -108,7 +122,8 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(allowedOrigins));
         config.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedHeaders(
+            List.of("Content-Type", "Authorization", "X-Workspace-Id", "Accept", "X-Requested-With"));
 
         UrlBasedCorsConfigurationSource source =
             new UrlBasedCorsConfigurationSource();
