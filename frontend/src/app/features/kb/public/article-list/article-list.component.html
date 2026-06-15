@@ -6,13 +6,14 @@
     <a
       routerLink="/articles/search"
       class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
+    data-testid="article-browse-all"
     >
       {{ translationService.translate('kb.search-articles') }}
     </a>
   </div>
 
   @if (errorMessage()) {
-    <p class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4">
+    <p class="bg-accent-danger-muted text-accent-danger px-4 py-3 rounded-lg mb-4" data-testid="article-list-error">
       {{ errorMessage() }}
     </p>
   }
@@ -27,10 +28,11 @@
   }
 
   @if (!isLoading() && articles().length > 0) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="article-list">
       @for (article of articles(); track article.id) {
         <div
           class="bg-surface-primary rounded-xl shadow-sm border border-border-default hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+          data-testid="article-card"
         >
           <div class="p-6 flex flex-col flex-1">
             <div class="flex items-center gap-2 mb-3">
@@ -47,6 +49,7 @@
             <a [routerLink]="['/articles', article.id]" class="no-underline">
               <h2
                 class="text-lg font-semibold text-text-primary mb-2 hover:text-primary-600 transition-colors"
+                data-testid="article-card-title"
               >
                 {{ displayTitle(article) }}
               </h2>

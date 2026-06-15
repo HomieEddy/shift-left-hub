@@ -2,6 +2,7 @@
   <a
     routerLink="/articles"
     class="text-sm text-primary-600 hover:text-primary-700 mb-6 inline-block"
+    data-testid="article-back-link"
     >{{ translationService.translate('kb.back') }}</a
   >
 
@@ -25,11 +26,12 @@
   }
 
   @if (!isLoading() && article() !== null) {
-    <article class="max-w-none">
+    <article class="max-w-none" data-testid="article-viewer">
       <!-- Bilingual fallback notice -->
       @if (isFallback()) {
         <div
           class="bg-accent-info-muted border border-accent-info text-accent-info px-4 py-3 rounded-lg mb-6 text-sm"
+          data-testid="article-fallback-notice"
         >
           {{ translationService.translate('kb.fallback-notice', { VAR_LANG: fallbackLanguage() }) }}
         </div>
