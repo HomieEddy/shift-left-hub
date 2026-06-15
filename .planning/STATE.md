@@ -25,15 +25,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-14)
 
 **Core value:** Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents.
 
-**Current focus:** Phase 21 — Production Deployment (not started)
+**Current focus:** Phase 21 — Production Deployment (planned — 3 plans, 2 waves)
 
 ## Current Position
 
-Phase: 20 of 21 (Security Audit & Hardening)
-Plan: 3 of 3 plans (20-01 through 20-03)
-Status: COMPLETE — 3/3 plans executed, 3 atomic commits
-Last activity: 2026-06-15 — Phase 20 executed (3 commits: backend, frontend, infra hardening)
-Progress: [■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■] 95% (Phase 20 complete)
+Phase: 21 of 21 (Production Deployment)
+Plan: 0 of 3 plans (21-01 through 21-03)
+Status: PLANNED — 3 plans created, awaiting execution
+Last activity: 2026-06-15 — Phase 21 plans created (3 plans: code changes, project setup, deploy + verify)
+Progress: [■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■] 95% (Phase 21 planned)
 
 ## Performance Metrics
 
@@ -49,7 +49,7 @@ Progress: [■■■■■■■■■■■■■■■■■■■■■■■
 | 18. Unit Test Tightening | 5 | ✓ Complete |
 | 19. E2E Test Coverage | 6 | ✓ Complete |
 | 20. Security Audit & Hardening | 3 | ✓ Complete |
-| 21. Production Deployment | TBD | Not started |
+| 21. Production Deployment | 3 | Planned |
 
 ## Accumulated Context
 
@@ -84,7 +84,7 @@ Resume file: None
 Last session: 2026-06-14
 Stopped at: Phase 19 — E2E Test Coverage executed (6/6 plans)
 Resume file: None
-Next action: `/gsd-plan-phase 21` to plan Phase 21 Production Deployment
+Next action: `/gsd-execute-phase 21` to execute Phase 21 Production Deployment
 
 ---
 
