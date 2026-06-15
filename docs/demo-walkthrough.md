@@ -1,11 +1,26 @@
 # Shift-Left Knowledge Hub — Demo Walkthrough
 
+## Production Verification
+
+After deploying to production, use these URLs instead of localhost:
+
+- **Frontend:** `https://shift-left-hub-frontend.vercel.app`
+- **Backend Health:** `https://shift-left-hub-backend-production.up.railway.app/actuator/health`
+
+All steps below use `https://shift-left-hub-frontend.vercel.app` as the base URL instead of `http://localhost:4200`.
+
 ## Prerequisites
 
+### Local Development
 - Docker Compose running: `docker compose up`
 - Java 21 + Maven for backend: `cd backend && ./mvnw spring-boot:run`
 - Node.js 22+ for frontend: `cd frontend && pnpm install && pnpm start`
 - Browser: Chrome (for best Playwright compatibility)
+
+### Production Verification
+- Frontend deployed on Vercel: `https://shift-left-hub-frontend.vercel.app`
+- Backend deployed on Railway: `https://shift-left-hub-backend-production.up.railway.app`
+- Both services have built and deployed from the latest `master` commit
 
 ## 1. Login as User
 
