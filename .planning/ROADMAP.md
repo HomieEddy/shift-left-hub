@@ -89,11 +89,19 @@ Plans:
 **Depends on**: Phase 18
 **Requirements**: TST-08, TST-09, TST-10, TST-11, TST-12, TST-13, TST-14, TST-15, TST-16
 **Success Criteria** (what must be TRUE):
-  1. Playwright e2e covers auth happy path: register, login, logout, protected route redirect
-  2. Playwright e2e covers knowledge base, AI self-service, escalation, agent dashboard, workspace management, admin, and document ingestion happy paths
-  3. All 8 Playwright e2e tests pass consistently across multiple runs
-  4. All three test suites pass consistently: backend (`mvn test`), frontend (`npm run test -- --watch=false`), and e2e (Playwright)
-**Plans**: TBD
+   1. Playwright e2e covers auth happy path: register, login, logout, protected route redirect
+   2. Playwright e2e covers knowledge base, AI self-service, escalation, agent dashboard, workspace management, admin, and document ingestion happy paths
+   3. All 8 Playwright e2e tests pass consistently across multiple runs
+   4. All three test suites pass consistently: backend (`mvn test`), frontend (`npm run test -- --watch=false`), and e2e (Playwright)
+**Plans**: 6 plans
+
+Plans:
+- [ ] 19-01 — Infrastructure: 3 new page objects + e2e/fixtures
+- [ ] 19-02 — Auth (TST-08) + KB (TST-09) specs + template testids
+- [ ] 19-03 — AI Chat (TST-10) + Escalation (TST-11) specs + chat testids
+- [ ] 19-04 — Agent Dashboard (TST-12) + Workspace Mgmt (TST-13) specs + switcher testids
+- [ ] 19-05 — Admin (TST-14) + Document Ingestion (TST-15) specs + admin template testids
+- [ ] 19-06 — Cleanup + Verification (TST-16): delete golden-path, verify all tests pass
 
 ### Phase 20: Security Audit & Hardening
 **Goal**: Application is audited for security vulnerabilities across backend, frontend, and infrastructure, with all findings resolved
@@ -140,7 +148,7 @@ Plans:
 | 16. UI Neutralization | v2.0 | 4/4 | Complete | 2026-06-14 |
 | 17. Codebase Review | v2.1 | 3/3 | Complete | 2026-06-14 |
 | 18. Unit Test Tightening | v2.1 | 5/5 | Complete | 2026-06-14 |
-| 19. E2E Test Coverage | v2.1 | 0/0 | Not started | - |
+| 19. E2E Test Coverage | v2.1 | 0/6 | Planned | - |
 | 20. Security Audit & Hardening | v2.1 | 0/0 | Not started | - |
 | 21. Production Deployment | v2.1 | 0/0 | Not started | - |
 
