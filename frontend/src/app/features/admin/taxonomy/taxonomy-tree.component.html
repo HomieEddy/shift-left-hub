@@ -8,6 +8,7 @@
         (click)="openMerge()"
         (keydown.enter)="openMerge()"
         type="button"
+        data-testid="taxonomy-merge-btn"
         class="px-4 py-2 text-sm border border-border-default rounded-lg hover:bg-surface-secondary font-medium transition-colors"
       >
         {{ translationService.translate('admin.taxonomy.merge') }}
@@ -16,6 +17,7 @@
         (click)="openCreate()"
         (keydown.enter)="openCreate()"
         type="button"
+        data-testid="taxonomy-new-btn"
         class="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
       >
         {{ translationService.translate('admin.taxonomy.new') }}
@@ -55,10 +57,11 @@
       <p class="text-xs text-text-tertiary mb-3">
         {{ translationService.translate('admin.taxonomy.dragHint') }}
       </p>
-      <div class="taxonomy-tree">
+      <div data-testid="taxonomy-tree" class="taxonomy-tree">
         @for (node of treeNodes(); track node.category.id) {
           <div class="ml-0">
             <div
+              [attr.data-testid]="'taxonomy-node-' + node.category.id"
               class="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-surface-secondary group"
               draggable="true"
               (dragstart)="onDragStart($event, node.category.id)"
@@ -88,7 +91,7 @@
                   <span class="w-4"></span>
                 }
               </button>
-              <span class="flex-1 text-sm font-medium text-text-primary">{{
+              <span data-testid="taxonomy-node-name" class="flex-1 text-sm font-medium text-text-primary">{{
                 node.category.nameEn
               }}</span>
               <span class="text-xs text-text-tertiary">{{ node.category.nameFr }}</span>
@@ -105,6 +108,7 @@
                   type="button"
                   (click)="openEdit(node.category)"
                   (keydown.enter)="openEdit(node.category)"
+                  data-testid="taxonomy-edit-btn"
                   class="text-xs px-2 py-1 rounded border border-border-default text-text-secondary hover:bg-surface-secondary font-medium"
                 >
                   {{ translationService.translate('admin.taxonomy.edit') }}
@@ -113,6 +117,7 @@
                   type="button"
                   (click)="confirmDelete(node.category)"
                   (keydown.enter)="confirmDelete(node.category)"
+                  data-testid="taxonomy-delete-btn"
                   class="text-xs px-2 py-1 rounded border border-accent-danger text-accent-danger hover:bg-accent-danger-muted font-medium"
                 >
                   {{ translationService.translate('admin.articles.delete') }}
