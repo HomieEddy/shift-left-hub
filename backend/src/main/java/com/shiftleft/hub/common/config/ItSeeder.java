@@ -71,36 +71,36 @@ public class ItSeeder {
     @EventListener(ApplicationReadyEvent.class)
     @Order(2)
     public void seed() {
-        if (!seedEnabled) {
-            log.info("IT seeding skipped — seed-enabled is false");
-            return;
-        }
-
-        // Find admin user
-        User admin = userRepository.findByRole(UserRole.ROLE_ADMIN).stream()
-            .findFirst()
-            .orElse(null);
-        if (admin == null) {
-            log.warn("IT seeding skipped — no admin user found");
-            return;
-        }
-
-        // Find IT workspace
-        Workspace itWs = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
-        if (itWs == null) {
-            log.warn("IT seeding skipped — workspace '{}' not found", WORKSPACE_SLUG);
-            return;
-        }
-        UUID itWsId = itWs.getId();
-
-        // Step 1: Ensure all IT tags exist
-        Map<String, Tag> tagByNameEn = ensureTags(itWsId);
-        log.info("IT workspace: {} tags ready", tagByNameEn.size());
-
-        // Step 2: Scan and process markdown files
-        int created = 0;
-        int updated = 0;
         try {
+            if (!seedEnabled) {
+                log.info("IT seeding skipped — seed-enabled is false");
+                return;
+            }
+
+            // Find admin user
+            User admin = userRepository.findByRole(UserRole.ROLE_ADMIN).stream()
+                .findFirst()
+                .orElse(null);
+            if (admin == null) {
+                log.warn("IT seeding skipped — no admin user found");
+                return;
+            }
+
+            // Find IT workspace
+            Workspace itWs = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
+            if (itWs == null) {
+                log.warn("IT seeding skipped — workspace '{}' not found", WORKSPACE_SLUG);
+                return;
+            }
+            UUID itWsId = itWs.getId();
+
+            // Step 1: Ensure all IT tags exist
+            Map<String, Tag> tagByNameEn = ensureTags(itWsId);
+            log.info("IT workspace: {} tags ready", tagByNameEn.size());
+
+            // Step 2: Scan and process markdown files
+            int created = 0;
+            int updated = 0;
             Resource[] resources = resolver.getResources(MARKDOWN_PATTERN);
             for (Resource resource : resources) {
                 String filename = resource.getFilename();
@@ -168,12 +168,10 @@ public class ItSeeder {
                     log.debug("Created article: {}", slug);
                 }
             }
+            log.info("IT seeding complete — created: {}, updated: {}", created, updated);
         } catch (Exception e) {
-            log.error("Error during IT seeding", e);
-            return;
+            log.error("Error during IT seeding — continuing startup without IT seed data", e);
         }
-
-        log.info("IT seeding complete — created: {}, updated: {}", created, updated);
     }
 
     // =========================================================================

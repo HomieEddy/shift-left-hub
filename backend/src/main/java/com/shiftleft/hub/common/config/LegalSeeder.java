@@ -80,38 +80,38 @@ public class LegalSeeder {
     @EventListener(ApplicationReadyEvent.class)
     @Order(2)
     public void seed() {
-        if (!seedEnabled) {
-            log.info("KB seeding is disabled — Legal seeder skipped");
-            return;
-        }
-
-        log.info("Legal seeder starting...");
-
-        // Step 1: Find admin user
-        User admin = userRepository.findByRole(UserRole.ROLE_ADMIN)
-            .stream()
-            .findFirst()
-            .orElse(null);
-        if (admin == null) {
-            log.warn("No admin user found — Legal seeder skipped");
-            return;
-        }
-
-        // Step 2: Find Legal workspace
-        Workspace workspace = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
-        if (workspace == null) {
-            log.warn("Legal workspace (slug: {}) not found — Legal seeder skipped", WORKSPACE_SLUG);
-            return;
-        }
-        UUID wsId = workspace.getId();
-
-        // Step 3: Ensure Legal tags exist
-        Map<String, Tag> tagByNameEn = ensureLegalTags(wsId);
-        log.info("Legal workspace ready — {} tags available", tagByNameEn.size());
-
-        // Step 4: Scan, parse, and create articles from markdown files
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
+            if (!seedEnabled) {
+                log.info("KB seeding is disabled — Legal seeder skipped");
+                return;
+            }
+
+            log.info("Legal seeder starting...");
+
+            // Step 1: Find admin user
+            User admin = userRepository.findByRole(UserRole.ROLE_ADMIN)
+                .stream()
+                .findFirst()
+                .orElse(null);
+            if (admin == null) {
+                log.warn("No admin user found — Legal seeder skipped");
+                return;
+            }
+
+            // Step 2: Find Legal workspace
+            Workspace workspace = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
+            if (workspace == null) {
+                log.warn("Legal workspace (slug: {}) not found — Legal seeder skipped", WORKSPACE_SLUG);
+                return;
+            }
+            UUID wsId = workspace.getId();
+
+            // Step 3: Ensure Legal tags exist
+            Map<String, Tag> tagByNameEn = ensureLegalTags(wsId);
+            log.info("Legal workspace ready — {} tags available", tagByNameEn.size());
+
+            // Step 4: Scan, parse, and create articles from markdown files
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             Resource[] resources = resolver.getResources(CLASS_PATH_PATTERN);
             log.info("Found {} Legal seed markdown files", resources.length);
 
@@ -188,7 +188,7 @@ public class LegalSeeder {
                 created, updated, created + updated);
 
         } catch (Exception e) {
-            log.error("Error during Legal seeding", e);
+            log.error("Error during Legal seeding — continuing startup without Legal seed data", e);
         }
     }
 

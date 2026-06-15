@@ -128,12 +128,17 @@ Plans:
 **Depends on**: Phase 20
 **Requirements**: DEP-01, DEP-02, DEP-03, DEP-04, DEP-05
 **Success Criteria** (what must be TRUE):
-  1. Frontend Angular SPA is deployed and accessible on Vercel with custom domain
-  2. Backend Spring Boot API + PostgreSQL database are deployed and accessible on Railway with custom domain
-  3. Production Docker configuration uses multi-stage builds, minimal images, and excludes dev dependencies
-  4. CI/CD pipeline verifies build, test, lint, and security steps before deploying
-  5. Deployed application passes health checks and smoke tests (login → AI query → escalate → ticket)
-**Plans**: TBD
+   1. Frontend Angular SPA is deployed and accessible on Vercel with default domain
+   2. Backend Spring Boot API + PostgreSQL database are deployed and accessible on Railway with default domain
+   3. Production Docker configuration uses multi-stage builds, minimal images, and excludes dev dependencies
+   4. CI/CD pipeline verifies build, test, lint, and security steps before deploying
+   5. Deployed application passes health checks and smoke tests (login → AI query → escalate → ticket)
+**Plans**: 3 plans
+
+Plans:
+- [ ] 21-01 — Pre-deploy code changes: env.js runtime config, base URL interceptor, Dockerfile/CI verification, pre-deploy checklist
+- [ ] 21-02 — Pre-deploy setup: create Railway project + PostgreSQL + environment variables, create Vercel project
+- [ ] 21-03 — Deploy & smoke test: set production Railway URL, update demo walkthrough, push to main, manual smoke test
 
 ## Progress
 
@@ -159,7 +164,7 @@ Plans:
 | 18. Unit Test Tightening | v2.1 | 5/5 | Complete | 2026-06-14 |
 | 19. E2E Test Coverage | v2.1 | 6/6 | Complete | 2026-06-14 |
 | 20. Security Audit & Hardening | v2.1 | 3/3 | Complete | 2026-06-15 |
-| 21. Production Deployment | v2.1 | 0/0 | Not started | - |
+| 21. Production Deployment | v2.1 | 0/3 | Planned | - |
 
 ---
 

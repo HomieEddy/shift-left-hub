@@ -4,12 +4,13 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/http/error.interceptor';
+import { baseUrlInterceptor } from './core/http/base-url.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([errorInterceptor])),
+    provideHttpClient(withInterceptors([baseUrlInterceptor, errorInterceptor])),
     provideMarkdown({
       markedOptions: {
         provide: MARKED_OPTIONS,

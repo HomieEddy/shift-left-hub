@@ -80,38 +80,38 @@ public class HrSeeder {
     @EventListener(ApplicationReadyEvent.class)
     @Order(2)
     public void seed() {
-        if (!seedEnabled) {
-            log.info("KB seeding is disabled — HR seeder skipped");
-            return;
-        }
-
-        log.info("HR seeder starting...");
-
-        // Step 1: Find admin user
-        User admin = userRepository.findByRole(UserRole.ROLE_ADMIN)
-            .stream()
-            .findFirst()
-            .orElse(null);
-        if (admin == null) {
-            log.warn("No admin user found — HR seeder skipped");
-            return;
-        }
-
-        // Step 2: Find HR workspace
-        Workspace workspace = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
-        if (workspace == null) {
-            log.warn("HR workspace (slug: {}) not found — HR seeder skipped", WORKSPACE_SLUG);
-            return;
-        }
-        UUID wsId = workspace.getId();
-
-        // Step 3: Ensure HR tags exist
-        Map<String, Tag> tagByNameEn = ensureHrTags(wsId);
-        log.info("HR workspace ready — {} tags available", tagByNameEn.size());
-
-        // Step 4: Scan, parse, and create articles from markdown files
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
+            if (!seedEnabled) {
+                log.info("KB seeding is disabled — HR seeder skipped");
+                return;
+            }
+
+            log.info("HR seeder starting...");
+
+            // Step 1: Find admin user
+            User admin = userRepository.findByRole(UserRole.ROLE_ADMIN)
+                .stream()
+                .findFirst()
+                .orElse(null);
+            if (admin == null) {
+                log.warn("No admin user found — HR seeder skipped");
+                return;
+            }
+
+            // Step 2: Find HR workspace
+            Workspace workspace = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
+            if (workspace == null) {
+                log.warn("HR workspace (slug: {}) not found — HR seeder skipped", WORKSPACE_SLUG);
+                return;
+            }
+            UUID wsId = workspace.getId();
+
+            // Step 3: Ensure HR tags exist
+            Map<String, Tag> tagByNameEn = ensureHrTags(wsId);
+            log.info("HR workspace ready — {} tags available", tagByNameEn.size());
+
+            // Step 4: Scan, parse, and create articles from markdown files
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
             Resource[] resources = resolver.getResources(CLASS_PATH_PATTERN);
             log.info("Found {} HR seed markdown files", resources.length);
 
@@ -188,7 +188,7 @@ public class HrSeeder {
                 created, updated, created + updated);
 
         } catch (Exception e) {
-            log.error("Error during HR seeding", e);
+            log.error("Error during HR seeding — continuing startup without HR seed data", e);
         }
     }
 

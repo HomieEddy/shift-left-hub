@@ -4,6 +4,10 @@ WORKDIR /app
 
 # Copy Maven wrapper and pom first for dependency caching
 COPY pom.xml ./
+COPY checkstyle.xml ./
+COPY checkstyle-suppressions.xml ./
+COPY dependency-check-suppressions.xml ./
+COPY spotbugs-exclude.xml ./
 COPY .mvn .mvn
 COPY mvnw mvnw.cmd ./
 RUN chmod +x mvnw

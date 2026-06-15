@@ -109,24 +109,28 @@ public class MasterSeeder {
             return;
         }
 
-        log.info("Master seeder starting...");
+        try {
+            log.info("Master seeder starting...");
 
-        // Step 1: Seed 7 users
-        seedUsers();
+            // Step 1: Seed 7 users
+            seedUsers();
 
-        // Step 2: Seed 4 workspaces
-        seedWorkspaces();
+            // Step 2: Seed 4 workspaces
+            seedWorkspaces();
 
-        // Step 3: Assign users to workspaces and set default workspace
-        assignUsersAndSetDefaults();
+            // Step 3: Assign users to workspaces and set default workspace
+            assignUsersAndSetDefaults();
 
-        // Step 4: Seed default AI config if none exists
-        seedAiConfig();
+            // Step 4: Seed default AI config if none exists
+            seedAiConfig();
 
-        // Step 5: Clean up old v1.0 seed articles
-        cleanupOldArticles();
+            // Step 5: Clean up old v1.0 seed articles
+            cleanupOldArticles();
 
-        log.info("Master seeder completed successfully");
+            log.info("Master seeder completed successfully");
+        } catch (Exception e) {
+            log.error("Master seeder failed — continuing startup without seed data", e);
+        }
     }
 
     // =========================================================================
