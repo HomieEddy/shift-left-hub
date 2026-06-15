@@ -39,6 +39,7 @@ class AiConfigServiceTest {
             .embeddingDimension(768)
             .build();
         ReflectionTestUtils.setField(aiConfigService, "encryptionKey", "test-encryption-key-32chars!!");
+        ReflectionTestUtils.setField(aiConfigService, "encryptionSalt", "test-salt");
     }
 
     // ── getConfig ────────────────────────────────────────────
