@@ -11,6 +11,7 @@ import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.workspace.domain.WorkspaceRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class PublicArticleService {
 
     private static final String PUBLIC_SLUG = "public";
@@ -41,8 +43,13 @@ public class PublicArticleService {
 
     @PostConstruct
     void init() {
-        workspaceRepository.findBySlug(PUBLIC_SLUG)
-            .ifPresent(ws -> publicWorkspaceId = ws.getId());
+        try {
+            workspaceRepository.findBySlug(PUBLIC_SLUG)
+                .ifPresent(ws -> publicWorkspaceId = ws.getId());
+        } catch (Exception e) {
+            // Railway startup can race schema initialization; fall back to lazy resolution.
+            log.warn("Public workspace lookup deferred: {}", e.getMessage());
+        }
     }
 
     private UUID resolveWorkspaceId() {

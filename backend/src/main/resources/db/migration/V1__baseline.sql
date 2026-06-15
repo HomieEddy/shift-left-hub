@@ -1,4 +1,10 @@
-CREATE EXTENSION IF NOT EXISTS vector;
+DO $$
+BEGIN
+    CREATE EXTENSION IF NOT EXISTS vector;
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'vector extension unavailable (pgvector may be pre-installed or insufficient privileges): %', SQLERRM;
+END;
+$$;
 
 CREATE TABLE app_user (
     id UUID NOT NULL,

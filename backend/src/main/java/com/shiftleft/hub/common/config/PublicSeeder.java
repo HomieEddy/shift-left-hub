@@ -71,36 +71,36 @@ public class PublicSeeder {
     @EventListener(ApplicationReadyEvent.class)
     @Order(2)
     public void seed() {
-        if (!seedEnabled) {
-            log.info("Public seeding skipped — seed-enabled is false");
-            return;
-        }
-
-        // Find admin user
-        User admin = userRepository.findByRole(UserRole.ROLE_ADMIN).stream()
-            .findFirst()
-            .orElse(null);
-        if (admin == null) {
-            log.warn("Public seeding skipped — no admin user found");
-            return;
-        }
-
-        // Find Public workspace
-        Workspace publicWs = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
-        if (publicWs == null) {
-            log.warn("Public seeding skipped — workspace '{}' not found", WORKSPACE_SLUG);
-            return;
-        }
-        UUID publicWsId = publicWs.getId();
-
-        // Step 1: Ensure all Public tags exist
-        Map<String, Tag> tagByNameEn = ensureTags(publicWsId);
-        log.info("Public workspace: {} tags ready", tagByNameEn.size());
-
-        // Step 2: Scan and process markdown files
-        int created = 0;
-        int updated = 0;
         try {
+            if (!seedEnabled) {
+                log.info("Public seeding skipped — seed-enabled is false");
+                return;
+            }
+
+            // Find admin user
+            User admin = userRepository.findByRole(UserRole.ROLE_ADMIN).stream()
+                .findFirst()
+                .orElse(null);
+            if (admin == null) {
+                log.warn("Public seeding skipped — no admin user found");
+                return;
+            }
+
+            // Find Public workspace
+            Workspace publicWs = workspaceService.findBySlug(WORKSPACE_SLUG).orElse(null);
+            if (publicWs == null) {
+                log.warn("Public seeding skipped — workspace '{}' not found", WORKSPACE_SLUG);
+                return;
+            }
+            UUID publicWsId = publicWs.getId();
+
+            // Step 1: Ensure all Public tags exist
+            Map<String, Tag> tagByNameEn = ensureTags(publicWsId);
+            log.info("Public workspace: {} tags ready", tagByNameEn.size());
+
+            // Step 2: Scan and process markdown files
+            int created = 0;
+            int updated = 0;
             Resource[] resources = resolver.getResources(MARKDOWN_PATTERN);
             for (Resource resource : resources) {
                 String filename = resource.getFilename();
@@ -168,12 +168,10 @@ public class PublicSeeder {
                     log.debug("Created article: {}", slug);
                 }
             }
+            log.info("Public seeding complete — created: {}, updated: {}", created, updated);
         } catch (Exception e) {
-            log.error("Error during Public seeding", e);
-            return;
+            log.error("Error during Public seeding — continuing startup without Public seed data", e);
         }
-
-        log.info("Public seeding complete — created: {}, updated: {}", created, updated);
     }
 
     // =========================================================================
