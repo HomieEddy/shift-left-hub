@@ -45,6 +45,11 @@ jobs:
         run: ./mvnw verify -B
         working-directory: backend
 
+      - name: OWASP Dependency-Check (advisory)
+        run: ./mvnw dependency-check:check -B
+        working-directory: backend
+        continue-on-error: true
+
       - name: SonarQube Cloud Scan
         if: always()  # Runs even if tests fail (informational per D-02)
         env:
@@ -96,6 +101,11 @@ jobs:
       - name: Run unit tests with coverage
         run: pnpm test
         working-directory: frontend
+
+      - name: Audit npm dependencies
+        run: pnpm audit --audit-level=high
+        working-directory: frontend
+        continue-on-error: true
 
       - name: Build
         run: pnpm build

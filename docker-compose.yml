@@ -2,12 +2,10 @@ services:
   db:
     image: pgvector/pgvector:0.8.0-pg16
     container_name: shiftleft-db
-    ports:
-      - "5433:5432"
     environment:
-      POSTGRES_DB: shiftleft
-      POSTGRES_USER: shiftleft
-      POSTGRES_PASSWORD: shiftleft
+      POSTGRES_DB: ${POSTGRES_DB:-shiftleft}
+      POSTGRES_USER: ${POSTGRES_USER:-shiftleft}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -32,11 +30,12 @@ services:
       SPRING_FLYWAY_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shiftleft
       SPRING_DATASOURCE_USERNAME: shiftleft
-      SPRING_DATASOURCE_PASSWORD: shiftleft
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_AI_OPENAI_API_KEY: ${SPRING_AI_OPENAI_API_KEY:-sk-local-dev-placeholder}
-      APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL:-admin@shiftleft.com}
-      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-ShiftLeft!2026}
-      APP_AI_ENCRYPTION_KEY: ${APP_AI_ENCRYPTION_KEY:-local-dev-placeholder-key-2026}
+      APP_ADMIN_EMAIL: ${APP_ADMIN_EMAIL}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD}
+      APP_AI_ENCRYPTION_KEY: ${APP_AI_ENCRYPTION_KEY}
+      APP_AI_ENCRYPTION_SALT: ${APP_AI_ENCRYPTION_SALT}
       APP_JWT_SECRET: ${APP_JWT_SECRET}
     volumes:
       - ./backend:/app

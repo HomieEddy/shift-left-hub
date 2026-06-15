@@ -1,10 +1,12 @@
 FROM node:22-alpine
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
 
-RUN corepack enable
+RUN corepack enable && chown -R appuser:appgroup /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY --chown=appuser:appgroup package.json pnpm-lock.yaml ./
+USER appuser
 RUN pnpm install --frozen-lockfile
 
 EXPOSE 4200
