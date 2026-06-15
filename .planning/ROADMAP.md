@@ -110,11 +110,16 @@ Plans:
 **Depends on**: Phase 19
 **Requirements**: SEC-01, SEC-02, SEC-03, SEC-04
 **Success Criteria** (what must be TRUE):
-  1. Backend security audit covers JWT authentication, RBAC authorization, injection vulnerabilities (SQL, NoSQL, command), secrets exposure, and dependency vulnerabilities
-  2. Frontend security audit covers XSS, CSRF, secure cookie handling, and dependency vulnerabilities
-  3. Infrastructure security audit covers CORS headers, CSP headers, HTTPS enforcement, and environment variable management
-  4. All discovered vulnerabilities are fixed or documented with risk acceptance rationale
-**Plans**: TBD
+   1. Backend security audit covers JWT authentication, RBAC authorization, injection vulnerabilities (SQL, NoSQL, command), secrets exposure, and dependency vulnerabilities
+   2. Frontend security audit covers XSS, CSRF, secure cookie handling, and dependency vulnerabilities
+   3. Infrastructure security audit covers CORS headers, CSP headers, HTTPS enforcement, and environment variable management
+   4. All discovered vulnerabilities are fixed or documented with risk acceptance rationale
+**Plans**: 3 plans
+
+Plans:
+- [ ] 20-01 — Backend Security Audit & Hardening (SEC-01, SEC-04) — OWASP Dependency-Check, SpotBugs find-sec-bugs, JWT/RBAC/injection/secrets audit, rate limiting, CR-01/CR-02 fixes, cookie hardening
+- [ ] 20-02 — Frontend Security Audit & Hardening (SEC-02, SEC-04) — ESLint security plugin, XSS audit, DomSanitizer bypass fix with DOMPurify, template security audit
+- [ ] 20-03 — Infrastructure Security Hardening (SEC-03, SEC-04) — Docker non-root USER, credential extraction, CSP meta tag, security headers, CI dependency scanning, .env.example
 
 ### Phase 21: Production Deployment
 **Goal**: Application is deployed to production on Vercel (frontend) and Railway (backend/database) with correct Docker configuration and passing health checks
@@ -151,7 +156,7 @@ Plans:
 | 17. Codebase Review | v2.1 | 3/3 | Complete | 2026-06-14 |
 | 18. Unit Test Tightening | v2.1 | 5/5 | Complete | 2026-06-14 |
 | 19. E2E Test Coverage | v2.1 | 6/6 | Complete | 2026-06-14 |
-| 20. Security Audit & Hardening | v2.1 | 0/0 | Not started | - |
+| 20. Security Audit & Hardening | v2.1 | 0/3 | Planning (3 plans created) | - |
 | 21. Production Deployment | v2.1 | 0/0 | Not started | - |
 
 ---
