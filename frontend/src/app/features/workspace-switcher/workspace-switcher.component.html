@@ -1,9 +1,10 @@
 <div class="relative">
   <button
     (click)="toggleDropdown()"
+    data-testid="workspace-toggle"
     class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-surface-tertiary transition-colors text-sm"
   >
-    <span class="text-text-secondary">{{ currentWorkspace()?.name || '...' }}</span>
+    <span class="text-text-secondary" data-testid="workspace-current-name">{{ currentWorkspace()?.name || '...' }}</span>
     @if (isDefaultWorkspace(currentWorkspace())) {
       <span class="text-xs text-text-tertiary">{{
         translationService.translate('workspace.default-suffix')
@@ -14,11 +15,13 @@
 
   @if (isOpen()) {
     <div
+      data-testid="workspace-dropdown"
       class="absolute right-0 top-full mt-1 w-64 bg-surface-primary rounded-xl shadow-xl border border-border-default py-1 z-50"
     >
       @for (ws of workspaces(); track ws.id) {
         <button
           (click)="promptSwitch(ws)"
+          [attr.data-testid]="'workspace-option-' + ws.id"
           class="w-full flex items-center gap-3 px-3 py-2 hover:bg-surface-secondary transition-colors text-sm text-left"
         >
           <span class="text-text-secondary w-5 h-5 flex items-center justify-center">
@@ -40,7 +43,7 @@
 </div>
 
 @if (pendingSwitch(); as target) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center">
+  <div data-testid="workspace-switch-modal" class="fixed inset-0 z-50 flex items-center justify-center">
     <button
       type="button"
       class="absolute inset-0 bg-black/50 animate-in border-0 cursor-default"
@@ -61,12 +64,14 @@
       <div class="flex items-center justify-end gap-3">
         <button
           (click)="cancelSwitch()"
+          data-testid="workspace-switch-cancel"
           class="px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-surface-tertiary transition-colors"
         >
           {{ translationService.translate('app.cancel') }}
         </button>
         <button
           (click)="confirmSwitch()"
+          data-testid="workspace-switch-confirm"
           class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-accent-info hover:opacity-90 transition-opacity"
         >
           {{ translationService.translate('workspace.switch.confirmButton') }}
