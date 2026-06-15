@@ -1,8 +1,8 @@
 # Shift-Left Knowledge Hub - Testing Strategy Document (TSD)
 
-> **Updated:** 2026-06-14 — v2.0 Workspace Platform milestone.
-> Current coverage: 112 backend integration tests + 9 backend unit tests + 127 frontend tests + Playwright E2E.
-> The document remains accurate for v2.0. No changes to testing philosophy.
+> **Updated:** 2026-06-14 — v2.1 Deployment milestone, Phase 19 E2E refactor.
+> Current coverage: 112 backend integration tests + 9 backend unit tests + 127 frontend tests + 8 Playwright E2E specs.
+> Phase 19 replaced the single golden-path with 8 independent per-feature E2E specs.
 
 ## The Philosophy: Pragmatic Competency
 To demonstrate engineering maturity without over-engineering a portfolio project, this testing strategy focuses strictly on High-ROI (Return on Investment) tests. We will ignore trivial tests (like testing getters/setters) and focus on the critical paths: business logic in the backend, state management in the frontend, and one "Golden Path" End-to-End (E2E) test.
@@ -75,41 +75,23 @@ it('should fetch tickets and return an Observable', () => {
 
 ## 3. End-to-End (E2E) Testing (Playwright)
 
-### A. The "Golden Path" Strategy
-E2E tests are brittle and slow if overused. We will write exactly **one** robust Playwright script that tests the critical "Happy Path" of the entire application to prove system integration.
+### A. Per-Feature Spec Strategy
+E2E tests are brittle and slow if overused. We write **one spec per user-facing feature** (8 total) to prove system integration while keeping each test focused and independent.
 
-* **The Scenario:** 1. User logs in.
-  2. User types a query into the AI Assistant.
-  3. User clicks "Escalate to Human".
-  4. Agent logs in and sees the new ticket on the dashboard.
-* **The Execution:** Playwright is chosen over older tools (Cypress/Protractor) to demonstrate up-to-date knowledge of modern web testing standards (multi-browser, auto-waiting, parallel execution).
+* **The Scenarios:** Each spec covers a distinct feature's happy path:
+  1. Auth (TST-08): register, login, logout, protected route redirect
+  2. Knowledge Base (TST-09): browse, search, view article, bilingual switch
+  3. AI Chat (TST-10): ask question, receive response, rate answer
+  4. Escalation (TST-11): user creates ticket, agent resolves
+  5. Agent Dashboard (TST-12): view queue, claim, resolve with KCS flag
+  6. Workspace Management (TST-13): switch workspace, view members
+  7. Admin (TST-14): manage users, manage tags, approve/reject KCS drafts
+  8. Document Ingestion (TST-15): upload, verify indexed, query, cleanup
+* **The Execution:** Each spec is fully independent per D-06 (no cross-test state dependencies). AI response assertions use presence-only checks per D-09. Playwright is chosen over older tools (Cypress/Protractor) to demonstrate up-to-date knowledge of modern web testing standards (multi-browser, auto-waiting, parallel execution).
 
-```javascript
-// Example: golden-path.spec.ts
-import { test, expect } from '@playwright/test';
-
-test('User can escalate issue and Agent receives ticket', async ({ page }) => {
-  // 1. User Journey
-  await page.goto('http://localhost:4200/login');
-  await page.fill('input[name="email"]', 'user@shiftleft.com');
-  await page.fill('input[name="password"]', 'password123');
-  await page.click('button[type="submit"]');
-
-  await page.fill('input[placeholder="Describe your issue..."]', 'VPN is down');
-  await page.click('text="No, this didn\'t help (Escalate)"');
-  await page.click('button:has-text("Submit Ticket")');
-  
-  await expect(page.locator('.toast-success')).toHaveText('Ticket Escalated');
-
-  // 2. Agent Journey (Using a clean browser context)
-  const agentContext = await page.context().browser().newContext();
-  const agentPage = await agentContext.newPage();
-  
-  await agentPage.goto('http://localhost:4200/login');
-  // ... agent login steps ...
-  await expect(agentPage.locator('table tr')).toContainText('VPN is down');
-});
-```
+**Page objects** (`e2e/pages/`) encapsulate per-feature selectors and interactions:
+- `LoginPage`, `ChatPage`, `TicketsPage`, `AgentDashboardPage`, `KcsDraftsPage`, `KnowledgeBasePage`
+- `WorkspaceManagementPage`, `AdminPage`, `DocumentsPage`
 
 ---
 

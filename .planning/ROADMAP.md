@@ -42,7 +42,7 @@
 
 - [x] **Phase 17: Codebase Review** — Full codebase-wide review of frontend, backend, and database
 - [x] **Phase 18: Unit Test Tightening** — Backend and frontend unit tests expanded with meaningful coverage
-- [ ] **Phase 19: E2E Test Coverage** — 8 Playwright e2e happy-path tests covering all user-facing features
+- [x] **Phase 19: E2E Test Coverage** — 8 Playwright e2e happy-path tests covering all user-facing features
 - [ ] **Phase 20: Security Audit & Hardening** — Full security audit of backend, frontend, and infrastructure
 - [ ] **Phase 21: Production Deployment** — Deploy frontend (Vercel), backend (Railway), and verify live
 
@@ -89,11 +89,21 @@ Plans:
 **Depends on**: Phase 18
 **Requirements**: TST-08, TST-09, TST-10, TST-11, TST-12, TST-13, TST-14, TST-15, TST-16
 **Success Criteria** (what must be TRUE):
-  1. Playwright e2e covers auth happy path: register, login, logout, protected route redirect
-  2. Playwright e2e covers knowledge base, AI self-service, escalation, agent dashboard, workspace management, admin, and document ingestion happy paths
-  3. All 8 Playwright e2e tests pass consistently across multiple runs
-  4. All three test suites pass consistently: backend (`mvn test`), frontend (`npm run test -- --watch=false`), and e2e (Playwright)
-**Plans**: TBD
+   1. Playwright e2e covers auth happy path: register, login, logout, protected route redirect
+   2. Playwright e2e covers knowledge base, AI self-service, escalation, agent dashboard, workspace management, admin, and document ingestion happy paths
+   3. All 8 Playwright e2e tests pass consistently across multiple runs
+   4. All three test suites pass consistently: backend (`mvn test`), frontend (`npm run test -- --watch=false`), and e2e (Playwright)
+**Plans**: 6 plans
+
+Plans:
+- [x] 19-01 — Infrastructure: 3 new page objects + e2e/fixtures ✓ `8 files, 231 insertions`
+- [x] 19-02 — Auth (TST-08) + KB (TST-09) specs + template testids ✓ `5 files, 118 insertions`
+- [x] 19-03 — AI Chat (TST-10) + Escalation (TST-11) specs + chat testids ✓ `3 files, 115 insertions`
+- [x] 19-04 — Agent Dashboard (TST-12) + Workspace Mgmt (TST-13) specs + switcher testids ✓ `3 files, 73 insertions`
+- [x] 19-05 — Admin (TST-14) + Document Ingestion (TST-15) specs + admin template testids ✓ `7 files, 190 insertions`
+- [x] 19-06 — Cleanup + Verification (TST-16): delete golden-path ✓ `142 deletions`
+
+**Completed:** 2026-06-14
 
 ### Phase 20: Security Audit & Hardening
 **Goal**: Application is audited for security vulnerabilities across backend, frontend, and infrastructure, with all findings resolved
@@ -140,10 +150,10 @@ Plans:
 | 16. UI Neutralization | v2.0 | 4/4 | Complete | 2026-06-14 |
 | 17. Codebase Review | v2.1 | 3/3 | Complete | 2026-06-14 |
 | 18. Unit Test Tightening | v2.1 | 5/5 | Complete | 2026-06-14 |
-| 19. E2E Test Coverage | v2.1 | 0/0 | Not started | - |
+| 19. E2E Test Coverage | v2.1 | 6/6 | Complete | 2026-06-14 |
 | 20. Security Audit & Hardening | v2.1 | 0/0 | Not started | - |
 | 21. Production Deployment | v2.1 | 0/0 | Not started | - |
 
 ---
 
-*Last updated: 2026-06-14 — v2.1 Deployment phases defined*
+*Last updated: 2026-06-14 — v2.1 Deployment: Phase 19 complete*
