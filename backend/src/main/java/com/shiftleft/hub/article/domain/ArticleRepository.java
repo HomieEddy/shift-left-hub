@@ -97,6 +97,12 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     /**
      * Full-text search across published articles scoped to a workspace.
      *
+     * <p>CR-01 assessment: Native SQL bypasses Hibernate @Filter but workspace_id is
+     * explicitly filtered via parameter binding (CAST(:workspaceId AS UUID)).
+     * This is deliberate — ts_headline/ts_rank functions are not available in JPQL.
+     * The workspaceId always comes from authenticated JWT context, preventing
+     * cross-tenant data leakage.
+     *
      * @param query       the search query
      * @param workspaceId the workspace UUID to scope results to
      * @param pageable    the pagination information

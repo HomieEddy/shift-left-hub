@@ -42,6 +42,9 @@ public class AiConfigService {
     @Value("${app.ai.encryption-key}")
     private String encryptionKey;
 
+    @Value("${app.ai.encryption-salt}")
+    private String encryptionSalt;
+
     /**
      * Returns the current AI configuration as a response DTO.
      *
@@ -274,10 +277,6 @@ public class AiConfigService {
     }
 
     private byte[] getSalt() {
-        try {
-            return "ShiftLeftKBSalt".getBytes("UTF-8");
-        } catch (java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException("UTF-8 not supported", e);
-        }
+        return encryptionSalt.getBytes(java.nio.charset.StandardCharsets.UTF_8);
     }
 }
