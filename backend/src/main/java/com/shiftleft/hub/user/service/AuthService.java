@@ -120,7 +120,7 @@ public class AuthService {
      * @param refreshTokenValue the refresh token value to invalidate
      */
     public void logout(String refreshTokenValue) {
-        if (refreshTokenValue != null
+        if (refreshTokenValue != null && !refreshTokenValue.isEmpty()
                 && jwtService.isTokenValid(refreshTokenValue)) {
             try {
                 String tokenId = jwtService.extractTokenId(refreshTokenValue);
