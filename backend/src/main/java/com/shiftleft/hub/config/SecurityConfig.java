@@ -91,6 +91,17 @@ public class SecurityConfig {
             )
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(ex -> ex
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    var auth = SecurityContextHolder.getContext().getAuthentication();
+                    log.warn("ACCESS DENIED: path={}, auth={}, authorities={}",
+                        request.getRequestURI(),
+                        auth != null ? auth.getName() : "null",
+                        auth != null ? auth.getAuthorities() : "null");
+                    response.setStatus(403);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"Forbidden\"}");
+                }))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
