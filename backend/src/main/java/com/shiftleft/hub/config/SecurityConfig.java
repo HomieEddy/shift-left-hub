@@ -80,7 +80,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            // CSRF disabled: stateless JWT API. Mitigated by SameSite=Strict cookies (SEC-04).
+            // CSRF disabled: stateless JWT API. Mitigated by SameSite=None cookies with HTTPS (cross-site production).
             .csrf(csrf -> csrf.disable())
             .headers(headers -> headers
                 .httpStrictTransportSecurity(hsts -> hsts
