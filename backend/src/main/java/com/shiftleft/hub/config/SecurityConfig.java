@@ -147,12 +147,17 @@ public class SecurityConfig {
                     throws ServletException, IOException {
 
                 Cookie[] cookies = request.getCookies();
-                if (cookies != null) {
+                if (cookies == null) {
+                    log.info("JWT filter: no cookies in request to {}", request.getRequestURI());
+                } else {
                     String accessToken = Arrays.stream(cookies)
                         .filter(c -> "access_token".equals(c.getName()))
                         .map(Cookie::getValue)
                         .findFirst()
                         .orElse(null);
+
+                    log.info("JWT filter: cookies={}, accessTokenPresent={}",
+                        cookies.length, accessToken != null);
 
                     if (accessToken != null
                             && jwtService.isTokenValid(accessToken)) {
@@ -170,6 +175,8 @@ public class SecurityConfig {
                                         new UsernamePasswordAuthenticationToken(
                                             principal, null,
                                             principal.getAuthorities()));
+                                log.info("JWT auth set: email={}, role={}",
+                                    u.getEmail(), u.getRole().name());
                                 UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
                                 if (workspaceId != null) {
                                     WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
