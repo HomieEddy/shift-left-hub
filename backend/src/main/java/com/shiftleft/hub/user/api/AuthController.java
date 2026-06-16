@@ -121,15 +121,15 @@ public class AuthController {
 
     private ResponseCookie createAccessCookie(String token) {
         return ResponseCookie.from("access_token", token)
-            .httpOnly(true).secure(true).sameSite("Strict").path("/").maxAge(ACCESS_COOKIE_MAX_AGE).build();
+            .httpOnly(true).secure(true).sameSite("None").path("/").maxAge(ACCESS_COOKIE_MAX_AGE).build();
     }
 
     private ResponseCookie createRefreshCookie(String token) {
         return ResponseCookie.from("refresh_token", token)
-            .httpOnly(true).secure(true).sameSite("Strict").path("/").maxAge(REFRESH_COOKIE_MAX_AGE).build();
+            .httpOnly(true).secure(true).sameSite("None").path("/").maxAge(REFRESH_COOKIE_MAX_AGE).build();
     }
 
     private ResponseCookie clearCookie(String name) {
-        return ResponseCookie.from(name, "").httpOnly(true).secure(true).sameSite("Strict").path("/").maxAge(0).build();
+        return ResponseCookie.from(name, "").httpOnly(true).secure(true).sameSite("None").path("/").maxAge(0).build();
     }
 }
