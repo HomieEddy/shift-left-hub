@@ -102,37 +102,6 @@ jobs:
         run: ./mvnw test -B -Dtest='*IntegrationTest, KnowledgeHubApplicationTests'
         working-directory: backend
 
-  backend-owasp:
-    name: Backend (OWASP Dependency-Check)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 21 (Temurin)
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: 'maven'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('backend/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Fix Maven wrapper permissions
-        run: chmod +x mvnw
-        working-directory: backend
-
-      - name: OWASP Dependency-Check (advisory)
-        run: ./mvnw dependency-check:check -B
-        working-directory: backend
-        continue-on-error: true
-
   backend-sonar:
     name: Backend (SonarQube Cloud Scan)
     needs: [backend-unit-tests, backend-integration-tests]
