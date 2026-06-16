@@ -57,11 +57,9 @@ public class MasterSeeder {
     @Value("${app.admin.password:#{null}}")
     private String adminPassword;
 
-    private static final String ADMIN_EMAIL = "admin@company.com";
     private static final String PUBLIC_SLUG = "public";
 
-    private static final List<UserSeed> USERS = List.of(
-        new UserSeed(ADMIN_EMAIL, "System Admin", UserRole.ROLE_ADMIN),
+    private static final List<UserSeed> NON_ADMIN_USERS = List.of(
         new UserSeed("hr.user@company.com", "HR User", UserRole.ROLE_USER),
         new UserSeed("hr.tech@company.com", "HR Tech", UserRole.ROLE_AGENT),
         new UserSeed("legal.user@company.com", "Legal User", UserRole.ROLE_USER),
@@ -138,7 +136,20 @@ public class MasterSeeder {
     // =========================================================================
 
     private void seedUsers() {
-        for (UserSeed us : USERS) {
+        // Create admin user first (uses APP_ADMIN_EMAIL env var)
+        if (!userRepository.existsByEmail(adminEmail)) {
+            User admin = User.builder()
+                .email(adminEmail)
+                .password(passwordEncoder.encode(adminPassword))
+                .displayName("System Admin")
+                .role(UserRole.ROLE_ADMIN)
+                .enabled(true)
+                .build();
+            userRepository.save(admin);
+            log.info("Created admin seed user: {}", adminEmail);
+        }
+
+        for (UserSeed us : NON_ADMIN_USERS) {
             if (!userRepository.existsByEmail(us.email())) {
                 User user = User.builder()
                     .email(us.email())
@@ -160,7 +171,7 @@ public class MasterSeeder {
     // =========================================================================
 
     private void seedWorkspaces() {
-        User admin = userRepository.findByEmail(ADMIN_EMAIL)
+        User admin = userRepository.findByEmail(adminEmail)
             .orElseThrow(() -> new IllegalStateException(
                 "Admin user not found after seeding — cannot create workspaces"));
 
@@ -197,10 +208,9 @@ public class MasterSeeder {
             log.warn("Public workspace not found — skipping assignments and default workspace setup");
             return;
         }
-        UUID publicWsId = publicWs.getId();
 
         // Admin → all workspaces as ADMIN (already done by createWorkspace but explicit for clarity)
-        User admin = userRepository.findByEmail(ADMIN_EMAIL).orElse(null);
+        User admin = userRepository.findByEmail(adminEmail).orElse(null);
         if (admin != null) {
             for (Workspace ws : workspaceBySlug.values()) {
                 workspaceService.assignUserToWorkspace(ws.getId(), admin.getId(), "ADMIN");
@@ -215,8 +225,16 @@ public class MasterSeeder {
         assignDepartment("it", workspaceBySlug, publicWs,
             "it.user@company.com", "it.tech@company.com");
 
-        // Set default_workspace_id to Public for all seed users
-        for (UserSeed us : USERS) {
+        // Set default_workspace_id to Public for all seed users (admin + non-admin)
+        UUID publicWsId = publicWs.getId();
+        userRepository.findByEmail(adminEmail).ifPresent(user -> {
+            if (!publicWsId.equals(user.getDefaultWorkspaceId())) {
+                user.setDefaultWorkspaceId(publicWsId);
+                userRepository.save(user);
+                log.debug("Set default workspace for {} to Public", adminEmail);
+            }
+        });
+        for (UserSeed us : NON_ADMIN_USERS) {
             userRepository.findByEmail(us.email()).ifPresent(user -> {
                 if (!publicWsId.equals(user.getDefaultWorkspaceId())) {
                     user.setDefaultWorkspaceId(publicWsId);
