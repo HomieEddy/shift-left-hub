@@ -208,7 +208,6 @@ public class MasterSeeder {
             log.warn("Public workspace not found — skipping assignments and default workspace setup");
             return;
         }
-        UUID publicWsId = publicWs.getId();
 
         // Admin → all workspaces as ADMIN (already done by createWorkspace but explicit for clarity)
         User admin = userRepository.findByEmail(adminEmail).orElse(null);
@@ -227,6 +226,7 @@ public class MasterSeeder {
             "it.user@company.com", "it.tech@company.com");
 
         // Set default_workspace_id to Public for all seed users (admin + non-admin)
+        UUID publicWsId = publicWs.getId();
         userRepository.findByEmail(adminEmail).ifPresent(user -> {
             if (!publicWsId.equals(user.getDefaultWorkspaceId())) {
                 user.setDefaultWorkspaceId(publicWsId);
