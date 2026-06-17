@@ -46,7 +46,7 @@ In the Railway backend service dashboard, add these environment variables:
 | `SPRING_PROFILES_ACTIVE` | `docker` | Enables Docker profile config |
 | `SPRING_JPA_HIBERNATE_DDL_AUTO` | `validate` | Flyway manages schema |
 | `SPRING_FLYWAY_ENABLED` | `true` | Enables migrations |
-| `APP_CORS_ALLOWED_ORIGINS` | `https://[your-vercel-app].vercel.app` | Set after Vercel deploy |
+| `APP_CORS_ALLOWED_ORIGINS` | `https://[your-vercel-app].vercel.app` | Explicit trusted frontend origins only; use comma-separated values for multiple origins, no wildcards |
 
 Note the Railway app URL: `https://[your-railway-app].up.railway.app`
 You'll need this for the env.js file and CORS config.
