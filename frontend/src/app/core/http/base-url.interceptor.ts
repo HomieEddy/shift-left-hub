@@ -5,8 +5,15 @@ export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
   const baseUrl = env?.apiBaseUrl ?? '';
 
   if (baseUrl && req.url.startsWith('/api/')) {
-    const apiReq = req.clone({ url: `${baseUrl.replace(/\/+$/, '')}${req.url}` });
+    const apiReq = req.clone({
+      url: `${baseUrl.replace(/\/+$/, '')}${req.url}`,
+      withCredentials: true,
+    });
     return next(apiReq);
+  }
+
+  if (req.url.startsWith('/api/')) {
+    return next(req.clone({ withCredentials: true }));
   }
 
   return next(req);

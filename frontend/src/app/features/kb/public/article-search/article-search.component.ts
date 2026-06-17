@@ -3,7 +3,6 @@ import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import DOMPurify from 'dompurify';
 import { PublicArticleService } from '../../services/public-article.service';
@@ -17,7 +16,6 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
   templateUrl: './article-search.component.html',
 })
 export class ArticleSearchComponent implements OnInit {
-  private http = inject(HttpClient);
   private publicArticleService = inject(PublicArticleService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -35,12 +33,10 @@ export class ArticleSearchComponent implements OnInit {
   totalResults = signal(0);
   currentPage = signal(0);
   totalPages = signal(0);
-  categories = signal<{ id: string; nameEn: string; nameFr: string }[]>([]);
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
     this.loadSearchTags();
-    this.loadCategories();
 
     this.destroyRef.onDestroy(() => {
       if (this.debounceTimer != null) {
@@ -74,18 +70,6 @@ export class ArticleSearchComponent implements OnInit {
         this.currentPage.set(0);
       }
     });
-  }
-
-  loadCategories(): void {
-    this.http
-      .get<{ id: string; nameEn: string; nameFr: string }[]>('/api/admin/categories')
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (cats) => this.categories.set(cats),
-        error: () => {
-          /* categories are non-critical, silently ignore */
-        },
-      });
   }
 
   loadSearchTags(): void {

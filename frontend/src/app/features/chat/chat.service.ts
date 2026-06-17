@@ -25,6 +25,12 @@ export interface StreamEvent {
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
+  private getApiUrl(path: string): string {
+    const env = (window as unknown as { __env?: { apiBaseUrl?: string } }).__env;
+    const baseUrl = env?.apiBaseUrl ?? '';
+    return baseUrl ? `${baseUrl.replace(/\/+$/, '')}${path}` : path;
+  }
+
   sendMessage(
     message: string,
     history: ChatMessage[],
@@ -32,7 +38,7 @@ export class ChatService {
     const subject = new Subject<StreamEvent>();
     const controller = new AbortController();
 
-    fetch('/api/ai/chat', {
+    fetch(this.getApiUrl('/api/ai/chat'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
