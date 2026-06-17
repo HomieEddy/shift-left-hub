@@ -92,7 +92,7 @@ public class SecurityConfig {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(ex -> ex
-                .accessDeniedHandler((request, response, ex) -> {
+                .accessDeniedHandler((request, response, denied) -> {
                     var auth = SecurityContextHolder.getContext().getAuthentication();
                     log.warn("ACCESS DENIED: path={}, auth={}, authorities={}",
                         request.getRequestURI(),
