@@ -2,6 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest, UserDto } from './auth.models';
+import { AuthTokenService } from './auth-token.service';
 
 /** Manages authentication state, session tokens, and admin/agent utilities. */
 @Injectable({ providedIn: 'root' })
@@ -13,6 +14,7 @@ export class AuthService {
   readonly isAgent = signal(false);
 
   private readonly http = inject(HttpClient);
+  private readonly authTokenService = inject(AuthTokenService);
 
   constructor() {
     this.tryRefreshToken();
@@ -53,6 +55,11 @@ export class AuthService {
       .pipe(tap(() => this.clearSession()));
   }
 
+  /** Current in-memory access token. Never persisted to browser storage. */
+  accessToken(): string | null {
+    return this.authTokenService.accessToken();
+  }
+
   /** Fetch all users (admin only). */
   getUsers(): Observable<UserDto[]> {
     return this.http.get<UserDto[]>('/api/admin/users', { withCredentials: true });
@@ -79,6 +86,7 @@ export class AuthService {
 
   private setSession(response: AuthResponse): void {
     this.userSignal.set(response);
+    this.authTokenService.setAccessToken(response.accessToken);
     this.isAuthenticated.set(true);
     this.isAdmin.set(response.role === 'ROLE_ADMIN');
     this.isAgent.set(response.role === 'ROLE_AGENT' || response.role === 'ROLE_ADMIN');
@@ -86,6 +94,7 @@ export class AuthService {
 
   private clearSession(): void {
     this.userSignal.set(null);
+    this.authTokenService.clear();
     this.isAuthenticated.set(false);
     this.isAdmin.set(false);
     this.isAgent.set(false);
