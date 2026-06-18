@@ -108,6 +108,14 @@ class AuthFlowIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void t03a_accessProtectedEndpoint_shouldSucceedWithBearerToken() {
+        client().get().uri("/api/tickets")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     void t03b_accessProtectedEndpoint_shouldReturnUnauthorizedWithoutAccessToken() {
         client().get().uri("/api/tickets")
                 .exchange()
