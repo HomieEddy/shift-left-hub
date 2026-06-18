@@ -6,7 +6,6 @@ import com.shiftleft.hub.article.domain.ArticleStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,7 @@ import java.util.Map;
 public class EmbeddingService {
 
     private final VectorStore vectorStore;
-    private final EmbeddingModel embeddingModel;
+    private final EmbeddingModelProvider embeddingProvider;
     private final ArticleRepository articleRepository;
     private final AiConfigService aiConfigService;
 
@@ -35,7 +34,7 @@ public class EmbeddingService {
      * @return the embedding vector
      */
     public float[] generateEmbedding(String text) {
-        return embeddingModel.embed(text);
+        return embeddingProvider.getEmbeddingModel().embed(text);
     }
 
     /**

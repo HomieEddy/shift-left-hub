@@ -8,15 +8,20 @@ import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.api.dto.TestConnectionResult;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
+import com.shiftleft.hub.config.EmbeddingProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
+import org.springframework.ai.ollama.api.OllamaEmbeddingOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -235,6 +240,36 @@ public class AiConfigService {
         String apiKey = config.getOpenaiApiKey();
         String modelName = config.getChatModelName();
         return buildChatClient(provider, endpointUrl, apiKey, modelName);
+    }
+
+    /**
+     * Builds an EmbeddingModel from environment-variable-based EmbeddingProperties.
+     * Does not read from the database — API keys are kept in env vars only.
+     *
+     * @param props the embedding configuration from environment variables
+     * @return a configured EmbeddingModel
+     */
+    public EmbeddingModel buildEmbeddingModel(EmbeddingProperties props) {
+        String provider = props.getProvider();
+        String endpointUrl = props.getEndpointUrl();
+        String apiKey = props.getApiKey();
+        String model = props.getModel();
+
+        log.info("buildEmbeddingModel: provider={}, model={}, endpointUrl={}, apiKeyPresent={}",
+            provider, model, endpointUrl, apiKey != null && !apiKey.isBlank());
+
+        if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
+            var clientBuilder = OpenAIOkHttpClient.builder().apiKey(apiKey);
+            if (endpointUrl != null && !endpointUrl.equals("http://host.docker.internal:11434")) {
+                clientBuilder = clientBuilder.baseUrl(endpointUrl);
+            }
+            return new OpenAiEmbeddingModel(clientBuilder.build());
+        }
+
+        return OllamaEmbeddingModel.builder()
+            .ollamaApi(OllamaApi.builder().baseUrl(endpointUrl).build())
+            .defaultOptions(OllamaEmbeddingOptions.builder().model(model).build())
+            .build();
     }
 
     /**

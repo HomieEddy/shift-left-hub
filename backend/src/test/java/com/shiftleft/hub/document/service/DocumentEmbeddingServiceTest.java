@@ -1,7 +1,9 @@
 package com.shiftleft.hub.document.service;
 
+import com.shiftleft.hub.ai.service.EmbeddingModelProvider;
 import com.shiftleft.hub.document.domain.DocumentChunk;
 import com.shiftleft.hub.document.domain.DocumentChunkRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,9 +22,15 @@ import static org.mockito.Mockito.*;
 class DocumentEmbeddingServiceTest {
 
     @Mock private EmbeddingModel embeddingModel;
+    @Mock private EmbeddingModelProvider embeddingProvider;
     @Mock private DocumentChunkRepository documentChunkRepository;
 
     @InjectMocks private DocumentEmbeddingService documentEmbeddingService;
+
+    @BeforeEach
+    void setUp() {
+        lenient().when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
+    }
 
     private static final UUID DOCUMENT_ID = UUID.randomUUID();
 
