@@ -176,53 +176,40 @@ public class SecurityConfig {
                     FilterChain filterChain)
                     throws ServletException, IOException {
 
-                Cookie[] cookies = request.getCookies();
-                if (cookies == null) {
-                    log.info("JWT filter: no cookies in request to {}", request.getRequestURI());
-                } else {
-                    String accessToken = Arrays.stream(cookies)
-                        .filter(c -> "access_token".equals(c.getName()))
-                        .map(Cookie::getValue)
-                        .findFirst()
-                        .orElse(null);
+                String accessToken = extractAccessToken(request);
 
-                    log.info("JWT filter: cookies={}, accessTokenPresent={}",
-                        cookies.length, accessToken != null);
-
-                    if (accessToken != null
-                            && jwtService.isTokenValid(accessToken)) {
-                        try {
-                            var userId = jwtService.extractUserId(accessToken);
-                            var user = userRepository.findById(userId);
-                            if (user.isPresent()) {
-                                var u = user.get();
-                                var principal = new User(
-                                    u.getEmail(), "",
-                                    List.of(new SimpleGrantedAuthority(
-                                        u.getRole().name())));
-                                SecurityContextHolder.getContext()
-                                    .setAuthentication(
-                                        new UsernamePasswordAuthenticationToken(
-                                            principal, null,
-                                            principal.getAuthorities()));
-                                log.info("JWT auth set: email={}, role={}",
-                                    u.getEmail(), u.getRole().name());
-                                UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
-                                log.info("JWT workspace_id extracted: {}", workspaceId);
-                                if (workspaceId != null) {
-                                    WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
-                                }
-                            } else {
-                                log.debug("JWT user not found in DB — clearing auth context");
-                                SecurityContextHolder.clearContext();
-                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                response.getWriter().write("{\"error\":\"Session expired — please log in again\"}");
-                                return;
+                if (accessToken != null && jwtService.isTokenValid(accessToken)) {
+                    try {
+                        var userId = jwtService.extractUserId(accessToken);
+                        var user = userRepository.findById(userId);
+                        if (user.isPresent()) {
+                            var u = user.get();
+                            var principal = new User(
+                                u.getEmail(), "",
+                                List.of(new SimpleGrantedAuthority(
+                                    u.getRole().name())));
+                            SecurityContextHolder.getContext()
+                                .setAuthentication(
+                                    new UsernamePasswordAuthenticationToken(
+                                        principal, null,
+                                        principal.getAuthorities()));
+                            log.info("JWT auth set: email={}, role={}",
+                                u.getEmail(), u.getRole().name());
+                            UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
+                            log.info("JWT workspace_id extracted: {}", workspaceId);
+                            if (workspaceId != null) {
+                                WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
                             }
-                        } catch (Exception e) {
-                            log.warn("JWT validation failed", e);
+                        } else {
+                            log.debug("JWT user not found in DB — clearing auth context");
                             SecurityContextHolder.clearContext();
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"error\":\"Session expired — please log in again\"}");
+                            return;
                         }
+                    } catch (Exception e) {
+                        log.warn("JWT validation failed", e);
+                        SecurityContextHolder.clearContext();
                     }
                 }
 
@@ -231,6 +218,29 @@ public class SecurityConfig {
                 } finally {
                     WorkspaceContextHolder.clear();
                 }
+            }
+
+            private String extractAccessToken(HttpServletRequest request) {
+                Cookie[] cookies = request.getCookies();
+                String cookieToken = cookies == null ? null : Arrays.stream(cookies)
+                    .filter(c -> "access_token".equals(c.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+
+                String bearerToken = extractBearerToken(request.getHeader("Authorization"));
+                log.info("JWT filter: cookies={}, cookieTokenPresent={}, bearerTokenPresent={}",
+                    cookies != null ? cookies.length : 0, cookieToken != null, bearerToken != null);
+
+                return cookieToken != null ? cookieToken : bearerToken;
+            }
+
+            private String extractBearerToken(String authorizationHeader) {
+                if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                    return null;
+                }
+                String token = authorizationHeader.substring("Bearer ".length()).trim();
+                return token.isEmpty() ? null : token;
             }
         };
     }
