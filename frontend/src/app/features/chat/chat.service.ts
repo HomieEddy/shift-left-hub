@@ -43,7 +43,7 @@ export class ChatService {
 
     const buildHeaders = (): HeadersInit => {
       const token = this.authService.accessToken();
-      return token
+      return token !== null
         ? { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
         : { 'Content-Type': 'application/json' };
     };

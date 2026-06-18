@@ -3,6 +3,11 @@ package com.shiftleft.hub.config;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Configuration properties for authentication cookies.
+ * Binds the {@code app.auth.cookie.secure} and {@code app.auth.cookie.same-site}
+ * properties and validates them at startup.
+ */
 @ConfigurationProperties(prefix = "app.auth.cookie")
 public class AuthCookieProperties {
 

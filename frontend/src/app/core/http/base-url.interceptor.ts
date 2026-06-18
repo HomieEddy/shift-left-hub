@@ -7,7 +7,7 @@ export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
   const env = (window as unknown as { __env?: { apiBaseUrl?: string } }).__env;
   const baseUrl = env?.apiBaseUrl ?? '';
   const token = authTokenService.accessToken();
-  const headers = token ? req.headers.set('Authorization', `Bearer ${token}`) : req.headers;
+  const headers = token !== null ? req.headers.set('Authorization', `Bearer ${token}`) : req.headers;
 
   if (baseUrl && req.url.startsWith('/api/')) {
     const apiReq = req.clone({
