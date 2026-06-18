@@ -92,6 +92,12 @@ public class SecurityConfig {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, exception) -> {
+                    log.warn("AUTHENTICATION REQUIRED: path={}", request.getRequestURI());
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"Unauthorized\"}");
+                })
                 .accessDeniedHandler((request, response, denied) -> {
                     var auth = SecurityContextHolder.getContext().getAuthentication();
                     log.warn("ACCESS DENIED: path={}, auth={}, authorities={}",
