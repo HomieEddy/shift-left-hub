@@ -1,6 +1,5 @@
 package com.shiftleft.hub.ai.service;
 
-import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.shiftleft.hub.ai.api.dto.AiConfigRequest;
 import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.api.dto.TestConnectionResult;
@@ -15,6 +14,7 @@ import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,8 +126,8 @@ public class AiConfigService {
             ChatModel chatModel;
             if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
                 chatModel = OpenAiChatModel.builder()
-                    .openAiClient(OpenAIOkHttpClient.builder().apiKey(apiKey).build())
-                    .options(OpenAiChatOptions.builder().model(model).build())
+                    .openAiApi(new OpenAiApi(apiKey))
+                    .defaultOptions(OpenAiChatOptions.builder().model(model).build())
                     .build();
             } else {
                 chatModel = OllamaChatModel.builder()
@@ -195,8 +195,8 @@ public class AiConfigService {
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
             chatModel = OpenAiChatModel.builder()
-                .openAiClient(com.openai.client.okhttp.OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
-                .options(OpenAiChatOptions.builder().model(resolvedModel).build())
+                .openAiApi(new OpenAiApi(decryptedKey))
+                .defaultOptions(OpenAiChatOptions.builder().model(resolvedModel).build())
                 .build();
         } else {
             String baseUrl = endpointUrl != null ? endpointUrl : "http://host.docker.internal:11434";
