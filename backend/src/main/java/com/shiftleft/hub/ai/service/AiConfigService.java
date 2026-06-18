@@ -194,14 +194,18 @@ public class AiConfigService {
         String resolvedModel = modelName != null ? modelName : "llama3.2:3b";
         ChatModel chatModel;
 
+        log.info("buildChatClient: provider={}, model={}, apiKeyPresent={}",
+            provider, resolvedModel, apiKey != null && !apiKey.isBlank());
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
+            log.info("buildChatClient: using OpenAI, decryptedKey length={}", decryptedKey.length());
             chatModel = OpenAiChatModel.builder()
                 .openAiClient(OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
                 .options(OpenAiChatOptions.builder().model(resolvedModel).build())
                 .build();
         } else {
             String baseUrl = endpointUrl != null ? endpointUrl : "http://host.docker.internal:11434";
+            log.info("buildChatClient: falling back to Ollama, baseUrl={}", baseUrl);
             chatModel = OllamaChatModel.builder()
                 .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
                 .defaultOptions(OllamaChatOptions.builder().model(resolvedModel).build())
