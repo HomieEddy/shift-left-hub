@@ -2,6 +2,7 @@ package com.shiftleft.hub.ai.service;
 
 import com.shiftleft.hub.document.domain.DocumentChunkRepository;
 import com.shiftleft.hub.document.domain.DocumentRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,8 +25,14 @@ class UnifiedSearchServiceTest {
     @Mock private DocumentChunkRepository documentChunkRepository;
     @Mock private DocumentRepository documentRepository;
     @Mock private EmbeddingModel embeddingModel;
+    @Mock private EmbeddingModelProvider embeddingProvider;
 
     @InjectMocks private UnifiedSearchService unifiedSearchService;
+
+    @BeforeEach
+    void setUp() {
+        when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
+    }
 
     private final UUID workspaceId = UUID.randomUUID();
 

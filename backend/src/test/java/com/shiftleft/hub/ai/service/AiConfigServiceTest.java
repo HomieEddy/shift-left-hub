@@ -4,6 +4,7 @@ import com.shiftleft.hub.ai.api.dto.AiConfigRequest;
 import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
+import com.shiftleft.hub.config.EmbeddingProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.ai.ollama.OllamaEmbeddingModel;
+import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -163,5 +167,48 @@ class AiConfigServiceTest {
 
         assertNotNull(result);
         verify(aiConfigRepository).save(any(AiConfig.class));
+    }
+
+    // ── buildEmbeddingModel ───────────────────────────────────
+
+    @Test
+    void buildEmbeddingModel_shouldBuildOllamaModel() {
+        EmbeddingProperties props = new EmbeddingProperties();
+        props.setProvider("OLLAMA");
+        props.setEndpointUrl("http://localhost:11434");
+        props.setModel("nomic-embed-text");
+
+        EmbeddingModel result = aiConfigService.buildEmbeddingModel(props);
+
+        assertNotNull(result);
+        assertInstanceOf(OllamaEmbeddingModel.class, result);
+    }
+
+    @Test
+    void buildEmbeddingModel_shouldBuildOpenAiModel() {
+        EmbeddingProperties props = new EmbeddingProperties();
+        props.setProvider("OPENAI_COMPATIBLE");
+        props.setEndpointUrl("https://api.voyageai.com/v1/");
+        props.setModel("voyage-4-lite");
+        props.setApiKey("test-api-key");
+
+        EmbeddingModel result = aiConfigService.buildEmbeddingModel(props);
+
+        assertNotNull(result);
+        assertInstanceOf(OpenAiEmbeddingModel.class, result);
+    }
+
+    @Test
+    void buildEmbeddingModel_shouldFallBackToOllamaWhenNoApiKey() {
+        EmbeddingProperties props = new EmbeddingProperties();
+        props.setProvider("OPENAI_COMPATIBLE");
+        props.setEndpointUrl("https://api.voyageai.com/v1/");
+        props.setModel("voyage-4-lite");
+        props.setApiKey("");
+
+        EmbeddingModel result = aiConfigService.buildEmbeddingModel(props);
+
+        assertNotNull(result);
+        assertInstanceOf(OllamaEmbeddingModel.class, result);
     }
 }

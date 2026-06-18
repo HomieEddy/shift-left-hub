@@ -5,6 +5,7 @@ import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRole;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -30,10 +31,16 @@ class EmbeddingServiceTest {
 
     @Mock private VectorStore vectorStore;
     @Mock private EmbeddingModel embeddingModel;
+    @Mock private EmbeddingModelProvider embeddingProvider;
     @Mock private ArticleRepository articleRepository;
     @Mock private AiConfigService aiConfigService;
 
     @InjectMocks private EmbeddingService embeddingService;
+
+    @BeforeEach
+    void setUp() {
+        when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
+    }
 
     private final UUID articleId = UUID.randomUUID();
     private final UUID authorId = UUID.randomUUID();
