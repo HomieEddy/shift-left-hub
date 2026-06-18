@@ -38,6 +38,9 @@ public class EmbeddingModelProvider {
         return cached;
     }
 
+    /**
+     * Invalidates the cached EmbeddingModel so it will be rebuilt on the next request.
+     */
     public void evict() {
         cached = null;
         log.info("EmbeddingModel cache evicted — will rebuild on next request");
