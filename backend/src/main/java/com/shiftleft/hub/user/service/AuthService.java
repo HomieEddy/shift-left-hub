@@ -8,6 +8,8 @@ import com.shiftleft.hub.user.api.dto.RegisterRequest;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
+import com.shiftleft.hub.workspace.domain.Workspace;
+import com.shiftleft.hub.workspace.service.WorkspaceService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +27,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final WorkspaceService workspaceService;
 
     /**
      * Register a new user with the given request.
@@ -54,6 +57,11 @@ public class AuthService {
 
         user = userRepository.save(user);
 
+        Workspace defaultWorkspace = workspaceService.createWorkspace(
+            "My Workspace", "Default personal workspace", null, user.getId());
+        user.setDefaultWorkspaceId(defaultWorkspace.getId());
+        userRepository.save(user);
+
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
@@ -79,10 +87,22 @@ public class AuthService {
             throw new BadCredentialsException("Invalid credentials");
         }
 
+        ensureDefaultWorkspace(user);
+
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
         return buildAuthResponse(user, accessToken, refreshToken);
+    }
+
+    private void ensureDefaultWorkspace(User user) {
+        if (user.getDefaultWorkspaceId() != null) {
+            return;
+        }
+        Workspace defaultWorkspace = workspaceService.createWorkspace(
+            "My Workspace", "Default personal workspace", null, user.getId());
+        user.setDefaultWorkspaceId(defaultWorkspace.getId());
+        userRepository.save(user);
     }
 
     /**
@@ -107,6 +127,8 @@ public class AuthService {
         } catch (JwtException e) {
             throw new BadCredentialsException(e.getMessage());
         }
+
+        ensureDefaultWorkspace(user);
 
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
