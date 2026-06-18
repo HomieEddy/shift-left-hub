@@ -22,7 +22,6 @@ import org.springframework.ai.ollama.api.OllamaEmbeddingOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
-import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -264,10 +263,7 @@ public class AiConfigService {
             if (endpointUrl != null && !endpointUrl.equals("http://host.docker.internal:11434")) {
                 clientBuilder = clientBuilder.baseUrl(endpointUrl);
             }
-            return OpenAiEmbeddingModel.builder()
-                .openAiClient(clientBuilder.build())
-                .defaultOptions(OpenAiEmbeddingOptions.builder().model(model).build())
-                .build();
+            return new OpenAiEmbeddingModel(clientBuilder.build());
         }
 
         return OllamaEmbeddingModel.builder()
