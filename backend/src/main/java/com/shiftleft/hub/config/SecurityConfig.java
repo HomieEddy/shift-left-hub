@@ -203,9 +203,6 @@ public class SecurityConfig {
                         } else {
                             log.debug("JWT user not found in DB — clearing auth context");
                             SecurityContextHolder.clearContext();
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("{\"error\":\"Session expired — please log in again\"}");
-                            return;
                         }
                     } catch (Exception e) {
                         log.warn("JWT validation failed", e);
