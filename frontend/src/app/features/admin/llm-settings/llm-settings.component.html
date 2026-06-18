@@ -51,17 +51,21 @@
             </select>
           </div>
 
-          @if (config.llmProvider === 'OLLAMA') {
+          @if (config.llmProvider === 'OLLAMA' || config.llmProvider === 'OPENAI_COMPATIBLE') {
             <div>
               <label
                 for="ollamaEndpoint"
                 class="block text-sm font-medium text-text-secondary mb-1"
-                >{{ translationService.translate('admin.settings.llm.ollama-endpoint') }}</label
+                >{{ config.llmProvider === 'OLLAMA'
+                   ? translationService.translate('admin.settings.llm.ollama-endpoint')
+                   : 'API Base URL' }}</label
               >
               <input
                 id="ollamaEndpoint"
                 [(ngModel)]="config.ollamaEndpointUrl"
-                placeholder="http://host.docker.internal:11434"
+                [placeholder]="config.llmProvider === 'OLLAMA'
+                   ? 'http://host.docker.internal:11434'
+                   : 'https://api.openai.com/v1'"
                 class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
