@@ -127,9 +127,13 @@ public class AiConfigService {
 
             String response;
             if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
-                log.info("Testing OpenAI connection: model={}, apiKey length={}", model,
-                    apiKey.length());
-                var client = OpenAIOkHttpClient.builder().apiKey(apiKey).build();
+                log.info("Testing OpenAI connection: model={}, apiKey length={}, endpointUrl={}",
+                    model, apiKey.length(), endpointUrl);
+                var clientBuilder = OpenAIOkHttpClient.builder().apiKey(apiKey);
+                if (endpointUrl != null && !endpointUrl.equals("http://host.docker.internal:11434")) {
+                    clientBuilder = clientBuilder.baseUrl(endpointUrl);
+                }
+                var client = clientBuilder.build();
                 var params = ChatCompletionCreateParams.builder()
                     .model(model)
                     .addUserMessage("Return only the word hello.")
