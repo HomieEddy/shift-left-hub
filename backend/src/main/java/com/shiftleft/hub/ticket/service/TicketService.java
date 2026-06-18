@@ -1,5 +1,6 @@
 package com.shiftleft.hub.ticket.service;
 
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.ticket.api.dto.CreateTicketRequest;
 import com.shiftleft.hub.ticket.api.dto.TicketResponse;
 import com.shiftleft.hub.ticket.domain.Ticket;
@@ -56,6 +57,7 @@ public class TicketService {
             .issue(request.issue())
             .shiftLeftContext(request.shiftLeftContext())
             .build();
+        ticket.setWorkspaceId(WorkspaceContextHolder.getCurrentWorkspaceId());
 
         ticket = ticketRepository.save(ticket);
         log.info("Ticket {} created for user {}", ticketNumber, email);
