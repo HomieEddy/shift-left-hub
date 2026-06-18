@@ -116,13 +116,13 @@ export class ChatService {
       if (response.status === 403 && this.authService.isAuthenticated()) {
         try {
           await firstValueFrom(this.authService.refresh());
-          handleResponse(await doFetch());
+          void handleResponse(await doFetch());
           return;
         } catch {
           // refresh failed, fall through to error display
         }
       }
-      handleResponse(response);
+      void handleResponse(response);
     }).catch((err) => {
       if ((err as Error).name !== 'AbortError') {
         subject.next({ type: 'error', content: 'Network error. Please check your connection.' });
