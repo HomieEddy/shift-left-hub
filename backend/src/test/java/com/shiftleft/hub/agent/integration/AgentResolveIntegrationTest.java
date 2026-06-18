@@ -16,6 +16,7 @@ import com.shiftleft.hub.user.api.dto.RegisterRequest;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
+import com.shiftleft.hub.workspace.service.WorkspaceService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -49,10 +50,14 @@ class AgentResolveIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private WorkspaceService workspaceService;
+
     private WebTestClient webTestClient;
     private String userAccessToken;
     private String agentAccessToken;
     private UUID createdTicketId;
+    private UUID userWorkspaceId;
 
     private static final String USER_EMAIL = "ticket-creator@shiftleft.local";
     private static final String AGENT_EMAIL = "support-agent@shiftleft.local";
@@ -78,9 +83,10 @@ class AgentResolveIntegrationTest extends AbstractIntegrationTest {
                 .expectBody(AuthResponse.class)
                 .returnResult().getResponseBody();
         userAccessToken = userReg.accessToken();
+        userWorkspaceId = UUID.fromString(userReg.workspaceId());
 
         // Create agent user directly in database
-        userRepository.findByEmail(AGENT_EMAIL).orElseGet(() ->
+        User agent = userRepository.findByEmail(AGENT_EMAIL).orElseGet(() ->
             userRepository.save(User.builder()
                 .email(AGENT_EMAIL)
                 .password(passwordEncoder.encode(PASSWORD))
@@ -99,6 +105,19 @@ class AgentResolveIntegrationTest extends AbstractIntegrationTest {
                 .expectBody(AuthResponse.class)
                 .returnResult().getResponseBody();
         agentAccessToken = agentLogin.accessToken();
+
+        // Assign agent to the user's workspace so they can see the ticket
+        workspaceService.assignUserToWorkspace(userWorkspaceId, agent.getId(), "ADMIN");
+
+        // Re-authenticate agent with the workspace context
+        var switchResponse = client().post()
+                .uri("/api/auth/workspace/{id}", userWorkspaceId)
+                .cookie("access_token", agentAccessToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(AuthResponse.class)
+                .returnResult().getResponseBody();
+        agentAccessToken = switchResponse.accessToken();
     }
 
     @Test
