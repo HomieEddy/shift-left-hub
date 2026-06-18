@@ -3,6 +3,7 @@ package com.shiftleft.hub.ai.api;
 import com.shiftleft.hub.ai.api.dto.ChatRequest;
 import com.shiftleft.hub.ai.api.dto.StreamEvent;
 import com.shiftleft.hub.ai.service.AiChatService;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 @RestController
@@ -46,9 +48,13 @@ public class ChatController {
     @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter chat(@Valid @RequestBody ChatRequest request, Authentication auth) {
         SseEmitter emitter = new SseEmitter(30_000L);
+        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
 
         chatExecutor.submit(() -> {
             try {
+                if (workspaceId != null) {
+                    WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+                }
                 aiChatService.processChat(request, emitter, auth.getName());
             } catch (Exception e) {
                 try {
@@ -58,6 +64,10 @@ public class ChatController {
                     emitter.complete();
                 } catch (IOException ex) {
                     emitter.completeWithError(ex);
+                }
+            } finally {
+                if (workspaceId != null) {
+                    WorkspaceContextHolder.clear();
                 }
             }
         });
