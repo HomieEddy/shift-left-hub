@@ -1,15 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { ChatService, StreamEvent } from './chat.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 describe('ChatService', () => {
   let service: ChatService;
   let originalEnv: { apiBaseUrl?: string } | undefined;
 
+  const mockAuthService = {
+    isAuthenticated: vi.fn().mockReturnValue(true),
+    refresh: vi.fn().mockReturnValue({ subscribe: vi.fn() }),
+  };
+
   beforeEach(() => {
     originalEnv = (window as unknown as { __env?: { apiBaseUrl?: string } }).__env;
     (window as unknown as { __env?: { apiBaseUrl?: string } }).__env = undefined;
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [{ provide: AuthService, useValue: mockAuthService }],
+    });
     service = TestBed.inject(ChatService);
   });
 

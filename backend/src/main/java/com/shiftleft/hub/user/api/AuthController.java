@@ -28,7 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private static final int ACCESS_COOKIE_MAX_AGE = 900;
+    private static final int ACCESS_COOKIE_MAX_AGE = 3600;
     private static final int REFRESH_COOKIE_MAX_AGE = 604800;
 
     private final AuthService authService;
