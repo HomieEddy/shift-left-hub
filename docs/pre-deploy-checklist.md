@@ -49,6 +49,11 @@ In the Railway backend service dashboard, add these environment variables:
 | `APP_AUTH_COOKIE_SECURE` | `true` | Required for HTTPS production cookies |
 | `APP_AUTH_COOKIE_SAME_SITE` | `Lax` | API traffic is same-origin through Vercel rewrites |
 | `APP_CORS_ALLOWED_ORIGINS` | `https://[your-vercel-app].vercel.app` | Explicit trusted frontend origins only; use comma-separated values for multiple origins, no wildcards |
+| `APP_EMBEDDING_PROVIDER` | `OPENAI_COMPATIBLE` | Must match embedding API format |
+| `APP_EMBEDDING_ENDPOINT_URL` | `https://api.voyageai.com/v1/` | Your embedding provider base URL |
+| `APP_EMBEDDING_API_KEY` | Your Voyage AI key | Stored in env var, never in DB |
+| `APP_EMBEDDING_MODEL` | `voyage-4-lite` | 512-dimensional embeddings |
+| `SPRING_AI_VECTORSTORE_PGVECTOR_DIMENSIONS` | `512` | Must match embedding model dimension |
 
 Note the Railway app URL: `https://[your-railway-app].up.railway.app`
 You'll need this for `frontend/vercel.json` and CORS config.
