@@ -16,7 +16,7 @@ class SecurityConfigTest {
         SecurityConfig securityConfig = new SecurityConfig(
             mock(UserRepository.class),
             mock(JwtService.class),
-            new RateLimitingFilter());
+            new RateLimitingFilter(true));
         ReflectionTestUtils.setField(securityConfig, "allowedOrigins",
             new String[] {"http://localhost:4200", "https://trusted.vercel.app"});
 
@@ -38,7 +38,7 @@ class SecurityConfigTest {
         SecurityConfig securityConfig = new SecurityConfig(
             mock(UserRepository.class),
             mock(JwtService.class),
-            new RateLimitingFilter());
+            new RateLimitingFilter(true));
         ReflectionTestUtils.setField(securityConfig, "allowedOrigins", new String[] {"   ", ""});
 
         assertThrows(IllegalStateException.class, securityConfig::corsConfigurationSource);
@@ -49,7 +49,7 @@ class SecurityConfigTest {
         SecurityConfig securityConfig = new SecurityConfig(
             mock(UserRepository.class),
             mock(JwtService.class),
-            new RateLimitingFilter());
+            new RateLimitingFilter(true));
         ReflectionTestUtils.setField(securityConfig, "allowedOrigins", new String[] {"*"});
 
         assertThrows(IllegalArgumentException.class, securityConfig::corsConfigurationSource);

@@ -4,6 +4,7 @@ import com.shiftleft.hub.agent.api.dto.AgentTicketResponse;
 import com.shiftleft.hub.agent.api.dto.WorkNoteResponse;
 import com.shiftleft.hub.agent.domain.WorkNote;
 import com.shiftleft.hub.agent.domain.WorkNoteRepository;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
 import com.shiftleft.hub.ticket.domain.Ticket;
 import com.shiftleft.hub.ticket.domain.TicketCategory;
@@ -129,6 +130,7 @@ public class AgentTicketService {
             .author(agent)
             .content(content)
             .build();
+        note.setWorkspaceId(WorkspaceContextHolder.getCurrentWorkspaceId());
         note = workNoteRepository.saveAndFlush(note);
         log.info("Work note added to ticket {} by {}", ticket.getTicketNumber(), agentEmail);
         return WorkNoteResponse.from(note);

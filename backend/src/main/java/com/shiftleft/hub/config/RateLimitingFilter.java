@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,11 +17,15 @@ import java.util.concurrent.TimeUnit;
 public class RateLimitingFilter extends OncePerRequestFilter {
 
     private final Cache<String, Integer> requestCounts;
+    private final boolean enabled;
 
     /**
      * Creates a rate limiting filter that limits auth requests to 10 per minute per IP.
+     *
+     * @param enabled whether rate limiting is active
      */
-    public RateLimitingFilter() {
+    public RateLimitingFilter(@Value("${app.rate-limiting.enabled:true}") boolean enabled) {
+        this.enabled = enabled;
         this.requestCounts = Caffeine.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .maximumSize(1000)
@@ -30,6 +35,10 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+        if (!enabled) {
+            chain.doFilter(request, response);
+            return;
+        }
         String path = request.getRequestURI();
         if (path.startsWith("/api/auth/")) {
             String clientIp = request.getRemoteAddr();

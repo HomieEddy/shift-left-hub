@@ -1,5 +1,6 @@
 package com.shiftleft.hub.ticket.service;
 
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.ticket.api.dto.CreateTicketRequest;
 import com.shiftleft.hub.ticket.api.dto.TicketResponse;
 import com.shiftleft.hub.ticket.domain.Ticket;
@@ -13,6 +14,8 @@ import com.shiftleft.hub.ticket.domain.TicketUrgency;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,7 +41,18 @@ class TicketServiceTest {
 
     @InjectMocks private TicketService ticketService;
 
+    private final UUID workspaceId = UUID.randomUUID();
     private final UUID userId = UUID.randomUUID();
+
+    @BeforeEach
+    void setUp() {
+        WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+    }
+
+    @AfterEach
+    void tearDown() {
+        WorkspaceContextHolder.clear();
+    }
     private final String email = "user@example.com";
     private final String displayName = "Test User";
 

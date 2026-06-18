@@ -8,6 +8,8 @@ import com.shiftleft.hub.user.api.dto.RegisterRequest;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
+import com.shiftleft.hub.workspace.domain.Workspace;
+import com.shiftleft.hub.workspace.service.WorkspaceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -22,6 +24,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +33,7 @@ class AuthServiceTest {
     @Mock private UserRepository userRepository;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private JwtService jwtService;
+    @Mock private WorkspaceService workspaceService;
 
     @InjectMocks private AuthService authService;
 
@@ -37,6 +41,7 @@ class AuthServiceTest {
     private final String password = "Password123!";
     private final String displayName = "Test User";
     private final UUID userId = UUID.randomUUID();
+    private final UUID workspaceId = UUID.randomUUID();
 
     private User createUser() {
         return User.builder()
@@ -46,6 +51,16 @@ class AuthServiceTest {
             .displayName(displayName)
             .role(UserRole.ROLE_USER)
             .enabled(true)
+            .defaultWorkspaceId(workspaceId)
+            .build();
+    }
+
+    private Workspace createWorkspace() {
+        return Workspace.builder()
+            .id(workspaceId)
+            .name("My Workspace")
+            .slug("my-workspace")
+            .createdBy(userId)
             .build();
     }
 
@@ -55,6 +70,9 @@ class AuthServiceTest {
         when(userRepository.existsByEmail(email)).thenReturn(false);
         when(passwordEncoder.encode(password)).thenReturn("encoded-password");
         when(userRepository.save(any(User.class))).thenReturn(createUser());
+        when(workspaceService.createWorkspace(
+            eq("My Workspace"), eq("Default personal workspace"), eq(null), eq(userId)))
+            .thenReturn(createWorkspace());
         when(jwtService.generateAccessToken(any(User.class))).thenReturn("access-token");
         when(jwtService.generateRefreshToken(any(User.class))).thenReturn("refresh-token");
 
@@ -63,7 +81,7 @@ class AuthServiceTest {
         assertNotNull(response);
         assertEquals(email, response.email());
         assertEquals("access-token", response.accessToken());
-        verify(userRepository).save(any(User.class));
+        verify(userRepository, times(2)).save(any(User.class));
     }
 
     @Test
@@ -201,13 +219,16 @@ class AuthServiceTest {
         when(userRepository.existsByEmail(email)).thenReturn(false);
         when(passwordEncoder.encode(password)).thenReturn("encoded-password");
         when(userRepository.save(any(User.class))).thenReturn(createUser());
+        when(workspaceService.createWorkspace(
+            eq("My Workspace"), eq("Default personal workspace"), eq(null), eq(userId)))
+            .thenReturn(createWorkspace());
         when(jwtService.generateAccessToken(any(User.class))).thenReturn("access-token");
         when(jwtService.generateRefreshToken(any(User.class))).thenReturn("refresh-token");
 
         authService.register(request);
 
         var captor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository).save(captor.capture());
+        verify(userRepository, times(2)).save(captor.capture());
         assertEquals(UserRole.ROLE_USER, captor.getValue().getRole());
     }
 
