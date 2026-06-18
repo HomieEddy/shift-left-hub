@@ -125,6 +125,8 @@ public class AiConfigService {
 
             ChatModel chatModel;
             if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
+                log.info("Building OpenAI chat model: model={}, apiKey length={}", model,
+                    apiKey.length());
                 chatModel = OpenAiChatModel.builder()
                     .openAiClient(OpenAIOkHttpClient.builder().apiKey(apiKey).build())
                     .options(OpenAiChatOptions.builder().model(model).build())
@@ -195,7 +197,7 @@ public class AiConfigService {
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
             chatModel = OpenAiChatModel.builder()
-                .openAiClient(com.openai.client.okhttp.OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
+                .openAiClient(OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
                 .options(OpenAiChatOptions.builder().model(resolvedModel).build())
                 .build();
         } else {
