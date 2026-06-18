@@ -8,6 +8,7 @@ import com.shiftleft.hub.user.service.AuthService;
 import com.shiftleft.hub.workspace.service.WorkspaceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,12 @@ public class AuthController {
     private final AuthService authService;
     private final WorkspaceService workspaceService;
     private final UserRepository userRepository;
+
+    @Value("${app.auth.cookie.secure:false}")
+    private boolean secureCookies;
+
+    @Value("${app.auth.cookie.same-site:Lax}")
+    private String cookieSameSite;
 
     /**
      * Register a new user.
@@ -121,15 +128,18 @@ public class AuthController {
 
     private ResponseCookie createAccessCookie(String token) {
         return ResponseCookie.from("access_token", token)
-            .httpOnly(true).secure(true).sameSite("None").path("/").maxAge(ACCESS_COOKIE_MAX_AGE).build();
+            .httpOnly(true).secure(secureCookies).sameSite(cookieSameSite)
+            .path("/").maxAge(ACCESS_COOKIE_MAX_AGE).build();
     }
 
     private ResponseCookie createRefreshCookie(String token) {
         return ResponseCookie.from("refresh_token", token)
-            .httpOnly(true).secure(true).sameSite("None").path("/").maxAge(REFRESH_COOKIE_MAX_AGE).build();
+            .httpOnly(true).secure(secureCookies).sameSite(cookieSameSite)
+            .path("/").maxAge(REFRESH_COOKIE_MAX_AGE).build();
     }
 
     private ResponseCookie clearCookie(String name) {
-        return ResponseCookie.from(name, "").httpOnly(true).secure(true).sameSite("None").path("/").maxAge(0).build();
+        return ResponseCookie.from(name, "").httpOnly(true).secure(secureCookies)
+            .sameSite(cookieSameSite).path("/").maxAge(0).build();
     }
 }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,17 +74,26 @@ class AuthFlowIntegrationTest extends AbstractIntegrationTest {
     void t02_login_shouldAuthenticateAndReturnNewTokens() {
         var request = new LoginRequest(EMAIL, PASSWORD);
 
-        AuthResponse response = client().post().uri("/api/auth/login")
+        var result = client().post().uri("/api/auth/login")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(AuthResponse.class)
-                .returnResult().getResponseBody();
+                .returnResult();
+
+        AuthResponse response = result.getResponseBody();
 
         assertThat(response).isNotNull();
         assertThat(response.accessToken()).isNotBlank();
         assertThat(response.refreshToken()).isNotBlank();
         assertThat(response.email()).isEqualTo(EMAIL);
+        assertThat(result.getResponseHeaders().get(HttpHeaders.SET_COOKIE))
+                .isNotNull()
+                .anySatisfy(cookie -> {
+                    assertThat(cookie).contains("access_token=");
+                    assertThat(cookie).contains("SameSite=Lax");
+                    assertThat(cookie).doesNotContain("Secure");
+                });
 
         accessToken = response.accessToken();
         refreshToken = response.refreshToken();
@@ -96,6 +105,13 @@ class AuthFlowIntegrationTest extends AbstractIntegrationTest {
                 .cookie("access_token", accessToken)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void t03b_accessProtectedEndpoint_shouldReturnUnauthorizedWithoutAccessToken() {
+        client().get().uri("/api/tickets")
+                .exchange()
+                .expectStatus().isUnauthorized();
     }
 
     @Test
