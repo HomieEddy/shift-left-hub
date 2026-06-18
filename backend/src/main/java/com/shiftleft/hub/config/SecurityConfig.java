@@ -202,6 +202,7 @@ public class SecurityConfig {
                                 log.info("JWT auth set: email={}, role={}",
                                     u.getEmail(), u.getRole().name());
                                 UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
+                                log.info("JWT workspace_id extracted: {}", workspaceId);
                                 if (workspaceId != null) {
                                     WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
                                 }
