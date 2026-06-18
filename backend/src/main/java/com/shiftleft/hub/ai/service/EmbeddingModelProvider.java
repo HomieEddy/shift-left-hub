@@ -21,6 +21,11 @@ public class EmbeddingModelProvider {
 
     private volatile EmbeddingModel cached;
 
+    /**
+     * Returns the cached EmbeddingModel, building it lazily on first call.
+     *
+     * @return the current EmbeddingModel
+     */
     public EmbeddingModel getEmbeddingModel() {
         if (cached == null) {
             synchronized (this) {
