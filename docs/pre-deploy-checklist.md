@@ -75,14 +75,15 @@ In the Vercel project dashboard → **Settings** → **Environment Variables**:
 
 Vercel builds the Angular SPA as static files. Runtime API calls use same-origin `/api` URLs and `frontend/vercel.json` rewrites them to Railway.
 
-## 5. Verify Vercel API Rewrite
+## 5. Verify Vercel API Rewrite (One-Time Initial Setup)
 
-After steps 1-4 are complete:
+Perform this step **once** before the first Vercel deploy. Vercel does not reload `vercel.json` on subsequent deploys — the config is static after the initial build.
 
-1. Edit `frontend/vercel.json`
-2. Confirm the `/api/:path*` rewrite points to `https://[your-railway-app].up.railway.app/api/:path*`
-3. Keep `frontend/public/env.js` set to `apiBaseUrl = ''`
-4. Commit and push to `master`
+1. Edit `frontend/vercel.json` and set the `/api/:path*` rewrite destination to `https://[your-railway-app].up.railway.app/api/:path*`
+2. Keep `frontend/public/env.js` set to `apiBaseUrl = ''`
+3. Commit and push to `master`
+
+If the Railway app URL ever changes (e.g., app is recreated), you must repeat this step to update the hardcoded destination in `vercel.json`.
 
 ## 6. Set CORS Origin (if Railway deployed before Vercel)
 

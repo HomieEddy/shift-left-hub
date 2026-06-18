@@ -10,6 +10,7 @@ describe('ChatService', () => {
 
   const mockAuthService = {
     isAuthenticated: vi.fn().mockReturnValue(true),
+    accessToken: vi.fn().mockReturnValue('access-token'),
     refresh: vi.fn().mockReturnValue(of({})),
   };
 
@@ -18,6 +19,7 @@ describe('ChatService', () => {
     (window as unknown as { __env?: { apiBaseUrl?: string } }).__env = undefined;
     vi.clearAllMocks();
     mockAuthService.isAuthenticated.mockReturnValue(true);
+    mockAuthService.accessToken.mockReturnValue('access-token');
     mockAuthService.refresh.mockReturnValue(of({}));
     TestBed.configureTestingModule({
       providers: [{ provide: AuthService, useValue: mockAuthService }],
@@ -219,6 +221,7 @@ describe('ChatService', () => {
       const options = fetchCall[1] as RequestInit;
       expect(options.method).toBe('POST');
       expect(options.credentials).toBe('include');
+      expect((options.headers as Record<string, string>)['Authorization']).toBe('Bearer access-token');
 
       const body = JSON.parse(options.body as string) as {
         message: string;
