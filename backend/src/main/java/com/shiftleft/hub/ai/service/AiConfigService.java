@@ -1,6 +1,8 @@
 package com.shiftleft.hub.ai.service;
 
 import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import com.shiftleft.hub.ai.api.dto.AiConfigRequest;
 import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.api.dto.TestConnectionResult;
@@ -123,27 +125,28 @@ public class AiConfigService {
                 ? request.ollamaEndpointUrl() : "http://host.docker.internal:11434";
             String apiKey = request.openaiApiKey();
 
-            ChatModel chatModel;
+            String response;
             if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
-                log.info("Building OpenAI chat model: model={}, apiKey length={}", model,
+                log.info("Testing OpenAI connection: model={}, apiKey length={}", model,
                     apiKey.length());
-                chatModel = OpenAiChatModel.builder()
-                    .openAiClient(OpenAIOkHttpClient.builder().apiKey(apiKey).build())
-                    .options(OpenAiChatOptions.builder().model(model).build())
+                var client = OpenAIOkHttpClient.builder().apiKey(apiKey).build();
+                var params = ChatCompletionCreateParams.builder()
+                    .model(model)
+                    .addUserMessage("Return only the word hello.")
                     .build();
+                var completion = client.chat().completions().create(params);
+                response = completion.choices().get(0).message().content().orElse("");
             } else {
-                chatModel = OllamaChatModel.builder()
+                ChatModel chatModel = OllamaChatModel.builder()
                     .ollamaApi(OllamaApi.builder().baseUrl(endpointUrl).build())
                     .defaultOptions(OllamaChatOptions.builder().model(model).build())
                     .build();
+                ChatClient chatClient = ChatClient.builder(chatModel).build();
+                response = chatClient.prompt()
+                    .user("Return only the word hello.")
+                    .call()
+                    .content();
             }
-
-            ChatClient chatClient = ChatClient.builder(chatModel).build();
-
-            String response = chatClient.prompt()
-                .user("Return only the word hello.")
-                .call()
-                .content();
 
             return new TestConnectionResult(true,
                 "Connection successful. Model " + model + " responded: " + (response != null ? response.trim() : ""));
