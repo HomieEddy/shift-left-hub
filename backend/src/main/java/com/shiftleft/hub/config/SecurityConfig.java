@@ -128,15 +128,26 @@ public class SecurityConfig {
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        log.info("CORS configured with allowed origins: {}", Arrays.toString(allowedOrigins));
+        List<String> explicitOrigins = Arrays.stream(allowedOrigins)
+            .map(String::trim)
+            .filter(origin -> !origin.isBlank())
+            .toList();
+
+        if (explicitOrigins.isEmpty()) {
+            throw new IllegalStateException(
+                "CORS allowed origins must not be empty when allowCredentials is enabled. "
+                + "Configure APP_CORS_ALLOWED_ORIGINS with explicit trusted frontend origins.");
+        }
+
+        log.info("CORS configured with allowed origins: {}", explicitOrigins);
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(allowedOrigins));
-        config.setAllowedOriginPatterns(List.of("https://*.vercel.app"));
+        config.setAllowedOrigins(explicitOrigins);
         config.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(
             List.of("Content-Type", "Authorization", "X-Workspace-Id", "Accept", "X-Requested-With"));
+        config.validateAllowCredentials();
 
         UrlBasedCorsConfigurationSource source =
             new UrlBasedCorsConfigurationSource();

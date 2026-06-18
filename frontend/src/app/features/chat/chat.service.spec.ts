@@ -4,13 +4,17 @@ import { ChatService, StreamEvent } from './chat.service';
 
 describe('ChatService', () => {
   let service: ChatService;
+  let originalEnv: { apiBaseUrl?: string } | undefined;
 
   beforeEach(() => {
+    originalEnv = (window as unknown as { __env?: { apiBaseUrl?: string } }).__env;
+    (window as unknown as { __env?: { apiBaseUrl?: string } }).__env = undefined;
     TestBed.configureTestingModule({});
     service = TestBed.inject(ChatService);
   });
 
   afterEach(() => {
+    (window as unknown as { __env?: { apiBaseUrl?: string } }).__env = originalEnv;
     vi.restoreAllMocks();
   });
 
@@ -210,6 +214,20 @@ describe('ChatService', () => {
       };
       expect(body.message).toBe('test-message');
       expect(body.history).toEqual(history);
+    });
+
+    it('should use runtime API base URL when configured', () => {
+      mockFetchStream(['data: {"type":"done","content":""}\n\n']);
+      (window as unknown as { __env?: { apiBaseUrl?: string } }).__env = {
+        apiBaseUrl: 'https://backend.example.com/',
+      };
+
+      service.sendMessage('test-message', []);
+
+      const fetchCall = vi.mocked(globalThis.fetch).mock.calls[0];
+      expect(fetchCall[0]).toBe('https://backend.example.com/api/ai/chat');
+      const options = fetchCall[1] as RequestInit;
+      expect(options.credentials).toBe('include');
     });
   });
 
