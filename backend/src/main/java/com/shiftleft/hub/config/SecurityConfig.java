@@ -133,6 +133,12 @@ public class SecurityConfig {
             .filter(origin -> !origin.isBlank())
             .toList();
 
+        if (explicitOrigins.isEmpty()) {
+            throw new IllegalStateException(
+                "CORS allowed origins must not be empty when allowCredentials is enabled. "
+                + "Configure APP_CORS_ALLOWED_ORIGINS with explicit trusted frontend origins.");
+        }
+
         log.info("CORS configured with allowed origins: {}", explicitOrigins);
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);

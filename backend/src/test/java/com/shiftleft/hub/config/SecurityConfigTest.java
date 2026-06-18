@@ -34,6 +34,17 @@ class SecurityConfigTest {
     }
 
     @Test
+    void corsConfigurationSource_shouldRejectEmptyOriginsWhenCredentialsAreAllowed() {
+        SecurityConfig securityConfig = new SecurityConfig(
+            mock(UserRepository.class),
+            mock(JwtService.class),
+            new RateLimitingFilter());
+        ReflectionTestUtils.setField(securityConfig, "allowedOrigins", new String[] {"   ", ""});
+
+        assertThrows(IllegalStateException.class, securityConfig::corsConfigurationSource);
+    }
+
+    @Test
     void corsConfigurationSource_shouldRejectWildcardOriginWhenCredentialsAreAllowed() {
         SecurityConfig securityConfig = new SecurityConfig(
             mock(UserRepository.class),
