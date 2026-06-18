@@ -41,9 +41,16 @@ export class ChatService {
     const subject = new Subject<StreamEvent>();
     const controller = new AbortController();
 
+    const buildHeaders = (): HeadersInit => {
+      const token = this.authService.accessToken();
+      return token
+        ? { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+        : { 'Content-Type': 'application/json' };
+    };
+
     const doFetch = () => fetch(this.getApiUrl('/api/ai/chat'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: buildHeaders(),
       credentials: 'include',
       body: JSON.stringify({ message, history }),
       signal: controller.signal,
