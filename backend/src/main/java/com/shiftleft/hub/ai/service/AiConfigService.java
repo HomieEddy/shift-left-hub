@@ -209,10 +209,6 @@ public class AiConfigService {
         return ChatClient.builder(chatModel).build();
     }
 
-    private boolean isOpenAiProvider(String provider) {
-        return "OPENAI".equals(provider) || "OPENAI_COMPATIBLE".equals(provider);
-    }
-
     /**
      * Builds a ChatClient from an AiConfig entity.
      * Kept for backward compatibility.
@@ -278,6 +274,10 @@ public class AiConfigService {
         } catch (Exception e) {
             throw new RuntimeException("Decryption failed", e);
         }
+    }
+
+    private boolean isOpenAiProvider(String provider) {
+        return "OPENAI".equals(provider) || "OPENAI_COMPATIBLE".equals(provider);
     }
 
     private byte[] getSalt() {

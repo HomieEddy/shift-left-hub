@@ -16,7 +16,8 @@ import jakarta.validation.constraints.Pattern;
  * @param similarityThreshold the similarity threshold for vector search
  */
 public record AiConfigRequest(
-    @Pattern(regexp = "^(OLLAMA|OPENAI|OPENAI_COMPATIBLE)$", message = "Provider must be OLLAMA, OPENAI, or OPENAI_COMPATIBLE")
+    @Pattern(regexp = "^(OLLAMA|OPENAI|OPENAI_COMPATIBLE)$",
+             message = "Provider must be OLLAMA, OPENAI, or OPENAI_COMPATIBLE")
     String llmProvider,
 
     @Pattern(regexp = "^https?://.*", message = "Must be a valid HTTP URL")
