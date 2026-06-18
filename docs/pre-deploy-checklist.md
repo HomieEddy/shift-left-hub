@@ -46,10 +46,12 @@ In the Railway backend service dashboard, add these environment variables:
 | `SPRING_PROFILES_ACTIVE` | `docker` | Enables Docker profile config |
 | `SPRING_JPA_HIBERNATE_DDL_AUTO` | `validate` | Flyway manages schema |
 | `SPRING_FLYWAY_ENABLED` | `true` | Enables migrations |
+| `APP_AUTH_COOKIE_SECURE` | `true` | Required for HTTPS production cookies |
+| `APP_AUTH_COOKIE_SAME_SITE` | `Lax` | API traffic is same-origin through Vercel rewrites |
 | `APP_CORS_ALLOWED_ORIGINS` | `https://[your-vercel-app].vercel.app` | Explicit trusted frontend origins only; use comma-separated values for multiple origins, no wildcards |
 
 Note the Railway app URL: `https://[your-railway-app].up.railway.app`
-You'll need this for the env.js file and CORS config.
+You'll need this for `frontend/vercel.json` and CORS config.
 
 ## 3. Create Vercel Project (Frontend)
 
@@ -71,15 +73,16 @@ In the Vercel project dashboard → **Settings** → **Environment Variables**:
 |----------|-------|-------------|
 | (No backend-related env vars needed) | | |
 
-Vercel builds the Angular SPA as static files. All runtime config is handled by `public/env.js`.
+Vercel builds the Angular SPA as static files. Runtime API calls use same-origin `/api` URLs and `frontend/vercel.json` rewrites them to Railway.
 
-## 5. Update env.js with Railway URL
+## 5. Verify Vercel API Rewrite
 
 After steps 1-4 are complete:
 
-1. Edit `frontend/public/env.js`
-2. Change `apiBaseUrl: ''` to `apiBaseUrl: 'https://[your-railway-app].up.railway.app'`
-3. Commit and push to `master`
+1. Edit `frontend/vercel.json`
+2. Confirm the `/api/:path*` rewrite points to `https://[your-railway-app].up.railway.app/api/:path*`
+3. Keep `frontend/public/env.js` set to `apiBaseUrl = ''`
+4. Commit and push to `master`
 
 ## 6. Set CORS Origin (if Railway deployed before Vercel)
 
