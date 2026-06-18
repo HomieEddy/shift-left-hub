@@ -4,6 +4,7 @@ import com.shiftleft.hub.agent.api.dto.AgentTicketResponse;
 import com.shiftleft.hub.agent.api.dto.WorkNoteResponse;
 import com.shiftleft.hub.agent.domain.WorkNote;
 import com.shiftleft.hub.agent.domain.WorkNoteRepository;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
 import com.shiftleft.hub.ticket.domain.Ticket;
 import com.shiftleft.hub.ticket.domain.TicketCategory;
@@ -14,6 +15,8 @@ import com.shiftleft.hub.ticket.domain.TicketUrgency;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -45,8 +48,19 @@ class AgentTicketServiceTest {
 
     @Captor private ArgumentCaptor<TicketResolvedEvent> eventCaptor;
 
+    private final UUID workspaceId = UUID.randomUUID();
     private final UUID userId = UUID.randomUUID();
     private final UUID agentId = UUID.randomUUID();
+
+    @BeforeEach
+    void setUp() {
+        WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+    }
+
+    @AfterEach
+    void tearDown() {
+        WorkspaceContextHolder.clear();
+    }
     private final String userEmail = "user@example.com";
     private final String agentEmail = "agent@example.com";
     private final String agentDisplayName = "Agent Smith";
