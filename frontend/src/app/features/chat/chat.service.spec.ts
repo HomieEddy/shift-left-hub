@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { ChatService, StreamEvent } from './chat.service';
 import { AuthService } from '../../core/auth/auth.service';
@@ -9,12 +10,15 @@ describe('ChatService', () => {
 
   const mockAuthService = {
     isAuthenticated: vi.fn().mockReturnValue(true),
-    refresh: vi.fn().mockReturnValue({ subscribe: vi.fn() }),
+    refresh: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(() => {
     originalEnv = (window as unknown as { __env?: { apiBaseUrl?: string } }).__env;
     (window as unknown as { __env?: { apiBaseUrl?: string } }).__env = undefined;
+    vi.clearAllMocks();
+    mockAuthService.isAuthenticated.mockReturnValue(true);
+    mockAuthService.refresh.mockReturnValue(of({}));
     TestBed.configureTestingModule({
       providers: [{ provide: AuthService, useValue: mockAuthService }],
     });
@@ -240,6 +244,61 @@ describe('ChatService', () => {
   });
 
   describe('error handling', () => {
+    it('should refresh and retry when the chat request returns 401', async () => {
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode('data: {"type":"done","content":""}\n\n'));
+          controller.close();
+        },
+      });
+      globalThis.fetch = vi.fn()
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 401,
+          statusText: 'Unauthorized',
+          body: null,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          statusText: 'OK',
+          body: stream,
+        });
+
+      const { events } = service.sendMessage('test', []);
+
+      await new Promise<void>((resolve) => {
+        events.subscribe({
+          next: (event) => {
+            if (event.type === 'done') resolve();
+          },
+        });
+      });
+
+      expect(mockAuthService.refresh).toHaveBeenCalledTimes(1);
+      expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not refresh when the chat request returns 403', async () => {
+      mockFetchStream([], 403);
+
+      const { events } = service.sendMessage('test', []);
+      const received: StreamEvent[] = [];
+
+      await new Promise<void>((resolve) => {
+        events.subscribe({
+          next: (event) => {
+            received.push(event);
+            if (event.type === 'error') resolve();
+          },
+        });
+      });
+
+      expect(mockAuthService.refresh).not.toHaveBeenCalled();
+      expect(received[0].content).toContain('HTTP 403');
+    });
+
     it('should emit error event on network failure', async () => {
       mockFetchError(new Error('Network request failed'));
 

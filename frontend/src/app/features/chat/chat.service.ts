@@ -113,7 +113,7 @@ export class ChatService {
     };
 
     doFetch().then(async (response) => {
-      if (response.status === 403 && this.authService.isAuthenticated()) {
+      if (response.status === 401 && this.authService.isAuthenticated()) {
         try {
           await firstValueFrom(this.authService.refresh());
           void handleResponse(await doFetch());
