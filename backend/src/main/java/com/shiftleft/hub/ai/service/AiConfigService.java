@@ -1,5 +1,7 @@
 package com.shiftleft.hub.ai.service;
 
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.shiftleft.hub.ai.api.dto.AiConfigRequest;
 import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.api.dto.TestConnectionResult;
@@ -14,7 +16,6 @@ import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,8 +126,12 @@ public class AiConfigService {
 
             ChatModel chatModel;
             if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
+                OpenAIClient openAiClient = OpenAIClient.builder()
+                    .apiKey(apiKey)
+                    .httpClient(OpenAIOkHttpClient.builder().build())
+                    .build();
                 chatModel = OpenAiChatModel.builder()
-                    .openAiApi(new OpenAiApi(apiKey))
+                    .openAiClient(openAiClient)
                     .defaultOptions(OpenAiChatOptions.builder().model(model).build())
                     .build();
             } else {
@@ -194,8 +199,12 @@ public class AiConfigService {
 
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
+            OpenAIClient openAiClient = OpenAIClient.builder()
+                .apiKey(decryptedKey)
+                .httpClient(OpenAIOkHttpClient.builder().build())
+                .build();
             chatModel = OpenAiChatModel.builder()
-                .openAiApi(new OpenAiApi(decryptedKey))
+                .openAiClient(openAiClient)
                 .defaultOptions(OpenAiChatOptions.builder().model(resolvedModel).build())
                 .build();
         } else {
