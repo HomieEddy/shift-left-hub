@@ -31,7 +31,7 @@ class UnifiedSearchServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
+        lenient().when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
     }
 
     private final UUID workspaceId = UUID.randomUUID();

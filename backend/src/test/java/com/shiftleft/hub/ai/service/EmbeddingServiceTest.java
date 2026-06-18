@@ -39,7 +39,7 @@ class EmbeddingServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
+        lenient().when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
     }
 
     private final UUID articleId = UUID.randomUUID();
