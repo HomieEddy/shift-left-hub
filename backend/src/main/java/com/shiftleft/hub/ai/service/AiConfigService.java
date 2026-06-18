@@ -124,7 +124,7 @@ public class AiConfigService {
             String apiKey = request.openaiApiKey();
 
             ChatModel chatModel;
-            if ("OPENAI_COMPATIBLE".equals(provider) && apiKey != null && !apiKey.isBlank()) {
+            if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
                 chatModel = OpenAiChatModel.builder()
                     .openAiClient(OpenAIOkHttpClient.builder().apiKey(apiKey).build())
                     .options(OpenAiChatOptions.builder().model(model).build())
@@ -192,7 +192,7 @@ public class AiConfigService {
         String resolvedModel = modelName != null ? modelName : "llama3.2:3b";
         ChatModel chatModel;
 
-        if ("OPENAI_COMPATIBLE".equals(provider) && apiKey != null && !apiKey.isBlank()) {
+        if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
             chatModel = OpenAiChatModel.builder()
                 .openAiClient(com.openai.client.okhttp.OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
@@ -207,6 +207,10 @@ public class AiConfigService {
         }
 
         return ChatClient.builder(chatModel).build();
+    }
+
+    private boolean isOpenAiProvider(String provider) {
+        return "OPENAI".equals(provider) || "OPENAI_COMPATIBLE".equals(provider);
     }
 
     /**
