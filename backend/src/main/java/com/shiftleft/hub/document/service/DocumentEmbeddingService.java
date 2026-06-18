@@ -1,10 +1,10 @@
 package com.shiftleft.hub.document.service;
 
+import com.shiftleft.hub.ai.service.EmbeddingModelProvider;
 import com.shiftleft.hub.document.domain.DocumentChunk;
 import com.shiftleft.hub.document.domain.DocumentChunkRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Slf4j
 public class DocumentEmbeddingService {
 
-    private final EmbeddingModel embeddingModel;
+    private final EmbeddingModelProvider embeddingProvider;
     private final DocumentChunkRepository documentChunkRepository;
 
     /**
@@ -33,7 +33,7 @@ public class DocumentEmbeddingService {
         }
 
         // Generate embeddings in batch
-        List<List<Double>> embeddings = embeddingModel.embed(chunkContents).stream()
+        List<List<Double>> embeddings = embeddingProvider.getEmbeddingModel().embed(chunkContents).stream()
             .map(fa -> {
                 List<Double> list = new ArrayList<>();
                 for (float f : fa) {

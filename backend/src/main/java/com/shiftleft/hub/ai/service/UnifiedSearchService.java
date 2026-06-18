@@ -4,7 +4,6 @@ import com.shiftleft.hub.document.domain.DocumentChunkRepository;
 import com.shiftleft.hub.document.domain.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,7 @@ public class UnifiedSearchService {
 
     private final DocumentChunkRepository documentChunkRepository;
     private final DocumentRepository documentRepository;
-    private final EmbeddingModel embeddingModel;
+    private final EmbeddingModelProvider embeddingProvider;
 
     private static final int TOP_K = 10;
 
@@ -59,7 +58,7 @@ public class UnifiedSearchService {
     public List<DocumentChunkResult> vectorSearchDocumentChunks(String query, UUID workspaceId, double threshold) {
         float[] queryEmbedding;
         try {
-            queryEmbedding = embeddingModel.embed(query);
+            queryEmbedding = embeddingProvider.getEmbeddingModel().embed(query);
         } catch (Exception e) {
             log.warn("Failed to generate query embedding for document chunk search: {}", e.getMessage());
             return List.of();
