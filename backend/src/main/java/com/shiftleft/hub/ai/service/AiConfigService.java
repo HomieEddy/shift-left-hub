@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.document.MetadataMode;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
@@ -22,8 +21,6 @@ import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.ollama.api.OllamaEmbeddingOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.OpenAiEmbeddingModel;
-import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -263,14 +260,7 @@ public class AiConfigService {
             provider, model, endpointUrl, apiKey != null && !apiKey.isBlank());
 
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
-            var clientBuilder = OpenAIOkHttpClient.builder()
-                .apiKey(apiKey)
-                .responseValidation(false);
-            if (endpointUrl != null && !endpointUrl.equals("http://host.docker.internal:11434")) {
-                clientBuilder = clientBuilder.baseUrl(endpointUrl);
-            }
-            var options = OpenAiEmbeddingOptions.builder().model(model).build();
-            return new OpenAiEmbeddingModel(clientBuilder.build(), MetadataMode.NONE, options);
+            return new OpenAiCompatibleEmbeddingModel(endpointUrl, apiKey, model);
         }
 
         return OllamaEmbeddingModel.builder()
