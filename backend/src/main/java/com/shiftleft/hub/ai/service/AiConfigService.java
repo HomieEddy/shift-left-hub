@@ -10,7 +10,6 @@ import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
 import com.shiftleft.hub.config.EmbeddingProperties;
 import com.shiftleft.hub.llmconfig.service.WorkspaceChatModelRegistry;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
@@ -41,7 +40,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class AiConfigService {
@@ -49,6 +47,18 @@ public class AiConfigService {
     private final AiConfigRepository aiConfigRepository;
     private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
     private final SecureRandom secureRandom = new SecureRandom();
+
+    /**
+     * Creates a new AiConfigService.
+     *
+     * @param aiConfigRepository the AI config repository
+     * @param workspaceChatModelRegistry the workspace chat model registry (lazy to break circular dep)
+     */
+    public AiConfigService(AiConfigRepository aiConfigRepository,
+            @org.springframework.context.annotation.Lazy WorkspaceChatModelRegistry workspaceChatModelRegistry) {
+        this.aiConfigRepository = aiConfigRepository;
+        this.workspaceChatModelRegistry = workspaceChatModelRegistry;
+    }
 
     @Value("${app.ai.encryption-key}")
     private String encryptionKey;
