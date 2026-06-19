@@ -18,6 +18,8 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,12 +36,17 @@ class EmbeddingServiceTest {
     @Mock private EmbeddingModelProvider embeddingProvider;
     @Mock private ArticleRepository articleRepository;
     @Mock private AiConfigService aiConfigService;
+    @Mock private JdbcTemplate jdbcTemplate;
 
     @InjectMocks private EmbeddingService embeddingService;
 
     @BeforeEach
     void setUp() {
         lenient().when(embeddingProvider.getEmbeddingModel()).thenReturn(embeddingModel);
+        lenient().when(jdbcTemplate.queryForObject(anyString(), eq(String.class), eq("public")))
+            .thenReturn("vector(768)");
+        ReflectionTestUtils.setField(embeddingService, "vectorStoreDimensions", 768);
+        ReflectionTestUtils.setField(embeddingService, "vectorStoreSchema", "public");
     }
 
     private final UUID articleId = UUID.randomUUID();
