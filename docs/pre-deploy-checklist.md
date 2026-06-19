@@ -52,8 +52,8 @@ In the Railway backend service dashboard, add these environment variables:
 | `APP_EMBEDDING_PROVIDER` | `OPENAI_COMPATIBLE` | Must match embedding API format |
 | `APP_EMBEDDING_ENDPOINT_URL` | `https://api.voyageai.com/v1/` | Your embedding provider base URL |
 | `APP_EMBEDDING_API_KEY` | Your Voyage AI key | Stored in env var, never in DB |
-| `APP_EMBEDDING_MODEL` | `voyage-4-lite` | 512-dimensional embeddings |
-| `SPRING_AI_VECTORSTORE_PGVECTOR_DIMENSIONS` | `512` | Must match embedding model dimension |
+| `APP_EMBEDDING_MODEL` | `voyage-4-lite` | 1024-dimensional embeddings |
+| `SPRING_AI_VECTORSTORE_PGVECTOR_DIMENSIONS` | `1024` | Must match embedding model dimension |
 
 Note the Railway app URL: `https://[your-railway-app].up.railway.app`
 You'll need this for `frontend/vercel.json` and CORS config.
