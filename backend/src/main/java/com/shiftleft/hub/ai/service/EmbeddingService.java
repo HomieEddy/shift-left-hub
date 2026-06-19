@@ -58,6 +58,7 @@ public class EmbeddingService {
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("articleId", article.getId().toString());
+        metadata.put("workspace_id", article.getWorkspaceId().toString());
         metadata.put("title", article.getTitleEn() != null ? article.getTitleEn() : "");
         metadata.put("slug", article.getSlug() != null ? article.getSlug() : "");
         Document document = new Document(content, metadata);
