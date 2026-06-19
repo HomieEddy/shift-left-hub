@@ -43,6 +43,7 @@ public class AiChatService {
     private static final int MAX_HISTORY = 10;
     private static final int TOP_K = 10;
     private static final int MAX_CONTEXT_RESULTS = 5;
+    private static final double FALLBACK_VECTOR_THRESHOLD = 0.35;
 
     record HybridSearchResult(UUID articleId, String titleEn, String titleFr,
         String slug, String excerpt, double score) {
@@ -206,6 +207,24 @@ public class AiChatService {
             docChunkFtsResults = List.of();
         }
 
+        if (ftsResults.isEmpty()
+                && vectorResults.isEmpty()
+                && docChunkResults.isEmpty()
+                && docChunkFtsResults.isEmpty()
+                && threshold > FALLBACK_VECTOR_THRESHOLD) {
+            log.info("No chat retrieval results at threshold {}; retrying article vector search at threshold {}",
+                threshold, FALLBACK_VECTOR_THRESHOLD);
+            try {
+                vectorResults = vectorSearch(query, FALLBACK_VECTOR_THRESHOLD);
+            } catch (Exception e) {
+                log.warn("Fallback vector search failed: {}", e.getMessage());
+            }
+        }
+
+        log.info(
+            "Chat retrieval results: workspace={}, ftsArticles={}, vectorArticles={}, vectorChunks={}, ftsChunks={}",
+            workspaceId, ftsResults.size(), vectorResults.size(), docChunkResults.size(), docChunkFtsResults.size());
+
         // Four-way RRF merge: FTS articles + vector articles + vector doc chunks + FTS doc chunks
         Map<UUID, Double> rrfScores = new HashMap<>();
         Map<UUID, HybridSearchResult> resultMap = new HashMap<>();
@@ -280,7 +299,7 @@ public class AiChatService {
                 String title = (String) meta.getOrDefault("title", "");
                 String slug = (String) meta.getOrDefault("slug", "");
                 double score = doc.getScore() != null ? doc.getScore() : 0;
-                return new HybridSearchResult(articleId, title, "", slug, "", score);
+                return new HybridSearchResult(articleId, title, "", slug, doc.getText(), score);
             })
             .filter(Objects::nonNull)
             .toList();

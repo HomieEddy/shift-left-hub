@@ -13,6 +13,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ai.document.Document;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Flux;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -213,5 +215,32 @@ class AiChatServiceTest {
         var results = aiChatService.hybridSearch("test", 0.65);
 
         assertFalse(results.isEmpty());
+    }
+
+    @Test
+    void hybridSearch_shouldRetryArticleVectorSearchWithLowerThresholdWhenAllResultsAreEmpty() {
+        UUID articleId = UUID.randomUUID();
+        Document fallbackDocument = new Document("Reset your password from the account settings page.",
+            Map.of(
+                "articleId", articleId.toString(),
+                "workspace_id", workspaceId.toString(),
+                "title", "Reset Password",
+                "slug", "reset-password"));
+
+        when(articleRepository.searchByText(anyString(), eq(workspaceId), any(Pageable.class)))
+            .thenReturn(new PageImpl<Object[]>(Collections.emptyList()));
+        when(vectorStore.similaritySearch(any(SearchRequest.class)))
+            .thenReturn(List.of())
+            .thenReturn(List.of(fallbackDocument));
+        when(unifiedSearchService.vectorSearchDocumentChunks(anyString(), eq(workspaceId), anyDouble()))
+            .thenReturn(List.of());
+        when(unifiedSearchService.ftsSearchDocumentChunks(anyString(), eq(workspaceId)))
+            .thenReturn(List.of());
+
+        var results = aiChatService.hybridSearch("how do I change my password?", 0.65);
+
+        assertEquals(1, results.size());
+        assertEquals(articleId, results.getFirst().articleId());
+        verify(vectorStore, times(2)).similaritySearch(any(SearchRequest.class));
     }
 }
