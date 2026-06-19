@@ -35,6 +35,10 @@ public class AiConfigService {
     private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
     private final SecureRandom secureRandom = new SecureRandom();
 
+    /**
+     * Creates a new AiConfigService with lazy dependency injection
+     * to break circular references between config and providers.
+     */
     public AiConfigService(AiConfigRepository aiConfigRepository,
             @Lazy EmbeddingModelProvider embeddingProvider,
             @Lazy WorkspaceChatModelRegistry workspaceChatModelRegistry) {
