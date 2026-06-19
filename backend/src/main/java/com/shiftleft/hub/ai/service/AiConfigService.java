@@ -136,7 +136,9 @@ public class AiConfigService {
             if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
                 log.info("Testing OpenAI connection: model={}, apiKey length={}, endpointUrl={}",
                     model, apiKey.length(), endpointUrl);
-                var clientBuilder = OpenAIOkHttpClient.builder().apiKey(apiKey);
+            var clientBuilder = OpenAIOkHttpClient.builder()
+                .apiKey(apiKey)
+                .responseValidation(false);
                 if (endpointUrl != null && !endpointUrl.equals("http://host.docker.internal:11434")) {
                     clientBuilder = clientBuilder.baseUrl(endpointUrl);
                 }
