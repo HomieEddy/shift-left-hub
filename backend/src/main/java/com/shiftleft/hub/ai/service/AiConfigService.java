@@ -270,7 +270,7 @@ public class AiConfigService {
                 clientBuilder = clientBuilder.baseUrl(endpointUrl);
             }
             var options = OpenAiEmbeddingOptions.builder().model(model).build();
-            return new OpenAiEmbeddingModel(clientBuilder.build(), MetadataMode.EMBED, options);
+            return new OpenAiEmbeddingModel(clientBuilder.build(), MetadataMode.NONE, options);
         }
 
         return OllamaEmbeddingModel.builder()
