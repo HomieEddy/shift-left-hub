@@ -66,6 +66,7 @@ class EmbeddingServiceTest {
             .slug("test-article")
             .status(ArticleStatus.PUBLISHED)
             .author(createAuthor())
+            .workspaceId(UUID.randomUUID())
             .build();
     }
 
