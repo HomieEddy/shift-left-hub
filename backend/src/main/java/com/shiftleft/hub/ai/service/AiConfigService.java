@@ -10,19 +10,7 @@ import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
 import com.shiftleft.hub.config.EmbeddingProperties;
 import com.shiftleft.hub.llmconfig.service.WorkspaceChatModelRegistry;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.ollama.OllamaEmbeddingModel;
-import org.springframework.ai.ollama.api.OllamaApi;
-import org.springframework.ai.ollama.api.OllamaChatOptions;
-import org.springframework.ai.ollama.api.OllamaEmbeddingOptions;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +26,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class AiConfigService {
@@ -47,6 +34,14 @@ public class AiConfigService {
     private final EmbeddingModelProvider embeddingProvider;
     private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
     private final SecureRandom secureRandom = new SecureRandom();
+
+    public AiConfigService(AiConfigRepository aiConfigRepository,
+            @Lazy EmbeddingModelProvider embeddingProvider,
+            @Lazy WorkspaceChatModelRegistry workspaceChatModelRegistry) {
+        this.aiConfigRepository = aiConfigRepository;
+        this.embeddingProvider = embeddingProvider;
+        this.workspaceChatModelRegistry = workspaceChatModelRegistry;
+    }
 
     @Value("${app.ai.encryption-key}")
     private String encryptionKey;
