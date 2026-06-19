@@ -59,15 +59,16 @@ class EmbeddingServiceTest {
     }
 
     private Article createArticle() {
-        return Article.builder()
+        Article article = Article.builder()
             .id(articleId)
             .titleEn("Test Article")
             .contentEn("Content of the article")
             .slug("test-article")
             .status(ArticleStatus.PUBLISHED)
             .author(createAuthor())
-            .workspaceId(UUID.randomUUID())
             .build();
+        article.setWorkspaceId(UUID.randomUUID());
+        return article;
     }
 
     // ── generateEmbedding ────────────────────────────────────
