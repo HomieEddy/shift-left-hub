@@ -10,6 +10,7 @@ import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
 import com.shiftleft.hub.config.EmbeddingProperties;
 import com.shiftleft.hub.llmconfig.service.WorkspaceChatModelRegistry;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,26 +27,15 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class AiConfigService {
 
     private final AiConfigRepository aiConfigRepository;
-    private final EmbeddingModelProvider embeddingProvider;
-    private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
+    @Lazy private final EmbeddingModelProvider embeddingProvider;
+    @Lazy private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
     private final SecureRandom secureRandom = new SecureRandom();
-
-    /**
-     * Creates a new AiConfigService with lazy dependency injection
-     * to break circular references between config and providers.
-     */
-    public AiConfigService(AiConfigRepository aiConfigRepository,
-            @Lazy EmbeddingModelProvider embeddingProvider,
-            @Lazy WorkspaceChatModelRegistry workspaceChatModelRegistry) {
-        this.aiConfigRepository = aiConfigRepository;
-        this.embeddingProvider = embeddingProvider;
-        this.workspaceChatModelRegistry = workspaceChatModelRegistry;
-    }
 
     @Value("${app.ai.encryption-key}")
     private String encryptionKey;
