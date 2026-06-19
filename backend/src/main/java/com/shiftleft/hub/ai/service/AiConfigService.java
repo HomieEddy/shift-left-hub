@@ -33,8 +33,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class AiConfigService {
 
     private final AiConfigRepository aiConfigRepository;
-    @Lazy private final EmbeddingModelProvider embeddingProvider;
-    @Lazy private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
+    private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Value("${app.ai.encryption-key}")
@@ -104,7 +103,6 @@ public class AiConfigService {
 
         config = aiConfigRepository.save(config);
         workspaceChatModelRegistry.evictAll();
-        embeddingProvider.evict();
         return AiConfigResponse.from(config);
     }
 
