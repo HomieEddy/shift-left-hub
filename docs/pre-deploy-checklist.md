@@ -44,7 +44,7 @@ In the Railway backend service dashboard, add these environment variables:
 | `APP_AI_ENCRYPTION_SALT` | Generate a random salt | `openssl rand -base64 16` |
 | `SPRING_AI_OPENAI_API_KEY` | Your OpenAI API key | Or Ollama-compatible endpoint |
 | `SPRING_PROFILES_ACTIVE` | `docker` | Enables Docker profile config |
-| `SPRING_JPA_HIBERNATE_DDL_AUTO` | `validate` | Flyway manages schema |
+| `SPRING_JPA_HIBERNATE_DDL_AUTO` | `none` | Flyway manages schema (use `validate` after first successful deploy) |
 | `SPRING_FLYWAY_ENABLED` | `true` | Enables migrations |
 | `APP_AUTH_COOKIE_SECURE` | `true` | Required for HTTPS production cookies |
 | `APP_AUTH_COOKIE_SAME_SITE` | `Lax` | API traffic is same-origin through Vercel rewrites |
