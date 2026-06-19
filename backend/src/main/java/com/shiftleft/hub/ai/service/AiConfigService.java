@@ -9,6 +9,7 @@ import com.shiftleft.hub.ai.api.dto.TestConnectionResult;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
 import com.shiftleft.hub.config.EmbeddingProperties;
+import com.shiftleft.hub.llmconfig.service.WorkspaceChatModelRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -43,6 +44,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class AiConfigService {
 
     private final AiConfigRepository aiConfigRepository;
+    private final EmbeddingModelProvider embeddingProvider;
+    private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Value("${app.ai.encryption-key}")
@@ -111,6 +114,8 @@ public class AiConfigService {
         }
 
         config = aiConfigRepository.save(config);
+        workspaceChatModelRegistry.evictAll();
+        embeddingProvider.evict();
         return AiConfigResponse.from(config);
     }
 
