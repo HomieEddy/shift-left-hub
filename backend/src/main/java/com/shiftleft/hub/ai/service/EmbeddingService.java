@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,13 @@ public class EmbeddingService {
     private final EmbeddingModelProvider embeddingProvider;
     private final ArticleRepository articleRepository;
     private final AiConfigService aiConfigService;
+    private final JdbcTemplate jdbcTemplate;
+
+    @Value("${spring.ai.vectorstore.pgvector.dimensions:768}")
+    private int vectorStoreDimensions;
+
+    @Value("${spring.ai.vectorstore.pgvector.schema-name:public}")
+    private String vectorStoreSchema;
 
     /**
      * Generates an embedding vector for the given text.
@@ -65,7 +74,9 @@ public class EmbeddingService {
             storeEmbedding(article);
             log.info("Stored embedding for article {}", article.getId());
         } catch (Exception e) {
-            log.warn("Failed to store embedding for article {}: {}", article.getId(), e.getMessage());
+            log.warn("Failed to store embedding for article {}: {} | rootCause={} | vectorStore={}",
+                article.getId(), e.getMessage(), mostSpecificMessage(e), describeVectorStoreSchema());
+            log.debug("Embedding storage failure details", e);
         }
     }
 
@@ -81,9 +92,41 @@ public class EmbeddingService {
             try {
                 generateAndStoreEmbedding(article);
             } catch (Exception e) {
-                log.warn("Failed to re-embed article {}: {}", article.getId(), e.getMessage());
+                log.warn("Failed to re-embed article {}: {} | rootCause={} | vectorStore={}",
+                    article.getId(), e.getMessage(), mostSpecificMessage(e), describeVectorStoreSchema());
+                log.debug("Re-embedding failure details", e);
             }
         }
         log.info("Re-embedding complete for {} articles", publishedArticles.size());
+    }
+
+    private String describeVectorStoreSchema() {
+        try {
+            String embeddingType = jdbcTemplate.queryForObject("""
+                SELECT format_type(a.atttypid, a.atttypmod)
+                FROM pg_attribute a
+                JOIN pg_class c ON c.oid = a.attrelid
+                JOIN pg_namespace n ON n.oid = c.relnamespace
+                WHERE n.nspname = ?
+                  AND c.relname = 'vector_store'
+                  AND a.attname = 'embedding'
+                  AND NOT a.attisdropped
+                """, String.class, vectorStoreSchema);
+            return "schema=" + vectorStoreSchema
+                + ", configuredDimensions=" + vectorStoreDimensions
+                + ", embeddingColumnType=" + embeddingType;
+        } catch (Exception e) {
+            return "schema=" + vectorStoreSchema
+                + ", configuredDimensions=" + vectorStoreDimensions
+                + ", inspectionError=" + mostSpecificMessage(e);
+        }
+    }
+
+    private String mostSpecificMessage(Throwable throwable) {
+        Throwable current = throwable;
+        while (current.getCause() != null) {
+            current = current.getCause();
+        }
+        return current.getMessage();
     }
 }
