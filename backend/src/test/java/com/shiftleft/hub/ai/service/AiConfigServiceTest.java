@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
-import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -195,7 +194,7 @@ class AiConfigServiceTest {
         EmbeddingModel result = aiConfigService.buildEmbeddingModel(props);
 
         assertNotNull(result);
-        assertInstanceOf(OpenAiEmbeddingModel.class, result);
+        assertInstanceOf(OpenAiCompatibleEmbeddingModel.class, result);
     }
 
     @Test
