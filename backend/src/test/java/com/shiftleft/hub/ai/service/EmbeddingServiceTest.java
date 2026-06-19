@@ -108,6 +108,7 @@ class EmbeddingServiceTest {
         assertEquals(1, docs.size());
         assertEquals("Content of the article\n---\n", docs.getFirst().getText());
         assertEquals(articleId.toString(), docs.getFirst().getMetadata().get("articleId"));
+        assertEquals(article.getWorkspaceId().toString(), docs.getFirst().getMetadata().get("workspace_id"));
     }
 
     @Test
