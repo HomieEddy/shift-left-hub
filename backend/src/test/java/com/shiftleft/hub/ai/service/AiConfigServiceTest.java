@@ -5,6 +5,7 @@ import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.domain.AiConfig;
 import com.shiftleft.hub.ai.domain.AiConfigRepository;
 import com.shiftleft.hub.config.EmbeddingProperties;
+import com.shiftleft.hub.llmconfig.service.WorkspaceChatModelRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,8 @@ import static org.mockito.Mockito.*;
 class AiConfigServiceTest {
 
     @Mock private AiConfigRepository aiConfigRepository;
+    @Mock private EmbeddingModelProvider embeddingProvider;
+    @Mock private WorkspaceChatModelRegistry workspaceChatModelRegistry;
 
     @InjectMocks private AiConfigService aiConfigService;
 
