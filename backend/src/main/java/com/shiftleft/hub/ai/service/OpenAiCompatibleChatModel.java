@@ -18,6 +18,10 @@ import org.springframework.ai.chat.prompt.Prompt;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Minimal OpenAI-compatible chat model that uses the OpenAI Java SDK directly.
+ * Bypasses Spring AI's OpenAiChatModel credential handling bug in 2.0.0-M8.
+ */
 public class OpenAiCompatibleChatModel implements ChatModel {
 
     private final OpenAIClient openAiClient;
