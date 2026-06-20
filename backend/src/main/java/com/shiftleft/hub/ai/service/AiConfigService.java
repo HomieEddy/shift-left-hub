@@ -228,8 +228,14 @@ public class AiConfigService {
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
             log.info("buildChatClient: using OpenAI, decryptedKey length={}", decryptedKey.length());
+            var clientBuilder = OpenAIOkHttpClient.builder()
+                .apiKey(decryptedKey)
+                .responseValidation(false);
+            if (endpointUrl != null && !endpointUrl.equals("http://host.docker.internal:11434")) {
+                clientBuilder = clientBuilder.baseUrl(endpointUrl);
+            }
             chatModel = OpenAiChatModel.builder()
-                .openAiClient(OpenAIOkHttpClient.builder().apiKey(decryptedKey).build())
+                .openAiClient(clientBuilder.build())
                 .options(OpenAiChatOptions.builder().model(resolvedModel).build())
                 .build();
         } else {
