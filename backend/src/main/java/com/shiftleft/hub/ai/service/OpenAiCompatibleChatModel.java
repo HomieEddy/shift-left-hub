@@ -59,14 +59,6 @@ public class OpenAiCompatibleChatModel implements ChatModel {
     }
 
     @Override
-    public ChatResponse call(org.springframework.ai.model.ModelRequest request) {
-        if (request instanceof Prompt prompt) {
-            return call(prompt);
-        }
-        throw new UnsupportedOperationException("Unsupported request type: " + request.getClass());
-    }
-
-    @Override
     public reactor.core.publisher.Flux<ChatResponse> stream(Prompt prompt) {
         ChatCompletionCreateParams params = buildParams(prompt);
         return reactor.core.publisher.Flux.fromStream(
@@ -89,14 +81,6 @@ public class OpenAiCompatibleChatModel implements ChatModel {
                         .build());
                 })
         );
-    }
-
-    @Override
-    public reactor.core.publisher.Flux<ChatResponse> stream(org.springframework.ai.model.ModelRequest request) {
-        if (request instanceof Prompt prompt) {
-            return stream(prompt);
-        }
-        throw new UnsupportedOperationException("Unsupported request type: " + request.getClass());
     }
 
     private ChatCompletionCreateParams buildParams(Prompt prompt) {
