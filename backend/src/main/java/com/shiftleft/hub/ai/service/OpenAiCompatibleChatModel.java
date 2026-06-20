@@ -2,12 +2,8 @@ package com.shiftleft.hub.ai.service;
 
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
-import com.openai.models.chat.completions.ChatCompletionAssistantMessageParam;
 import com.openai.models.chat.completions.ChatCompletionChunk;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
-import com.openai.models.chat.completions.ChatCompletionMessageParam;
-import com.openai.models.chat.completions.ChatCompletionSystemMessageParam;
-import com.openai.models.chat.completions.ChatCompletionUserMessageParam;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -84,28 +80,20 @@ public class OpenAiCompatibleChatModel implements ChatModel {
     }
 
     private ChatCompletionCreateParams buildParams(Prompt prompt) {
-        List<ChatCompletionMessageParam> messages = new ArrayList<>();
+        ChatCompletionCreateParams.Builder builder = ChatCompletionCreateParams.builder()
+            .model(model);
 
         for (Message msg : prompt.getInstructions()) {
-            if (msg instanceof UserMessage userMsg) {
-                messages.add(ChatCompletionUserMessageParam.builder()
-                    .content(userMsg.getText())
-                    .build());
+            if (msg instanceof org.springframework.ai.chat.messages.SystemMessage sysMsg) {
+                builder.addSystemMessage(sysMsg.getText());
+            } else if (msg instanceof UserMessage userMsg) {
+                builder.addUserMessage(userMsg.getText());
             } else if (msg instanceof AssistantMessage assistantMsg) {
-                messages.add(ChatCompletionAssistantMessageParam.builder()
-                    .content(assistantMsg.getText())
-                    .build());
-            } else if (msg instanceof org.springframework.ai.chat.messages.SystemMessage sysMsg) {
-                messages.add(ChatCompletionSystemMessageParam.builder()
-                    .content(sysMsg.getText())
-                    .build());
+                builder.addAssistantMessage(assistantMsg.getText());
             }
         }
 
-        return ChatCompletionCreateParams.builder()
-            .model(model)
-            .messages(messages)
-            .build();
+        return builder.build();
     }
 
     private static OpenAIOkHttpClient buildClient(String endpointUrl, String apiKey) {
