@@ -43,9 +43,6 @@ export class WorkspaceSwitcherComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (ws) => this.workspaces.set(ws),
-        error: () => {
-          this.authService.logout().subscribe();
-        },
       });
   }
 
