@@ -20,8 +20,6 @@ import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.ollama.api.OllamaEmbeddingOptions;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +87,7 @@ public class AiConfigService {
                     .ollamaEndpointUrl("http://host.docker.internal:11434")
                     .chatModelName("llama3.2:3b")
                     .embeddingModelName("nomic-embed-text")
-                    .similarityThreshold(0.65)
+                    .similarityThreshold(0.35)
                     .embeddingDimension(768)
                     .build();
                 return aiConfigRepository.save(defaultConfig);
@@ -228,16 +226,7 @@ public class AiConfigService {
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
             log.info("buildChatClient: using OpenAI, decryptedKey length={}", decryptedKey.length());
-            var clientBuilder = OpenAIOkHttpClient.builder()
-                .apiKey(decryptedKey)
-                .responseValidation(false);
-            if (endpointUrl != null && !endpointUrl.equals("http://host.docker.internal:11434")) {
-                clientBuilder = clientBuilder.baseUrl(endpointUrl);
-            }
-            chatModel = OpenAiChatModel.builder()
-                .openAiClient(clientBuilder.build())
-                .options(OpenAiChatOptions.builder().model(resolvedModel).build())
-                .build();
+            chatModel = new OpenAiCompatibleChatModel(endpointUrl, decryptedKey, resolvedModel);
         } else {
             String baseUrl = endpointUrl != null ? endpointUrl : "http://host.docker.internal:11434";
             log.info("buildChatClient: falling back to Ollama, baseUrl={}", baseUrl);
