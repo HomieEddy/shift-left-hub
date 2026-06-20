@@ -1,5 +1,6 @@
 package com.shiftleft.hub.ai.service;
 
+import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionChunk;
@@ -17,20 +18,16 @@ import org.springframework.ai.chat.prompt.Prompt;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Minimal OpenAI-compatible chat model that uses the OpenAI Java SDK directly.
- * Bypasses Spring AI's OpenAiChatModel credential handling bug in 2.0.0-M8.
- */
 public class OpenAiCompatibleChatModel implements ChatModel {
 
-    private final OpenAIOkHttpClient openAiClient;
+    private final OpenAIClient openAiClient;
     private final String model;
 
     public OpenAiCompatibleChatModel(String endpointUrl, String apiKey, String model) {
         this(buildClient(endpointUrl, apiKey), model);
     }
 
-    OpenAiCompatibleChatModel(OpenAIOkHttpClient openAiClient, String model) {
+    OpenAiCompatibleChatModel(OpenAIClient openAiClient, String model) {
         this.openAiClient = openAiClient;
         this.model = model;
     }
@@ -96,7 +93,7 @@ public class OpenAiCompatibleChatModel implements ChatModel {
         return builder.build();
     }
 
-    private static OpenAIOkHttpClient buildClient(String endpointUrl, String apiKey) {
+    private static OpenAIClient buildClient(String endpointUrl, String apiKey) {
         return OpenAIOkHttpClient.builder()
             .apiKey(apiKey)
             .baseUrl(normalizeBaseUrl(endpointUrl))

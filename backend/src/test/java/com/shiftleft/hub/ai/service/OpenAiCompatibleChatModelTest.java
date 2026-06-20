@@ -1,5 +1,6 @@
 package com.shiftleft.hub.ai.service;
 
+import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -25,19 +26,8 @@ class OpenAiCompatibleChatModelTest {
 
     @Test
     void call_shouldParseOpenAiCompatibleResponse() {
-        OpenAIOkHttpClient client = buildMockClient("""
-            {
-              "choices": [
-                {
-                  "message": {"role": "assistant", "content": "Hello, how can I help?"},
-                  "finish_reason": "stop"
-                }
-              ],
-              "model": "test-model"
-            }
-            """);
-
-        OpenAiCompatibleChatModel model = new OpenAiCompatibleChatModel(client, "test-model");
+        OpenAiCompatibleChatModel model = new OpenAiCompatibleChatModel(
+            buildMockClient(), "test-model");
         Prompt prompt = new Prompt(List.of(new UserMessage("Hi")));
 
         ChatResponse response = model.call(prompt);
@@ -52,7 +42,7 @@ class OpenAiCompatibleChatModelTest {
     void call_shouldIncludeModelAndMessagesInRequest() {
         RestClient.Builder builder = RestClient.builder().baseUrl("https://api.example.com/v1");
         MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
-        OpenAIOkHttpClient client = OpenAIOkHttpClient.builder()
+        OpenAIClient client = OpenAIOkHttpClient.builder()
             .apiKey("test-key")
             .baseUrl("https://api.example.com/v1")
             .responseValidation(false)
@@ -77,7 +67,7 @@ class OpenAiCompatibleChatModelTest {
         server.verify();
     }
 
-    private OpenAIOkHttpClient buildMockClient(String responseBody) {
+    private OpenAIClient buildMockClient() {
         RestClient.Builder builder = RestClient.builder().baseUrl("https://api.example.com/v1");
         MockRestServiceServer.bindTo(builder).build();
         return OpenAIOkHttpClient.builder()
