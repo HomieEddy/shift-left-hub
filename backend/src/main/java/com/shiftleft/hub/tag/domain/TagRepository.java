@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -11,11 +12,7 @@ import java.util.UUID;
  */
 public interface TagRepository extends JpaRepository<Tag, UUID> {
 
-    /**
-     * Finds tags by their English names.
-     *
-     * @param nameEn the collection of English names to search for
-     * @return the list of matching tags
-     */
     List<Tag> findByNameEnIn(Collection<String> nameEn);
+
+    Optional<Tag> findByNameEnAndWorkspaceId(String nameEn, UUID workspaceId);
 }
