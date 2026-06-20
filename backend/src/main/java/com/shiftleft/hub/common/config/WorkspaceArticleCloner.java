@@ -1,9 +1,9 @@
 package com.shiftleft.hub.common.config;
 
+import com.shiftleft.hub.ai.service.EmbeddingService;
 import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
-import com.shiftleft.hub.ai.service.EmbeddingService;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagRepository;
 import com.shiftleft.hub.workspace.domain.Workspace;
@@ -37,6 +37,10 @@ public class WorkspaceArticleCloner {
     private final TagRepository tagRepository;
     private final EmbeddingService embeddingService;
 
+    /**
+     * After PublicSeeder populates the public workspace, clones each article
+     * into every non-public workspace with workspace-scoped slugs and tags.
+     */
     @EventListener(ApplicationReadyEvent.class)
     @Order(3)
     public void cloneToWorkspaces() {
