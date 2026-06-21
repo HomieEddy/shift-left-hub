@@ -81,13 +81,15 @@ public class AiChatService {
             String history = formatHistory(request.history());
 
             ChatClient chatClient = workspaceChatModelRegistry.getChatClient(workspaceId);
-            String systemPrompt = workspaceChatModelRegistry.getSystemPrompt(workspaceId);
-            String fullPrompt = buildPrompt(request.message(), context, history, systemPrompt);
+            String systemPrompt = resolveSystemPrompt(
+                workspaceChatModelRegistry.getSystemPrompt(workspaceId));
+            String userMessage = buildUserMessage(request.message(), context, history);
             AtomicReference<String> fullResponse = new AtomicReference<>("");
             final Disposable[] subscription = {null};
 
             var flux = chatClient.prompt()
-                .user(fullPrompt)
+                .system(systemPrompt)
+                .user(userMessage)
                 .stream()
                 .content()
                 .doOnError(error -> {
@@ -333,33 +335,48 @@ public class AiChatService {
         return sb.toString();
     }
 
-    private String buildPrompt(String userMessage, String context, String history, String systemPrompt) {
-        String effectivePrompt = (systemPrompt != null && !systemPrompt.isBlank())
-            ? systemPrompt
-            : "You are a helpful assistant using the workspace knowledge base. Answer based on the"
-            + " workspace's knowledge base articles and uploaded documents. Use Markdown formatting"
-            + " with clear sections.";
-
-        effectivePrompt = effectivePrompt
+    private String resolveSystemPrompt(String workspaceSystemPrompt) {
+        String prompt = (workspaceSystemPrompt != null && !workspaceSystemPrompt.isBlank())
+            ? workspaceSystemPrompt
+            : DEFAULT_SYSTEM_PROMPT;
+        return prompt
             .replace("{workspace_name}", resolveWorkspaceName())
             // TODO: Resolve {domain} and {categories} from workspace configuration
             // when workspace domain/category context is available
             .replace("{domain}", "")
             .replace("{categories}", "");
+    }
 
-        return """
-    %s
-
-    %s
-
-    Conversation history:
-    %s
-
-    User: %s
-    Assistant:""".formatted(effectivePrompt, context, history, userMessage);
+    private String buildUserMessage(String userMessage, String context, String history) {
+        StringBuilder sb = new StringBuilder();
+        if (!history.isBlank()) {
+            sb.append("Conversation history:\n").append(history).append("\n\n");
+        }
+        if (!context.isBlank()) {
+            sb.append(context).append("\n\n");
+        }
+        sb.append("User question:\n").append(userMessage);
+        return sb.toString();
     }
 
     private String resolveWorkspaceName() {
         return WorkspaceContextHolder.getCurrentWorkspaceId().toString();
     }
+
+    private static final String DEFAULT_SYSTEM_PROMPT = """
+        You are a helpful assistant for the {workspace_name} workspace. Your job is to answer
+        the user's question using the knowledge base articles and document
+        excerpts provided in the user's message below.
+
+        Guidelines:
+        - Synthesize a clear, direct answer from the provided context. Do not
+          list article titles or links as the answer itself.
+        - Use Markdown formatting with headings, bullet points, and short
+          paragraphs for readability.
+        - If the context is insufficient, say so honestly and suggest the
+          user rephrase or escalate to a human agent.
+        - Cite article titles inline when you draw a fact from them, so the
+          user can find the source in the references list below your answer.
+        - Do not invent facts that are not supported by the provided context.
+        """;
 }
