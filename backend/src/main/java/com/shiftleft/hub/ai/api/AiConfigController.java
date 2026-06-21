@@ -5,6 +5,7 @@ import com.shiftleft.hub.ai.api.dto.AiConfigResponse;
 import com.shiftleft.hub.ai.api.dto.TestConnectionResult;
 import com.shiftleft.hub.ai.service.AiConfigService;
 import com.shiftleft.hub.ai.service.EmbeddingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class AiConfigController {
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public AiConfigResponse updateConfig(@RequestBody AiConfigRequest request) {
+    public AiConfigResponse updateConfig(@Valid @RequestBody AiConfigRequest request) {
         return aiConfigService.updateConfig(request);
     }
 
@@ -55,7 +56,7 @@ public class AiConfigController {
      */
     @PostMapping("/test")
     @PreAuthorize("hasRole('ADMIN')")
-    public TestConnectionResult testConnection(@RequestBody AiConfigRequest request) {
+    public TestConnectionResult testConnection(@Valid @RequestBody AiConfigRequest request) {
         return aiConfigService.testConnection(request);
     }
 
