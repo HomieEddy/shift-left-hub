@@ -170,4 +170,27 @@ class MasterSeederTest {
         verifyNoInteractions(userRepository, aiConfigRepository, workspaceService, workspaceRepository,
             articleRepository, tagRepository);
     }
+
+    @Test
+    void generateSeedPassword_produces24CharAlphanumericString() throws Exception {
+        var method = MasterSeeder.class.getDeclaredMethod("generateSeedPassword");
+        method.setAccessible(true);
+
+        String password = (String) method.invoke(null);
+
+        assertEquals(24, password.length());
+        assertTrue(password.matches("[A-Za-z0-9]+"),
+            "Seed password must be alphanumeric, was: " + password);
+    }
+
+    @Test
+    void generateSeedPassword_producesDifferentValues() throws Exception {
+        var method = MasterSeeder.class.getDeclaredMethod("generateSeedPassword");
+        method.setAccessible(true);
+
+        String a = (String) method.invoke(null);
+        String b = (String) method.invoke(null);
+
+        assertNotEquals(a, b, "Two consecutive seeds must not collide");
+    }
 }
