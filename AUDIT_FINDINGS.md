@@ -15,7 +15,7 @@
 | S-2 | Real admin JWTs in `cookies.txt` (gitignored but unprotected on disk) | `cookies.txt:5-6` | S | HIGH |
 | S-3 | `AiConfigController.getConfig` lacks `@PreAuthorize`; only `authenticated()` required → any USER can read AI config (incl. `hasOpenaiKey`) | `backend/.../ai/api/AiConfigController.java:32-35` | S | HIGH | ✓ fixed in `fix/s-3-aiconfig-preauthorize` |
 | S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH | ✓ fixed in `fix/s-4-aiconfig-valid` |
-| S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH |
+| S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH | ✓ fixed in `fix/s-5-admin-llmconfig-valid` |
 | S-6 | Dev JWT signing secret literal in `.env` (forgery if copied to prod) | `.env:2` | S | HIGH |
 | S-7 | JWT filter logs user email + role + workspace_id at INFO per request (PII) | `backend/.../config/SecurityConfig.java:196-199` | S | HIGH |
 | S-8 | Rate limiter uses only `getRemoteAddr()`; ignores `X-Forwarded-For` → spoofable throttle key | `backend/.../config/RateLimitingFilter.java:44-52` | S | MED |
