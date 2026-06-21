@@ -1,1 +1,0 @@
-ALTER TABLE article ADD COLUMN IF NOT EXISTS excerpt_fr TEXT;
