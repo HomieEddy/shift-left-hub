@@ -28,7 +28,6 @@
 | S-7 | JWT filter logs user email + role + workspace_id at INFO per request (PII) | `backend/.../config/SecurityConfig.java:196-199` | S | HIGH | ✓ fixed in `fix/s-7-jwt-pii-logging` — dropped to DEBUG, swapped email for userId |
 | S-8 | Rate limiter uses only `getRemoteAddr()`; ignores `X-Forwarded-For` → spoofable throttle key | `backend/.../config/RateLimitingFilter.java:44-52` | S | MED | ✓ fixed in `fix/s-8-rate-limit-xff` — opt-in XFF trust, 5 new tests |
 | S-9 | `MasterSeeder` reuses same password env value for ALL seed users (admin + non-admin) | `backend/.../common/config/MasterSeeder.java:152-160` | S | MED | ✓ fixed in `fix/s-9-seeder-random-passwords` |
->>>>>>> e4fbf95 (fix(security): generate per-user random passwords for seed users)
 | S-10 | Hardcoded default DB password `shiftleft` in `application.properties` | `backend/src/main/resources/application.properties:7` | S | MED | ✓ fixed in `fix/s-10-default-db-password` — fail-fast in SecurityDefaultsCheck |
 | S-11 | Hardcoded default AI encryption salt `ShiftLeftKBSalt` weakens PBKDF2 | `backend/src/main/resources/application.properties:49` | S | MED |
 | S-12 | Outbound AI endpoint URL not host/IP allow-listed → SSRF to internal services | `backend/.../ai/service/AiConfigService.java:142-156` + `OpenAiCompatibleChatModel.java:100-113` | M | MED |
