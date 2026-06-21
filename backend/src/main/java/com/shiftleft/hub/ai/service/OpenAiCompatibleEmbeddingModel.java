@@ -92,10 +92,18 @@ public class OpenAiCompatibleEmbeddingModel extends AbstractEmbeddingModel {
     }
 
     private static RestClient buildRestClient(String endpointUrl, String apiKey) {
-        return RestClient.builder()
-            .baseUrl(normalizeBaseUrl(endpointUrl))
-            .defaultHeader("Authorization", "Bearer " + apiKey)
-            .build();
+        String normalized = normalizeBaseUrl(endpointUrl);
+        // S-13: refuse to send a Bearer token over plain HTTP.
+        if (apiKey != null && !apiKey.isBlank() && normalized.startsWith("http://")) {
+            throw new IllegalArgumentException(
+                "Refusing to send an API key over plain HTTP to " + normalized
+                    + ". Use https:// or omit the API key for unauthenticated endpoints.");
+        }
+        var builder = RestClient.builder().baseUrl(normalized);
+        if (apiKey != null && !apiKey.isBlank()) {
+            builder = builder.defaultHeader("Authorization", "Bearer " + apiKey);
+        }
+        return builder.build();
     }
 
     private static String normalizeBaseUrl(String endpointUrl) {
