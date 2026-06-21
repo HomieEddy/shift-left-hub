@@ -15,7 +15,14 @@ describe('ChatComponent', () => {
   const mockStreamEvent = (
     type: StreamEvent['type'],
     content = '',
-    sources: { articleId: string; title: string; slug: string; score: number }[] = [],
+    sources: {
+      articleId: string;
+      title: string;
+      slug: string;
+      score: number;
+      filename?: string;
+      excerpt?: string;
+    }[] = [],
   ): StreamEvent => ({
     type,
     content,
@@ -136,5 +143,58 @@ describe('ChatComponent', () => {
   it('should open escalation form', () => {
     component.escalateToHumanAgent();
     expect(component.showEscalationForm()).toBe(true);
+  });
+
+  it('should render source excerpt for article sources', () => {
+    component.currentInput = 'How do I set up VPN?';
+    component.sendMessage();
+
+    eventsSubject.next(
+      mockStreamEvent('done', '', [
+        {
+          articleId: 'a1',
+          title: 'VPN Setup Guide',
+          slug: 'vpn-setup',
+          score: 0.92,
+          excerpt: 'Install the VPN client and authenticate with your corporate credentials.',
+        },
+      ]),
+    );
+    fixture.detectChanges();
+
+    const root = fixture.nativeElement as HTMLElement;
+    const link = root.querySelector<HTMLAnchorElement>(
+      '[data-testid="chat-source-article"]',
+    );
+    expect(link).toBeTruthy();
+    const href = link?.getAttribute('href') ?? link?.getAttribute('ng-reflect-router-link') ?? '';
+    expect(href).toContain('/articles/a1');
+    expect(link?.textContent).toContain('VPN Setup Guide');
+    expect(link?.textContent).toContain('Install the VPN client');
+  });
+
+  it('should render source excerpt for document sources', () => {
+    component.currentInput = 'Show me the network diagram';
+    component.sendMessage();
+
+    eventsSubject.next(
+      mockStreamEvent('done', '', [
+        {
+          articleId: 'd1',
+          title: '',
+          slug: '',
+          score: 0,
+          filename: 'network-diagram.pdf',
+          excerpt: 'High-level overview of the corporate network topology.',
+        },
+      ]),
+    );
+    fixture.detectChanges();
+
+    const root = fixture.nativeElement as HTMLElement;
+    const doc = root.querySelector('[data-testid="chat-source-document"]');
+    expect(doc).toBeTruthy();
+    expect(doc?.textContent).toContain('network-diagram.pdf');
+    expect(doc?.textContent).toContain('corporate network topology');
   });
 });
