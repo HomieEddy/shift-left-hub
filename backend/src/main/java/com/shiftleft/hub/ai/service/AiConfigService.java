@@ -44,6 +44,7 @@ public class AiConfigService {
 
     private final AiConfigRepository aiConfigRepository;
     private final WorkspaceChatModelRegistry workspaceChatModelRegistry;
+    private final EndpointUrlValidator endpointUrlValidator;
     private final SecureRandom secureRandom = new SecureRandom();
 
     /**
@@ -51,11 +52,14 @@ public class AiConfigService {
      *
      * @param aiConfigRepository the AI config repository
      * @param workspaceChatModelRegistry the workspace chat model registry (lazy to break circular dep)
+     * @param endpointUrlValidator validates outbound AI endpoint URLs for SSRF
      */
     public AiConfigService(AiConfigRepository aiConfigRepository,
-            @org.springframework.context.annotation.Lazy WorkspaceChatModelRegistry workspaceChatModelRegistry) {
+            @org.springframework.context.annotation.Lazy WorkspaceChatModelRegistry workspaceChatModelRegistry,
+            EndpointUrlValidator endpointUrlValidator) {
         this.aiConfigRepository = aiConfigRepository;
         this.workspaceChatModelRegistry = workspaceChatModelRegistry;
+        this.endpointUrlValidator = endpointUrlValidator;
     }
 
     @Value("${app.ai.encryption-key}")
@@ -144,6 +148,7 @@ public class AiConfigService {
             String apiKey = request.openaiApiKey();
 
             String response;
+            endpointUrlValidator.requireSafe(endpointUrl);
             if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
                 log.info("Testing OpenAI connection: model={}, apiKey length={}, endpointUrl={}",
                     model, apiKey.length(), endpointUrl);
@@ -226,9 +231,13 @@ public class AiConfigService {
         if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
             String decryptedKey = decrypt(apiKey);
             log.info("buildChatClient: using OpenAI, decryptedKey length={}", decryptedKey.length());
+            if (endpointUrl != null && !endpointUrl.isBlank()) {
+                endpointUrlValidator.requireSafe(endpointUrl);
+            }
             chatModel = new OpenAiCompatibleChatModel(endpointUrl, decryptedKey, resolvedModel);
         } else {
             String baseUrl = endpointUrl != null ? endpointUrl : "http://host.docker.internal:11434";
+            endpointUrlValidator.requireSafe(baseUrl);
             log.info("buildChatClient: falling back to Ollama, baseUrl={}", baseUrl);
             chatModel = OllamaChatModel.builder()
                 .ollamaApi(OllamaApi.builder().baseUrl(baseUrl).build())
