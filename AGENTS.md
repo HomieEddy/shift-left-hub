@@ -91,6 +91,21 @@ Next: `/gsd-plan-phase 1`
 - **DRY** — Third copy-paste → extract to shared utility.
 - **Boy Scout Rule** — Leave the codebase cleaner than you found it.
 
+### Agent Skills (contributor setup)
+Two MIT-licensed skills enforce the principles above at agent time. They are **not vendored in this repo** — each contributor installs them once into their own opencode config (per-user, no shared state, no hooks committed).
+
+Install both (one-time per machine):
+
+```
+npx skills add DietrichGebert/ponytail
+npx skills add shadcn/improve
+```
+
+- **ponytail** (`/ponytail`, `/ponytail-review`, `/ponytail-audit`, `/ponytail-debt`) — always-on YAGNI/KISS enforcement injected into every system prompt. Reaches for stdlib/native platform features before reaching for a new dependency. Never touches validation, security, error handling, or accessibility. Default mode is `full`; override per-session with `/ponytail lite|full|ultra|off` or `PONYTAIL_DEFAULT_MODE` env var. Source: <https://github.com/DietrichGebert/ponytail>.
+- **improve** (`/improve`, `/improve quick|deep|security|branch|next|plan|execute|reconcile`) — on-demand read-only auditor. Maps the repo, audits across nine categories (correctness, security, performance, test coverage, tech debt, dependencies, DX, docs, direction), and writes self-contained plans to `plans/` for cheap executors. Never touches source. Use `/improve branch` before opening a PR, `/improve reconcile` between phases. Source: <https://github.com/shadcn/improve>.
+
+These complement the existing KISS/YAGNI/DRY rules — stronger enforcement at agent time, not a replacement. Do not add their skill files, hooks, or plugins to this repository.
+
 ### Spring Boot Backend Standards
 - **Layered Architecture** — Controllers (HTTP/routing only, zero business logic) → Services (all business logic, `@Transactional`) → Repositories (database only)
 - **DTO Pattern** — Never expose JPA Entities directly to API. Use Java 14+ `record` types for immutable Request/Response DTOs.
