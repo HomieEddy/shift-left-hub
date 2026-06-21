@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -22,10 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * After PublicSeeder populates the public workspace, clones articles into each
- * workspace so switching workspaces shows content immediately.
- */
 @Component
 @RequiredArgsConstructor
 @Profile("!test")
@@ -43,6 +40,7 @@ public class WorkspaceArticleCloner {
      */
     @EventListener(ApplicationReadyEvent.class)
     @Order(3)
+    @Transactional
     public void cloneToWorkspaces() {
         Workspace publicWs = workspaceRepository.findBySlug("public").orElse(null);
         if (publicWs == null) {
