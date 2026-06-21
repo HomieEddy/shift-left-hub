@@ -27,7 +27,7 @@
 | S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED | ✓ fixed in `fix/s-14-admin-preauthorize` — class-level @PreAuthorize on all 6 |
 | S-15 | `KcsEventListener` logs AI-drafted article title (user content) at INFO | `backend/.../kcs/service/KcsEventListener.java:68` | S | MED | ✓ fixed in `fix/s-15-kcs-worknote-no-title` |
 | S-16 | JWT validation errors logged with `e.getMessage()` (may echo claim values) | `backend/.../config/JwtService.java:179,195` | S | MED | ✓ fixed in `fix/s-16-jwt-log-class-only` |
-| S-17 | `GlobalExceptionHandler` returns raw exception class + message + first stack frame in dev profile | `backend/.../common/config/GlobalExceptionHandler.java:316-327` | S | MED |
+| S-17 | `GlobalExceptionHandler` returns raw exception class + message + first stack frame in dev profile | `backend/.../common/config/GlobalExceptionHandler.java:316-327` | S | MED | ✓ fixed in `fix/s-17-handler-no-stack-leak` |
 
 ---
 

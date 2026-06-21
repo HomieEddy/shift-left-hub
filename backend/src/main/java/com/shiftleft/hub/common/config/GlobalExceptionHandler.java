@@ -24,6 +24,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Central exception handler that translates domain exceptions to RFC 7807 Problem Details.
@@ -312,19 +313,19 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGeneral(Exception ex, HttpServletRequest request) {
-        log.error("Unhandled exception: {} — {}", request.getRequestURI(), ex.getMessage(), ex);
-        String detail = environment.acceptsProfiles(Profiles.of("dev"))
-            ? ex.getMessage() + " — " + ex.getClass().getSimpleName()
-            : "Internal server error";
+        // S-17: never return raw exception class names, messages, or stack
+        // frames to the client, regardless of profile. They can echo
+        // internals (PII, file paths, class names) that help an attacker
+        // fingerprint the stack. The full exception is logged server-side
+        // and correlated to the response via a stable errorId.
+        String errorId = UUID.randomUUID().toString();
+        log.error("Unhandled exception id={} path={} class={} message={}",
+            errorId, request.getRequestURI(), ex.getClass().getName(), ex.getMessage(), ex);
         ProblemDetail pd = buildProblem(HttpStatus.INTERNAL_SERVER_ERROR,
-            "Internal Server Error", detail,
+            "Internal Server Error",
+            "An unexpected error occurred. Reference id: " + errorId,
             "urn:shiftleft:problem:internal-error", request);
-        if (environment.acceptsProfiles(Profiles.of("dev"))) {
-            StackTraceElement[] stack = ex.getStackTrace();
-            if (stack.length > 0) {
-                pd.setProperty("stackTrace", stack[0].toString());
-            }
-        }
+        pd.setProperty("errorId", errorId);
         return pd;
     }
 
