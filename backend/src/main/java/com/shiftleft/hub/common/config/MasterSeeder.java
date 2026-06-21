@@ -151,19 +151,33 @@ public class MasterSeeder {
 
         for (UserSeed us : NON_ADMIN_USERS) {
             if (!userRepository.existsByEmail(us.email())) {
+                String seedPassword = generateSeedPassword();
                 User user = User.builder()
                     .email(us.email())
-                    .password(passwordEncoder.encode(adminPassword))
+                    .password(passwordEncoder.encode(seedPassword))
                     .displayName(us.displayName())
                     .role(us.role())
                     .enabled(true)
                     .build();
                 userRepository.save(user);
-                log.info("Created seed user: {} ({}) — role: {}", us.email(), us.displayName(), us.role());
+                log.info("Created seed user: {} ({}) — role: {} — initial password: {}",
+                    us.email(), us.displayName(), us.role(), seedPassword);
             } else {
                 log.debug("Seed user {} already exists — skipping", us.email());
             }
         }
+    }
+
+    private static final java.security.SecureRandom RANDOM = new java.security.SecureRandom();
+    private static final String SEED_PASSWORD_ALPHABET =
+        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+
+    private static String generateSeedPassword() {
+        StringBuilder sb = new StringBuilder(24);
+        for (int i = 0; i < 24; i++) {
+            sb.append(SEED_PASSWORD_ALPHABET.charAt(RANDOM.nextInt(SEED_PASSWORD_ALPHABET.length())));
+        }
+        return sb.toString();
     }
 
     // =========================================================================
