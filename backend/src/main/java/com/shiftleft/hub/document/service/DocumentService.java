@@ -160,7 +160,13 @@ public class DocumentService {
             } else {
                 safeFilename = document.getId().toString();
             }
-            Path filePath = uploadPath.resolve(safeFilename);
+            Path filePath = uploadPath.resolve(safeFilename).normalize();
+            // Defense in depth: reject any path that escapes the upload directory
+            // (e.g. sanitized filenames that collapse to ".." or absolute paths)
+            if (!filePath.startsWith(uploadPath)) {
+                throw new DocumentProcessingException(
+                    "Invalid filename: path traversal detected");
+            }
             file.transferTo(filePath.toFile());
             document.setFilePath(filePath.toString());
             documentRepository.save(document);
