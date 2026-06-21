@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -78,5 +79,24 @@ class OpenAiCompatibleEmbeddingModelTest {
         assertArrayEquals(new float[] {0.1f, 0.2f}, response.getResult().getOutput());
         assertArrayEquals(new float[] {0.3f, 0.4f}, response.getResults().get(1).getOutput());
         server.verify();
+    }
+
+    @Test
+    void constructor_refusesHttpWithApiKey() {
+        // S-13: sending a Bearer token over plain HTTP leaks the credential.
+        assertThrows(IllegalArgumentException.class,
+            () -> new OpenAiCompatibleEmbeddingModel("http://insecure.example/v1", "sk-secret", "embed"));
+    }
+
+    @Test
+    void constructor_allowsHttpWithoutApiKey() {
+        // Local Ollama typically runs over HTTP without auth; that path is fine.
+        RestClient.Builder builder = RestClient.builder().baseUrl("http://localhost:11434/v1");
+        MockRestServiceServer.bindTo(builder).build();
+        // Just verify construction does not throw on http+no-key.
+        var model = new OpenAiCompatibleEmbeddingModel(
+            "http://localhost:11434/v1", null, "nomic-embed");
+        assertEquals("nomic-embed",
+            org.springframework.test.util.ReflectionTestUtils.getField(model, "model"));
     }
 }
