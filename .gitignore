@@ -35,8 +35,11 @@ Thumbs.db
 .env
 .env.local
 
-# Temp files
+# Temp files / credential jars (curl -c default, Postman, Insomnia, etc.)
 cookies.txt
+cookies-*.txt
+*.cookies
+cookie-jar*
 
 # Uploaded documents storage
 backend/uploads/
