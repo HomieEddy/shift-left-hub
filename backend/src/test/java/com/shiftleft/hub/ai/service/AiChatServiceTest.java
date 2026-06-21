@@ -94,8 +94,10 @@ class AiChatServiceTest {
         verify(emitter).complete();
     }
 
+    @Captor private ArgumentCaptor<String> systemPromptCaptor;
+
     @Test
-    void chat_shouldIncludeSearchContextInPrompt() throws Exception {
+    void chat_shouldIncludeSearchContextInUserMessage() throws Exception {
         UUID articleId = UUID.randomUUID();
         ChatRequest request = new ChatRequest("test query", null);
         SseEmitter emitter = mock(SseEmitter.class);
@@ -110,8 +112,10 @@ class AiChatServiceTest {
             .thenReturn(List.of());
         when(unifiedSearchService.ftsSearchDocumentChunks(anyString(), eq(workspaceId)))
             .thenReturn(List.of());
+        when(workspaceChatModelRegistry.getSystemPrompt(workspaceId)).thenReturn(null);
         when(workspaceChatModelRegistry.getChatClient(workspaceId)).thenReturn(chatClient);
         when(chatClient.prompt()).thenReturn(promptSpec);
+        when(promptSpec.system(anyString())).thenReturn(promptSpec);
         when(promptSpec.user(promptCaptor.capture())).thenReturn(promptSpec);
         when(promptSpec.stream()).thenReturn(streamSpec);
         when(streamSpec.content()).thenReturn(Flux.just("Hello response"));
@@ -119,7 +123,75 @@ class AiChatServiceTest {
         aiChatService.processChat(request, emitter, "user1");
 
         assertTrue(promptCaptor.getValue().contains("Test Title"));
+        assertTrue(promptCaptor.getValue().contains("test query"),
+            "user message should contain the original user question");
         verify(emitter, atLeastOnce()).send(any(SseEmitter.SseEventBuilder.class));
+    }
+
+    @Test
+    void chat_shouldSendSystemPromptSeparatelyFromUserMessage() throws Exception {
+        UUID articleId = UUID.randomUUID();
+        ChatRequest request = new ChatRequest("vpn setup", null);
+        SseEmitter emitter = mock(SseEmitter.class);
+
+        Object[] ftsRow = {articleId, "VPN Guide", "Guide VPN", "vpn-guide", "Step-by-step VPN setup",
+            LocalDateTime.now()};
+        when(aiConfigService.getConfigEntity()).thenReturn(createAiConfig());
+        when(articleRepository.searchByText(eq("vpn setup"), eq(workspaceId), any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.<Object[]>of(ftsRow)));
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
+        when(unifiedSearchService.vectorSearchDocumentChunks(anyString(), eq(workspaceId), anyDouble()))
+            .thenReturn(List.of());
+        when(unifiedSearchService.ftsSearchDocumentChunks(anyString(), eq(workspaceId)))
+            .thenReturn(List.of());
+        when(workspaceChatModelRegistry.getSystemPrompt(workspaceId)).thenReturn(null);
+        when(workspaceChatModelRegistry.getChatClient(workspaceId)).thenReturn(chatClient);
+        when(chatClient.prompt()).thenReturn(promptSpec);
+        when(promptSpec.system(systemPromptCaptor.capture())).thenReturn(promptSpec);
+        when(promptSpec.user(promptCaptor.capture())).thenReturn(promptSpec);
+        when(promptSpec.stream()).thenReturn(streamSpec);
+        when(streamSpec.content()).thenReturn(Flux.just("To set up VPN..."));
+
+        aiChatService.processChat(request, emitter, "user1");
+
+        List<String> systemValues = systemPromptCaptor.getAllValues();
+        assertEquals(1, systemValues.size(), ".system() must be called exactly once");
+        String systemPrompt = systemValues.getFirst();
+        assertTrue(systemPrompt.contains("Synthesize"),
+            "default system prompt must instruct the model to synthesize, not list");
+        assertFalse(systemPrompt.contains("VPN Guide"),
+            "system prompt must NOT contain retrieved article content");
+        assertFalse(promptCaptor.getValue().contains("Synthesize"),
+            "user message must NOT contain system instructions");
+    }
+
+    @Test
+    void chat_shouldUseCustomWorkspaceSystemPromptWhenProvided() throws Exception {
+        UUID articleId = UUID.randomUUID();
+        String customPrompt = "You are a VPN specialist. Be concise.";
+        ChatRequest request = new ChatRequest("vpn", null);
+        SseEmitter emitter = mock(SseEmitter.class);
+
+        Object[] ftsRow = {articleId, "VPN", null, "vpn", "excerpt", LocalDateTime.now()};
+        when(aiConfigService.getConfigEntity()).thenReturn(createAiConfig());
+        when(articleRepository.searchByText(eq("vpn"), eq(workspaceId), any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.<Object[]>of(ftsRow)));
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
+        when(unifiedSearchService.vectorSearchDocumentChunks(anyString(), eq(workspaceId), anyDouble()))
+            .thenReturn(List.of());
+        when(unifiedSearchService.ftsSearchDocumentChunks(anyString(), eq(workspaceId)))
+            .thenReturn(List.of());
+        when(workspaceChatModelRegistry.getSystemPrompt(workspaceId)).thenReturn(customPrompt);
+        when(workspaceChatModelRegistry.getChatClient(workspaceId)).thenReturn(chatClient);
+        when(chatClient.prompt()).thenReturn(promptSpec);
+        when(promptSpec.system(systemPromptCaptor.capture())).thenReturn(promptSpec);
+        when(promptSpec.user(promptCaptor.capture())).thenReturn(promptSpec);
+        when(promptSpec.stream()).thenReturn(streamSpec);
+        when(streamSpec.content()).thenReturn(Flux.just("ok"));
+
+        aiChatService.processChat(request, emitter, "user1");
+
+        assertEquals(customPrompt, systemPromptCaptor.getValue());
     }
 
     @Test
@@ -171,8 +243,10 @@ class AiChatServiceTest {
             .thenReturn(List.of());
         when(unifiedSearchService.ftsSearchDocumentChunks(anyString(), eq(workspaceId)))
             .thenReturn(List.of());
+        when(workspaceChatModelRegistry.getSystemPrompt(workspaceId)).thenReturn(null);
         when(workspaceChatModelRegistry.getChatClient(workspaceId)).thenReturn(chatClient);
         when(chatClient.prompt()).thenReturn(promptSpec);
+        when(promptSpec.system(anyString())).thenReturn(promptSpec);
         when(promptSpec.user(anyString())).thenReturn(promptSpec);
         when(promptSpec.stream()).thenReturn(streamSpec);
         when(streamSpec.content()).thenReturn(Flux.error(new RuntimeException("API error")));

@@ -72,28 +72,45 @@
                 <p class="text-xs font-medium text-text-secondary mb-2">
                   {{ translationService.translate('chat.sources') }}
                 </p>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex flex-col gap-2">
                   @for (source of msg.sources; track source.articleId) {
                     @if (source.filename) {
-                      <span
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-accent-warning-muted text-accent-warning hover:bg-accent-warning/20 transition-colors border border-accent-warning/20"
+                      <div
+                        class="inline-flex flex-col gap-1 px-3 py-2 rounded-lg text-xs bg-accent-warning-muted text-accent-warning border border-accent-warning/20"
                         [title]="source.excerpt || ''"
+                        data-testid="chat-source-document"
                       >
-                        <svg lucideFileText class="w-3 h-3 flex-shrink-0"></svg>
-                        <span class="truncate max-w-[200px]">{{ source.filename }}</span>
-                        @if (source.score > 0) {
-                          <span class="opacity-60">({{ source.score }})</span>
+                        <span class="inline-flex items-center gap-1.5">
+                          <svg lucideFileText class="w-3 h-3 flex-shrink-0"></svg>
+                          <span class="truncate max-w-[260px] font-medium">{{ source.filename }}</span>
+                          @if (source.score > 0) {
+                            <span class="opacity-60">({{ source.score }})</span>
+                          }
+                        </span>
+                        @if (source.excerpt) {
+                          <p class="text-accent-warning/80 leading-relaxed pl-4 line-clamp-2">
+                            {{ source.excerpt }}
+                          </p>
                         }
-                      </span>
+                      </div>
                     } @else {
                       <a
                         [routerLink]="'/articles/' + source.articleId"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20"
+                        class="inline-flex flex-col gap-1 px-3 py-2 rounded-lg text-xs bg-accent-info-muted text-accent-info hover:bg-accent-info/20 transition-colors border border-accent-info/20"
+                        data-testid="chat-source-article"
+                        [title]="source.excerpt || source.title"
                       >
-                        <svg lucideFileText class="w-3 h-3"></svg>
-                        <span>{{ source.title }}</span>
-                        @if (source.score > 0) {
-                          <span class="opacity-60">({{ source.score }})</span>
+                        <span class="inline-flex items-center gap-1.5">
+                          <svg lucideFileText class="w-3 h-3 flex-shrink-0"></svg>
+                          <span class="font-medium">{{ source.title }}</span>
+                          @if (source.score > 0) {
+                            <span class="opacity-60">({{ source.score }})</span>
+                          }
+                        </span>
+                        @if (source.excerpt) {
+                          <p class="text-accent-info/80 leading-relaxed pl-4 line-clamp-2">
+                            {{ source.excerpt }}
+                          </p>
                         }
                       </a>
                     }
