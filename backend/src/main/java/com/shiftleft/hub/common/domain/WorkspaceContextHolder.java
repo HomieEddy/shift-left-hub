@@ -24,6 +24,19 @@ public final class WorkspaceContextHolder {
     }
 
     /**
+     * Returns the current workspace ID, or null if none is set.
+     *
+     * <p>Use this in code paths that need to optionally restore a previously
+     * set context (e.g. admin operations that temporarily clear the
+     * workspace filter to run a cross-workspace query).</p>
+     *
+     * @return the workspace UUID, or null
+     */
+    public static UUID getCurrentWorkspaceIdOrNull() {
+        return currentWorkspaceId.get();
+    }
+
+    /**
      * Returns the current workspace ID.
      *
      * @return the workspace UUID for the current request

@@ -3,8 +3,10 @@ package com.shiftleft.hub.ai.service;
 import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRole;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -177,6 +179,37 @@ class EmbeddingServiceTest {
         when(articleRepository.findByStatus(ArticleStatus.PUBLISHED, Pageable.unpaged()))
             .thenReturn(page);
         doThrow(new RuntimeException("Failure")).when(vectorStore).add(anyList());
+
+        assertDoesNotThrow(() -> embeddingService.reEmbedAll());
+    }
+
+    @Test
+    void reEmbedAll_shouldClearWorkspaceContextBeforeQueryingAndRestoreAfter() {
+        UUID adminWorkspaceId = UUID.randomUUID();
+        WorkspaceContextHolder.setCurrentWorkspaceId(adminWorkspaceId);
+        try {
+            Article article = createArticle();
+            Page<Article> page = new PageImpl<>(List.of(article));
+            when(articleRepository.findByStatus(eq(ArticleStatus.PUBLISHED), any(Pageable.class)))
+                .thenReturn(page);
+
+            embeddingService.reEmbedAll();
+
+            verify(articleRepository).findByStatus(eq(ArticleStatus.PUBLISHED), any(Pageable.class));
+            verify(vectorStore, atLeastOnce()).add(anyList());
+            assertEquals(adminWorkspaceId, WorkspaceContextHolder.getCurrentWorkspaceId(),
+                "admin's workspace context must be restored after re-embed");
+        } finally {
+            WorkspaceContextHolder.clear();
+        }
+    }
+
+    @Test
+    void reEmbedAll_shouldNotThrowWhenNoWorkspaceContextIsSet() {
+        WorkspaceContextHolder.clear();
+        Page<Article> page = new PageImpl<>(List.of());
+        when(articleRepository.findByStatus(eq(ArticleStatus.PUBLISHED), any(Pageable.class)))
+            .thenReturn(page);
 
         assertDoesNotThrow(() -> embeddingService.reEmbedAll());
     }

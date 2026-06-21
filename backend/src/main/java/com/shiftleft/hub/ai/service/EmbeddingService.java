@@ -3,6 +3,7 @@ package com.shiftleft.hub.ai.service;
 import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
+import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -82,12 +84,28 @@ public class EmbeddingService {
     }
 
     /**
-     * Re-embeds all published articles in the vector store.
+     * Re-embeds all published articles in the vector store, across every workspace.
+     *
+     * <p>The admin endpoint that triggers this can be invoked while the caller
+     * is in any workspace. {@code WorkspaceFilterAspect} (Phase 9) auto-applies
+     * a Hibernate {@code workspaceFilter} to every repository call when a
+     * workspace context is set, which would otherwise scope this query to a
+     * single workspace. We temporarily clear the context for the duration of
+     * the lookup so the filter is disabled, then restore the original context.</p>
      */
     public void reEmbedAll() {
-        var publishedPage = articleRepository.findByStatus(ArticleStatus.PUBLISHED, Pageable.unpaged());
-        List<Article> publishedArticles = publishedPage.getContent();
-        log.info("Re-embedding {} published articles", publishedArticles.size());
+        UUID savedWorkspaceId = WorkspaceContextHolder.getCurrentWorkspaceIdOrNull();
+        WorkspaceContextHolder.clear();
+        List<Article> publishedArticles;
+        try {
+            var publishedPage = articleRepository.findByStatus(ArticleStatus.PUBLISHED, Pageable.unpaged());
+            publishedArticles = publishedPage.getContent();
+        } finally {
+            if (savedWorkspaceId != null) {
+                WorkspaceContextHolder.setCurrentWorkspaceId(savedWorkspaceId);
+            }
+        }
+        log.info("Re-embedding {} published articles across all workspaces", publishedArticles.size());
 
         for (Article article : publishedArticles) {
             try {
