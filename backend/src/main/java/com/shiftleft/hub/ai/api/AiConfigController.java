@@ -30,6 +30,7 @@ public class AiConfigController {
      * @return current AI configuration response
      */
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public AiConfigResponse getConfig() {
         return aiConfigService.getConfig();
     }
