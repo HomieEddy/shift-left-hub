@@ -14,11 +14,13 @@
 | S-1 | Path traversal: `..` survives filename sanitization → upload writes outside workspace dir | `backend/.../document/service/DocumentService.java:157-163` | S | HIGH | ✓ fixed in `fix/s-1-path-traversal-uploads` |
 | S-2 | Real admin JWTs in `cookies.txt` (gitignored but unprotected on disk) | `cookies.txt:5-6` | S | HIGH |
 | S-3 | `AiConfigController.getConfig` lacks `@PreAuthorize`; only `authenticated()` required → any USER can read AI config (incl. `hasOpenaiKey`) | `backend/.../ai/api/AiConfigController.java:32-35` | S | HIGH | ✓ fixed in `fix/s-3-aiconfig-preauthorize` |
+<<<<<<< HEAD
 | S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH |
 | S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH |
 | S-6 | Dev JWT signing secret literal in `.env` (forgery if copied to prod) | `.env:2` | S | HIGH |
 | S-7 | JWT filter logs user email + role + workspace_id at INFO per request (PII) | `backend/.../config/SecurityConfig.java:196-199` | S | HIGH |
 | S-8 | Rate limiter uses only `getRemoteAddr()`; ignores `X-Forwarded-For` → spoofable throttle key | `backend/.../config/RateLimitingFilter.java:44-52` | S | MED |
+>>>>>>> 98a86df (fix(security): make rate limiter X-Forwarded-For opt-in)
 | S-9 | `MasterSeeder` reuses same password env value for ALL seed users (admin + non-admin) | `backend/.../common/config/MasterSeeder.java:152-160` | S | MED |
 | S-10 | Hardcoded default DB password `shiftleft` in `application.properties` | `backend/src/main/resources/application.properties:7` | S | MED |
 | S-11 | Hardcoded default AI encryption salt `ShiftLeftKBSalt` weakens PBKDF2 | `backend/src/main/resources/application.properties:49` | S | MED |
