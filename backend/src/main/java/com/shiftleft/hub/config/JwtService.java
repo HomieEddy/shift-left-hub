@@ -176,7 +176,11 @@ public class JwtService {
             parseToken(token);
             return true;
         } catch (JwtException e) {
-            log.warn("Token validation failed: {}", e.getMessage());
+            // Log the exception class only. JJWT exception messages may
+            // echo claim contents (subject, role, workspace id) which is
+            // PII; full message stays in the exception for debug-only
+            // paths, not in default log streams.
+            log.warn("Token validation failed: {}", e.getClass().getSimpleName());
             return false;
         }
     }
@@ -192,7 +196,7 @@ public class JwtService {
             Claims claims = parseToken(token);
             return "refresh".equals(claims.get("type"));
         } catch (JwtException e) {
-            log.warn("Token validation failed: not a refresh token — {}", e.getMessage());
+            log.warn("Refresh-token validation failed: {}", e.getClass().getSimpleName());
             return false;
         }
     }
