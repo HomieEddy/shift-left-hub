@@ -11,8 +11,8 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| S-1 | Path traversal: `..` survives filename sanitization → upload writes outside workspace dir | `backend/.../document/service/DocumentService.java:157-163` | S | HIGH |
-| S-2 | Real admin JWTs in `cookies.txt` (gitignored but unprotected on disk) | `cookies.txt:5-6` | S | HIGH | ✓ fixed in `fix/s-2-protect-cookies-on-disk` — file deleted, `.gitignore` broadened |
+| S-1 | Path traversal: `..` survives filename sanitization → upload writes outside workspace dir | `backend/.../document/service/DocumentService.java:157-163` | S | HIGH | ✓ fixed in `fix/s-1-path-traversal-uploads` |
+| S-2 | Real admin JWTs in `cookies.txt` (gitignored but unprotected on disk) | `cookies.txt:5-6` | S | HIGH |
 | S-3 | `AiConfigController.getConfig` lacks `@PreAuthorize`; only `authenticated()` required → any USER can read AI config (incl. `hasOpenaiKey`) | `backend/.../ai/api/AiConfigController.java:32-35` | S | HIGH |
 | S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH |
 | S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH |

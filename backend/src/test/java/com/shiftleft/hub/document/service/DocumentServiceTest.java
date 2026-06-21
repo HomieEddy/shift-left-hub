@@ -370,4 +370,30 @@ class DocumentServiceTest {
         assertThrows(DocumentNotFoundException.class,
             () -> documentService.deleteDocument(DOCUMENT_ID));
     }
+
+    // ── uploadDocument: path traversal (S-1) ───────────────────
+
+    @Test
+    void uploadDocument_shouldRejectDotDotFilename() throws Exception {
+        // After Paths.get("..").getFileName() returns ".." and the
+        // [a-zA-Z0-9_.-] regex keeps dots, a bare ".." filename resolves
+        // one level above the document storage directory. The containment
+        // check in uploadDocument must reject it.
+        setUploadDir();
+        MultipartFile file = mock(MultipartFile.class);
+        when(file.getContentType()).thenReturn("text/markdown");
+        when(file.getSize()).thenReturn(1024L);
+        try { when(file.getBytes()).thenReturn("content".getBytes()); } catch (IOException e) {}
+        when(file.getOriginalFilename()).thenReturn("..");
+
+        when(documentRepository.findByWorkspaceIdAndContentHashAndStatus(
+            any(), anyString(), eq(DocumentStatus.READY)))
+            .thenReturn(Optional.empty());
+
+        mockDocumentSaveWithId();
+
+        assertThrows(DocumentProcessingException.class, () ->
+            documentService.uploadDocument(file, null));
+        verify(eventPublisher, never()).publishEvent(any(DocumentUploadedEvent.class));
+    }
 }
