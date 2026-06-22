@@ -193,10 +193,10 @@ public class SecurityConfig {
                                     new UsernamePasswordAuthenticationToken(
                                         principal, null,
                                         principal.getAuthorities()));
-                            log.info("JWT auth set: email={}, role={}",
-                                u.getEmail(), u.getRole().name());
+                            log.debug("JWT auth set: userId={}, role={}",
+                                u.getId(), u.getRole().name());
                             UUID workspaceId = jwtService.extractWorkspaceId(accessToken);
-                            log.info("JWT workspace_id extracted: {}", workspaceId);
+                            log.debug("JWT workspace_id extracted: {}", workspaceId);
                             if (workspaceId != null) {
                                 WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
                             }
@@ -226,7 +226,7 @@ public class SecurityConfig {
                     .orElse(null);
 
                 String bearerToken = extractBearerToken(request.getHeader("Authorization"));
-                log.info("JWT filter: cookies={}, cookieTokenPresent={}, bearerTokenPresent={}",
+                log.debug("JWT filter: cookies={}, cookieTokenPresent={}, bearerTokenPresent={}",
                     cookies != null ? cookies.length : 0, cookieToken != null, bearerToken != null);
 
                 return cookieToken != null ? cookieToken : bearerToken;
