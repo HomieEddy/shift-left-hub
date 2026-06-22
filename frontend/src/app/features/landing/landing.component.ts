@@ -56,7 +56,7 @@ export class LandingComponent implements OnInit {
 
   workspaceIcon = computed(() => {
     const icon = this.currentWorkspace()?.icon;
-    if (!icon) {
+    if (icon == null || icon === '') {
       return 'W';
     }
     return icon.length <= 2 ? icon : icon.charAt(0).toUpperCase();
