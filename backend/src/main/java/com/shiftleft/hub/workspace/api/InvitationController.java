@@ -1,5 +1,6 @@
 package com.shiftleft.hub.workspace.api;
 
+import com.shiftleft.hub.user.domain.UserNotFoundException;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceInvitationResponse;
 import com.shiftleft.hub.workspace.service.WorkspaceInvitationService;
@@ -34,7 +35,7 @@ public class InvitationController {
     public ResponseEntity<List<WorkspaceInvitationResponse>> listMyInvitations(
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException());
         var invitations = invitationService.listPendingForUser(user.getId());
         return ResponseEntity.ok(invitationService.toResponseList(invitations));
     }
@@ -51,7 +52,7 @@ public class InvitationController {
             @PathVariable UUID id,
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException());
         invitationService.acceptInvitation(id, user.getId());
         return ResponseEntity.ok().build();
     }
@@ -68,7 +69,7 @@ public class InvitationController {
             @PathVariable UUID id,
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException());
         invitationService.rejectInvitation(id, user.getId());
         return ResponseEntity.ok().build();
     }

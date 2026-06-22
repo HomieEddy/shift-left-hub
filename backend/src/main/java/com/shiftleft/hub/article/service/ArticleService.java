@@ -9,6 +9,7 @@ import com.shiftleft.hub.article.domain.ArticleNotFoundException;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
+import com.shiftleft.hub.common.util.SlugUtils;
 import com.shiftleft.hub.tag.domain.Tag;
 import com.shiftleft.hub.tag.domain.TagNotFoundException;
 import com.shiftleft.hub.tag.domain.TagRepository;
@@ -101,7 +102,7 @@ public class ArticleService {
 
         String slug = slugify(request.titleEn());
         if (articleRepository.findBySlug(slug).isPresent()) {
-            slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
+            slug = SlugUtils.withUniqueSuffix(slug);
         }
 
         Article article = Article.builder()
@@ -139,7 +140,7 @@ public class ArticleService {
         article.setTitleEn(request.titleEn());
         String newSlug = slugify(request.titleEn());
         if (!newSlug.equals(article.getSlug()) && articleRepository.findBySlug(newSlug).isPresent()) {
-            newSlug = newSlug + "-" + UUID.randomUUID().toString().substring(0, 8);
+            newSlug = SlugUtils.withUniqueSuffix(newSlug);
         }
         article.setSlug(newSlug);
         article.setContentEn(request.contentEn());
@@ -226,10 +227,6 @@ public class ArticleService {
     }
 
     private String slugify(String title) {
-        return title.toLowerCase()
-            .replaceAll("[^a-z0-9\\s-]", "")
-            .replaceAll("\\s+", "-")
-            .replaceAll("-+", "-")
-            .replaceAll("^-|-$", "");
+        return SlugUtils.slugify(title);
     }
 }

@@ -172,7 +172,7 @@ public class WorkspaceService {
             .findByIdWorkspaceIdAndIdUserId(workspaceId, userId)
             .orElseThrow(() -> new WorkspaceNotFoundException("User is not a member of this workspace"));
 
-        long adminCount = workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN");
+        long adminCount = countAdmins(workspaceId);
         if (adminCount <= 1 && "ADMIN".equals(member.getRole())) {
             throw new IllegalArgumentException("Cannot leave — must leave at least one admin");
         }
@@ -192,7 +192,7 @@ public class WorkspaceService {
             .findByIdWorkspaceIdAndIdUserId(workspaceId, userId)
             .orElseThrow(() -> new WorkspaceNotFoundException("Member not found"));
 
-        long adminCount = workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN");
+        long adminCount = countAdmins(workspaceId);
         if (adminCount <= 1 && "ADMIN".equals(member.getRole())) {
             throw new IllegalArgumentException("Cannot remove the only admin");
         }
@@ -214,7 +214,7 @@ public class WorkspaceService {
             .findByIdWorkspaceIdAndIdUserId(workspaceId, userId)
             .orElseThrow(() -> new WorkspaceNotFoundException("Member not found"));
 
-        long adminCount = workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN");
+        long adminCount = countAdmins(workspaceId);
         if (adminCount <= 1 && "ADMIN".equals(member.getRole()) && !"ADMIN".equals(newRole)) {
             throw new IllegalArgumentException("Cannot remove the only admin role");
         }
@@ -259,6 +259,10 @@ public class WorkspaceService {
      */
     public List<Workspace> findAllNonDeleted() {
         return workspaceRepository.findAllByDeletedAtIsNull();
+    }
+
+    private long countAdmins(UUID workspaceId) {
+        return workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN");
     }
 
     private String generateUniqueSlug(String name) {

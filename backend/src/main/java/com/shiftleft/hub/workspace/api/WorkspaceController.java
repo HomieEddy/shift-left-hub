@@ -1,6 +1,7 @@
 package com.shiftleft.hub.workspace.api;
 
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
+import com.shiftleft.hub.user.domain.UserNotFoundException;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceResponse;
 import com.shiftleft.hub.workspace.domain.Workspace;
@@ -37,7 +38,7 @@ public class WorkspaceController {
     public ResponseEntity<List<WorkspaceResponse>> listMyWorkspaces(
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException());
         List<Workspace> workspaces = workspaceService.findWorkspacesByUserId(user.getId());
         List<WorkspaceResponse> responses = workspaces.stream()
             .map(w -> new WorkspaceResponse(
@@ -59,7 +60,7 @@ public class WorkspaceController {
     public ResponseEntity<Map<String, String>> getCurrentRole(
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException());
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         String role = workspaceService.getUserRole(workspaceId, user.getId()).orElse("NONE");
         return ResponseEntity.ok(Map.of("role", role));
@@ -77,7 +78,7 @@ public class WorkspaceController {
             @PathVariable UUID id,
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException());
         workspaceService.leaveWorkspace(id, user.getId());
         return ResponseEntity.ok().build();
     }

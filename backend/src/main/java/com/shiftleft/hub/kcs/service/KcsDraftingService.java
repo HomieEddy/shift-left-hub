@@ -6,6 +6,7 @@ import com.shiftleft.hub.article.domain.Article;
 import com.shiftleft.hub.article.domain.ArticleRepository;
 import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
+import com.shiftleft.hub.common.util.SlugUtils;
 import com.shiftleft.hub.kcs.api.dto.KcsDraftResponse;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.kcs.domain.TicketResolvedEvent;
@@ -81,7 +82,7 @@ public class KcsDraftingService {
         // 4. Generate slug
         String slug = slugify(parsed.titleEn());
         if (articleRepository.findBySlug(slug).isPresent()) {
-            slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
+            slug = SlugUtils.withUniqueSuffix(slug);
         }
 
         // 5. Resolve suggested tags (find existing tags by name, or skip if none match)
@@ -306,11 +307,7 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     }
 
     private String slugify(String title) {
-        return title.toLowerCase()
-            .replaceAll("[^a-z0-9\\s-]", "")
-            .replaceAll("\\s+", "-")
-            .replaceAll("-+", "-")
-            .replaceAll("^-|-$", "");
+        return SlugUtils.slugify(title);
     }
 
     /** Resolves tag names to existing Tag entities — only matches exact name_en. */

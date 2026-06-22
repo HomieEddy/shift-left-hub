@@ -160,25 +160,22 @@ export class ChatComponent {
   }
 
   private setEscalationPayload(event: StreamEvent) {
-    const userMessages = this.messages().filter((m) => m.role === 'user');
-    const lastUserContent =
-      userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
-    this.escalationPayload.set({
-      issue: lastUserContent,
-      transcript: this.messages(),
-      sources: event.sources || [],
-    });
+    this.escalationPayload.set(this.buildEscalationPayload(event.sources || []));
   }
 
   private setEscalationPayloadOnError() {
+    this.escalationPayload.set(this.buildEscalationPayload([]));
+  }
+
+  private buildEscalationPayload(sources: { articleId: string; title: string; slug: string; score: number }[]) {
     const userMessages = this.messages().filter((m) => m.role === 'user');
     const lastUserContent =
       userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
-    this.escalationPayload.set({
+    return {
       issue: lastUserContent,
       transcript: this.messages(),
-      sources: [],
-    });
+      sources,
+    };
   }
 
   handleFeedback(yes: boolean) {

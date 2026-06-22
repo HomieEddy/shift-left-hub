@@ -145,7 +145,7 @@ public class AiConfigService {
 
             String response;
             endpointUrlValidator.requireSafe(endpointUrl);
-            if (isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank()) {
+            if (hasOpenAiKey(provider, apiKey)) {
                 log.info("Testing OpenAI connection: model={}, apiKey length={}, endpointUrl={}",
                     model, apiKey.length(), endpointUrl);
                 var clientBuilder = OpenAIOkHttpClient.builder()
@@ -339,6 +339,10 @@ public class AiConfigService {
 
     private boolean isOpenAiProvider(String provider) {
         return "OPENAI".equals(provider) || "OPENAI_COMPATIBLE".equals(provider);
+    }
+
+    private boolean hasOpenAiKey(String provider, String apiKey) {
+        return isOpenAiProvider(provider) && apiKey != null && !apiKey.isBlank();
     }
 
     private byte[] getSalt() {

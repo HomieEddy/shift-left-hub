@@ -6,6 +6,7 @@ import com.shiftleft.hub.article.domain.ArticleStatus;
 import com.shiftleft.hub.category.domain.Category;
 import com.shiftleft.hub.category.domain.CategoryRepository;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
+import com.shiftleft.hub.common.util.SlugUtils;
 import com.shiftleft.hub.document.domain.*;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
@@ -250,12 +251,12 @@ public class DocumentService {
         // Derive title and slug from filename (strip extension)
         String filename = document.getFilename();
         String title = filename != null ? filename.replaceFirst("\\.[^.]+$", "") : "Untitled";
-        String slug = title.toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("^-|-$", "");
+        String slug = SlugUtils.slugify(title);
         if (slug.isEmpty()) {
             slug = "untitled";
         }
         if (articleRepository.findBySlug(slug).isPresent()) {
-            slug = slug + "-" + UUID.randomUUID().toString().substring(0, 8);
+            slug = SlugUtils.withUniqueSuffix(slug);
         }
 
         // Look up author
