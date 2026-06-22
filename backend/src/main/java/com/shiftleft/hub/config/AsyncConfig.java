@@ -30,7 +30,7 @@ public class AsyncConfig {
     }
 
     /**
-     * Dedicated executor for async event listeners.
+     * Dedicated executor for KCS event listeners.
      * Core pool of 2 threads, max 4, with a small queue for burst handling.
      *
      * @return the configured task executor
@@ -43,6 +43,29 @@ public class AsyncConfig {
         executor.setQueueCapacity(10);
         executor.setThreadNamePrefix("kcs-async-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();
+        return executor;
+    }
+
+    /**
+     * Dedicated executor for the document ETL pipeline
+     * (DocumentEventListener). P-10: previously shared the
+     * kcsTaskExecutor, so a 4-document upload burst could starve
+     * KCS drafting (and vice-versa). The ETL holds a thread for
+     * parse + chunk + embed + save, so it gets its own pool sized
+     * for that workload.
+     *
+     * @return the configured task executor
+     */
+    @Bean(name = "documentEtlExecutor")
+    public Executor documentEtlExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(20);
+        executor.setThreadNamePrefix("doc-etl-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(60);
         executor.initialize();
         return executor;
     }

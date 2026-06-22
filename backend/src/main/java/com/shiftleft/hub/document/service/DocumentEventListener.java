@@ -31,7 +31,7 @@ public class DocumentEventListener {
      * @param event the document uploaded event containing document and workspace IDs
      */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
-    @Async("kcsTaskExecutor")
+    @Async("documentEtlExecutor")
     public void handleDocumentUploaded(DocumentUploadedEvent event) {
         log.info("ETL stage: PARSING document {}", event.documentId());
         try {
