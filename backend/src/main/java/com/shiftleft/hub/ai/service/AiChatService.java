@@ -318,10 +318,13 @@ public class AiChatService {
         String prompt = (workspaceSystemPrompt != null && !workspaceSystemPrompt.isBlank())
             ? workspaceSystemPrompt
             : DEFAULT_SYSTEM_PROMPT;
+        // The {workspace_name} placeholder is always resolved from the
+        // current workspace. The {domain} and {categories} placeholders
+        // remain in the template (replaced with empty strings) for
+        // backward compatibility with prompts authored before
+        // workspace-level domain/category fields were available.
         return prompt
             .replace("{workspace_name}", resolveWorkspaceName())
-            // TODO: Resolve {domain} and {categories} from workspace configuration
-            // when workspace domain/category context is available
             .replace("{domain}", "")
             .replace("{categories}", "");
     }

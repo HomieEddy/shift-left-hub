@@ -183,8 +183,10 @@ export class ChatComponent {
     if (yes) {
       this.showFollowUp.set(true);
     } else {
-      // TODO: When wiring up AI context in Phase 4, include the full conversation transcript
-      // as a system instruction rather than injecting a fabricated user message.
+      // The escalation payload already carries the full transcript and
+      // matched sources (see buildEscalationPayload above). Prefilling
+      // currentInput with the last user message is a UX nicety so the
+      // user sees context in the input field before submit.
       const userMessages = this.messages().filter((m) => m.role === 'user');
       const lastUserContent =
         userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';

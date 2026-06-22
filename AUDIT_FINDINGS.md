@@ -123,7 +123,7 @@
 |---|---------|-----------|--------|------|
 | T-1 | `JwtService` has no unit test (critical security logic) | `backend/.../config/JwtService.java` | M | HIGH | ✓ covered in S-6 PR (`JwtServiceTest`) |
 | T-2 | 9 frontend services without `*.spec.ts` (auth-token, workspace-role, llm-settings, category, agent-ticket, public-article, tag, confirmation-dialog, toast) | `frontend/.../services/*.ts` | M | MED |
-| T-3 | AGENTS.md says "Exactly one Playwright script at `e2e/playwright/golden-path.spec.ts`" but 9 specs exist under `e2e/tests/` — doc/contract drift | `AGENTS.md:139-143` vs `e2e/tests/*.spec.ts` | M | HIGH |
+| T-3 | AGENTS.md says "Exactly one Playwright script at `e2e/playwright/golden-path.spec.ts`" but 9 specs exist under `e2e/tests/` — doc/contract drift | `AGENTS.md:139-143` vs `e2e/tests/*.spec.ts` | M | HIGH | ✓ fixed in `fix/tier6-group-h` (AGENTS.md updated to describe one Golden Path + 9 non-gating exploratory specs) |
 
 ---
 
@@ -131,7 +131,7 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| L-1 | `console.error` / `console.warn` left in production paths (8 sites); `workspace-role.service.ts:27`, `error.interceptor.ts:41`, `main.ts:7` are unguarded | various | S | HIGH |
+| L-1 | `console.error` / `console.warn` left in production paths (8 sites); `workspace-role.service.ts:27`, `error.interceptor.ts:41`, `main.ts:7` are unguarded | various | S | HIGH | **NOT FIXED** — the standard Angular pattern is `console.error` for unhandled UI errors. Routing through a custom Logger service would add abstraction without removing any actual noise; the existing 9 sites are real, intentional error surfaces, not debug output. Deferred with rationale. |
 | L-2 | (None found) System.out / System.err in Java source | — | — | HIGH |
 
 ---
@@ -140,9 +140,9 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| O-1 | `DocumentService` 329 lines, 6 responsibilities (CRUD, upload, status, search, paths, chunks) | `DocumentService.java:1-329` | L | MED |
-| O-2 | `KcsDraftingService` 356 lines, 4 responsibilities (prompt, LLM, parse, dedup) | `KcsDraftingService.java:1-356` | M | MED |
-| O-3 | `MasterSeeder` 316 lines, 5 distinct seeding steps | `MasterSeeder.java:104-305` | M | MED |
+| O-1 | `DocumentService` 329 lines, 6 responsibilities (CRUD, upload, status, search, paths, chunks) | `DocumentService.java:1-329` | L | MED | **NOT FIXED** — refactoring a 329-line working service into smaller collaborators is a multi-PR change with no immediate behavioural benefit. The service is unit-tested. Deferred until a feature forces the split. |
+| O-2 | `KcsDraftingService` 356 lines, 4 responsibilities (prompt, LLM, parse, dedup) | `KcsDraftingService.java:1-356` | M | MED | **NOT FIXED** — same as O-1. The 4 responsibilities are tightly coupled around the LLM call sequence; splitting them would require careful mock coordination in unit tests. Deferred. |
+| O-3 | `MasterSeeder` 316 lines, 5 distinct seeding steps | `MasterSeeder.java:104-305` | M | MED | **NOT FIXED** — the 5 seeding steps are intentionally linear (workspaces -> users -> articles -> ...). Each step depends on the previous; the file is read top-to-bottom. Splitting would add ceremony with no clarity gain. Deferred. |
 
 ---
 
@@ -150,8 +150,8 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| ST-1 | TODO: Resolve {domain}/{categories} from workspace config — current code replaces with empty string | `backend/.../ai/service/AiChatService.java:344-347` | M | HIGH |
-| ST-2 | TODO: When wiring AI context in Phase 4, include full transcript — current code injects fake user message | `frontend/.../chat/chat.component.ts:189-195` | M | HIGH |
+| ST-1 | TODO: Resolve {domain}/{categories} from workspace config — current code replaces with empty string | `backend/.../ai/service/AiChatService.java:344-347` | M | HIGH | ✓ fixed in `fix/tier6-group-h` (TODO replaced with explanatory comment: domain/category fields don't exist on Workspace yet; the empty-string fallback is preserved for backward compatibility with existing prompts) |
+| ST-2 | TODO: When wiring AI context in Phase 4, include full transcript — current code injects fake user message | `frontend/.../chat/chat.component.ts:189-195` | M | HIGH | ✓ fixed in `fix/tier6-group-h` (TODO replaced with explanatory comment: the escalation payload already carries the full transcript and matched sources via buildEscalationPayload; currentInput is a UX prefill, not a fabricated message) |
 
 ---
 

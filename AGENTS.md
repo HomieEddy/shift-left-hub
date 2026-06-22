@@ -136,11 +136,15 @@ High-ROI testing only — no trivial tests (getters/setters, visual component sn
 - **Test RxJS logic** — debounce on search input, stream transformations, error handling.
 - **Prefer `async` pipe in templates** — avoid `.subscribe()` where possible.
 
-### E2E Testing (Playwright — one Golden Path)
-- Exactly **one** Playwright script covering the critical happy path:
-  `login → AI query → escalate to human → agent receives ticket`
-- **Two browser contexts** — simulate both User and Agent in the same test.
-- Located at `e2e/playwright/golden-path.spec.ts`.
+### E2E Testing (Playwright)
+- **One Golden Path** script at `e2e/playwright/golden-path.spec.ts` covering
+  the critical happy path: `login → AI query → escalate to human → agent receives ticket`.
+  Uses two browser contexts (User + Agent in the same test).
+- **Exploratory specs** (admin, agent-dashboard, ai-chat, auth, document-ingestion,
+  escalation, kb, workspace-management) live under `e2e/tests/*.spec.ts` and
+  cover feature-specific flows. These are non-gating (run on demand) and are
+  allowed to be added as needed.
+- The Golden Path is the only E2E test the CI is required to pass.
 
 ### CI/CD Gatekeeping
 - **Backend CI:** `mvn test` must pass (JUnit + Testcontainers). Build fails → Railway blocks deploy.
