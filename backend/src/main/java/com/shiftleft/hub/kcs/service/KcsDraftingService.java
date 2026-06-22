@@ -220,7 +220,12 @@ suggested_tags: <Comma-separated list of suggested tag names in English>
     /** Calls the LLM using the same provider/config as the chat service. (D-08, D-09) */
     private String callLlm(String prompt) {
         AiConfig config = aiConfigService.getConfigEntity();
-        ChatClient chatClient = aiConfigService.buildChatClient(config);
+        ChatClient chatClient = aiConfigService.buildChatClient(
+            config.getLlmProvider(),
+            config.getOllamaEndpointUrl(),
+            config.getOpenaiApiKey(),
+            config.getChatModelName()
+        );
 
         return chatClient.prompt()
             .user(prompt)

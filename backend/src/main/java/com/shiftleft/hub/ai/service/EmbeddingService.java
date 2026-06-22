@@ -51,7 +51,7 @@ public class EmbeddingService {
      *
      * @param article the article to embed and store
      */
-    public void storeEmbedding(Article article) {
+    void storeEmbedding(Article article) {
         vectorStore.add(List.of(toDocument(article)));
     }
 

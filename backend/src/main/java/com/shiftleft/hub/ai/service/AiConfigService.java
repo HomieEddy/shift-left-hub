@@ -245,21 +245,6 @@ public class AiConfigService {
     }
 
     /**
-     * Builds a ChatClient from an AiConfig entity.
-     * Kept for backward compatibility.
-     *
-     * @param config the AI configuration
-     * @return a configured ChatClient
-     */
-    public ChatClient buildChatClient(AiConfig config) {
-        String provider = config.getLlmProvider();
-        String endpointUrl = config.getOllamaEndpointUrl();
-        String apiKey = config.getOpenaiApiKey();
-        String modelName = config.getChatModelName();
-        return buildChatClient(provider, endpointUrl, apiKey, modelName);
-    }
-
-    /**
      * Builds an EmbeddingModel from environment-variable-based EmbeddingProperties.
      * Does not read from the database — API keys are kept in env vars only.
      *
