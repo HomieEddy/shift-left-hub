@@ -24,7 +24,7 @@ import java.util.List;
 public class UserSeeder {
 
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final String SEED_PASSWORD_ALPHABET =
+    private static final String SEED_CHAR_POOL =
         "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
 
     private static final List<UserSeed> NON_ADMIN_USERS = List.of(
@@ -98,7 +98,7 @@ public class UserSeeder {
     public static String generateSeedPassword() {
         StringBuilder sb = new StringBuilder(24);
         for (int i = 0; i < 24; i++) {
-            sb.append(SEED_PASSWORD_ALPHABET.charAt(RANDOM.nextInt(SEED_PASSWORD_ALPHABET.length())));
+            sb.append(SEED_CHAR_POOL.charAt(RANDOM.nextInt(SEED_CHAR_POOL.length())));
         }
         return sb.toString();
     }
