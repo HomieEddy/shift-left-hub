@@ -125,16 +125,14 @@ public class KcsDraftingService {
         String searchText = extractKeywords(
             Objects.toString(event.issue(), "") + " " + Objects.toString(event.resolutionNotes(), ""));
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
-        var ftsResults = articleRepository.searchByText(searchText, workspaceId,
+        var ftsResults = articleRepository.searchIdsByText(searchText, workspaceId,
             org.springframework.data.domain.PageRequest.of(0, 5));
 
         Set<UUID> duplicates = new HashSet<>();
         if (!ftsResults.isEmpty()) {
             // Use FTS result IDs as preliminary duplicates (IN-05)
-            for (Object[] row : ftsResults.getContent()) {
-                if (row[0] instanceof UUID id) {
-                    duplicates.add(id);
-                }
+            for (UUID id : ftsResults.getContent()) {
+                duplicates.add(id);
             }
         }
 

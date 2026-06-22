@@ -55,7 +55,7 @@ public class CategoryService {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
         Category category = categoryRepository.findByWorkspaceIdAndId(workspaceId, id)
             .orElseThrow(() -> new CategoryNotFoundException(id));
-        return CategoryResponse.from(category, category.getChildren().size());
+        return CategoryResponse.from(category, categoryRepository.countByParentId(id));
     }
 
     /**
@@ -114,7 +114,7 @@ public class CategoryService {
         }
 
         Category saved = categoryRepository.save(category);
-        return CategoryResponse.from(saved, saved.getChildren().size());
+        return CategoryResponse.from(saved, categoryRepository.countByParentId(saved.getId()));
     }
 
     /**
@@ -177,7 +177,7 @@ public class CategoryService {
         categoryRepository.delete(source);
         log.info("Category {} merged into {} in workspace {}", sourceId, targetId, workspaceId);
 
-        return CategoryResponse.from(target, target.getChildren().size());
+        return CategoryResponse.from(target, categoryRepository.countByParentId(target.getId()));
     }
 
     private long countContentByCategory(UUID categoryId) {

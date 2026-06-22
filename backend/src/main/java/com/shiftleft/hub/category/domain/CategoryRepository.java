@@ -18,6 +18,8 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     List<Category> findByParentId(UUID parentId);
 
+    long countByParentId(UUID parentId);
+
     Optional<Category> findByWorkspaceIdAndId(UUID workspaceId, UUID id);
 
     boolean existsByParentId(UUID parentId);
