@@ -204,12 +204,14 @@ describe('AgentTicketListComponent', () => {
   it('should handle claim error gracefully', () => {
     const errorSubject = new Subject<unknown>();
     agentTicketService.claimTicket.mockReturnValue(errorSubject.asObservable());
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
     component.openClaimConfirm('1');
     component.confirmClaim();
     errorSubject.error(new Error('Failed'));
 
     expect(component.claimError()).toBe('Failed to claim ticket. Please try again.');
+    consoleErrorSpy.mockRestore();
   });
 
   it('should handle ticket load error gracefully', () => {
