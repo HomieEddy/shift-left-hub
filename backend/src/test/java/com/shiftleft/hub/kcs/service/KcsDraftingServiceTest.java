@@ -48,9 +48,12 @@ class KcsDraftingServiceTest {
     @Mock private TagRepository tagRepository;
     @Mock private TicketRepository ticketRepository;
     @Mock private VectorStore vectorStore;
-    @Mock private UserRepository userRepository;
 
-    @InjectMocks private KcsDraftingService kcsDraftingService;
+    private KcsPromptBuilder promptBuilder;
+    private KcsResponseParser responseParser;
+    private KcsDuplicateDetector duplicateDetector;
+    private KcsSimilaritySearch similaritySearch;
+    private KcsDraftingService kcsDraftingService;
 
     private static final UUID WORKSPACE_ID = UUID.randomUUID();
     private final UUID ticketId = UUID.randomUUID();
@@ -58,6 +61,14 @@ class KcsDraftingServiceTest {
     @BeforeEach
     void setUp() {
         WorkspaceContextHolder.setCurrentWorkspaceId(WORKSPACE_ID);
+        promptBuilder = new KcsPromptBuilder();
+        responseParser = new KcsResponseParser();
+        duplicateDetector = new KcsDuplicateDetector(articleRepository, vectorStore);
+        similaritySearch = new KcsSimilaritySearch(articleRepository);
+        kcsDraftingService = new KcsDraftingService(
+            articleRepository, tagRepository, ticketRepository,
+            promptBuilder, responseParser, duplicateDetector, similaritySearch,
+            aiConfigService);
     }
 
     @AfterEach
