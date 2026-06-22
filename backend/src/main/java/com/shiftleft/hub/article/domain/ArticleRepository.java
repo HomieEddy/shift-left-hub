@@ -37,13 +37,20 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     Page<Article> findByStatus(ArticleStatus status, Pageable pageable);
 
     /**
-     * Finds published articles scoped to a specific workspace.
+     * Page of articles by status with the {@code tags} collection
+     * eagerly loaded. Used by the admin listing endpoint, which maps
+     * every article to a DTO that reads the tags; a plain
+     * {@code findByStatus} would fire one SELECT per row for the
+     * lazy {@code tags} collection. {@code author} and
+     * {@code lastEditor} are already eager and need no graph entry.
      *
-     * @param status       the article status to filter by
-     * @param workspaceId  the workspace UUID to scope results to
-     * @param pageable     the pagination information
-     * @return a page of articles matching the status and workspace
+     * @param status the article status to filter by
+     * @param pageable the page request
+     * @return the page of articles with tags initialized
      */
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"tags"})
+    Page<Article> findWithAssociationsByStatus(ArticleStatus status, Pageable pageable);
+
     Page<Article> findByStatusAndWorkspaceId(ArticleStatus status, UUID workspaceId, Pageable pageable);
 
     /**
@@ -387,4 +394,16 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
      */
     @Query("SELECT COUNT(a) FROM Article a JOIN a.tags t WHERE t.id = :tagId")
     long countByTagId(@Param("tagId") UUID tagId);
+
+    /**
+     * Returns the number of articles per tag id, for the given set of
+     * tag ids, in a single query. Used by the tag listing endpoint to
+     * avoid firing one COUNT query per tag.
+     *
+     * @param tagIds the tag ids to count
+     * @return a list of [tagId, articleCount] tuples
+     */
+    @Query("SELECT t.id, COUNT(a) FROM Article a JOIN a.tags t "
+        + "WHERE t.id IN :tagIds GROUP BY t.id")
+    List<Object[]> countByTagIds(@Param("tagIds") java.util.Collection<UUID> tagIds);
 }

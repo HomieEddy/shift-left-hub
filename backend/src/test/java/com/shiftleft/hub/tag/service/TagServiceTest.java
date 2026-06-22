@@ -68,7 +68,7 @@ class TagServiceTest {
     void getAllTags_shouldReturnListWithArticleCounts() {
         Tag tag = createTag();
         when(tagRepository.findAll()).thenReturn(List.of(tag));
-        when(articleRepository.countByTagId(tagId)).thenReturn(0L);
+        when(articleRepository.countByTagIds(List.of(tagId))).thenReturn(List.of());
 
         List<TagResponse> responses = tagService.getAllTags();
 

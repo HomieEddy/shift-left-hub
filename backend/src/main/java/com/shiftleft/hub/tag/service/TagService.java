@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +32,10 @@ public class TagService {
      * @return the list of all tag responses
      */
     public List<TagResponse> getAllTags() {
-        return tagRepository.findAll().stream()
-            .map(tag -> TagResponse.from(tag, getArticleCount(tag)))
+        List<Tag> tags = tagRepository.findAll();
+        Map<UUID, Long> articleCounts = countArticlesPerTag(tags);
+        return tags.stream()
+            .map(tag -> TagResponse.from(tag, articleCounts.getOrDefault(tag.getId(), 0L)))
             .toList();
     }
 
@@ -109,5 +113,16 @@ public class TagService {
 
     private long getArticleCount(Tag tag) {
         return articleRepository.countByTagId(tag.getId());
+    }
+
+    private Map<UUID, Long> countArticlesPerTag(List<Tag> tags) {
+        List<UUID> ids = tags.stream().map(Tag::getId).toList();
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return articleRepository.countByTagIds(ids).stream()
+            .collect(Collectors.toMap(
+                row -> (UUID) row[0],
+                row -> (Long) row[1]));
     }
 }

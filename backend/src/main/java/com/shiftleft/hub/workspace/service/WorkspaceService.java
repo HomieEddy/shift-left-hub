@@ -276,12 +276,20 @@ public class WorkspaceService {
             base = base.substring(0, 120);
         }
 
-        String slug = base;
+        final String finalBase = base;
+        if (!workspaceRepository.existsBySlug(finalBase)) {
+            return finalBase;
+        }
+        List<String> taken = workspaceRepository.findSlugStringsByPrefix(finalBase + "-");
+        java.util.Set<Integer> usedSuffixes = taken.stream()
+            .map(s -> s.substring(finalBase.length() + 1))
+            .filter(s -> s.matches("\\d+"))
+            .map(Integer::parseInt)
+            .collect(java.util.stream.Collectors.toSet());
         int suffix = 2;
-        while (workspaceRepository.existsBySlug(slug)) {
-            slug = base + "-" + suffix;
+        while (usedSuffixes.contains(suffix)) {
             suffix++;
         }
-        return slug;
+        return finalBase + "-" + suffix;
     }
 }
