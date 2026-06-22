@@ -47,7 +47,7 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| I-1..14 | Hardcoded English error/placeholder/aria-label strings (14 sites across components) | `chat.component.ts:152`; `article-search.component.ts:128`; `article-list.component.ts:56`; `workspace-list.component.ts:59,84` (placeholders :30, :43); `taxonomy-tree.component.ts:56`; `taxonomy-bulk.component.ts:52,56`; `tag-manager.component.ts:96`; `document-list.component.ts:164,189,217`; `agent-ticket-detail.component.ts:110,137,161,195`; `app.html:454`; `workspace-switcher.component.html:51`; `skeleton.component.html:7`; `skeleton-table.component.html:4`; `skeleton-card.component.html:4`; `search-input.component.html:40`; `modal.component.html:12,23` | S each | HIGH | Groups 2 + 3 + 4 (workspace-list, taxonomy, tag-manager, document-list) fixed in their respective fix/i18n-group-N branches |
+| I-1..14 | Hardcoded English error/placeholder/aria-label strings (14 sites across components) | `chat.component.ts:152`; `article-search.component.ts:128`; `article-list.component.ts:56`; `workspace-list.component.ts:59,84` (placeholders :30, :43); `taxonomy-tree.component.ts:56`; `taxonomy-bulk.component.ts:52,56`; `tag-manager.component.ts:96`; `document-list.component.ts:164,189,217`; `agent-ticket-detail.component.ts:110,137,161,195`; `app.html:454`; `workspace-switcher.component.html:51`; `skeleton.component.html:7`; `skeleton-table.component.html:4`; `skeleton-card.component.html:4`; `search-input.component.html:40`; `modal.component.html:12,23` | S each | HIGH | Groups 2..5 (workspace-list, taxonomy, tag-manager, document-list, agent-ticket-detail) fixed in their respective fix/i18n-group-N branches |
 
 ---
 
