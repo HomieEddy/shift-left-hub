@@ -56,7 +56,7 @@ export class WorkspaceListComponent implements OnInit {
           this.isLoading.set(false);
         },
         error: () => {
-          this.errorMessage.set('Failed to load workspaces');
+          this.errorMessage.set(this.translationService.translate('admin.workspaces.error.load'));
           this.isLoading.set(false);
         },
       });
@@ -81,7 +81,7 @@ export class WorkspaceListComponent implements OnInit {
           this.loadWorkspaces();
         },
         error: () => {
-          this.createError.set('Failed to create workspace');
+          this.createError.set(this.translationService.translate('admin.workspaces.error.create'));
           this.isCreating.set(false);
         },
       });

@@ -78,7 +78,7 @@ describe('TaxonomyBulkComponent', () => {
 
     expect(http.post).toHaveBeenCalledWith('/api/admin/articles/bulk-category', { categoryId: 'c1' });
     expect(component['isApplying']()).toBe(false);
-    expect(component['applyMessage']()).toBe('Categories updated');
+    expect(component['applyMessage']()).toBe('admin.taxonomy.bulk.updated');
   });
 
   it('should perform batch apply to documents tab', () => {
@@ -106,6 +106,6 @@ describe('TaxonomyBulkComponent', () => {
     errorSubject.error(new Error('API error'));
 
     expect(component['isApplying']()).toBe(false);
-    expect(component['applyMessage']()).toBe('Failed to update categories');
+    expect(component['applyMessage']()).toBe('admin.taxonomy.bulk.error.update');
   });
 });
