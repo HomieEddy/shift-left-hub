@@ -82,9 +82,9 @@ class WorkspaceServiceTest {
     @Test
     void createWorkspace_shouldHandleSlugCollisions() {
         when(workspaceRepository.existsBySlug("test")).thenReturn(true);
-        when(workspaceRepository.existsBySlug("test-2")).thenReturn(false);
+        when(workspaceRepository.findSlugStringsByPrefix("test-")).thenReturn(List.of("test-2"));
         when(workspaceRepository.save(any(Workspace.class))).thenReturn(
-            Workspace.builder().id(workspaceId).name("test").slug("test-2")
+            Workspace.builder().id(workspaceId).name("test").slug("test-3")
                 .createdBy(userId).createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now())
                 .build());
         when(workspaceMemberRepository.save(any(WorkspaceMember.class)))
@@ -92,7 +92,7 @@ class WorkspaceServiceTest {
 
         Workspace result = workspaceService.createWorkspace("test", null, null, userId);
 
-        assertEquals("test-2", result.getSlug());
+        assertEquals("test-3", result.getSlug());
     }
 
     // ── findAll ────────────────────────────────────────────────
@@ -313,7 +313,8 @@ class WorkspaceServiceTest {
     void createWorkspace_shouldThrowWhenNameAlreadyExists() {
         // Slug collision is handled by appending a suffix; no exception thrown
         when(workspaceRepository.existsBySlug("test")).thenReturn(true);
-        when(workspaceRepository.existsBySlug("test-2")).thenReturn(true);
+        when(workspaceRepository.findSlugStringsByPrefix("test-"))
+            .thenReturn(List.of("test-2", "test-3"));
         when(workspaceRepository.save(any(Workspace.class))).thenReturn(createWorkspace());
         when(workspaceMemberRepository.save(any(WorkspaceMember.class)))
             .thenReturn(WorkspaceMember.builder().build());

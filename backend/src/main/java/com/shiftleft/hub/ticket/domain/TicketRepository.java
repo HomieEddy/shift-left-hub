@@ -1,6 +1,7 @@
 package com.shiftleft.hub.ticket.domain;
 
 import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,18 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
     List<Ticket> findByUserIdAndStatusOrderByCreatedAtDesc(UUID userId, TicketStatus status);
 
     long countByStatus(TicketStatus status);
+
+    /**
+     * Finds all tickets with the assignedTo and resolvedBy associations
+     * eagerly loaded. Used by the agent listing endpoint, which maps
+     * every ticket to a DTO that reads both user references; a plain
+     * {@code findAll()} would fire one SELECT per row for those proxies.
+     *
+     * @return all tickets with their user references initialized
+     */
+    @Override
+    @EntityGraph(attributePaths = {"user", "assignedTo", "resolvedBy"})
+    List<Ticket> findAll();
 
     /**
      * Finds a ticket by ID with a pessimistic write lock.

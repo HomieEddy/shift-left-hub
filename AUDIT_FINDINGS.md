@@ -91,17 +91,17 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| P-1 | `AgentTicketService.listTickets` `findAll()` + filter in Java + lazy `getUser()` per row | `AgentTicketService.java:58-67` | M | HIGH |
-| P-2 | `CategoryService.getAllCategories` N+1 on `cat.getChildren().size()` | `CategoryService.java:39-41` | S | HIGH |
-| P-3 | `CategoryService.getCategory`/`updateCategory`/`mergeCategories` same N+1 | `CategoryService.java:54,113,176` | S | HIGH |
-| P-4 | `TagService.getAllTags` N+1 on `getArticleCount(tag)` per tag | `TagService.java:32-35` | S | HIGH |
-| P-5 | `ArticleResponse.from` triggers `getTags()` + `getAuthor()` on every page row | `ArticleResponse.java:42-64` | M | MED |
-| P-6 | `KcsDraftingService.checkDuplicates` consumes only `row[0]` but query returns 9 cols incl. `ts_headline(...)` | `KcsDraftingService.java:127-138` | S | MED |
+| P-1 | `AgentTicketService.listTickets` `findAll()` + filter in Java + lazy `getUser()` per row | `AgentTicketService.java:58-67` | M | HIGH | ✓ fixed in `fix/tier6-group-f` (TicketRepository.findAll override with @EntityGraph for user/assignedTo/resolvedBy) |
+| P-2 | `CategoryService.getAllCategories` N+1 on `cat.getChildren().size()` | `CategoryService.java:39-41` | S | HIGH | ✓ fixed in `fix/tier6-group-f` (CategoryRepository.countChildrenByParentIds bulk query) |
+| P-3 | `CategoryService.getCategory`/`updateCategory`/`mergeCategories` same N+1 | `CategoryService.java:54,113,176` | S | HIGH | **NOT FIXED in group-f** — same pattern as P-2 but single-id (count is at most 1). The per-row `getChildren().size()` on a single category is one extra query, not N+1. Lower-priority; can be a single follow-up if it shows up in profiling. |
+| P-4 | `TagService.getAllTags` N+1 on `getArticleCount(tag)` per tag | `TagService.java:32-35` | S | HIGH | ✓ fixed in `fix/tier6-group-f` (ArticleRepository.countByTagIds bulk query) |
+| P-5 | `ArticleResponse.from` triggers `getTags()` + `getAuthor()` on every page row | `ArticleResponse.java:42-64` | M | MED | ✓ fixed in `fix/tier6-group-f` (ArticleRepository.findWithAssociationsByStatus with @EntityGraph for tags) |
+| P-6 | `KcsDraftingService.checkDuplicates` consumes only `row[0]` but query returns 9 cols incl. `ts_headline(...)` | `KcsDraftingService.java:127-138` | S | MED | **NOT FIXED in group-f** — needs a new repo method that returns a stripped projection. Will be a separate small PR. |
 | P-7 | `EmbeddingService.reEmbedAll` synchronous vector writes on @Async thread | `EmbeddingService.java:96-120` | M | HIGH |
 | P-8 | `AiChatService.processChat` runs 4 hybrid-search queries sequentially before streaming | `AiChatService.java:59-80` | M | MED |
 | P-9 | `KcsEventListener` holds DB connection during `Thread.sleep(backoff)` (up to 7s) | `KcsEventListener.java:91-120` | M | MED |
 | P-10 | `DocumentEventListener.handleDocumentUploaded` entire ETL pipeline on single `kcsTaskExecutor` thread | `DocumentEventListener.java:35-86` | M | MED |
-| P-11 | `WorkspaceService.generateUniqueSlug` O(N) roundtrips via `while (existsBySlug)` | `WorkspaceService.java:275-280` | S | LOW |
+| P-11 | `WorkspaceService.generateUniqueSlug` O(N) roundtrips via `while (existsBySlug)` | `WorkspaceService.java:275-280` | S | LOW | ✓ fixed in `fix/tier6-group-f` (single `findSlugStringsByPrefix` query that returns all conflicting slugs at once; the loop now runs in memory) |
 
 ---
 

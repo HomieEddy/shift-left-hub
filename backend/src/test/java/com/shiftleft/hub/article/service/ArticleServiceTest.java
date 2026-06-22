@@ -133,7 +133,7 @@ class ArticleServiceTest {
     void getArticlesByStatus_shouldFilter() {
         Article draft = createArticle(ArticleStatus.DRAFT);
         Page<Article> page = new PageImpl<>(List.of(draft));
-        when(articleRepository.findByStatus(eq(ArticleStatus.DRAFT), any(Pageable.class)))
+        when(articleRepository.findWithAssociationsByStatus(eq(ArticleStatus.DRAFT), any(Pageable.class)))
             .thenReturn(page);
 
         Page<ArticleResponse> result = articleService.getArticlesByStatus(ArticleStatus.DRAFT, 0, 10);

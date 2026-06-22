@@ -78,7 +78,7 @@ public class ArticleService {
      * @return a page of article responses
      */
     public Page<ArticleResponse> getArticlesByStatus(ArticleStatus status, int page, int size) {
-        return articleRepository.findByStatus(status,
+        return articleRepository.findWithAssociationsByStatus(status,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")))
             .map(ArticleResponse::from);
     }

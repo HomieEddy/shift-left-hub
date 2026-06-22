@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Service for managing workspace-scoped category taxonomy.
@@ -36,8 +38,10 @@ public class CategoryService {
      */
     public List<CategoryResponse> getAllCategories() {
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
-        return categoryRepository.findByWorkspaceIdOrderByNameEnAsc(workspaceId).stream()
-            .map(cat -> CategoryResponse.from(cat, cat.getChildren().size()))
+        List<Category> categories = categoryRepository.findByWorkspaceIdOrderByNameEnAsc(workspaceId);
+        Map<UUID, Long> childCounts = countChildren(categories);
+        return categories.stream()
+            .map(cat -> CategoryResponse.from(cat, childCounts.getOrDefault(cat.getId(), 0L)))
             .toList();
     }
 
@@ -184,5 +188,16 @@ public class CategoryService {
     private void reassignContent(UUID sourceId, Category target) {
         articleRepository.reassignCategory(sourceId, target.getId());
         documentRepository.reassignCategory(sourceId, target.getId());
+    }
+
+    private Map<UUID, Long> countChildren(List<Category> categories) {
+        List<UUID> ids = categories.stream().map(Category::getId).toList();
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return categoryRepository.countChildrenByParentIds(ids).stream()
+            .collect(Collectors.toMap(
+                row -> (UUID) row[0],
+                row -> (Long) row[1]));
     }
 }
