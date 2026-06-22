@@ -111,22 +111,9 @@
 			<artifactId>caffeine</artifactId>
 		</dependency>
 
-		<!-- Spring Modulith (exclude APT — incompatible with Boot 4.x JsonWriter API) -->
-		<dependency>
-			<groupId>org.springframework.modulith</groupId>
-			<artifactId>spring-modulith-starter-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.modulith</groupId>
-					<artifactId>spring-modulith-apt</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.modulith</groupId>
-			<artifactId>spring-modulith-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+		<!-- Spring Modulith intentionally not included: the modular-monolith
+		     architecture is implemented via Spring ApplicationEventPublisher,
+		     not Modulith annotations. DEP-1: 0 Java imports of modulith.* -->
 
 		<!-- Spring AI -->
 		<dependency>
@@ -192,16 +179,9 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.springframework.modulith</groupId>
-				<artifactId>spring-modulith-bom</artifactId>
-				<version>1.3.5</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.ai</groupId>
-				<artifactId>spring-ai-bom</artifactId>
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-bom</artifactId>
 				<version>2.0.0-M8</version>
 				<type>pom</type>
 				<scope>import</scope>
