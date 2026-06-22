@@ -153,7 +153,7 @@ class KcsDraftingServiceTest {
 
         when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.empty());
         when(aiConfigService.getConfigEntity()).thenReturn(aiConfig);
-        when(aiConfigService.buildChatClient(aiConfig)).thenReturn(chatClient);
+        when(aiConfigService.buildChatClient(aiConfig.getLlmProvider(), aiConfig.getOllamaEndpointUrl(), aiConfig.getOpenaiApiKey(), aiConfig.getChatModelName())).thenReturn(chatClient);
         when(articleRepository.findBySlug("vpn-connection-guide")).thenReturn(Optional.empty());
         Tag networkTag = Tag.builder().id(UUID.randomUUID()).nameEn("network").nameFr("réseau").color("#3498db").build();
         when(tagRepository.findByNameEnIn(anyList())).thenReturn(List.of(networkTag));
@@ -213,7 +213,7 @@ class KcsDraftingServiceTest {
 
         when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.empty());
         when(aiConfigService.getConfigEntity()).thenReturn(aiConfig);
-        when(aiConfigService.buildChatClient(aiConfig)).thenReturn(chatClient);
+        when(aiConfigService.buildChatClient(aiConfig.getLlmProvider(), aiConfig.getOllamaEndpointUrl(), aiConfig.getOpenaiApiKey(), aiConfig.getChatModelName())).thenReturn(chatClient);
         // slug from event.issue() = "user-cannot-connect-to-vpn"
         when(articleRepository.findBySlug("user-cannot-connect-to-vpn")).thenReturn(Optional.empty());
         // suggestedTags will be empty from blank LLM response — resolveSuggestedTags returns early, no tagRepository call
@@ -265,7 +265,7 @@ class KcsDraftingServiceTest {
 
         when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.empty());
         when(aiConfigService.getConfigEntity()).thenReturn(aiConfig);
-        when(aiConfigService.buildChatClient(aiConfig)).thenReturn(chatClient);
+        when(aiConfigService.buildChatClient(aiConfig.getLlmProvider(), aiConfig.getOllamaEndpointUrl(), aiConfig.getOpenaiApiKey(), aiConfig.getChatModelName())).thenReturn(chatClient);
         // First slug lookup returns existing article → collision
         Article existingArticle = createArticle();
         when(articleRepository.findBySlug("vpn-connection-guide")).thenReturn(Optional.of(existingArticle));
@@ -386,7 +386,7 @@ class KcsDraftingServiceTest {
         when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.empty());
         when(aiConfigService.getConfigEntity()).thenReturn(aiConfig);
         ChatClient chatClient = mockChatClient("");
-        when(aiConfigService.buildChatClient(aiConfig)).thenReturn(chatClient);
+        when(aiConfigService.buildChatClient(aiConfig.getLlmProvider(), aiConfig.getOllamaEndpointUrl(), aiConfig.getOpenaiApiKey(), aiConfig.getChatModelName())).thenReturn(chatClient);
         when(articleRepository.findBySlug("user-cannot-connect-to-vpn")).thenReturn(Optional.empty());
         when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> {
             Article a = invocation.getArgument(0);
@@ -433,7 +433,7 @@ class KcsDraftingServiceTest {
 
         when(articleRepository.findBySourceTicketId(ticketId)).thenReturn(Optional.empty());
         when(aiConfigService.getConfigEntity()).thenReturn(aiConfig);
-        when(aiConfigService.buildChatClient(aiConfig)).thenReturn(chatClient);
+        when(aiConfigService.buildChatClient(aiConfig.getLlmProvider(), aiConfig.getOllamaEndpointUrl(), aiConfig.getOpenaiApiKey(), aiConfig.getChatModelName())).thenReturn(chatClient);
         when(articleRepository.findBySlug("vpn-connection-guide")).thenReturn(Optional.empty());
         when(tagRepository.findByNameEnIn(anyList())).thenReturn(List.of());
         when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> {

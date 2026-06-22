@@ -67,7 +67,10 @@ class WorkspaceChatModelRegistryTest {
         when(workspaceLlmConfigRepository.findByWorkspaceId(WORKSPACE_ID)).thenReturn(Optional.empty());
         var globalAiConfig = new com.shiftleft.hub.ai.domain.AiConfig();
         when(aiConfigService.getConfigEntity()).thenReturn(globalAiConfig);
-        when(aiConfigService.buildChatClient(globalAiConfig)).thenReturn(mockChatClient);
+        when(aiConfigService.buildChatClient(
+            globalAiConfig.getLlmProvider(), globalAiConfig.getOllamaEndpointUrl(),
+            globalAiConfig.getOpenaiApiKey(), globalAiConfig.getChatModelName()))
+            .thenReturn(mockChatClient);
 
         ChatClient client = registry.getChatClient(WORKSPACE_ID);
 
@@ -116,15 +119,23 @@ class WorkspaceChatModelRegistryTest {
         when(workspaceLlmConfigRepository.findByWorkspaceId(OTHER_WORKSPACE_ID)).thenReturn(Optional.empty());
         var globalAiConfig = new com.shiftleft.hub.ai.domain.AiConfig();
         when(aiConfigService.getConfigEntity()).thenReturn(globalAiConfig);
-        when(aiConfigService.buildChatClient(globalAiConfig)).thenReturn(mockChatClient);
+        when(aiConfigService.buildChatClient(
+            globalAiConfig.getLlmProvider(), globalAiConfig.getOllamaEndpointUrl(),
+            globalAiConfig.getOpenaiApiKey(), globalAiConfig.getChatModelName()))
+            .thenReturn(mockChatClient);
 
         registry.getChatClient(WORKSPACE_ID);
         registry.getChatClient(OTHER_WORKSPACE_ID);
         registry.evictAll();
 
-        when(aiConfigService.buildChatClient(globalAiConfig)).thenReturn(mock(ChatClient.class));
+        when(aiConfigService.buildChatClient(
+            globalAiConfig.getLlmProvider(), globalAiConfig.getOllamaEndpointUrl(),
+            globalAiConfig.getOpenaiApiKey(), globalAiConfig.getChatModelName()))
+            .thenReturn(mock(ChatClient.class));
         registry.getChatClient(WORKSPACE_ID);
-        verify(aiConfigService, times(3)).buildChatClient(globalAiConfig);
+        verify(aiConfigService, times(3)).buildChatClient(
+            globalAiConfig.getLlmProvider(), globalAiConfig.getOllamaEndpointUrl(),
+            globalAiConfig.getOpenaiApiKey(), globalAiConfig.getChatModelName());
     }
 
     @Test
