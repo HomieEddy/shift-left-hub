@@ -9,7 +9,7 @@
       class="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
       (click)="closed.emit()"
       tabindex="-1"
-      [attr.aria-label]="'Close ' + title()"
+          [attr.aria-label]="translationService.translate('a11y.close-modal', { title: title() })"
     ></button>
     <div
       class="relative bg-surface-primary rounded-xl shadow-2xl w-full animate-scale-in"
@@ -20,7 +20,7 @@
         <button
           (click)="closed.emit()"
           class="text-text-tertiary hover:text-text-primary transition-colors p-1 rounded-md hover:bg-surface-secondary"
-          [attr.aria-label]="'Close ' + title()"
+      [attr.aria-label]="translationService.translate('a11y.close-modal', { title: title() })"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

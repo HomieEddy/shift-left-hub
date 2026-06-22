@@ -139,7 +139,7 @@ describe('AgentTicketDetailComponent', () => {
     component.loadWorkNotes('ticket-123');
     errorSubject.error(new Error('Failed'));
 
-    expect(component.workNoteError()).toBe('Failed to load work notes.');
+    expect(component.workNoteError()).toBe('translated');
   });
 
   it('should call claimTicket on claim', () => {
