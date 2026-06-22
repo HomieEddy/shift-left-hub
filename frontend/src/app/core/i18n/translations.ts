@@ -965,6 +965,10 @@ export const translations: Record<string, { en: string; fr: string }> = {
     en: 'This tag is in use and cannot be deleted.',
     fr: 'Cette \u00e9tiquette est utilis\u00e9e et ne peut \u00eatre supprim\u00e9e.',
   },
+  'kb.tags.error.save': {
+    en: 'Failed to save tag.',
+    fr: 'Échec de l\'enregistrement de l\'étiquette.',
+  },
   'toast.dismiss': { en: 'Dismiss notification', fr: 'Fermer la notification' },
 
   'nav.documents': { en: 'Documents', fr: 'Documents' },
@@ -1046,6 +1050,18 @@ export const translations: Record<string, { en: string; fr: string }> = {
   'admin.taxonomy.create': { en: 'Create', fr: 'Cr�er' },
   'admin.taxonomy.update': { en: 'Update', fr: 'Mettre � jour' },
   'admin.taxonomy.loading': { en: 'Loading categories...', fr: 'Chargement des cat�gories...' },
+  'admin.taxonomy.error.load': {
+    en: 'Failed to load categories',
+    fr: 'Échec du chargement des catégories',
+  },
+  'admin.taxonomy.bulk.updated': {
+    en: 'Categories updated',
+    fr: 'Catégories mises à jour',
+  },
+  'admin.taxonomy.bulk.error.update': {
+    en: 'Failed to update categories',
+    fr: 'Échec de la mise à jour des catégories',
+  },
   'admin.articles.category': { en: 'Category', fr: 'Cat�gorie' },
   'admin.articles.categoryNone': { en: 'None', fr: 'Aucune' },
   'nav.taxonomy': { en: 'Taxonomy', fr: 'Taxonomie' },

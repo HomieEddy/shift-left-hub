@@ -93,7 +93,11 @@ export class TagManagerComponent implements OnInit {
           serverError !== null && typeof serverError === 'object'
             ? (serverError as Record<string, unknown>)['error']
             : undefined;
-        this.errorMessage.set(typeof detail === 'string' ? detail : 'Failed to save tag.');
+        this.errorMessage.set(
+          typeof detail === 'string'
+            ? detail
+            : this.translationService.translate('kb.tags.error.save'),
+        );
       },
     });
   }

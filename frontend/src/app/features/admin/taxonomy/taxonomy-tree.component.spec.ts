@@ -184,6 +184,6 @@ describe('TaxonomyTreeComponent', () => {
     errorSubject.error(new Error('Failed to load'));
 
     expect(component.isLoading()).toBe(false);
-    expect(component.errorMessage()).toBe('Failed to load categories');
+    expect(component.errorMessage()).toBe('admin.taxonomy.error.load');
   });
 });
