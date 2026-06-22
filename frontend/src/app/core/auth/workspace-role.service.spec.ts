@@ -47,7 +47,8 @@ describe('WorkspaceRoleService', () => {
   });
 
   it('should clear role on refreshRole error', () => {
-    service.fetchRole().subscribe();
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    service.refreshRole();
     httpMock.expectOne('/api/workspaces/current/role').flush('error', {
       status: 500,
       statusText: 'Server Error',
