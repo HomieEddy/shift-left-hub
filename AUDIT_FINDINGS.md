@@ -35,11 +35,11 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| B-1 | `@Autowired` annotation on constructor (redundant; auto-wires since Spring 4.3) | `backend/.../document/service/DocumentChunkingService.java:18` | S | HIGH |
-| B-2 | try/catch inside `@RestController` SSE endpoint (must use `@RestControllerAdvice`) | `backend/.../ai/api/ChatController.java:54,60,76` | M | HIGH |
-| B-3 | `.subscribe()` in component without `takeUntilDestroyed` | `frontend/.../tickets/escalation-form/escalation-form.component.ts:71` | S | HIGH |
-| B-4 | `confirmationDialog.confirm(...).subscribe(...)` without `takeUntilDestroyed` (5 sites) | `workspace-members.component.ts:102,124,142`; `user-list.component.ts:129`; `tag-manager.component.ts:108,132` | S | HIGH |
-| B-5 | 3-level ternary inside `{{ }}` template | `frontend/.../landing/landing.component.html:10` | S | HIGH |
+| B-1 | `@Autowired` annotation on constructor (redundant; auto-wires since Spring 4.3) | `backend/.../document/service/DocumentChunkingService.java:18` | S | HIGH | ✓ fixed in `fix/tier2-banned-patterns` |
+| B-2 | try/catch inside `@RestController` SSE endpoint (must use `@RestControllerAdvice`) | `backend/.../ai/api/ChatController.java:54,60,76` | M | HIGH | ✓ fixed in `fix/tier2-banned-patterns` — extracted emitErrorAndComplete helper |
+| B-3 | `.subscribe()` in component without `takeUntilDestroyed` | `frontend/.../tickets/escalation-form/escalation-form.component.ts:71` | S | HIGH | ✓ fixed in `fix/tier2-banned-patterns` |
+| B-4 | `confirmationDialog.confirm(...).subscribe(...)` without `takeUntilDestroyed` (5 sites) | `workspace-members.component.ts:102,124,142`; `user-list.component.ts:129`; `tag-manager.component.ts:108,132` | S | HIGH | ✓ fixed in `fix/tier2-banned-patterns` |
+| B-5 | 3-level ternary inside `{{ }}` template | `frontend/.../landing/landing.component.html:10` | S | HIGH | ✓ fixed in `fix/tier2-banned-patterns` — moved to `workspaceIcon` computed |
 
 ---
 

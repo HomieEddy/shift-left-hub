@@ -50,6 +50,10 @@ public class ChatController {
         SseEmitter emitter = new SseEmitter(30_000L);
         UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
 
+        // SSE endpoint: once the stream starts, the only way to signal a
+        // server-side error to the client is to emit a synthetic event
+        // and complete the emitter. Centralize the emission here so the
+        // controller body stays declarative and the catch logic is testable.
         chatExecutor.submit(() -> {
             try {
                 if (workspaceId != null) {
@@ -57,14 +61,7 @@ public class ChatController {
                 }
                 aiChatService.processChat(request, emitter, auth.getName());
             } catch (Exception e) {
-                try {
-                    emitter.send(SseEmitter.event()
-                        .name("message")
-                        .data(new StreamEvent("error", "An error occurred: " + e.getMessage(), null)));
-                    emitter.complete();
-                } catch (IOException ex) {
-                    emitter.completeWithError(ex);
-                }
+                emitErrorAndComplete(emitter, "An error occurred: " + e.getMessage());
             } finally {
                 if (workspaceId != null) {
                     WorkspaceContextHolder.clear();
@@ -72,17 +69,19 @@ public class ChatController {
             }
         });
 
-        emitter.onTimeout(() -> {
-            try {
-                emitter.send(SseEmitter.event()
-                    .name("message")
-                    .data(new StreamEvent("error", "Request timed out after 30 seconds", null)));
-            } catch (IOException e) {
-                log.warn("Failed to send timeout error to client", e);
-            }
-            emitter.complete();
-        });
+        emitter.onTimeout(() -> emitErrorAndComplete(emitter, "Request timed out after 30 seconds"));
 
         return emitter;
+    }
+
+    private void emitErrorAndComplete(SseEmitter emitter, String message) {
+        try {
+            emitter.send(SseEmitter.event()
+                .name("message")
+                .data(new StreamEvent("error", message, null)));
+            emitter.complete();
+        } catch (IOException e) {
+            emitter.completeWithError(e);
+        }
     }
 }

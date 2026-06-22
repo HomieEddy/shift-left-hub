@@ -7,7 +7,7 @@
           <div
             class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-bold text-xl shadow-sm flex-shrink-0"
           >
-            {{ ws.icon ? (ws.icon.length <= 2 ? ws.icon : ws.icon.charAt(0).toUpperCase()) : 'W' }}
+            {{ workspaceIcon() }}
           </div>
           <div>
             <div class="flex items-center gap-2 mb-1">
