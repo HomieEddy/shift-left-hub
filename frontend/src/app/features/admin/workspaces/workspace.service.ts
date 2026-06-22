@@ -10,7 +10,6 @@ import {
   InvitationDto,
   ChangeRoleRequest,
   UpdateWorkspaceRequest,
-  WorkspaceRoleResponse,
 } from './workspace.model';
 import { SUPPRESS_ERROR_TOAST } from '../../../core/http/http-context-tokens';
 
@@ -86,12 +85,7 @@ export class WorkspaceService {
     const context = new HttpContext().set(SUPPRESS_ERROR_TOAST, true);
     return this.http.get<WorkspaceDto[]>(`${this.userApiUrl}/mine`, {
       context,
-      });
-  }
-
-  getMyRole(): Observable<WorkspaceRoleResponse> {
-    return this.http.get<WorkspaceRoleResponse>(`${this.userApiUrl}/current/role`, {
-      });
+    });
   }
 
   leaveWorkspace(id: string): Observable<void> {
