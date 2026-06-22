@@ -71,12 +71,16 @@
 | S-11 | Hardcoded default AI encryption salt `ShiftLeftKBSalt` weakens PBKDF2 | `backend/src/main/resources/application.properties:49` | S | MED | ✓ covered by S-10 PR (SecurityDefaultsCheck validates salt too) |
 | S-12 | Outbound AI endpoint URL not host/IP allow-listed → SSRF to internal services | `backend/.../ai/service/AiConfigService.java:142-156` + `OpenAiCompatibleChatModel.java:100-113` | M | MED | ✓ fixed in `fix/s-12-endpoint-ssrf` — EndpointUrlValidator |
 | S-13 | `OpenAiCompatibleEmbeddingModel` allows `http://` endpoint with Bearer header (MITM) | `backend/.../ai/service/OpenAiCompatibleEmbeddingModel.java:94-100` | S | MED | ✓ fixed in `fix/s-12-endpoint-ssrf` — same PR, buildRestClient refuses http+key |
+<<<<<<< HEAD
 =======
 | S-9 | `MasterSeeder` reuses same password env value for ALL seed users (admin + non-admin) | `backend/.../common/config/MasterSeeder.java:152-160` | S | MED | ✓ fixed in `fix/s-9-seeder-random-passwords` |
 | S-10 | Hardcoded default DB password `shiftleft` in `application.properties` | `backend/src/main/resources/application.properties:7` | S | MED | ✓ fixed in `fix/s-10-default-db-password` — fail-fast in SecurityDefaultsCheck |
 | S-11 | Hardcoded default AI encryption salt `ShiftLeftKBSalt` weakens PBKDF2 | `backend/src/main/resources/application.properties:49` | S | MED | ✓ covered by S-10 PR (SecurityDefaultsCheck validates salt too) |
 >>>>>>> origin/fix/s-10-default-db-password
-| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED |
+| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED | ✓ fixed in `fix/s-14-admin-preauthorize` — class-level @PreAuthorize on all 6 |
+=======
+| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED | ✓ fixed in `fix/s-14-admin-preauthorize` — class-level @PreAuthorize on all 6 |
+>>>>>>> origin/fix/s-14-admin-preauthorize
 | S-15 | `KcsEventListener` logs AI-drafted article title (user content) at INFO | `backend/.../kcs/service/KcsEventListener.java:68` | S | MED |
 | S-16 | JWT validation errors logged with `e.getMessage()` (may echo claim values) | `backend/.../config/JwtService.java:179,195` | S | MED |
 | S-17 | `GlobalExceptionHandler` returns raw exception class + message + first stack frame in dev profile | `backend/.../common/config/GlobalExceptionHandler.java:316-327` | S | MED |
