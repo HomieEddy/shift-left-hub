@@ -3,6 +3,7 @@ package com.shiftleft.hub.document.api;
 import com.shiftleft.hub.document.api.dto.DocumentListResponse;
 import com.shiftleft.hub.document.api.dto.DocumentUploadResponse;
 import com.shiftleft.hub.document.domain.Document;
+import com.shiftleft.hub.document.service.DocumentConverter;
 import com.shiftleft.hub.document.service.DocumentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class AdminDocumentController {
 
     private final DocumentService documentService;
+    private final DocumentConverter documentConverter;
 
     /**
      * Uploads a document file. Starts the async ETL pipeline for processing.
@@ -102,7 +104,7 @@ public class AdminDocumentController {
     public ResponseEntity<Map<String, Object>> convertToArticle(
             @PathVariable UUID id,
             Authentication auth) {
-        UUID articleId = documentService.convertToArticle(id, auth.getName());
+        UUID articleId = documentConverter.convertToArticle(id, auth.getName());
         return ResponseEntity.ok(Map.of("articleId", articleId));
     }
 }

@@ -1,6 +1,7 @@
 package com.shiftleft.hub.document.service;
 
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
+import com.shiftleft.hub.category.domain.CategoryRepository;
 import com.shiftleft.hub.document.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,10 +30,12 @@ class DocumentServiceTest {
 
     @Mock private DocumentRepository documentRepository;
     @Mock private DocumentChunkRepository documentChunkRepository;
+    @Mock private CategoryRepository categoryRepository;
     @Mock private ApplicationEventPublisher eventPublisher;
+    @Mock private DocumentFileStorage documentFileStorage;
 
-
-    @InjectMocks private DocumentService documentService;
+    private DocumentWorkspaceAccess workspaceAccess;
+    private DocumentService documentService;
 
     @org.junit.jupiter.api.io.TempDir
     static Path tempDir;
@@ -46,6 +49,16 @@ class DocumentServiceTest {
     @BeforeEach
     void setUp() {
         WorkspaceContextHolder.setCurrentWorkspaceId(WORKSPACE_ID);
+        // Real workspaceAccess backed by the mocked repository so the test
+        // stubs on documentRepository.findById(...) are honored.
+        workspaceAccess = new DocumentWorkspaceAccess(documentRepository);
+        documentService = new DocumentService(
+            documentRepository, documentChunkRepository, categoryRepository,
+            eventPublisher, documentFileStorage, workspaceAccess);
+        // Default file-storage stub so the existing tests that don't care about
+        // the file path still pass. Individual tests can override with mockFileStorageWrite().
+        lenient().when(documentFileStorage.write(any(MultipartFile.class), any(UUID.class), any(UUID.class)))
+            .thenAnswer(invocation -> tempDir.resolve("safe-filename"));
     }
 
     @AfterEach
@@ -71,9 +84,16 @@ class DocumentServiceTest {
     }
 
     private void setUploadDir() throws Exception {
-        var field = DocumentService.class.getDeclaredField("uploadDir");
-        field.setAccessible(true);
-        field.set(documentService, tempDir.toString());
+        // Kept for legacy tests; no-op now that the upload dir lives in DocumentFileStorage.
+        // Individual upload tests configure documentFileStorage.write(...) directly via mockFileStorageWrite().
+    }
+
+    private void mockFileStorageWrite() {
+        when(documentFileStorage.write(any(MultipartFile.class), any(UUID.class), any(UUID.class)))
+            .thenAnswer(invocation -> {
+                UUID docId = invocation.getArgument(2);
+                return tempDir.resolve(docId.toString()).resolve("safe-filename");
+            });
     }
 
     private void mockDocumentSaveWithId() {
@@ -249,8 +269,7 @@ class DocumentServiceTest {
     // ── uploadDocument: file IO failure ──────────────────────────
 
     @Test
-    void uploadDocument_shouldHandleFileIoFailure() throws Exception {
-        setUploadDir();
+    void uploadDocument_shouldPropagateFileStorageFailure() throws Exception {
         MultipartFile file = mock(MultipartFile.class);
         when(file.getContentType()).thenReturn("text/markdown");
         when(file.getSize()).thenReturn(1024L);
@@ -263,13 +282,13 @@ class DocumentServiceTest {
 
         mockDocumentSaveWithId();
 
-        try (MockedStatic<java.nio.file.Files> filesMock = mockStatic(java.nio.file.Files.class)) {
-            filesMock.when(() -> java.nio.file.Files.createDirectories(any(java.nio.file.Path.class)))
-                .thenThrow(new java.io.IOException("Permission denied"));
+        // File storage throws (e.g. permission denied) — service must surface it
+        // as DocumentProcessingException and must not publish the upload event.
+        when(documentFileStorage.write(any(MultipartFile.class), any(UUID.class), any(UUID.class)))
+            .thenThrow(new DocumentProcessingException("Failed to store uploaded file", new IOException("Permission denied")));
 
-            assertThrows(DocumentProcessingException.class, () ->
-                documentService.uploadDocument(file, null));
-        }
+        assertThrows(DocumentProcessingException.class, () ->
+            documentService.uploadDocument(file, null));
 
         verify(eventPublisher, never()).publishEvent(any(DocumentUploadedEvent.class));
     }
@@ -348,12 +367,10 @@ class DocumentServiceTest {
     // ── uploadDocument: path traversal (S-1) ───────────────────
 
     @Test
-    void uploadDocument_shouldRejectDotDotFilename() throws Exception {
-        // After Paths.get("..").getFileName() returns ".." and the
-        // [a-zA-Z0-9_.-] regex keeps dots, a bare ".." filename resolves
-        // one level above the document storage directory. The containment
-        // check in uploadDocument must reject it.
-        setUploadDir();
+    void uploadDocument_shouldPropagatePathTraversalFromFileStorage() throws Exception {
+        // Path-traversal containment is enforced inside DocumentFileStorage.write.
+        // DocumentService.uploadDocument must surface that as DocumentProcessingException
+        // and must not publish the upload event.
         MultipartFile file = mock(MultipartFile.class);
         when(file.getContentType()).thenReturn("text/markdown");
         when(file.getSize()).thenReturn(1024L);
@@ -365,6 +382,9 @@ class DocumentServiceTest {
             .thenReturn(Optional.empty());
 
         mockDocumentSaveWithId();
+
+        when(documentFileStorage.write(any(MultipartFile.class), any(UUID.class), any(UUID.class)))
+            .thenThrow(new DocumentProcessingException("Invalid filename: path traversal detected"));
 
         assertThrows(DocumentProcessingException.class, () ->
             documentService.uploadDocument(file, null));
