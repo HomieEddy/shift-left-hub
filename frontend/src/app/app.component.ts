@@ -23,6 +23,7 @@ import {
   LucideUpload,
 } from '@lucide/angular';
 import { ToastContainer } from './shared/ui/toast/toast-container.component';
+import { LoggerService } from './core/logging/logger.service';
 import { WorkspaceSwitcherComponent } from './features/workspace-switcher/workspace-switcher.component';
 import { InvitationBadgeComponent } from './features/workspace-switcher/invitation-badge.component';
 
@@ -61,6 +62,7 @@ export class App {
   private router = inject(Router);
   private kcsDraftService = inject(KcsDraftService);
   private destroyRef = inject(DestroyRef);
+  private logger = inject(LoggerService);
 
   pendingKcsCount = signal(0);
   isMobileMenuOpen = signal(false);
@@ -90,7 +92,7 @@ export class App {
         next: (response) => this.pendingKcsCount.set(response.pendingCount),
         error: (err) => {
           if (isDevMode()) {
-            console.warn('KCS pending-count poll failed:', err);
+            this.logger.warn('KCS pending-count poll failed:', err);
           }
         },
       });

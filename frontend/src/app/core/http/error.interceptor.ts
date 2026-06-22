@@ -3,11 +3,13 @@ import { inject, isDevMode } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { ToastService } from '../../shared/ui/toast/toast.service';
+import { LoggerService } from '../logging/logger.service';
 import { TranslationService } from '../i18n/translation.service';
 import { SUPPRESS_ERROR_TOAST } from './http-context-tokens';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const logger = inject(LoggerService);
   const toastService = inject(ToastService);
   const translationService = inject(TranslationService);
 
@@ -38,7 +40,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (message != null) {
         toastService.error(message);
         if (isDevMode()) {
-          console.error(`[HTTP Error ${error.status}]:`, message);
+          logger.error(`[HTTP Error ${error.status}]:`, message);
         }
       }
 

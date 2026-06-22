@@ -13,6 +13,7 @@ import {
 } from '../../../shared/ui/badge/badge-utils';
 import { ShiftLeftContext } from '../../tickets/ticket.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
+import { LoggerService } from '../../../core/logging/logger.service';
 
 @Component({
   selector: 'app-agent-ticket-detail',
@@ -29,6 +30,7 @@ export class AgentTicketDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private logger = inject(LoggerService);
   protected translationService = inject(TranslationService);
 
   ticket = signal<AgentTicket | null>(null);
@@ -105,7 +107,7 @@ export class AgentTicketDetailComponent implements OnInit {
         next: (notes) => this.workNotes.set(notes),
         error: (err) => {
           if (isDevMode()) {
-            console.error('Failed to load work notes:', err);
+            this.logger.error('Failed to load work notes:', err);
           }
           this.workNoteError.set(this.translationService.translate('agent.detail.loadNotesError'));
         },
@@ -132,7 +134,7 @@ export class AgentTicketDetailComponent implements OnInit {
         error: () => {
           this.isSubmittingNote.set(false);
           if (isDevMode()) {
-            console.error('Failed to add work note');
+            this.logger.error('Failed to add work note');
           }
           this.workNoteError.set(this.translationService.translate('agent.detail.addNoteError'));
         },
@@ -156,7 +158,7 @@ export class AgentTicketDetailComponent implements OnInit {
         error: () => {
           this.isClaiming.set(false);
           if (isDevMode()) {
-            console.error('Failed to claim ticket');
+            this.logger.error('Failed to claim ticket');
           }
           this.claimError.set(this.translationService.translate('agent.detail.claimError'));
         },
@@ -190,7 +192,7 @@ export class AgentTicketDetailComponent implements OnInit {
         error: () => {
           this.isResolving.set(false);
           if (isDevMode()) {
-            console.error('Failed to resolve ticket');
+            this.logger.error('Failed to resolve ticket');
           }
           this.resolveError.set(this.translationService.translate('agent.detail.resolveError'));
         },
