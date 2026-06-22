@@ -45,6 +45,24 @@ public class AiChatService {
     private static final int MAX_CONTEXT_RESULTS = 5;
     private static final double FALLBACK_VECTOR_THRESHOLD = 0.35;
 
+    /**
+     * Shared executor for the 4 parallel hybrid-search queries in
+     * {@link #hybridSearch}. Sized for the typical 4-way fan-out so a
+     * single chat request uses 4 threads at most. The pool is shared
+     * across all chat requests but bounded so a spike of requests
+     * cannot exhaust the host's threads.
+     */
+    private static final java.util.concurrent.ExecutorService HYBRID_SEARCH_EXECUTOR =
+        java.util.concurrent.Executors.newFixedThreadPool(
+            Math.max(4, Runtime.getRuntime().availableProcessors()),
+            r -> {
+                Thread t = new Thread(r, "chat-hybrid-search");
+                t.setDaemon(true);
+                return t;
+            });
+
+    private final java.util.concurrent.ExecutorService hybridSearchExecutor = HYBRID_SEARCH_EXECUTOR;
+
     record HybridSearchResult(UUID articleId, String titleEn, String titleFr,
         String slug, String excerpt, double score) {
     }
@@ -141,55 +159,45 @@ public class AiChatService {
     }
 
     List<HybridSearchResult> hybridSearch(String query, double threshold) {
-        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+        // Capture the workspace id on the calling thread (the
+        // WorkspaceContextHolder is ThreadLocal) and pass it explicitly
+        // to the parallel search tasks; they run on a different thread
+        // and the ThreadLocal would be empty there.
+        final UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
 
-        // 1. FTS search — articles (existing)
-        final List<HybridSearchResult> ftsResults = ftsSearch(query);
+        // Run the 4 independent search queries in parallel. P-8: previously
+        // sequential — each query could take 50-200ms; parallel cuts total
+        // wall time to roughly max(query) instead of sum(query). Failures
+        // are isolated per query (logged + empty list) so a partial outage
+        // doesn't break the whole retrieval.
+        // Run the 4 independent search queries in parallel. P-8: previously
+        // sequential — each query could take 50-200ms; parallel cuts total
+        // wall time to roughly max(query) instead of sum(query). Failures
+        // are isolated per query (logged + empty list) so a partial outage
+        // doesn't break the whole retrieval. WorkspaceContextHolder is a
+        // ThreadLocal, so each task re-installs the captured workspaceId
+        // on its own thread before running.
+        final java.util.UUID capturedWorkspaceId = workspaceId;
+        var ftsFuture = java.util.concurrent.CompletableFuture
+            .supplyAsync(() -> withWorkspace(capturedWorkspaceId,
+                () -> ftsSearch(query, capturedWorkspaceId)), hybridSearchExecutor);
+        var vectorFuture = java.util.concurrent.CompletableFuture
+            .supplyAsync(() -> withWorkspace(capturedWorkspaceId,
+                () -> safeVectorSearch(query, capturedWorkspaceId, threshold)),
+                hybridSearchExecutor);
+        var docChunkVectorFuture = java.util.concurrent.CompletableFuture
+            .supplyAsync(() -> withWorkspace(capturedWorkspaceId,
+                () -> safeVectorSearchDocumentChunks(query, capturedWorkspaceId, threshold)),
+                hybridSearchExecutor);
+        var docChunkFtsFuture = java.util.concurrent.CompletableFuture
+            .supplyAsync(() -> withWorkspace(capturedWorkspaceId,
+                () -> safeFtsSearchDocumentChunks(query, capturedWorkspaceId)),
+                hybridSearchExecutor);
 
-        // 2. Vector search — articles (existing)
-        List<HybridSearchResult> vectorResults;
-        try {
-            vectorResults = vectorSearch(query, threshold);
-        } catch (Exception e) {
-            log.warn("Vector search failed, continuing with FTS-only results: {}", e.getMessage());
-            vectorResults = List.of();
-        }
-
-        // 3. Document chunk vector search
-        List<HybridSearchResult> docChunkResults;
-        try {
-            var chunkResults = unifiedSearchService.vectorSearchDocumentChunks(query, workspaceId, threshold);
-            docChunkResults = chunkResults.stream()
-                .map(cr -> new HybridSearchResult(
-                    cr.chunkId(),
-                    cr.filename(),
-                    null,
-                    null,
-                    cr.excerpt(),
-                    cr.score()))
-                .toList();
-        } catch (Exception e) {
-            log.warn("Document chunk vector search failed: {}", e.getMessage());
-            docChunkResults = List.of();
-        }
-
-        // 4. Document chunk FTS search
-        List<HybridSearchResult> docChunkFtsResults;
-        try {
-            var chunkFtsResults = unifiedSearchService.ftsSearchDocumentChunks(query, workspaceId);
-            docChunkFtsResults = chunkFtsResults.stream()
-                .map(cr -> new HybridSearchResult(
-                    cr.chunkId(),
-                    cr.filename(),
-                    null,
-                    null,
-                    cr.excerpt(),
-                    0))
-                .toList();
-        } catch (Exception e) {
-            log.warn("Document chunk FTS search failed: {}", e.getMessage());
-            docChunkFtsResults = List.of();
-        }
+        final List<HybridSearchResult> ftsResults = ftsFuture.join();
+        List<HybridSearchResult> vectorResults = vectorFuture.join();
+        List<HybridSearchResult> docChunkResults = docChunkVectorFuture.join();
+        List<HybridSearchResult> docChunkFtsResults = docChunkFtsFuture.join();
 
         if (ftsResults.isEmpty()
                 && vectorResults.isEmpty()
@@ -248,8 +256,85 @@ public class AiChatService {
             .toList();
     }
 
-    private List<HybridSearchResult> ftsSearch(String query) {
-        UUID workspaceId = WorkspaceContextHolder.getCurrentWorkspaceId();
+    /**
+     * Wraps a {@link java.util.function.Supplier} so the workspace
+     * context is re-installed on the current thread before running.
+     * WorkspaceContextHolder is a ThreadLocal; the parallel
+     * search tasks in {@link #hybridSearch} run on pool threads
+     * that have no context, so this helper bridges that gap.
+     *
+     * @param workspaceId the workspace id to install
+     * @param work the work to run
+     * @return the work's result
+     */
+    private <T> T withWorkspace(UUID workspaceId,
+            java.util.function.Supplier<T> work) {
+        WorkspaceContextHolder.setCurrentWorkspaceId(workspaceId);
+        try {
+            return work.get();
+        } finally {
+            WorkspaceContextHolder.clear();
+        }
+    }
+
+    /**
+     * Wrappers used by the parallel search fan-out in {@link #hybridSearch}.
+     * Each wraps a search that can fail and logs + returns empty on
+     * failure so a partial outage doesn't break retrieval. The
+     * workspaceId is passed explicitly because the parallel tasks
+     * run on different threads and the ThreadLocal
+     * WorkspaceContextHolder is empty there.
+     */
+    private List<HybridSearchResult> safeVectorSearch(
+            String query, UUID workspaceId, double threshold) {
+        try {
+            return vectorSearch(query, threshold);
+        } catch (Exception e) {
+            log.warn("Vector search failed, continuing with empty result: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private List<HybridSearchResult> safeVectorSearchDocumentChunks(
+            String query, UUID workspaceId, double threshold) {
+        try {
+            var chunkResults = unifiedSearchService.vectorSearchDocumentChunks(
+                query, workspaceId, threshold);
+            return chunkResults.stream()
+                .map(cr -> new HybridSearchResult(
+                    cr.chunkId(),
+                    cr.filename(),
+                    null,
+                    null,
+                    cr.excerpt(),
+                    cr.score()))
+                .toList();
+        } catch (Exception e) {
+            log.warn("Document chunk vector search failed: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private List<HybridSearchResult> safeFtsSearchDocumentChunks(String query, UUID workspaceId) {
+        try {
+            var chunkFtsResults = unifiedSearchService.ftsSearchDocumentChunks(
+                query, workspaceId);
+            return chunkFtsResults.stream()
+                .map(cr -> new HybridSearchResult(
+                    cr.chunkId(),
+                    cr.filename(),
+                    null,
+                    null,
+                    cr.excerpt(),
+                    0))
+                .toList();
+        } catch (Exception e) {
+            log.warn("Document chunk FTS search failed: {}", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private List<HybridSearchResult> ftsSearch(String query, UUID workspaceId) {
         var page = articleRepository.searchByText(query, workspaceId, PageRequest.of(0, TOP_K));
         return page.getContent().stream()
             .map(row -> {
