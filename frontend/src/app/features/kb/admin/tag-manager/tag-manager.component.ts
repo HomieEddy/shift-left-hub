@@ -105,6 +105,7 @@ export class TagManagerComponent implements OnInit {
         message: this.translationService.translate('confirm.message.delete-tag', { name: nameEn }),
         confirmLabel: this.translationService.translate('confirm.label.delete'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (confirmed === true) {
           this.tagService

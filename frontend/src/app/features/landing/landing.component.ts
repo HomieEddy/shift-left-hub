@@ -54,6 +54,14 @@ export class LandingComponent implements OnInit {
     return list.find((ws) => ws.id === user.workspaceId) ?? list[0] ?? null;
   });
 
+  workspaceIcon = computed(() => {
+    const icon = this.currentWorkspace()?.icon;
+    if (!icon) {
+      return 'W';
+    }
+    return icon.length <= 2 ? icon : icon.charAt(0).toUpperCase();
+  });
+
   ngOnInit() {
     this.workspaceService
       .getMyWorkspaces()
