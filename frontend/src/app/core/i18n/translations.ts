@@ -513,6 +513,22 @@ export const translations: Record<string, { en: string; fr: string }> = {
   'shared.search.placeholder': { en: 'Search...', fr: 'Rechercher...' },
   'shared.table.empty': { en: 'No data found.', fr: 'Aucune donnée trouvée.' },
   'admin.workspaces.title': { en: 'Workspaces', fr: 'Espaces de travail' },
+  'admin.workspaces.error.load': {
+    en: 'Failed to load workspaces',
+    fr: 'Échec du chargement des espaces',
+  },
+  'admin.workspaces.error.create': {
+    en: 'Failed to create workspace',
+    fr: 'Échec de la création de l\'espace',
+  },
+  'admin.workspaces.placeholder.name': {
+    en: 'My Workspace',
+    fr: 'Mon espace',
+  },
+  'admin.workspaces.placeholder.description': {
+    en: 'Optional description',
+    fr: 'Description optionnelle',
+  },
   'admin.workspaces.create': { en: 'Create Workspace', fr: 'Créer un espace' },
   'admin.workspaces.creating': { en: 'Creating...', fr: 'Création...' },
   'admin.workspaces.new': { en: 'New Workspace', fr: 'Nouvel espace' },
