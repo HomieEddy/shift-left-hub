@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Subject, firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
+import { resolveApiUrl } from '../../core/http/api-base-url';
 
 export interface ChatMessage {
   id?: string;
@@ -28,12 +29,6 @@ export interface StreamEvent {
 export class ChatService {
   private authService = inject(AuthService);
 
-  private getApiUrl(path: string): string {
-    const env = (window as unknown as { __env?: { apiBaseUrl?: string } }).__env;
-    const baseUrl = env?.apiBaseUrl ?? '';
-    return baseUrl ? `${baseUrl.replace(/\/+$/, '')}${path}` : path;
-  }
-
   sendMessage(
     message: string,
     history: ChatMessage[],
@@ -48,7 +43,7 @@ export class ChatService {
         : { 'Content-Type': 'application/json' };
     };
 
-    const doFetch = () => fetch(this.getApiUrl('/api/ai/chat'), {
+    const doFetch = () => fetch(resolveApiUrl('/api/ai/chat'), {
       method: 'POST',
       headers: buildHeaders(),
       credentials: 'include',
