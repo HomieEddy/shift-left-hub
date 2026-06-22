@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -28,7 +29,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,7 +36,12 @@ import java.util.UUID;
  * JPA entity representing a knowledge base article.
  */
 @Entity
-@Table(name = "article")
+@Table(
+    name = "article",
+    indexes = {
+        @Index(name = "idx_article_last_editor_id", columnList = "last_editor_id")
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -86,11 +91,11 @@ public class Article extends WorkspaceAwareEntity {
     @Column(name = "published_at")
     private LocalDateTime publishedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_editor_id")
     private User lastEditor;
 
