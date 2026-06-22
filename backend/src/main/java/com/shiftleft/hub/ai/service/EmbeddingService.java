@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,22 +40,19 @@ public class EmbeddingService {
     private String vectorStoreSchema;
 
     /**
+     * Number of articles batched into a single {@code vectorStore.add(...)}
+     * call. Picked to keep each INSERT small (latency stays low) while
+     * cutting the round-trip count by ~50x vs per-article writes.
+     */
+    private static final int RE_EMBED_BATCH_SIZE = 50;
+
+    /**
      * Stores an embedding for the given article in the vector store.
      *
      * @param article the article to embed and store
      */
     public void storeEmbedding(Article article) {
-        String content = (article.getContentEn() != null ? article.getContentEn() : "")
-            + "\n---\n"
-            + (article.getContentFr() != null ? article.getContentFr() : "");
-
-        Map<String, Object> metadata = new HashMap<>();
-        metadata.put("articleId", article.getId().toString());
-        metadata.put("workspace_id", article.getWorkspaceId().toString());
-        metadata.put("title", article.getTitleEn() != null ? article.getTitleEn() : "");
-        metadata.put("slug", article.getSlug() != null ? article.getSlug() : "");
-        Document document = new Document(content, metadata);
-        vectorStore.add(List.of(document));
+        vectorStore.add(List.of(toDocument(article)));
     }
 
     /**
@@ -97,16 +95,65 @@ public class EmbeddingService {
         }
         log.info("Re-embedding {} published articles across all workspaces", publishedArticles.size());
 
+        List<Document> batch = new ArrayList<>(RE_EMBED_BATCH_SIZE);
+        int[] written = {0};
+        int[] failed = {0};
         for (Article article : publishedArticles) {
             try {
-                generateAndStoreEmbedding(article);
+                batch.add(toDocument(article));
             } catch (Exception e) {
-                log.warn("Failed to re-embed article {}: {} | rootCause={} | vectorStore={}",
+                failed[0]++;
+                log.warn("Failed to build embedding for article {}: {} | rootCause={} | vectorStore={}",
                     article.getId(), e.getMessage(), mostSpecificMessage(e), describeVectorStoreSchema());
-                log.debug("Re-embedding failure details", e);
+                log.debug("Embedding build failure details", e);
+                continue;
+            }
+            if (batch.size() >= RE_EMBED_BATCH_SIZE) {
+                written[0] += flushBatch(batch);
             }
         }
-        log.info("Re-embedding complete for {} articles", publishedArticles.size());
+        if (!batch.isEmpty()) {
+            written[0] += flushBatch(batch);
+        }
+        log.info("Re-embedding complete: {} articles written, {} failed (of {} total)",
+            written[0], failed[0], publishedArticles.size());
+    }
+
+    /**
+     * Builds the {@link Document} for a single article without writing it.
+     * Shared by {@link #storeEmbedding(Article)} and the batched re-embed
+     * path so the metadata shape stays consistent.
+     */
+    private Document toDocument(Article article) {
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("articleId", article.getId().toString());
+        metadata.put("workspace_id", article.getWorkspaceId().toString());
+        metadata.put("title", article.getTitleEn() != null ? article.getTitleEn() : "");
+        metadata.put("slug", article.getSlug() != null ? article.getSlug() : "");
+        String content = (article.getContentEn() != null ? article.getContentEn() : "")
+            + "\n---\n"
+            + (article.getContentFr() != null ? article.getContentFr() : "");
+        return new Document(content, metadata);
+    }
+
+    /**
+     * Writes a batch of documents in one round-trip. Returns the number of
+     * documents successfully written; on failure the whole batch is logged
+     * and counted as 0 (the caller moves on).
+     */
+    private int flushBatch(List<Document> batch) {
+        int size = batch.size();
+        try {
+            vectorStore.add(List.copyOf(batch));
+            return size;
+        } catch (Exception e) {
+            log.warn("Failed to write batch of {} embeddings: {} | rootCause={} | vectorStore={}",
+                size, e.getMessage(), mostSpecificMessage(e), describeVectorStoreSchema());
+            log.debug("Batch write failure details", e);
+            return 0;
+        } finally {
+            batch.clear();
+        }
     }
 
     private String describeVectorStoreSchema() {
