@@ -111,6 +111,11 @@ public class WorkspaceChatModelRegistry {
         // Fall back to global defaults
         log.debug("No workspace LLM config for {}, using global defaults", workspaceId);
         var globalConfig = aiConfigService.getConfigEntity();
-        return aiConfigService.buildChatClient(globalConfig);
+        return aiConfigService.buildChatClient(
+            globalConfig.getLlmProvider(),
+            globalConfig.getOllamaEndpointUrl(),
+            globalConfig.getOpenaiApiKey(),
+            globalConfig.getChatModelName()
+        );
     }
 }
