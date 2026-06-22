@@ -1,7 +1,7 @@
 <div
   class="bg-surface-primary rounded-xl border border-border-default"
   role="status"
-  aria-label="Loading"
+  [attr.aria-label]="translationService.translate('a11y.loading')"
 >
   <div class="p-4 border-b border-border-default">
     <div class="animate-pulse bg-surface-tertiary rounded h-4 w-1/4"></div>

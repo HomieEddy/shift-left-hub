@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, input, output, signal } from '@angular/c
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-search-input',
@@ -10,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './search-input.component.html',
 })
 export class SearchInputComponent {
+  protected translationService = inject(TranslationService);
   placeholder = input('Search...');
   /** Debounce delay in ms. NOTE: read once at construction time; dynamic changes after init are not reflected. */
   debounceMs = input(300);

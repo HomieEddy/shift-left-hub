@@ -451,7 +451,7 @@
       type="button"
       class="absolute inset-0 bg-black/50 animate-in border-0 cursor-default"
       (click)="cancelLogout()"
-      aria-label="Close"
+      [attr.aria-label]="translationService.translate('a11y.close')"
     ></button>
     <div
       class="relative bg-surface-primary rounded-xl shadow-xl border border-border-default p-6 w-full max-w-sm mx-4 animate-in slide-in-from-bottom-4"

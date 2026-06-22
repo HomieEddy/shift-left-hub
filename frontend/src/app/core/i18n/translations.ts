@@ -970,6 +970,13 @@ export const translations: Record<string, { en: string; fr: string }> = {
     fr: 'Échec de l\'enregistrement de l\'étiquette.',
   },
   'toast.dismiss': { en: 'Dismiss notification', fr: 'Fermer la notification' },
+  'a11y.close': { en: 'Close', fr: 'Fermer' },
+  'a11y.loading': { en: 'Loading', fr: 'Chargement' },
+  'a11y.clear-search': { en: 'Clear search', fr: 'Effacer la recherche' },
+  'a11y.close-modal': {
+    en: 'Close {title}',
+    fr: 'Fermer {title}',
+  },
 
   'nav.documents': { en: 'Documents', fr: 'Documents' },
   'admin.documents.title': { en: 'Documents', fr: 'Documents' },

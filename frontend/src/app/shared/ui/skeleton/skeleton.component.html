@@ -4,5 +4,5 @@
   [style.width]="width()"
   [style.height]="height()"
   role="status"
-  aria-label="Loading"
+  [attr.aria-label]="translationService.translate('a11y.loading')"
 ></div>
