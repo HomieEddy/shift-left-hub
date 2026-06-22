@@ -52,8 +52,7 @@ export class AgentTicketService {
    */
   getWorkNotes(id: string): Observable<WorkNote[]> {
     return this.http.get<WorkNote[]>(`/api/agent/tickets/${id}/work-notes`, {
-      withCredentials: true,
-    });
+      });
   }
 
   /**
@@ -76,7 +75,6 @@ export class AgentTicketService {
    */
   resolveTicket(id: string, request: ResolveTicketRequest): Observable<AgentTicket> {
     return this.http.post<AgentTicket>(`/api/agent/tickets/${id}/resolve`, request, {
-      withCredentials: true,
-    });
+      });
   }
 }

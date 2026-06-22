@@ -28,8 +28,7 @@ export class ArticleService {
 
   updateArticle(id: string, request: UpdateArticleRequest): Observable<ArticleDto> {
     return this.http.put<ArticleDto>(`/api/admin/articles/${id}`, request, {
-      withCredentials: true,
-    });
+      });
   }
 
   publishArticle(id: string): Observable<ArticleDto> {

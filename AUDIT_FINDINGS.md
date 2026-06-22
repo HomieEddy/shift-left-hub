@@ -77,7 +77,7 @@
 | X-1 | 60+ `withCredentials: true` options duplicated across 14 frontend services; `baseUrlInterceptor` already sets it for all `/api/*` | `frontend/.../services/*.ts` (47+ matches) | S | HIGH | ✓ fixed in `fix/tier5-group-b` |
 | X-2 | `RuntimeException("User not found")` repeated 7×; `UserNotFoundException` exists but unused | `WorkspaceController:40,62,80`; `InvitationController:37,54,71`; `AuthController:113` | S | HIGH | ✓ fixed in `fix/tier5-group-a` |
 | X-3 | `slug + "-" + UUID.randomUUID().toString().substring(0, 8)` slug-uniqueness pattern duplicated 4× | `ArticleService.java:104,142`; `DocumentService.java:252`; `KcsDraftingService.java:84` | S | HIGH | ✓ fixed in `fix/tier5-group-a` (SlugUtils.withUniqueSuffix) |
-| X-4 | `chat.service.ts` re-implements `__env` base-URL resolution using raw `fetch` (bypasses `baseUrlInterceptor`) | `frontend/.../chat/chat.service.ts:31-35` | M | HIGH |
+| X-4 | `chat.service.ts` re-implements `__env` base-URL resolution using raw `fetch` (bypasses `baseUrlInterceptor`) | `frontend/.../chat/chat.service.ts:31-35` | M | HIGH | ✓ fixed in `fix/tier5-group-c` (readApiBaseUrl/resolveApiUrl helper) |
 | X-5 | `WorkspaceRoleService.fetchRole()` and `WorkspaceService.getMyRole()` both call same `GET /api/workspaces/current/role` | `workspace-role.service.ts:18-22`; `workspace.service.ts:98-102` | S | HIGH |
 | X-6 | SSE-emitter try/catch + `emitter.send(SseEmitter.event()...)` boilerplate repeated 5× in one file | `backend/.../ai/service/AiChatService.java:73,97-101,119-128,136-144,152-157` | M | HIGH |
 | X-7 | `slugify` regex chain duplicated 3× | `ArticleService.java:228-234`; `DocumentService.java:247`; `KcsDraftingService` (private) | S | MED | ✓ fixed in `fix/tier5-group-a` (SlugUtils.slugify) |

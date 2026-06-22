@@ -55,26 +55,22 @@ export class WorkspaceService {
 
   getInvitations(workspaceId: string): Observable<InvitationDto[]> {
     return this.http.get<InvitationDto[]>(`${this.apiUrl}/${workspaceId}/invitations`, {
-      withCredentials: true,
-    });
+      });
   }
 
   sendInvitation(workspaceId: string, request: CreateInvitationRequest): Observable<InvitationDto> {
     return this.http.post<InvitationDto>(`${this.apiUrl}/${workspaceId}/invitations`, request, {
-      withCredentials: true,
-    });
+      });
   }
 
   revokeInvitation(workspaceId: string, invitationId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${workspaceId}/invitations/${invitationId}`, {
-      withCredentials: true,
-    });
+      });
   }
 
   removeMember(workspaceId: string, userId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${workspaceId}/members/${userId}`, {
-      withCredentials: true,
-    });
+      });
   }
 
   changeMemberRole(
@@ -83,8 +79,7 @@ export class WorkspaceService {
     request: ChangeRoleRequest,
   ): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${workspaceId}/members/${userId}/role`, request, {
-      withCredentials: true,
-    });
+      });
   }
 
   getMyWorkspaces(): Observable<WorkspaceDto[]> {
@@ -96,8 +91,7 @@ export class WorkspaceService {
 
   getMyRole(): Observable<WorkspaceRoleResponse> {
     return this.http.get<WorkspaceRoleResponse>(`${this.userApiUrl}/current/role`, {
-      withCredentials: true,
-    });
+      });
   }
 
   leaveWorkspace(id: string): Observable<void> {

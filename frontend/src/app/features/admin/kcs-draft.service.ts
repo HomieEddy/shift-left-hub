@@ -46,7 +46,6 @@ export class KcsDraftService {
   /** Gets the count of pending (DRAFT) KCS articles for the nav badge. */
   getPendingCount(): Observable<PendingCountResponse> {
     return this.http.get<PendingCountResponse>('/api/admin/kcs/drafts/pending-count', {
-      withCredentials: true,
-    });
+      });
   }
 }

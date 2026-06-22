@@ -14,8 +14,7 @@ export class DocumentService {
       formData.append('categoryId', categoryId);
     }
     return this.http.post<DocumentUploadResponse>('/api/admin/documents/upload', formData, {
-      withCredentials: true,
-    });
+      });
   }
 
   getDocuments(): Observable<DocumentDto[]> {

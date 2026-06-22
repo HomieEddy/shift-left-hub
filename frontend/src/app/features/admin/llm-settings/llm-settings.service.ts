@@ -40,8 +40,7 @@ export class LlmSettingsService {
 
   testConnection(config: AiConfigRequest): Observable<TestConnectionResult> {
     return this.http.post<TestConnectionResult>('/api/ai/config/test', config, {
-      withCredentials: true,
-    });
+      });
   }
 
   reindexEmbeddings(): Observable<{ message: string }> {
