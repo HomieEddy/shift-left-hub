@@ -30,8 +30,10 @@ describe('ConfirmationDialogService', () => {
     mockDialog.open.mockReturnValue({ closed: of(true) });
     service.confirm(data).subscribe();
     expect(mockDialog.open).toHaveBeenCalledTimes(1);
-    const [component, options] = mockDialog.open.mock.calls[0];
+    const call = mockDialog.open.mock.calls[0];
+    const component = call[0] as unknown;
     expect(component).toBeDefined();
+    const options = call[1] as { data: ConfirmationData; width: string; disableClose: boolean };
     expect(options.data).toEqual(data);
     expect(options.width).toBe('420px');
     expect(options.disableClose).toBe(false);

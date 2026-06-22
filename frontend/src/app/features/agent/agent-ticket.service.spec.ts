@@ -114,7 +114,8 @@ describe('AgentTicketService', () => {
     });
     const req = httpMock.expectOne('/api/agent/tickets/tkt-1/work-notes');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body.content).toBe('Following up');
+    const body = req.request.body as { content?: string };
+    expect(body.content).toBe('Following up');
     req.flush({ ...mockWorkNote, content: 'Following up' });
   });
 
@@ -125,7 +126,8 @@ describe('AgentTicketService', () => {
     }).subscribe();
     const req = httpMock.expectOne('/api/agent/tickets/tkt-1/resolve');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body.resolutionNotes).toBe('Fixed by restarting service');
+    const body = req.request.body as { resolutionNotes?: string };
+    expect(body.resolutionNotes).toBe('Fixed by restarting service');
     req.flush({ ...mockTicket, status: 'RESOLVED' });
   });
 });

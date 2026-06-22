@@ -46,7 +46,8 @@ describe('LlmSettingsService', () => {
     service.updateConfig({ chatModelName: 'mistral' }).subscribe();
     const req = httpMock.expectOne('/api/ai/config');
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body.chatModelName).toBe('mistral');
+    const body = req.request.body as { chatModelName?: string };
+    expect(body.chatModelName).toBe('mistral');
     req.flush(mockConfig);
   });
 

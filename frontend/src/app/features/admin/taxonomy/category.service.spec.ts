@@ -57,7 +57,8 @@ describe('CategoryService', () => {
     });
     const req = httpMock.expectOne('/api/admin/categories');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body.nameEn).toBe('Network');
+    const body = req.request.body as { nameEn?: string };
+    expect(body.nameEn).toBe('Network');
     req.flush({ ...mockCategory, id: 'cat-2' });
   });
 
@@ -89,7 +90,8 @@ describe('CategoryService', () => {
     service.merge({ sourceCategoryId: 'cat-1', targetCategoryId: 'cat-2' }).subscribe();
     const req = httpMock.expectOne('/api/admin/categories/merge');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body.sourceCategoryId).toBe('cat-1');
+    const body = req.request.body as { sourceCategoryId?: string };
+    expect(body.sourceCategoryId).toBe('cat-1');
     req.flush(mockCategory);
   });
 });

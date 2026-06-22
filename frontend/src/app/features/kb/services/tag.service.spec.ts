@@ -56,7 +56,8 @@ describe('TagService', () => {
     service.createTag({ nameEn: 'Email', nameFr: 'Courriel', color: '#3366ff' }).subscribe();
     const req = httpMock.expectOne('/api/admin/tags');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body.nameEn).toBe('Email');
+    const body = req.request.body as { nameEn?: string };
+    expect(body.nameEn).toBe('Email');
     req.flush(mockTag);
   });
 
