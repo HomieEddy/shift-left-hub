@@ -1020,6 +1020,18 @@ export const translations: Record<string, { en: string; fr: string }> = {
     en: 'Failed to load documents.',
     fr: 'Échec du chargement des documents.',
   },
+  'admin.documents.error.reprocess': {
+    en: 'Failed to reprocess document: {message}',
+    fr: 'Échec du retraitement du document : {message}',
+  },
+  'admin.documents.error.delete': {
+    en: 'Failed to delete document: {message}',
+    fr: 'Échec de la suppression du document : {message}',
+  },
+  'admin.documents.error.convert': {
+    en: 'Failed to convert: {message}',
+    fr: 'Échec de la conversion : {message}',
+  },
   'admin.taxonomy.title': { en: 'Taxonomy Management', fr: 'Gestion de la taxonomie' },
   'admin.taxonomy.new': { en: 'New Category', fr: 'Nouvelle cat�gorie' },
   'admin.taxonomy.edit': { en: 'Edit Category', fr: 'Modifier la cat�gorie' },
