@@ -2,10 +2,12 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { WorkspaceRoleResponse } from '../../features/admin/workspaces/workspace.model';
+import { LoggerService } from '../logging/logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceRoleService {
   private http = inject(HttpClient);
+  private logger = inject(LoggerService);
 
   private roleSignal = signal<string>('NONE');
   readonly role = this.roleSignal.asReadonly();
@@ -24,7 +26,7 @@ export class WorkspaceRoleService {
   refreshRole(): void {
     this.fetchRole().subscribe({
       error: () => {
-        console.error('Failed to refresh workspace role');
+        this.logger.error('Failed to refresh workspace role');
         this.roleSignal.set('NONE');
       },
     });
