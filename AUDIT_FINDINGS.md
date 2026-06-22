@@ -109,7 +109,7 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| DEP-1 | `spring-modulith-starter-core` + `spring-modulith-starter-test` declared but `org.springframework.modulith.*` imported in **0** Java sources | `backend/pom.xml:114-129` | S | HIGH |
+| DEP-1 | `spring-modulith-starter-core` + `spring-modulith-starter-test` declared but `org.springframework.modulith.*` imported in **0** Java sources | `backend/pom.xml:114-129` | S | HIGH | ✓ fixed in `fix/tier6-group-g` (removed starter-core, starter-test, and the Modulith BOM; modular-monolith architecture is implemented via Spring ApplicationEventPublisher, not Modulith annotations) |
 | DEP-2 | `Caffeine` is appropriate for `RateLimitingFilter` — KEEP (no change) | — | — | LOW |
 | DEP-3 | `DOMPurify` is appropriate for the 1 sanitization site — KEEP (no change) | — | — | LOW |
 | DEP-4 | `@angular/cdk` is already optimally imported via `@angular/cdk/dialog` subpath — KEEP | — | — | LOW |
