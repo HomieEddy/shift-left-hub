@@ -1,7 +1,6 @@
 package com.shiftleft.hub.ai.service;
 
 import com.shiftleft.hub.document.domain.DocumentChunkRepository;
-import com.shiftleft.hub.document.domain.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ import java.util.UUID;
 public class UnifiedSearchService {
 
     private final DocumentChunkRepository documentChunkRepository;
-    private final DocumentRepository documentRepository;
     private final EmbeddingModelProvider embeddingProvider;
 
     private static final int TOP_K = 10;

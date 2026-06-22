@@ -352,18 +352,4 @@ public class DocumentService {
         }
         return filename.substring(lastDot).toLowerCase();
     }
-
-    /**
-     * Finds a READY document by workspace and content hash.
-     *
-     * @param workspaceId the workspace UUID
-     * @param contentHash the SHA-256 content hash
-     * @return the document entity, or null if not found
-     */
-    @Transactional(readOnly = true)
-    public Document findByContentHash(UUID workspaceId, String contentHash) {
-        return documentRepository.findByWorkspaceIdAndContentHashAndStatus(
-                workspaceId, contentHash, DocumentStatus.READY)
-            .orElse(null);
-    }
 }

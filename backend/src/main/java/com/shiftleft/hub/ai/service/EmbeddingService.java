@@ -39,16 +39,6 @@ public class EmbeddingService {
     private String vectorStoreSchema;
 
     /**
-     * Generates an embedding vector for the given text.
-     *
-     * @param text the input text
-     * @return the embedding vector
-     */
-    public float[] generateEmbedding(String text) {
-        return embeddingProvider.getEmbeddingModel().embed(text);
-    }
-
-    /**
      * Stores an embedding for the given article in the vector store.
      *
      * @param article the article to embed and store

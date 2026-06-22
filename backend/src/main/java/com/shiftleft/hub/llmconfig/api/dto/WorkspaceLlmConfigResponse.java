@@ -36,15 +36,11 @@ public record WorkspaceLlmConfigResponse(
 ) {
     /**
      * Creates a WorkspaceLlmConfigResponse from a WorkspaceLlmConfig entity.
-     * Returns null if the input is null.
      *
      * @param config the workspace LLM config entity
-     * @return a new response DTO, or null
+     * @return a new response DTO
      */
     public static WorkspaceLlmConfigResponse from(WorkspaceLlmConfig config) {
-        if (config == null) {
-            return null;
-        }
         return new WorkspaceLlmConfigResponse(
             config.getId(),
             config.getWorkspaceId(),
