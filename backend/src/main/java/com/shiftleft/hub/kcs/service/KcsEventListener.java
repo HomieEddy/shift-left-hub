@@ -65,7 +65,7 @@ public class KcsEventListener {
                 workNoteRepository.save(WorkNote.builder()
                     .ticket(ticket)
                     .author(systemUser)
-                    .content("KCS draft article created: " + article.getTitleEn())
+                    .content("KCS draft article created (id: " + article.getId() + ")")
                     .build());
                 log.info("KCS work note added to ticket {}", event.ticketNumber());
             }
