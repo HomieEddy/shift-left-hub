@@ -46,11 +46,11 @@ export class WorkspaceService {
   }
 
   updateWorkspace(id: string, request: UpdateWorkspaceRequest): Observable<WorkspaceDto> {
-    return this.http.put<WorkspaceDto>(`${this.apiUrl}/${id}`, request, { withCredentials: true });
+    return this.http.put<WorkspaceDto>(`${this.apiUrl}/${id}`, request, {});
   }
 
   deleteWorkspace(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true });
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {});
   }
 
   getInvitations(workspaceId: string): Observable<InvitationDto[]> {
@@ -91,7 +91,6 @@ export class WorkspaceService {
     const context = new HttpContext().set(SUPPRESS_ERROR_TOAST, true);
     return this.http.get<WorkspaceDto[]>(`${this.userApiUrl}/mine`, {
       context,
-      withCredentials: true,
     });
   }
 
@@ -102,18 +101,18 @@ export class WorkspaceService {
   }
 
   leaveWorkspace(id: string): Observable<void> {
-    return this.http.post<void>(`${this.userApiUrl}/${id}/leave`, {}, { withCredentials: true });
+    return this.http.post<void>(`${this.userApiUrl}/${id}/leave`, {}, {});
   }
 
   getMyInvitations(): Observable<InvitationDto[]> {
-    return this.http.get<InvitationDto[]>(`${this.invitationsApiUrl}`, { withCredentials: true });
+    return this.http.get<InvitationDto[]>(`${this.invitationsApiUrl}`, {});
   }
 
   acceptInvitation(id: string): Observable<void> {
     return this.http.post<void>(
       `${this.invitationsApiUrl}/${id}/accept`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 
@@ -121,7 +120,7 @@ export class WorkspaceService {
     return this.http.post<void>(
       `${this.invitationsApiUrl}/${id}/reject`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 }

@@ -17,13 +17,12 @@ export class KcsDraftService {
     const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
     return this.http.get<PaginatedResponse<KcsDraft>>('/api/admin/kcs/drafts', {
       params,
-      withCredentials: true,
     });
   }
 
   /** Gets a single KCS draft by article ID. */
   getDraftDetail(id: string): Observable<KcsDraft> {
-    return this.http.get<KcsDraft>(`/api/admin/kcs/drafts/${id}`, { withCredentials: true });
+    return this.http.get<KcsDraft>(`/api/admin/kcs/drafts/${id}`, {});
   }
 
   /** Approves a KCS draft (→ PUBLISHED). */
@@ -31,7 +30,7 @@ export class KcsDraftService {
     return this.http.put<KcsDraft>(
       `/api/admin/kcs/drafts/${id}/approve`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 
@@ -40,7 +39,7 @@ export class KcsDraftService {
     return this.http.put<KcsDraft>(
       `/api/admin/kcs/drafts/${id}/reject`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 

@@ -64,7 +64,6 @@ describe('ArticleService', () => {
       expect(req.request.method).toBe('GET');
       expect(req.request.params.get('page')).toBe('0');
       expect(req.request.params.get('size')).toBe('20');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockPaginatedResponse);
     });
 
@@ -94,7 +93,6 @@ describe('ArticleService', () => {
 
       const req = httpMock.expectOne('/api/admin/articles/article-1');
       expect(req.request.method).toBe('GET');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockArticle);
     });
   });
@@ -112,7 +110,6 @@ describe('ArticleService', () => {
 
       const req = httpMock.expectOne('/api/admin/articles');
       expect(req.request.method).toBe('POST');
-      expect(req.request.withCredentials).toBe(true);
       expect(req.request.body).toEqual(request);
       req.flush(mockArticle);
     });
@@ -131,7 +128,6 @@ describe('ArticleService', () => {
 
       const req = httpMock.expectOne('/api/admin/articles/article-1');
       expect(req.request.method).toBe('PUT');
-      expect(req.request.withCredentials).toBe(true);
       expect(req.request.body).toEqual(request);
       req.flush(mockArticle);
     });
@@ -145,7 +141,6 @@ describe('ArticleService', () => {
 
       const req = httpMock.expectOne('/api/admin/articles/article-1/publish');
       expect(req.request.method).toBe('PUT');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockArticle);
     });
   });
@@ -158,7 +153,6 @@ describe('ArticleService', () => {
 
       const req = httpMock.expectOne('/api/admin/articles/article-1/archive');
       expect(req.request.method).toBe('PUT');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockArticle);
     });
   });
@@ -169,7 +163,6 @@ describe('ArticleService', () => {
 
       const req = httpMock.expectOne('/api/admin/articles/article-1');
       expect(req.request.method).toBe('DELETE');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(null);
     });
   });

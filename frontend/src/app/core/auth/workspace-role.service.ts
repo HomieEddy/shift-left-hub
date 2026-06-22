@@ -17,7 +17,7 @@ export class WorkspaceRoleService {
 
   fetchRole(): Observable<WorkspaceRoleResponse> {
     return this.http
-      .get<WorkspaceRoleResponse>('/api/workspaces/current/role', { withCredentials: true })
+      .get<WorkspaceRoleResponse>('/api/workspaces/current/role', {})
       .pipe(tap((response) => this.roleSignal.set(response.role)));
   }
 

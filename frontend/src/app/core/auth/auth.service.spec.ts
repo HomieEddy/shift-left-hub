@@ -65,7 +65,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/auth/login');
       expect(req.request.method).toBe('POST');
-      expect(req.request.withCredentials).toBe(true);
 
       // The request body should contain email and password
       const body = req.request.body as { email: string; password: string };
@@ -92,7 +91,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/auth/register');
       expect(req.request.method).toBe('POST');
-      expect(req.request.withCredentials).toBe(true);
 
       const body = req.request.body as { email: string; password: string; displayName: string };
       expect(body.email).toBe('new@example.com');
@@ -112,7 +110,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/auth/refresh');
       expect(req.request.method).toBe('POST');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockAdminResponse);
     });
   });
@@ -129,7 +126,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/auth/logout');
       expect(req.request.method).toBe('POST');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(null);
     });
   });
@@ -189,7 +185,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/admin/users');
       expect(req.request.method).toBe('GET');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockUsers);
     });
 
@@ -211,7 +206,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/admin/users/user-1');
       expect(req.request.method).toBe('GET');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockUser);
     });
 
@@ -232,7 +226,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/admin/users/user-1/role');
       expect(req.request.method).toBe('PUT');
-      expect(req.request.withCredentials).toBe(true);
       expect(req.request.body).toEqual({ role: 'ROLE_ADMIN' });
       req.flush(updatedUser);
     });
@@ -254,7 +247,6 @@ describe('AuthService', () => {
 
       const req = httpMock.expectOne('/api/admin/users/user-1/status');
       expect(req.request.method).toBe('PUT');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(updatedUser);
     });
   });
