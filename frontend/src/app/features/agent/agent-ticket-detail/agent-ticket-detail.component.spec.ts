@@ -135,11 +135,13 @@ describe('AgentTicketDetailComponent', () => {
   it('should handle work notes load error gracefully', () => {
     const errorSubject = new Subject<unknown>();
     agentTicketService.getWorkNotes.mockReturnValue(errorSubject.asObservable());
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
     component.loadWorkNotes('ticket-123');
     errorSubject.error(new Error('Failed'));
 
     expect(component.workNoteError()).toBe('translated');
+    consoleErrorSpy.mockRestore();
   });
 
   it('should call claimTicket on claim', () => {

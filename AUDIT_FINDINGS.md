@@ -122,7 +122,7 @@
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
 | T-1 | `JwtService` has no unit test (critical security logic) | `backend/.../config/JwtService.java` | M | HIGH | ✓ covered in S-6 PR (`JwtServiceTest`) |
-| T-2 | 9 frontend services without `*.spec.ts` (auth-token, workspace-role, llm-settings, category, agent-ticket, public-article, tag, confirmation-dialog, toast) | `frontend/.../services/*.ts` | M | MED |
+| T-2 | 9 frontend services without `*.spec.ts` (auth-token, workspace-role, llm-settings, category, agent-ticket, public-article, tag, confirmation-dialog, toast) | `frontend/.../services/*.ts` | M | MED | ✓ fixed in `fix/tier6-group-m` — wrote 9 spec files using HttpTestingController (per AGENTS.md). Test count: 234 -> 279 (+45). 9 files: auth-token.service.spec, workspace-role.service.spec, llm-settings.service.spec, category.service.spec, agent-ticket.service.spec, public-article.service.spec, tag.service.spec, confirmation-dialog.service.spec, toast.service.spec. |
 | T-3 | AGENTS.md says "Exactly one Playwright script at `e2e/playwright/golden-path.spec.ts`" but 9 specs exist under `e2e/tests/` — doc/contract drift | `AGENTS.md:139-143` vs `e2e/tests/*.spec.ts` | M | HIGH | ✓ fixed in `fix/tier6-group-h` (AGENTS.md updated to describe one Golden Path + 9 non-gating exploratory specs) |
 
 ---
