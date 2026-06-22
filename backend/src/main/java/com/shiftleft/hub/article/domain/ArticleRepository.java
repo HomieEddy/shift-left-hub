@@ -162,6 +162,46 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
             Pageable pageable);
 
     /**
+     * Returns only the IDs of published articles matching the FTS query,
+     * in rank order. Used by KcsDraftingService.checkDuplicates, which
+     * doesn't need title/slug/excerpt/headline/tag data. Skips the
+     * tag_names correlated subquery that the full projection pays for.
+     *
+     * @param query the user's search text
+     * @param workspaceId the workspace to scope the search to
+     * @param pageable the page request
+     * @return a page of article ids
+     */
+    @Query(value = """
+        WITH q AS (
+          SELECT plainto_tsquery('english', :query) AS en_query,
+                 plainto_tsquery('french', :query) AS fr_query
+        )
+        SELECT a.id
+        FROM article a
+        CROSS JOIN q
+        WHERE a.workspace_id = CAST(:workspaceId AS UUID)
+          AND a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ q.en_query OR a.tsv_fr @@ q.fr_query)
+        ORDER BY GREATEST(ts_rank(a.tsv_en, q.en_query), ts_rank(a.tsv_fr, q.fr_query)) DESC
+        """,
+        countQuery = """
+        WITH q AS (
+          SELECT plainto_tsquery('english', :query) AS en_query,
+                 plainto_tsquery('french', :query) AS fr_query
+        )
+        SELECT count(*)
+        FROM article a
+        CROSS JOIN q
+        WHERE a.workspace_id = CAST(:workspaceId AS UUID)
+          AND a.status = 'PUBLISHED'
+          AND (a.tsv_en @@ q.en_query OR a.tsv_fr @@ q.fr_query)
+        """,
+        nativeQuery = true)
+    Page<UUID> searchIdsByText(@Param("query") String query,
+        @Param("workspaceId") UUID workspaceId, Pageable pageable);
+
+    /**
      * Full-text search across published articles filtered by tag names.
      *
      * @param query    the search query

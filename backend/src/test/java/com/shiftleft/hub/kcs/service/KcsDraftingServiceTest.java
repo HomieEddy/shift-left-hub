@@ -168,7 +168,7 @@ class KcsDraftingServiceTest {
                 .createdAt(LocalDateTime.now()).build();
         });
         // checkDuplicates: FTS empty, vector empty
-        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
+        when(articleRepository.searchIdsByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
@@ -225,7 +225,7 @@ class KcsDraftingServiceTest {
                 .author(a.getAuthor()).sourceTicketId(ticketId)
                 .createdAt(LocalDateTime.now()).build();
         });
-        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
+        when(articleRepository.searchIdsByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
@@ -276,7 +276,7 @@ class KcsDraftingServiceTest {
                 "Slug should have UUID suffix: " + a.getSlug());
             return a;
         });
-        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
+        when(articleRepository.searchIdsByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
@@ -396,7 +396,7 @@ class KcsDraftingServiceTest {
                 .author(a.getAuthor()).sourceTicketId(ticketId)
                 .createdAt(LocalDateTime.now()).build();
         });
-        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
+        when(articleRepository.searchIdsByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
@@ -446,7 +446,7 @@ class KcsDraftingServiceTest {
                 .tags(a.getTags()).sourceTicketId(ticketId)
                 .createdAt(LocalDateTime.now()).build();
         });
-        when(articleRepository.searchByText(anyString(), any(UUID.class), any(Pageable.class)))
+        when(articleRepository.searchIdsByText(anyString(), any(UUID.class), any(Pageable.class)))
             .thenReturn(new PageImpl<>(List.of()));
         when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
 
