@@ -21,20 +21,30 @@
             <Package name="~.*\.service"/>
         </Or>
     </Match>
-    <!-- VA_FORMAT_STRING_USES_NEWLINE: Text blocks with .formatted() — Java text blocks normalize to \n -->
+    <!-- EI_EXPOSE_REP + UUF_UNUSED_FIELD: Internal record KcsParsedArticle
+         is constructed only inside KcsResponseParser.parse() and the
+         suggestedTags list is wrapped via List.copyOf(). Record components
+         cannot be defensively copied without losing the record shape, and
+         SpotBugs UUF_UNUSED_FIELD is a known false-positive on records
+         (the auto-generated accessors DO use the fields). -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,UUF_UNUSED_FIELD"/>
+        <Class name="com.shiftleft.hub.kcs.service.KcsResponseParser$KcsParsedArticle"/>
+    </Match>
+    <!-- VA_FORMAT_STRING_USES_NEWLINE: Text blocks with .formatted() - Java text blocks normalize to \n -->
     <Match>
         <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
     </Match>
-    <!-- Pre-existing PATH_TRAVERSAL_IN in DocumentService — file upload path builder uses configured base dir -->
+    <!-- Pre-existing PATH_TRAVERSAL_IN in DocumentService - file upload path builder uses configured base dir -->
     <Match>
         <Bug pattern="PATH_TRAVERSAL_IN"/>
         <Package name="~.*\.document\.service"/>
     </Match>
-    <!-- Pre-existing CRLF_INJECTION_LOGS — logging with user-controlled data, acceptable risk -->
+    <!-- Pre-existing CRLF_INJECTION_LOGS - logging with user-controlled data, acceptable risk -->
     <Match>
         <Bug pattern="CRLF_INJECTION_LOGS"/>
     </Match>
-    <!-- SPRING_CSRF_PROTECTION_DISABLED: Stateless JWT API — CSRF is mitigated by SameSite=Strict cookies (SEC-04) -->
+    <!-- SPRING_CSRF_PROTECTION_DISABLED: Stateless JWT API - CSRF is mitigated by SameSite=Strict cookies (SEC-04) -->
     <Match>
         <Bug pattern="SPRING_CSRF_PROTECTION_DISABLED"/>
     </Match>

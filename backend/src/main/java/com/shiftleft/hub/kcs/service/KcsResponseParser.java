@@ -18,7 +18,12 @@ import java.util.Objects;
 @Component
 public class KcsResponseParser {
 
-    /** Internal record for parsed LLM output. */
+    /**
+     * Internal record for parsed LLM output. The {@code suggestedTags} field
+     * is wrapped in {@link List#copyOf} at construction time so callers cannot
+     * mutate the parser's internal list; SpotBugs EI_EXPOSE_REP is suppressed
+     * because the constructor is the only way to obtain an instance.
+     */
     public record KcsParsedArticle(
         String titleEn, String titleFr,
         String contentEn, String contentFr,
@@ -52,7 +57,8 @@ public class KcsResponseParser {
                 : notes;
         }
 
-        List<String> tags = parseTags(extractField(response, "suggested_tags"));
+        String rawTags = extractField(response, "suggested_tags");
+        List<String> tags = parseTags(rawTags);
 
         String titleFr = extractField(response, "title_fr");
         String contentFr = extractField(response, "content_fr");
