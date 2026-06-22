@@ -49,11 +49,11 @@ export class TaxonomyBulkComponent implements OnInit {
       .subscribe({
         next: () => {
           this.isApplying.set(false);
-          this.applyMessage.set('Categories updated');
+          this.applyMessage.set(this.translationService.translate('admin.taxonomy.bulk.updated'));
         },
         error: () => {
           this.isApplying.set(false);
-          this.applyMessage.set('Failed to update categories');
+          this.applyMessage.set(this.translationService.translate('admin.taxonomy.bulk.error.update'));
         },
       });
   }

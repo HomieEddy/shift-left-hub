@@ -53,7 +53,7 @@ export class TaxonomyTreeComponent implements OnInit {
           this.isLoading.set(false);
         },
         error: () => {
-          this.errorMessage.set('Failed to load categories');
+          this.errorMessage.set(this.translationService.translate('admin.taxonomy.error.load'));
           this.isLoading.set(false);
         },
       });

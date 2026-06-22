@@ -513,6 +513,22 @@ export const translations: Record<string, { en: string; fr: string }> = {
   'shared.search.placeholder': { en: 'Search...', fr: 'Rechercher...' },
   'shared.table.empty': { en: 'No data found.', fr: 'Aucune donnée trouvée.' },
   'admin.workspaces.title': { en: 'Workspaces', fr: 'Espaces de travail' },
+  'admin.workspaces.error.load': {
+    en: 'Failed to load workspaces',
+    fr: 'Échec du chargement des espaces',
+  },
+  'admin.workspaces.error.create': {
+    en: 'Failed to create workspace',
+    fr: 'Échec de la création de l\'espace',
+  },
+  'admin.workspaces.placeholder.name': {
+    en: 'My Workspace',
+    fr: 'Mon espace',
+  },
+  'admin.workspaces.placeholder.description': {
+    en: 'Optional description',
+    fr: 'Description optionnelle',
+  },
   'admin.workspaces.create': { en: 'Create Workspace', fr: 'Créer un espace' },
   'admin.workspaces.creating': { en: 'Creating...', fr: 'Création...' },
   'admin.workspaces.new': { en: 'New Workspace', fr: 'Nouvel espace' },
@@ -949,6 +965,10 @@ export const translations: Record<string, { en: string; fr: string }> = {
     en: 'This tag is in use and cannot be deleted.',
     fr: 'Cette \u00e9tiquette est utilis\u00e9e et ne peut \u00eatre supprim\u00e9e.',
   },
+  'kb.tags.error.save': {
+    en: 'Failed to save tag.',
+    fr: 'Échec de l\'enregistrement de l\'étiquette.',
+  },
   'toast.dismiss': { en: 'Dismiss notification', fr: 'Fermer la notification' },
 
   'nav.documents': { en: 'Documents', fr: 'Documents' },
@@ -1000,6 +1020,18 @@ export const translations: Record<string, { en: string; fr: string }> = {
     en: 'Failed to load documents.',
     fr: 'Échec du chargement des documents.',
   },
+  'admin.documents.error.reprocess': {
+    en: 'Failed to reprocess document: {message}',
+    fr: 'Échec du retraitement du document : {message}',
+  },
+  'admin.documents.error.delete': {
+    en: 'Failed to delete document: {message}',
+    fr: 'Échec de la suppression du document : {message}',
+  },
+  'admin.documents.error.convert': {
+    en: 'Failed to convert: {message}',
+    fr: 'Échec de la conversion : {message}',
+  },
   'admin.taxonomy.title': { en: 'Taxonomy Management', fr: 'Gestion de la taxonomie' },
   'admin.taxonomy.new': { en: 'New Category', fr: 'Nouvelle cat�gorie' },
   'admin.taxonomy.edit': { en: 'Edit Category', fr: 'Modifier la cat�gorie' },
@@ -1030,6 +1062,18 @@ export const translations: Record<string, { en: string; fr: string }> = {
   'admin.taxonomy.create': { en: 'Create', fr: 'Cr�er' },
   'admin.taxonomy.update': { en: 'Update', fr: 'Mettre � jour' },
   'admin.taxonomy.loading': { en: 'Loading categories...', fr: 'Chargement des cat�gories...' },
+  'admin.taxonomy.error.load': {
+    en: 'Failed to load categories',
+    fr: 'Échec du chargement des catégories',
+  },
+  'admin.taxonomy.bulk.updated': {
+    en: 'Categories updated',
+    fr: 'Catégories mises à jour',
+  },
+  'admin.taxonomy.bulk.error.update': {
+    en: 'Failed to update categories',
+    fr: 'Échec de la mise à jour des catégories',
+  },
   'admin.articles.category': { en: 'Category', fr: 'Cat�gorie' },
   'admin.articles.categoryNone': { en: 'None', fr: 'Aucune' },
   'nav.taxonomy': { en: 'Taxonomy', fr: 'Taxonomie' },

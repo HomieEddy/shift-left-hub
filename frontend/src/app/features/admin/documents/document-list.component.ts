@@ -161,7 +161,9 @@ export class DocumentListComponent implements OnInit {
       .subscribe({
         next: () => this.loadDocuments(),
         error: (err: Error) => {
-          this.errorMessage.set(`Failed to reprocess document: ${err.message}`);
+          this.errorMessage.set(
+            this.translationService.translate('admin.documents.error.reprocess', { message: err.message }),
+          );
         },
       });
   }
@@ -186,7 +188,9 @@ export class DocumentListComponent implements OnInit {
           this.loadDocuments();
         },
         error: (err: Error) => {
-          this.errorMessage.set(`Failed to delete document: ${err.message}`);
+          this.errorMessage.set(
+            this.translationService.translate('admin.documents.error.delete', { message: err.message }),
+          );
         },
       });
   }
@@ -214,7 +218,9 @@ export class DocumentListComponent implements OnInit {
             ids.delete(doc.id);
             return ids;
           });
-          this.errorMessage.set(`Failed to convert: ${err.message}`);
+          this.errorMessage.set(
+            this.translationService.translate('admin.documents.error.convert', { message: err.message }),
+          );
         },
       });
   }
