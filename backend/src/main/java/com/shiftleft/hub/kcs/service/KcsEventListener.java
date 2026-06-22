@@ -115,8 +115,9 @@ public class KcsEventListener {
                 }
             }
         }
-        // Loop body either returns, throws, or continues to the next iteration.
-        // Reaching this point is unreachable.
+        // Unreachable: the loop body returns on success, throws on
+        // failure. Java's flow analysis still requires a return path.
+        throw new IllegalStateException("KCS drafting reached an unreachable state");
     }
 
     /** Determines if an exception is likely LLM-related and retryable. */
