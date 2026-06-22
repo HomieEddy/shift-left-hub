@@ -322,32 +322,6 @@ class DocumentServiceTest {
         verify(eventPublisher).publishEvent(any(DocumentUploadedEvent.class));
     }
 
-    // ── findByContentHash ─────────────────────────────────────────
-
-    @Test
-    void findByContentHash_shouldReturnDocument() {
-        Document doc = createDocument(DocumentStatus.READY);
-        when(documentRepository.findByWorkspaceIdAndContentHashAndStatus(
-            WORKSPACE_ID, CONTENT_HASH, DocumentStatus.READY))
-            .thenReturn(Optional.of(doc));
-
-        Document result = documentService.findByContentHash(WORKSPACE_ID, CONTENT_HASH);
-
-        assertNotNull(result);
-        assertEquals(CONTENT_HASH, result.getContentHash());
-    }
-
-    @Test
-    void findByContentHash_shouldReturnNullWhenNotFound() {
-        when(documentRepository.findByWorkspaceIdAndContentHashAndStatus(
-            WORKSPACE_ID, CONTENT_HASH, DocumentStatus.READY))
-            .thenReturn(Optional.empty());
-
-        Document result = documentService.findByContentHash(WORKSPACE_ID, CONTENT_HASH);
-
-        assertNull(result);
-    }
-
     // ── getDocuments: wrong workspace ──────────────────────────
 
     @Test

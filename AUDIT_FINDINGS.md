@@ -59,14 +59,14 @@
 
 | # | Finding | file:line | Conf |
 |---|---------|-----------|------|
-| D-1 | `DocumentRepository documentRepository` field injected but never used in `UnifiedSearchService` | `backend/.../ai/service/UnifiedSearchService.java:4,25` | HIGH |
-| D-2 | `EmbeddingService.generateEmbedding(String)` public, no callers | `backend/.../ai/service/EmbeddingService.java:47-49` | HIGH |
-| D-3 | `EmbeddingService.storeEmbedding(Article)` public, no callers | `backend/.../ai/service/EmbeddingService.java:56-68` | HIGH |
-| D-4 | `AiConfigService.buildChatClient(AiConfig)` overload unused (only `(String,String,String,String)` is called) | `backend/.../ai/service/AiConfigService.java:249-255` | HIGH |
-| D-5 | `DocumentService.findByContentHash(UUID, String)` public method unused | `backend/.../document/service/DocumentService.java:357-362` | HIGH |
-| D-6 | `WorkspaceLlmConfigResponse.from(...)` `return null;` branch unreachable | `backend/.../llmconfig/api/dto/WorkspaceLlmConfigResponse.java:44-47` | HIGH |
-| D-7 | Unused imports in `AiConfigService`: `ChatCompletion`, `MetadataMode`, `OpenAiEmbeddingModel`, `OpenAiEmbeddingOptions` | `backend/.../ai/service/AiConfigService.java:4,16,23,24` | HIGH |
-| D-8 | TODO: `KCS drafting failed` `RuntimeException` thrown twice in same method (first is dead branch) | `backend/.../kcs/service/KcsEventListener.java:113-114,118-119` | MED |
+| D-1 | `DocumentRepository documentRepository` field injected but never used in `UnifiedSearchService` | `backend/.../ai/service/UnifiedSearchService.java:4,25` | HIGH | ✓ fixed in `fix/tier4-dead-code` |
+| D-2 | `EmbeddingService.generateEmbedding(String)` public, no production callers (only tests) | `backend/.../ai/service/EmbeddingService.java:47-49` | HIGH | ✓ fixed in `fix/tier4-dead-code` |
+| D-3 | `EmbeddingService.storeEmbedding(Article)` public, no callers | `backend/.../ai/service/EmbeddingService.java:56-68` | HIGH | NOT DEAD — used internally by `generateAndStoreEmbedding` (line 77) |
+| D-4 | `AiConfigService.buildChatClient(AiConfig)` overload unused (only `(String,String,String,String)` is called) | `backend/.../ai/service/AiConfigService.java:249-255` | HIGH | NOT DEAD — called by `KcsDraftingService:224` and `WorkspaceChatModelRegistry:103,114` |
+| D-5 | `DocumentService.findByContentHash(UUID, String)` public method unused | `backend/.../document/service/DocumentService.java:357-362` | HIGH | ✓ fixed in `fix/tier4-dead-code` |
+| D-6 | `WorkspaceLlmConfigResponse.from(...)` `return null;` branch unreachable | `backend/.../llmconfig/api/dto/WorkspaceLlmConfigResponse.java:44-47` | HIGH | ✓ fixed in `fix/tier4-dead-code` |
+| D-7 | Unused imports in `AiConfigService`: `ChatCompletion`, `MetadataMode`, `OpenAiEmbeddingModel`, `OpenAiEmbeddingOptions` | `backend/.../ai/service/AiConfigService.java:4,16,23,24` | HIGH | ✓ fixed in `fix/tier4-dead-code` |
+| D-8 | TODO: `KCS drafting failed` `RuntimeException` thrown twice in same method (first is dead branch) | `backend/.../kcs/service/KcsEventListener.java:113-114,118-119` | MED | ✓ fixed in `fix/tier4-dead-code` |
 
 ---
 

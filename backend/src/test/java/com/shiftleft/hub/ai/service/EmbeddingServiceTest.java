@@ -73,29 +73,6 @@ class EmbeddingServiceTest {
         return article;
     }
 
-    // ── generateEmbedding ────────────────────────────────────
-
-    @Test
-    void embed_shouldReturnVector() {
-        float[] expected = {0.1f, 0.2f, 0.3f};
-        when(embeddingModel.embed("test text")).thenReturn(expected);
-
-        float[] result = embeddingService.generateEmbedding("test text");
-
-        assertArrayEquals(expected, result);
-        verify(embeddingModel).embed("test text");
-    }
-
-    @Test
-    void embed_shouldHandleEmptyText() {
-        float[] expected = {};
-        when(embeddingModel.embed("")).thenReturn(expected);
-
-        float[] result = embeddingService.generateEmbedding("");
-
-        assertArrayEquals(expected, result);
-    }
-
     // ── storeEmbedding ────────────────────────────────────────
 
     @Test

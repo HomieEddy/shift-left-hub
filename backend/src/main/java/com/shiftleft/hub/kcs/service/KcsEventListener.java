@@ -115,8 +115,8 @@ public class KcsEventListener {
                 }
             }
         }
-        throw new RuntimeException(
-            "KCS drafting failed after " + MAX_RETRIES + " attempts");
+        // Loop body either returns, throws, or continues to the next iteration.
+        // Reaching this point is unreachable.
     }
 
     /** Determines if an exception is likely LLM-related and retryable. */
