@@ -140,7 +140,7 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| O-1 | `DocumentService` 329 lines, 6 responsibilities (CRUD, upload, status, search, paths, chunks) | `DocumentService.java:1-329` | L | MED | **NOT FIXED** — refactoring a 329-line working service into smaller collaborators is a multi-PR change with no immediate behavioural benefit. The service is unit-tested. Deferred until a feature forces the split. |
+| O-1 | `DocumentService` 329 lines, 6 responsibilities (CRUD, upload, status, search, paths, chunks) | `DocumentService.java:1-329` | L | MED | ✓ fixed in `refactor/tier10-o1-document-service-split` (PR #122) — split into 4 single-responsibility classes: `DocumentFileStorage` (FS write/delete with S-1 sanitization), `DocumentConverter` (document→article), `DocumentWorkspaceAccess` (workspace-scoped lookup), and a slimmed `DocumentService` (orchestration only, 356→234 lines, −34%). 375/375 unit tests pass; 13 new tests added. |
 | O-2 | `KcsDraftingService` 356 lines, 4 responsibilities (prompt, LLM, parse, dedup) | `KcsDraftingService.java:1-356` | M | MED | **NOT FIXED** — same as O-1. The 4 responsibilities are tightly coupled around the LLM call sequence; splitting them would require careful mock coordination in unit tests. Deferred. |
 | O-3 | `MasterSeeder` 316 lines, 5 distinct seeding steps | `MasterSeeder.java:104-305` | M | MED | **NOT FIXED** — the 5 seeding steps are intentionally linear (workspaces -> users -> articles -> ...). Each step depends on the previous; the file is read top-to-bottom. Splitting would add ceremony with no clarity gain. Deferred. |
 
