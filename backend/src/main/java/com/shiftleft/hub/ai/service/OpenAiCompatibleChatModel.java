@@ -45,14 +45,10 @@ public class OpenAiCompatibleChatModel implements ChatModel {
         for (ChatCompletion.Choice choice : completion.choices()) {
             String content = choice.message().content().orElse("");
             AssistantMessage msg = new AssistantMessage(content);
-            generations.add(new Generation(msg, ChatGenerationMetadata.builder()
-                .finishReason(choice.finishReason().toString())
-                .build()));
+            generations.add(new Generation(msg, genMetadata(choice.finishReason().toString())));
         }
 
-        return new ChatResponse(generations, ChatResponseMetadata.builder()
-            .model(model)
-            .build());
+        return new ChatResponse(generations, responseMetadata());
     }
 
     @Override
@@ -68,16 +64,21 @@ public class OpenAiCompatibleChatModel implements ChatModel {
                             content = choice.delta().content().get();
                         }
                         AssistantMessage msg = new AssistantMessage(content);
-                        generations.add(new Generation(msg, ChatGenerationMetadata.builder()
-                            .finishReason(choice.finishReason().isPresent()
-                                ? choice.finishReason().get().toString() : null)
-                            .build()));
+                        String finishReason = choice.finishReason().isPresent()
+                            ? choice.finishReason().get().toString() : null;
+                        generations.add(new Generation(msg, genMetadata(finishReason)));
                     }
-                    return new ChatResponse(generations, ChatResponseMetadata.builder()
-                        .model(model)
-                        .build());
+                    return new ChatResponse(generations, responseMetadata());
                 })
         );
+    }
+
+    private ChatResponseMetadata responseMetadata() {
+        return ChatResponseMetadata.builder().model(model).build();
+    }
+
+    private ChatGenerationMetadata genMetadata(String finishReason) {
+        return ChatGenerationMetadata.builder().finishReason(finishReason).build();
     }
 
     private ChatCompletionCreateParams buildParams(Prompt prompt) {

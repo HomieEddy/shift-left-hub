@@ -122,17 +122,13 @@ public class PublicArticleService {
 
         List<ArticleSearchResult> items = results.getContent().stream()
             .map(row -> {
-                var id = (UUID) row[0];
-                var titleEn = (String) row[1];
-                var titleFr = (String) row[2];
-                var slug = (String) row[3];
-                var excerpt = (String) row[4];
+                FtsArticleRow base = FtsArticleRow.from(row);
                 var publishedAt = (LocalDateTime) row[5];
                 var headlineEn = (String) row[6];
                 var headlineFr = (String) row[7];
                 var tagArray = (Object[]) row[8];
 
-                var title = titleEn != null ? titleEn : titleFr;
+                var title = base.titleEn() != null ? base.titleEn() : base.titleFr();
                 var headline = headlineEn != null ? headlineEn : headlineFr;
 
                 var tagsForArticle = tagArray == null
@@ -144,7 +140,8 @@ public class PublicArticleService {
                         .collect(Collectors.toCollection(LinkedHashSet::new));
 
                 return new ArticleSearchResult(
-                    id, title, headline, slug, excerpt, publishedAt, tagsForArticle);
+                    base.id(), title, headline, base.slug(), base.excerpt(),
+                    publishedAt, tagsForArticle);
             })
             .toList();
 
