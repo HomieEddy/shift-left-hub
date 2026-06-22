@@ -4,6 +4,7 @@ import com.shiftleft.hub.config.AuthCookieProperties;
 import com.shiftleft.hub.user.api.dto.AuthResponse;
 import com.shiftleft.hub.user.api.dto.LoginRequest;
 import com.shiftleft.hub.user.api.dto.RegisterRequest;
+import com.shiftleft.hub.user.domain.UserNotFoundException;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.service.AuthService;
 import com.shiftleft.hub.workspace.service.WorkspaceService;
@@ -110,7 +111,7 @@ public class AuthController {
             @PathVariable UUID id,
             @AuthenticationPrincipal UserDetails userDetails) {
         var user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UserNotFoundException());
         if (!workspaceService.isMemberOfWorkspace(id, user.getId())) {
             throw new IllegalArgumentException("User is not a member of this workspace");
         }
