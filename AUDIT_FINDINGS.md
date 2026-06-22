@@ -70,7 +70,7 @@
 
 | # | Finding | file:line | Effort | Conf |
 |---|---------|-----------|--------|------|
-| X-1 | 60+ `withCredentials: true` options duplicated across 14 frontend services; `baseUrlInterceptor` already sets it for all `/api/*` | `frontend/.../services/*.ts` (47+ matches) | S | HIGH |
+| X-1 | 60+ `withCredentials: true` options duplicated across 14 frontend services; `baseUrlInterceptor` already sets it for all `/api/*` | `frontend/.../services/*.ts` (47+ matches) | S | HIGH | ✓ fixed in `fix/tier5-group-b` (PR #105) — `baseUrlInterceptor` already calls `req.clone({ withCredentials: true, ... })` for every `/api/*` request, so the 47 explicit `withCredentials: true` options across 10 service files were dead. Removal is behavior-neutral because the interceptor sets the flag before the request leaves the app. |
 | X-2 | `RuntimeException("User not found")` repeated 7×; `UserNotFoundException` exists but unused | `WorkspaceController:40,62,80`; `InvitationController:37,54,71`; `AuthController:113` | S | HIGH | ✓ fixed in `fix/tier5-group-a` |
 | X-3 | `slug + "-" + UUID.randomUUID().toString().substring(0, 8)` slug-uniqueness pattern duplicated 4× | `ArticleService.java:104,142`; `DocumentService.java:252`; `KcsDraftingService.java:84` | S | HIGH | ✓ fixed in `fix/tier5-group-a` (SlugUtils.withUniqueSuffix) |
 | X-4 | `chat.service.ts` re-implements `__env` base-URL resolution using raw `fetch` (bypasses `baseUrlInterceptor`) | `frontend/.../chat/chat.service.ts:31-35` | M | HIGH | ✓ fixed in `fix/tier5-group-c` (readApiBaseUrl/resolveApiUrl helper) |
