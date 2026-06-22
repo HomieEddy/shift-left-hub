@@ -1,7 +1,6 @@
 package com.shiftleft.hub.ai.api;
 
 import com.shiftleft.hub.ai.api.dto.ChatRequest;
-import com.shiftleft.hub.ai.api.dto.StreamEvent;
 import com.shiftleft.hub.ai.service.AiChatService;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import jakarta.validation.Valid;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -61,7 +59,7 @@ public class ChatController {
                 }
                 aiChatService.processChat(request, emitter, auth.getName());
             } catch (Exception e) {
-                emitErrorAndComplete(emitter, "An error occurred: " + e.getMessage());
+                SseEmitterHelper.emitErrorAndComplete(emitter, "An error occurred: " + e.getMessage());
             } finally {
                 if (workspaceId != null) {
                     WorkspaceContextHolder.clear();
@@ -69,19 +67,8 @@ public class ChatController {
             }
         });
 
-        emitter.onTimeout(() -> emitErrorAndComplete(emitter, "Request timed out after 30 seconds"));
+        emitter.onTimeout(() -> SseEmitterHelper.emitErrorAndComplete(emitter, "Request timed out after 30 seconds"));
 
         return emitter;
-    }
-
-    private void emitErrorAndComplete(SseEmitter emitter, String message) {
-        try {
-            emitter.send(SseEmitter.event()
-                .name("message")
-                .data(new StreamEvent("error", message, null)));
-            emitter.complete();
-        } catch (IOException e) {
-            emitter.completeWithError(e);
-        }
     }
 }

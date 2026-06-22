@@ -1,8 +1,10 @@
 package com.shiftleft.hub.ai.service;
 
+import com.shiftleft.hub.ai.api.SseEmitterHelper;
 import com.shiftleft.hub.ai.api.dto.ChatRequest;
 import com.shiftleft.hub.ai.api.dto.StreamEvent;
 import com.shiftleft.hub.article.domain.ArticleRepository;
+import com.shiftleft.hub.article.service.FtsArticleRow;
 import com.shiftleft.hub.common.domain.WorkspaceContextHolder;
 import com.shiftleft.hub.llmconfig.service.WorkspaceChatModelRegistry;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,6 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.ai.vectorstore.filter.Filter.Expression;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.Disposable;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,11 +67,9 @@ public class AiChatService {
             List<HybridSearchResult> results = hybridSearch(request.message(), threshold);
 
             if (results.isEmpty()) {
-                StreamEvent fallbackEvent = new StreamEvent("fallback",
+                SseEmitterHelper.emitAndComplete(emitter, new StreamEvent("fallback",
                     "I couldn't find a resolution in the knowledge base. Would you like to escalate to a human agent?",
-                    null);
-                emitter.send(SseEmitter.event().name("message").data(fallbackEvent));
-                emitter.complete();
+                    null));
                 return;
             }
 
@@ -94,11 +92,7 @@ public class AiChatService {
                 .content()
                 .doOnError(error -> {
                     try {
-                        emitter.send(SseEmitter.event().name("message")
-                            .data(new StreamEvent("error", "Stream error: " + error.getMessage(), null)));
-                        emitter.complete();
-                    } catch (IOException e) {
-                        emitter.completeWithError(e);
+                        SseEmitterHelper.emitErrorAndComplete(emitter, "Stream error: " + error.getMessage());
                     } finally {
                         if (subscription[0] != null) {
                             subscription[0].dispose();
@@ -116,11 +110,8 @@ public class AiChatService {
                             r.slug() == null ? "document" : null,
                             r.excerpt()))
                             .toList();
-                        emitter.send(SseEmitter.event().name("message")
-                            .data(new StreamEvent("done", fullResponse.get(), sourceRefs)));
-                        emitter.complete();
-                    } catch (IOException e) {
-                        emitter.completeWithError(e);
+                        SseEmitterHelper.emitAndComplete(
+                            emitter, new StreamEvent("done", fullResponse.get(), sourceRefs));
                     } finally {
                         if (subscription[0] != null) {
                             subscription[0].dispose();
@@ -132,15 +123,12 @@ public class AiChatService {
                 chunk -> {
                     if (chunk != null && !chunk.isEmpty()) {
                         fullResponse.updateAndGet(s -> s + chunk);
-                        try {
-                            emitter.send(SseEmitter.event().name("message")
-                                .data(new StreamEvent("token", chunk, null)));
-                        } catch (IOException e) {
+                        boolean sent = SseEmitterHelper.tryEmit(emitter, new StreamEvent("token", chunk, null));
+                        if (!sent) {
                             log.debug("Client disconnected, aborting stream");
                             if (subscription[0] != null) {
                                 subscription[0].dispose();
                             }
-                            emitter.completeWithError(e);
                         }
                     }
                 }
@@ -148,13 +136,7 @@ public class AiChatService {
 
         } catch (Exception e) {
             log.error("Error processing chat: {}", e.getMessage(), e);
-            try {
-                emitter.send(SseEmitter.event().name("message")
-                    .data(new StreamEvent("error", "An error occurred: " + e.getMessage(), null)));
-                emitter.complete();
-            } catch (IOException ex) {
-                emitter.completeWithError(ex);
-            }
+            SseEmitterHelper.emitErrorAndComplete(emitter, "An error occurred: " + e.getMessage());
         }
     }
 
@@ -271,12 +253,9 @@ public class AiChatService {
         var page = articleRepository.searchByText(query, workspaceId, PageRequest.of(0, TOP_K));
         return page.getContent().stream()
             .map(row -> {
-                UUID id = (UUID) row[0];
-                String titleEn = (String) row[1];
-                String titleFr = (String) row[2];
-                String slug = (String) row[3];
-                String excerpt = (String) row[4];
-                return new HybridSearchResult(id, titleEn, titleFr, slug, excerpt, 0);
+                FtsArticleRow r = FtsArticleRow.from(row);
+                return new HybridSearchResult(
+                    r.id(), r.titleEn(), r.titleFr(), r.slug(), r.excerpt(), 0);
             })
             .toList();
     }
