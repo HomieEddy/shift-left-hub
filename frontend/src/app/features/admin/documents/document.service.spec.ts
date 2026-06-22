@@ -54,7 +54,6 @@ describe('DocumentService', () => {
 
       const req = httpMock.expectOne('/api/admin/documents');
       expect(req.request.method).toBe('GET');
-      expect(req.request.withCredentials).toBe(true);
       req.flush([mockDocument]);
     });
   });
@@ -86,7 +85,6 @@ describe('DocumentService', () => {
       const body = req.request.body as FormData;
       expect(body instanceof FormData).toBe(true);
       expect(body.has('file')).toBe(true);
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockUploadResponse);
     });
   });
@@ -97,7 +95,6 @@ describe('DocumentService', () => {
 
       const req = httpMock.expectOne('/api/admin/documents/doc-1');
       expect(req.request.method).toBe('DELETE');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(null);
     });
   });
@@ -110,7 +107,6 @@ describe('DocumentService', () => {
 
       const req = httpMock.expectOne('/api/admin/documents/doc-1/reprocess');
       expect(req.request.method).toBe('POST');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockUploadResponse);
     });
   });

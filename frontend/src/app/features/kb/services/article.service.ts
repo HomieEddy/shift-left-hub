@@ -15,29 +15,27 @@ export class ArticleService {
   getArticles(page = 0, size = 20): Observable<PaginatedResponse<ArticleDto>> {
     return this.http.get<PaginatedResponse<ArticleDto>>('/api/admin/articles', {
       params: { page, size },
-      withCredentials: true,
-    });
+      });
   }
 
   getArticleById(id: string): Observable<ArticleDto> {
-    return this.http.get<ArticleDto>(`/api/admin/articles/${id}`, { withCredentials: true });
+    return this.http.get<ArticleDto>(`/api/admin/articles/${id}`, {});
   }
 
   createArticle(request: CreateArticleRequest): Observable<ArticleDto> {
-    return this.http.post<ArticleDto>('/api/admin/articles', request, { withCredentials: true });
+    return this.http.post<ArticleDto>('/api/admin/articles', request, {});
   }
 
   updateArticle(id: string, request: UpdateArticleRequest): Observable<ArticleDto> {
     return this.http.put<ArticleDto>(`/api/admin/articles/${id}`, request, {
-      withCredentials: true,
-    });
+      });
   }
 
   publishArticle(id: string): Observable<ArticleDto> {
     return this.http.put<ArticleDto>(
       `/api/admin/articles/${id}/publish`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 
@@ -45,11 +43,11 @@ export class ArticleService {
     return this.http.put<ArticleDto>(
       `/api/admin/articles/${id}/archive`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 
   deleteArticle(id: string): Observable<void> {
-    return this.http.delete<void>(`/api/admin/articles/${id}`, { withCredentials: true });
+    return this.http.delete<void>(`/api/admin/articles/${id}`, {});
   }
 }

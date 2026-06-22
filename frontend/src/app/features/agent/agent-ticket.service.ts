@@ -23,7 +23,7 @@ export class AgentTicketService {
     if (filters?.category != null) params = params.set('category', filters.category);
     if (filters?.urgency != null) params = params.set('urgency', filters.urgency);
     if (filters?.search != null) params = params.set('search', filters.search);
-    return this.http.get<AgentTicket[]>('/api/agent/tickets', { params, withCredentials: true });
+    return this.http.get<AgentTicket[]>('/api/agent/tickets', { params });
   }
 
   /**
@@ -31,7 +31,7 @@ export class AgentTicketService {
    * @param id the ticket UUID
    */
   getTicket(id: string): Observable<AgentTicket> {
-    return this.http.get<AgentTicket>(`/api/agent/tickets/${id}`, { withCredentials: true });
+    return this.http.get<AgentTicket>(`/api/agent/tickets/${id}`, {});
   }
 
   /**
@@ -42,7 +42,7 @@ export class AgentTicketService {
     return this.http.post<AgentTicket>(
       `/api/agent/tickets/${id}/claim`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 
@@ -52,8 +52,7 @@ export class AgentTicketService {
    */
   getWorkNotes(id: string): Observable<WorkNote[]> {
     return this.http.get<WorkNote[]>(`/api/agent/tickets/${id}/work-notes`, {
-      withCredentials: true,
-    });
+      });
   }
 
   /**
@@ -65,7 +64,7 @@ export class AgentTicketService {
     return this.http.post<WorkNote>(
       `/api/agent/tickets/${id}/work-notes`,
       { content },
-      { withCredentials: true },
+      {},
     );
   }
 
@@ -76,7 +75,6 @@ export class AgentTicketService {
    */
   resolveTicket(id: string, request: ResolveTicketRequest): Observable<AgentTicket> {
     return this.http.post<AgentTicket>(`/api/agent/tickets/${id}/resolve`, request, {
-      withCredentials: true,
-    });
+      });
   }
 }
