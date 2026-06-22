@@ -126,6 +126,7 @@ export class UserListComponent implements OnInit {
         }),
         confirmLabel: this.translationService.translate('admin.users.' + action + '-confirm'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (!confirmed) return;
         this.authService

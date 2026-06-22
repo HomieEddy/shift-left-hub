@@ -1,7 +1,6 @@
 package com.shiftleft.hub.document.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,6 @@ public class DocumentChunkingService {
     private final int maxTokensPerChunk;
     private final int overlapTokens;
 
-    @Autowired
     public DocumentChunkingService(
             @Value("${app.document.chunk.max-tokens:512}") int maxTokensPerChunk,
             @Value("${app.document.chunk.overlap-tokens:50}") int overlapTokens) {

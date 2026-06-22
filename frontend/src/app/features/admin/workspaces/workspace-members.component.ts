@@ -99,6 +99,7 @@ export class WorkspaceMembersComponent implements OnInit {
         }),
         confirmLabel: this.translationService.translate('workspace.members.change-role-confirm'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (!confirmed) {
           this.loadData();
@@ -121,6 +122,7 @@ export class WorkspaceMembersComponent implements OnInit {
         }),
         confirmLabel: this.translationService.translate('workspace.members.remove-confirm'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (!confirmed) return;
         this.workspaceService
@@ -139,6 +141,7 @@ export class WorkspaceMembersComponent implements OnInit {
         }),
         confirmLabel: this.translationService.translate('workspace.members.revoke-confirm'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (!confirmed) return;
         this.workspaceService

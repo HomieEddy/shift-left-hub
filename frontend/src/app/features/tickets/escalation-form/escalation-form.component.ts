@@ -1,4 +1,5 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TicketService } from '../ticket.service';
@@ -13,6 +14,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
 })
 export class EscalationFormComponent {
   private ticketService = inject(TicketService);
+  private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
 
   escalationPayload = input<EscalationPayload | null>(null);
@@ -68,6 +70,7 @@ export class EscalationFormComponent {
         urgency: this.urgency(),
         shiftLeftContext,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (ticket) => {
           this.isSubmitting.set(false);
