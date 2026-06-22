@@ -31,24 +31,23 @@ export class LlmSettingsService {
   private http = inject(HttpClient);
 
   getConfig(): Observable<AiConfigResponse> {
-    return this.http.get<AiConfigResponse>('/api/ai/config', { withCredentials: true });
+    return this.http.get<AiConfigResponse>('/api/ai/config', {});
   }
 
   updateConfig(config: AiConfigRequest): Observable<AiConfigResponse> {
-    return this.http.put<AiConfigResponse>('/api/ai/config', config, { withCredentials: true });
+    return this.http.put<AiConfigResponse>('/api/ai/config', config, {});
   }
 
   testConnection(config: AiConfigRequest): Observable<TestConnectionResult> {
     return this.http.post<TestConnectionResult>('/api/ai/config/test', config, {
-      withCredentials: true,
-    });
+      });
   }
 
   reindexEmbeddings(): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(
       '/api/ai/config/embeddings/reindex',
       {},
-      { withCredentials: true },
+      {},
     );
   }
 }

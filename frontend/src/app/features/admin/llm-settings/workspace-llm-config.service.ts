@@ -39,8 +39,7 @@ export class WorkspaceLlmConfigService {
     return this.http.get<WorkspaceLlmConfigResponse>(
       `/api/admin/workspaces/${workspaceId}/llm-config`,
       {
-        withCredentials: true,
-      },
+        },
     );
   }
 
@@ -52,8 +51,7 @@ export class WorkspaceLlmConfigService {
       `/api/admin/workspaces/${workspaceId}/llm-config`,
       config,
       {
-        withCredentials: true,
-      },
+        },
     );
   }
 
@@ -65,14 +63,12 @@ export class WorkspaceLlmConfigService {
       `/api/admin/workspaces/${workspaceId}/llm-config/test`,
       config,
       {
-        withCredentials: true,
-      },
+        },
     );
   }
 
   deleteConfig(workspaceId: string): Observable<void> {
     return this.http.delete<void>(`/api/admin/workspaces/${workspaceId}/llm-config`, {
-      withCredentials: true,
-    });
+      });
   }
 }

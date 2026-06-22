@@ -58,7 +58,6 @@ describe('KcsDraftService', () => {
       expect(req.request.method).toBe('GET');
       expect(req.request.params.get('page')).toBe('0');
       expect(req.request.params.get('size')).toBe('20');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockPaginatedResponse);
     });
 
@@ -81,7 +80,6 @@ describe('KcsDraftService', () => {
 
       const req = httpMock.expectOne('/api/admin/kcs/drafts/draft-1');
       expect(req.request.method).toBe('GET');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockDraft);
     });
   });
@@ -94,7 +92,6 @@ describe('KcsDraftService', () => {
 
       const req = httpMock.expectOne('/api/admin/kcs/drafts/draft-1/approve');
       expect(req.request.method).toBe('PUT');
-      expect(req.request.withCredentials).toBe(true);
       // Verify empty body
       expect(req.request.body).toEqual({});
       req.flush({ ...mockDraft, status: 'PUBLISHED' });
@@ -109,7 +106,6 @@ describe('KcsDraftService', () => {
 
       const req = httpMock.expectOne('/api/admin/kcs/drafts/draft-1/reject');
       expect(req.request.method).toBe('PUT');
-      expect(req.request.withCredentials).toBe(true);
       expect(req.request.body).toEqual({});
       req.flush({ ...mockDraft, status: 'ARCHIVED' });
     });
@@ -123,7 +119,6 @@ describe('KcsDraftService', () => {
 
       const req = httpMock.expectOne('/api/admin/kcs/drafts/pending-count');
       expect(req.request.method).toBe('GET');
-      expect(req.request.withCredentials).toBe(true);
       req.flush(mockPendingCount);
     });
   });

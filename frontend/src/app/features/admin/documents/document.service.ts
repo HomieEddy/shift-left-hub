@@ -14,27 +14,26 @@ export class DocumentService {
       formData.append('categoryId', categoryId);
     }
     return this.http.post<DocumentUploadResponse>('/api/admin/documents/upload', formData, {
-      withCredentials: true,
-    });
+      });
   }
 
   getDocuments(): Observable<DocumentDto[]> {
-    return this.http.get<DocumentDto[]>('/api/admin/documents', { withCredentials: true });
+    return this.http.get<DocumentDto[]>('/api/admin/documents', {});
   }
 
   getDocument(id: string): Observable<DocumentDto> {
-    return this.http.get<DocumentDto>(`/api/admin/documents/${id}`, { withCredentials: true });
+    return this.http.get<DocumentDto>(`/api/admin/documents/${id}`, {});
   }
 
   deleteDocument(id: string): Observable<void> {
-    return this.http.delete<void>(`/api/admin/documents/${id}`, { withCredentials: true });
+    return this.http.delete<void>(`/api/admin/documents/${id}`, {});
   }
 
   reprocessDocument(id: string): Observable<DocumentUploadResponse> {
     return this.http.post<DocumentUploadResponse>(
       `/api/admin/documents/${id}/reprocess`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 
@@ -42,7 +41,7 @@ export class DocumentService {
     return this.http.post<{ articleId: string }>(
       `/api/admin/documents/${id}/convert`,
       {},
-      { withCredentials: true },
+      {},
     );
   }
 }
