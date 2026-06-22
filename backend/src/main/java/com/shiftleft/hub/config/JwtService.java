@@ -45,10 +45,32 @@ public class JwtService {
             @Value("${app.jwt.access-token-expiration}") long accessExpiration,
             @Value("${app.jwt.refresh-token-expiration}") long refreshExpiration,
             UsedRefreshTokenRepository usedRefreshTokenRepository) {
+        validateSecret(secretKey);
         this.secretKey = secretKey;
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;
         this.usedRefreshTokenRepository = usedRefreshTokenRepository;
+    }
+
+    private static final java.util.List<String> FORBIDDEN_SECRET_FRAGMENTS = java.util.List.of(
+        "change-in-prod", "change-me", "dev-jwt", "test-jwt", "your-secret-here"
+    );
+
+    private static void validateSecret(String secret) {
+        if (secret == null || secret.length() < 32) {
+            throw new IllegalStateException(
+                "app.jwt.secret must be at least 32 characters (got "
+                    + (secret == null ? 0 : secret.length()) + ")");
+        }
+        String lower = secret.toLowerCase();
+        for (String fragment : FORBIDDEN_SECRET_FRAGMENTS) {
+            if (lower.contains(fragment)) {
+                throw new IllegalStateException(
+                    "app.jwt.secret contains forbidden placeholder fragment '"
+                        + fragment + "'. Refusing to start: this looks like a"
+                        + " dev/test literal that must not sign real tokens.");
+            }
+        }
     }
 
     // SEC-04: JWT validation audited — HMAC-SHA, refresh rotation, 15min access/7d refresh, no PII leakage
@@ -176,7 +198,11 @@ public class JwtService {
             parseToken(token);
             return true;
         } catch (JwtException e) {
-            log.warn("Token validation failed: {}", e.getMessage());
+            // Log the exception class only. JJWT exception messages may
+            // echo claim contents (subject, role, workspace id) which is
+            // PII; full message stays in the exception for debug-only
+            // paths, not in default log streams.
+            log.warn("Token validation failed: {}", e.getClass().getSimpleName());
             return false;
         }
     }
@@ -192,7 +218,7 @@ public class JwtService {
             Claims claims = parseToken(token);
             return "refresh".equals(claims.get("type"));
         } catch (JwtException e) {
-            log.warn("Token validation failed: not a refresh token — {}", e.getMessage());
+            log.warn("Refresh-token validation failed: {}", e.getClass().getSimpleName());
             return false;
         }
     }

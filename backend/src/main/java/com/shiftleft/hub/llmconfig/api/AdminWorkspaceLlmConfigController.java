@@ -68,7 +68,7 @@ public class AdminWorkspaceLlmConfigController {
     @PostMapping("/{workspaceId}/llm-config/test")
     public ResponseEntity<TestConnectionResult> testConnection(
             @PathVariable UUID workspaceId,
-            @RequestBody WorkspaceLlmConfigRequest request) {
+            @Valid @RequestBody WorkspaceLlmConfigRequest request) {
         var result = workspaceLlmConfigService.testConnection(workspaceId, request);
         return ResponseEntity.ok(result);
     }

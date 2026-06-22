@@ -14,20 +14,89 @@
 | S-1 | Path traversal: `..` survives filename sanitization → upload writes outside workspace dir | `backend/.../document/service/DocumentService.java:157-163` | S | HIGH | ✓ fixed in `fix/s-1-path-traversal-uploads` |
 | S-2 | Real admin JWTs in `cookies.txt` (gitignored but unprotected on disk) | `cookies.txt:5-6` | S | HIGH |
 | S-3 | `AiConfigController.getConfig` lacks `@PreAuthorize`; only `authenticated()` required → any USER can read AI config (incl. `hasOpenaiKey`) | `backend/.../ai/api/AiConfigController.java:32-35` | S | HIGH | ✓ fixed in `fix/s-3-aiconfig-preauthorize` |
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 | S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH | ✓ fixed in `fix/s-4-aiconfig-valid` |
+<<<<<<< HEAD
+| S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH | ✓ fixed in `fix/s-5-admin-llmconfig-valid` |
+<<<<<<< HEAD
+=======
+| S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH | ✓ fixed in `fix/s-5-admin-llmconfig-valid` |
+>>>>>>> origin/fix/s-5-admin-llmconfig-valid
+| S-6 | Dev JWT signing secret literal in `.env` (forgery if copied to prod) | `.env:2` | S | HIGH | ✓ fixed in `fix/s-6-jwt-secret-validation` — fail-fast in JwtService ctor |
+=======
+| S-6 | Dev JWT signing secret literal in `.env` (forgery if copied to prod) | `.env:2` | S | HIGH | ✓ fixed in `fix/s-6-jwt-secret-validation` — fail-fast in JwtService ctor |
+>>>>>>> origin/fix/s-6-jwt-secret-validation
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> origin/fix/s-9-seeder-random-passwords
+| S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH |
+=======
+| S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH | ✓ fixed in `fix/s-4-aiconfig-valid` |
+=======
+<<<<<<< HEAD
+| S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH |
+>>>>>>> 3d6843b (fix(security): generate per-user random passwords for seed users)
+>>>>>>> origin/fix/s-10-default-db-password
 | S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH |
 | S-6 | Dev JWT signing secret literal in `.env` (forgery if copied to prod) | `.env:2` | S | HIGH |
-| S-7 | JWT filter logs user email + role + workspace_id at INFO per request (PII) | `backend/.../config/SecurityConfig.java:196-199` | S | HIGH |
+>>>>>>> origin/fix/s-7-jwt-pii-logging
+| S-7 | JWT filter logs user email + role + workspace_id at INFO per request (PII) | `backend/.../config/SecurityConfig.java:196-199` | S | HIGH | ✓ fixed in `fix/s-7-jwt-pii-logging` — dropped to DEBUG, swapped email for userId |
+=======
+| S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH | ✓ fixed in `fix/s-4-aiconfig-valid` |
+| S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH | ✓ fixed in `fix/s-5-admin-llmconfig-valid` |
+| S-6 | Dev JWT signing secret literal in `.env` (forgery if copied to prod) | `.env:2` | S | HIGH | ✓ fixed in `fix/s-6-jwt-secret-validation` — fail-fast in JwtService ctor |
+| S-7 | JWT filter logs user email + role + workspace_id at INFO per request (PII) | `backend/.../config/SecurityConfig.java:196-199` | S | HIGH | ✓ fixed in `fix/s-7-jwt-pii-logging` — dropped to DEBUG, swapped email for userId |
+>>>>>>> 38f3336 (fix(security): drop JWT filter PII logging from INFO to DEBUG)
 | S-8 | Rate limiter uses only `getRemoteAddr()`; ignores `X-Forwarded-For` → spoofable throttle key | `backend/.../config/RateLimitingFilter.java:44-52` | S | MED |
+<<<<<<< HEAD
+=======
 | S-9 | `MasterSeeder` reuses same password env value for ALL seed users (admin + non-admin) | `backend/.../common/config/MasterSeeder.java:152-160` | S | MED |
-| S-10 | Hardcoded default DB password `shiftleft` in `application.properties` | `backend/src/main/resources/application.properties:7` | S | MED |
-| S-11 | Hardcoded default AI encryption salt `ShiftLeftKBSalt` weakens PBKDF2 | `backend/src/main/resources/application.properties:49` | S | MED |
+>>>>>>> origin/fix/s-10-default-db-password
+=======
+| S-4 | `AiConfigController.testConnection` missing `@Valid` → `@Pattern`/`@NotBlank` silently bypassed | `backend/.../ai/api/AiConfigController.java:55-59` | S | HIGH | ✓ fixed in `fix/s-4-aiconfig-valid` |
+| S-5 | `AdminWorkspaceLlmConfigController.testConnection` missing `@Valid` | `backend/.../llmconfig/api/AdminWorkspaceLlmConfigController.java:68-74` | S | HIGH | ✓ fixed in `fix/s-5-admin-llmconfig-valid` |
+| S-6 | Dev JWT signing secret literal in `.env` (forgery if copied to prod) | `.env:2` | S | HIGH | ✓ fixed in `fix/s-6-jwt-secret-validation` — fail-fast in JwtService ctor |
+| S-7 | JWT filter logs user email + role + workspace_id at INFO per request (PII) | `backend/.../config/SecurityConfig.java:196-199` | S | HIGH | ✓ fixed in `fix/s-7-jwt-pii-logging` — dropped to DEBUG, swapped email for userId |
+| S-8 | Rate limiter uses only `getRemoteAddr()`; ignores `X-Forwarded-For` → spoofable throttle key | `backend/.../config/RateLimitingFilter.java:44-52` | S | MED | ✓ fixed in `fix/s-8-rate-limit-xff` — opt-in XFF trust, 5 new tests |
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 98a86df (fix(security): make rate limiter X-Forwarded-For opt-in)
+=======
+>>>>>>> e4fbf95 (fix(security): generate per-user random passwords for seed users)
+| S-9 | `MasterSeeder` reuses same password env value for ALL seed users (admin + non-admin) | `backend/.../common/config/MasterSeeder.java:152-160` | S | MED | ✓ fixed in `fix/s-9-seeder-random-passwords` | ✓ fixed in `fix/s-9-seeder-random-passwords` |
+| S-10 | Hardcoded default DB password `shiftleft` in `application.properties` | `backend/src/main/resources/application.properties:7` | S | MED | ✓ fixed in `fix/s-10-default-db-password` — fail-fast in SecurityDefaultsCheck |
+| S-11 | Hardcoded default AI encryption salt `ShiftLeftKBSalt` weakens PBKDF2 | `backend/src/main/resources/application.properties:49` | S | MED | ✓ covered by S-10 PR (SecurityDefaultsCheck validates salt too) |
 | S-12 | Outbound AI endpoint URL not host/IP allow-listed → SSRF to internal services | `backend/.../ai/service/AiConfigService.java:142-156` + `OpenAiCompatibleChatModel.java:100-113` | M | MED | ✓ fixed in `fix/s-12-endpoint-ssrf` — EndpointUrlValidator |
 | S-13 | `OpenAiCompatibleEmbeddingModel` allows `http://` endpoint with Bearer header (MITM) | `backend/.../ai/service/OpenAiCompatibleEmbeddingModel.java:94-100` | S | MED | ✓ fixed in `fix/s-12-endpoint-ssrf` — same PR, buildRestClient refuses http+key |
-| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED |
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+| S-9 | `MasterSeeder` reuses same password env value for ALL seed users (admin + non-admin) | `backend/.../common/config/MasterSeeder.java:152-160` | S | MED | ✓ fixed in `fix/s-9-seeder-random-passwords` |
+| S-10 | Hardcoded default DB password `shiftleft` in `application.properties` | `backend/src/main/resources/application.properties:7` | S | MED | ✓ fixed in `fix/s-10-default-db-password` — fail-fast in SecurityDefaultsCheck |
+| S-11 | Hardcoded default AI encryption salt `ShiftLeftKBSalt` weakens PBKDF2 | `backend/src/main/resources/application.properties:49` | S | MED | ✓ covered by S-10 PR (SecurityDefaultsCheck validates salt too) |
+>>>>>>> origin/fix/s-10-default-db-password
+| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED | ✓ fixed in `fix/s-14-admin-preauthorize` — class-level @PreAuthorize on all 6 |
+=======
+| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED | ✓ fixed in `fix/s-14-admin-preauthorize` — class-level @PreAuthorize on all 6 |
+>>>>>>> origin/fix/s-14-admin-preauthorize
 | S-15 | `KcsEventListener` logs AI-drafted article title (user content) at INFO | `backend/.../kcs/service/KcsEventListener.java:68` | S | MED |
-| S-16 | JWT validation errors logged with `e.getMessage()` (may echo claim values) | `backend/.../config/JwtService.java:179,195` | S | MED |
-| S-17 | `GlobalExceptionHandler` returns raw exception class + message + first stack frame in dev profile | `backend/.../common/config/GlobalExceptionHandler.java:316-327` | S | MED |
+| S-16 | JWT validation errors logged with `e.getMessage()` (may echo claim values) | `backend/.../config/JwtService.java:179,195` | S | MED | ✓ fixed in `fix/s-16-jwt-log-class-only` |
+=======
+| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED | ✓ fixed in `fix/s-14-admin-preauthorize` — class-level @PreAuthorize on all 6 |
+| S-15 | `KcsEventListener` logs AI-drafted article title (user content) at INFO | `backend/.../kcs/service/KcsEventListener.java:68` | S | MED | ✓ fixed in `fix/s-15-kcs-worknote-no-title` |
+| S-16 | JWT validation errors logged with `e.getMessage()` (may echo claim values) | `backend/.../config/JwtService.java:179,195` | S | MED | ✓ fixed in `fix/s-16-jwt-log-class-only` |
+>>>>>>> origin/fix/s-16-jwt-log-class-only
+| S-17 | `GlobalExceptionHandler` returns raw exception class + message + first stack frame in dev profile | `backend/.../common/config/GlobalExceptionHandler.java:316-327` | S | MED | ✓ fixed in `fix/s-17-handler-no-stack-leak` |
+=======
+| S-14 | Most `/api/admin/**` controllers rely solely on URL matchers, not `@PreAuthorize` (defense-in-depth gap) | `AdminKcsController`, `AdminCategoryController`, `AdminUserController`, `AdminTagController`, `AdminWorkspaceController`, `AdminArticleController` | M | MED | ✓ fixed in `fix/s-14-admin-preauthorize` — class-level @PreAuthorize on all 6 |
+| S-15 | `KcsEventListener` logs AI-drafted article title (user content) at INFO | `backend/.../kcs/service/KcsEventListener.java:68` | S | MED | ✓ fixed in `fix/s-15-kcs-worknote-no-title` |
+| S-16 | JWT validation errors logged with `e.getMessage()` (may echo claim values) | `backend/.../config/JwtService.java:179,195` | S | MED | ✓ fixed in `fix/s-16-jwt-log-class-only` |
+| S-17 | `GlobalExceptionHandler` returns raw exception class + message + first stack frame in dev profile | `backend/.../common/config/GlobalExceptionHandler.java:316-327` | S | MED | ✓ fixed in `fix/s-17-handler-no-stack-leak` |
+>>>>>>> origin/fix/s-17-handler-no-stack-leak
 
 ---
 

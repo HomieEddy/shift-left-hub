@@ -38,4 +38,12 @@
     <Match>
         <Bug pattern="SPRING_CSRF_PROTECTION_DISABLED"/>
     </Match>
+    <!-- CT_CONSTRUCTOR_THROW in JwtService: validateSecret is a static
+         method that throws on weak/dev-literal secrets before any
+         field is assigned, so no partially-constructed object is
+         exposed. The fail-fast is the correct behavior (S-6). -->
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+        <Class name="com.shiftleft.hub.config.JwtService"/>
+    </Match>
 </FindBugsFilter>
