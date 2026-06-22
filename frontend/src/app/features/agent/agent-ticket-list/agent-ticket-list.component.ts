@@ -12,6 +12,7 @@ import {
   urgencyBadgeClass,
 } from '../../../shared/ui/badge/badge-utils';
 import { TranslationService } from '../../../core/i18n/translation.service';
+import { LoggerService } from '../../../core/logging/logger.service';
 
 @Component({
   selector: 'app-agent-ticket-list',
@@ -28,6 +29,7 @@ export class AgentTicketListComponent implements OnInit {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   protected translationService = inject(TranslationService);
+  private logger = inject(LoggerService);
 
   tickets = signal<AgentTicket[]>([]);
   filteredTickets = signal<AgentTicket[]>([]);
@@ -150,7 +152,7 @@ export class AgentTicketListComponent implements OnInit {
           void this.router.navigate(['/agent/tickets', id]);
         },
         error: () => {
-          console.error('Failed to claim ticket');
+          this.logger.error('Failed to claim ticket');
           this.claimError.set('Failed to claim ticket. Please try again.');
         },
       });

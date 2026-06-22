@@ -20,6 +20,7 @@ import { EscalationFormComponent } from '../tickets/escalation-form/escalation-f
 import { ChatService, ChatMessage, StreamEvent } from './chat.service';
 import { Subscription } from 'rxjs';
 import { TranslationService } from '../../core/i18n/translation.service';
+import { LoggerService } from '../../core/logging/logger.service';
 
 @Component({
   selector: 'app-chat',
@@ -39,6 +40,7 @@ import { TranslationService } from '../../core/i18n/translation.service';
 export class ChatComponent {
   private chatService = inject(ChatService);
   protected translationService = inject(TranslationService);
+  private logger = inject(LoggerService);
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
@@ -266,7 +268,7 @@ export class ChatComponent {
       }
     } catch (e) {
       if (isDevMode()) {
-        console.warn('Scroll failed:', e);
+        this.logger.warn('Scroll failed:', e);
       }
     }
   }
