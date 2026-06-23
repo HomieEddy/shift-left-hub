@@ -6,9 +6,12 @@
     "lint:frontend": "cd frontend && pnpm lint",
     "test:frontend": "cd frontend && pnpm test -- --watch=false --browsers=ChromeHeadless",
     "test:backend": "cd backend && ./mvnw verify -B",
-    "format:check": "cd frontend && prettier --check \"src/**/*.{ts,html,json,css}\""
+    "format:check": "cd frontend && prettier --check \"src/**/*.{ts,html,json,css}\"",
+    "commitlint": "commitlint --edit"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2"
   }

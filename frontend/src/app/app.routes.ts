@@ -15,19 +15,19 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () =>
       import('./features/auth/login/login.component').then((m) => m.LoginComponent),
-    canActivate: [redirectIfAuthenticatedGuard],
+    canMatch: [redirectIfAuthenticatedGuard],
   },
   {
     path: 'register',
     loadComponent: () =>
       import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
-    canActivate: [redirectIfAuthenticatedGuard],
+    canMatch: [redirectIfAuthenticatedGuard],
   },
   {
     path: 'admin/users',
     loadComponent: () =>
       import('./features/admin/user-list/user-list.component').then((m) => m.UserListComponent),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/articles',
@@ -35,7 +35,7 @@ export const routes: Routes = [
       import('./features/kb/admin/article-list/article-list.component').then(
         (m) => m.ArticleListComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/articles/new',
@@ -43,7 +43,7 @@ export const routes: Routes = [
       import('./features/kb/admin/article-editor/article-editor.component').then(
         (m) => m.ArticleEditorComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/articles/:id/edit',
@@ -51,7 +51,7 @@ export const routes: Routes = [
       import('./features/kb/admin/article-editor/article-editor.component').then(
         (m) => m.ArticleEditorComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/kcs-drafts',
@@ -59,7 +59,7 @@ export const routes: Routes = [
       import('./features/admin/kcs-draft-list/kcs-draft-list.component').then(
         (m) => m.KcsDraftListComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/kcs-drafts/:id/edit',
@@ -67,7 +67,7 @@ export const routes: Routes = [
       import('./features/kb/admin/article-editor/article-editor.component').then(
         (m) => m.ArticleEditorComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/tags',
@@ -75,11 +75,11 @@ export const routes: Routes = [
       import('./features/kb/admin/tag-manager/tag-manager.component').then(
         (m) => m.TagManagerComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/workspaces',
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
     children: [
       {
         path: '',
@@ -103,7 +103,7 @@ export const routes: Routes = [
       import('./features/admin/documents/document-list.component').then(
         (m) => m.DocumentListComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/taxonomy',
@@ -111,7 +111,7 @@ export const routes: Routes = [
       import('./features/admin/taxonomy/taxonomy-tree.component').then(
         (m) => m.TaxonomyTreeComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'admin/settings/llm',
@@ -119,7 +119,7 @@ export const routes: Routes = [
       import('./features/admin/llm-settings/llm-settings.component').then(
         (m) => m.LlmSettingsComponent,
       ),
-    canActivate: [adminGuard],
+    canMatch: [adminGuard],
   },
   {
     path: 'agent/tickets',
@@ -127,7 +127,7 @@ export const routes: Routes = [
       import('./features/agent/agent-ticket-list/agent-ticket-list.component').then(
         (m) => m.AgentTicketListComponent,
       ),
-    canActivate: [agentGuard],
+    canMatch: [agentGuard],
   },
   {
     path: 'agent/tickets/:id',
@@ -135,7 +135,7 @@ export const routes: Routes = [
       import('./features/agent/agent-ticket-detail/agent-ticket-detail.component').then(
         (m) => m.AgentTicketDetailComponent,
       ),
-    canActivate: [agentGuard],
+    canMatch: [agentGuard],
   },
   {
     path: 'tickets',
@@ -143,7 +143,7 @@ export const routes: Routes = [
       import('./features/tickets/ticket-list/ticket-list.component').then(
         (m) => m.TicketListComponent,
       ),
-    canActivate: [authGuard],
+    canMatch: [authGuard],
   },
   {
     path: 'tickets/:id',
@@ -151,12 +151,12 @@ export const routes: Routes = [
       import('./features/tickets/ticket-detail/ticket-detail.component').then(
         (m) => m.TicketDetailComponent,
       ),
-    canActivate: [authGuard],
+    canMatch: [authGuard],
   },
   {
     path: 'chat',
     loadComponent: () => import('./features/chat/chat.component').then((m) => m.ChatComponent),
-    canActivate: [authGuard],
+    canMatch: [authGuard],
   },
   {
     path: 'articles',
