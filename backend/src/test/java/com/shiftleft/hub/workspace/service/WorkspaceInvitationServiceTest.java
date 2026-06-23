@@ -4,6 +4,7 @@ import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceInvitationResponse;
+import com.shiftleft.hub.workspace.domain.InvitationNotFoundException;
 import com.shiftleft.hub.workspace.domain.Workspace;
 import com.shiftleft.hub.workspace.domain.WorkspaceInvitation;
 import com.shiftleft.hub.workspace.domain.WorkspaceInvitationRepository;
@@ -153,7 +154,7 @@ class WorkspaceInvitationServiceTest {
     void acceptInvitation_shouldThrowWhenTokenInvalid() {
         when(invitationRepository.findById(invitationId)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class,
+        assertThrows(InvitationNotFoundException.class,
             () -> workspaceInvitationService.acceptInvitation(invitationId, invitedUserId));
         verify(workspaceMemberRepository, never()).save(any());
     }

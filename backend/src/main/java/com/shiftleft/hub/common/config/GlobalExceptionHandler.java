@@ -4,7 +4,10 @@ import com.shiftleft.hub.common.DuplicateEmailException;
 import com.shiftleft.hub.document.domain.DocumentProcessingException;
 import com.shiftleft.hub.document.domain.DuplicateDocumentException;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
+import com.shiftleft.hub.user.domain.AdminNotFoundException;
 import com.shiftleft.hub.user.domain.UserNotFoundException;
+import com.shiftleft.hub.workspace.domain.InvitationNotFoundException;
+import com.shiftleft.hub.workspace.service.LastAdminException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -70,6 +73,52 @@ public class GlobalExceptionHandler {
         log.warn("User not found: {} — {}", request.getRequestURI(), ex.getMessage());
         return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
             "urn:shiftleft:problem:entity-not-found", request);
+    }
+
+    /**
+     * Handles admin-not-found exceptions raised when an authenticated
+     * request fails to resolve its admin principal. Surfaces as 401
+     * because the security context is effectively invalid.
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return an unauthorized problem detail
+     */
+    @ExceptionHandler(AdminNotFoundException.class)
+    public ProblemDetail handleAdminNotFound(AdminNotFoundException ex, HttpServletRequest request) {
+        log.warn("Admin not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.UNAUTHORIZED, "Authentication Error", ex.getMessage(),
+            "urn:shiftleft:problem:auth-error", request);
+    }
+
+    /**
+     * Handles invitation-not-found exceptions.
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return a not-found problem detail
+     */
+    @ExceptionHandler(InvitationNotFoundException.class)
+    public ProblemDetail handleInvitationNotFound(InvitationNotFoundException ex, HttpServletRequest request) {
+        log.warn("Invitation not found: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.NOT_FOUND, "Entity Not Found", ex.getMessage(),
+            "urn:shiftleft:problem:entity-not-found", request);
+    }
+
+    /**
+     * Handles last-admin exceptions — a domain conflict where a workspace
+     * operation would leave zero administrators. Surfaces as 409 Conflict,
+     * not 400 Bad Request, because the input is well-formed.
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return a conflict problem detail
+     */
+    @ExceptionHandler(LastAdminException.class)
+    public ProblemDetail handleLastAdmin(LastAdminException ex, HttpServletRequest request) {
+        log.warn("Last admin guard: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.CONFLICT, "Workspace Conflict", ex.getMessage(),
+            "urn:shiftleft:problem:workspace-conflict", request);
     }
 
     /**

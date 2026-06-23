@@ -2,10 +2,12 @@ package com.shiftleft.hub.workspace.service;
 
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceInvitationResponse;
+import com.shiftleft.hub.workspace.domain.InvitationNotFoundException;
 import com.shiftleft.hub.workspace.domain.WorkspaceInvitation;
 import com.shiftleft.hub.workspace.domain.WorkspaceInvitationRepository;
 import com.shiftleft.hub.workspace.domain.WorkspaceMember;
 import com.shiftleft.hub.workspace.domain.WorkspaceMemberRepository;
+import com.shiftleft.hub.workspace.domain.WorkspaceNotFoundException;
 import com.shiftleft.hub.workspace.domain.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +44,7 @@ public class WorkspaceInvitationService {
      */
     public WorkspaceInvitation sendInvitation(UUID workspaceId, UUID invitedUserId, UUID invitedByUserId, String role) {
         var workspace = workspaceRepository.findById(workspaceId)
-            .orElseThrow(() -> new RuntimeException("Workspace not found: " + workspaceId));
+            .orElseThrow(() -> new WorkspaceNotFoundException(workspaceId));
         if (workspace.getDeletedAt() != null) {
             throw new IllegalArgumentException("Cannot invite to a deleted workspace");
         }
@@ -105,7 +107,7 @@ public class WorkspaceInvitationService {
      */
     public WorkspaceInvitation acceptInvitation(UUID invitationId, UUID userId) {
         WorkspaceInvitation invitation = invitationRepository.findById(invitationId)
-            .orElseThrow(() -> new RuntimeException("Invitation not found: " + invitationId));
+            .orElseThrow(() -> new InvitationNotFoundException(invitationId));
         if (!"PENDING".equals(invitation.getStatus())) {
             throw new IllegalArgumentException("Invitation is no longer pending");
         }
@@ -134,7 +136,7 @@ public class WorkspaceInvitationService {
      */
     public WorkspaceInvitation rejectInvitation(UUID invitationId, UUID userId) {
         WorkspaceInvitation invitation = invitationRepository.findById(invitationId)
-            .orElseThrow(() -> new RuntimeException("Invitation not found: " + invitationId));
+            .orElseThrow(() -> new InvitationNotFoundException(invitationId));
         if (!"PENDING".equals(invitation.getStatus())) {
             throw new IllegalArgumentException("Invitation is no longer pending");
         }
@@ -156,7 +158,7 @@ public class WorkspaceInvitationService {
      */
     public void revokeInvitation(UUID invitationId, UUID workspaceId) {
         WorkspaceInvitation invitation = invitationRepository.findByIdAndWorkspaceId(invitationId, workspaceId)
-            .orElseThrow(() -> new RuntimeException("Invitation not found for this workspace"));
+            .orElseThrow(() -> new InvitationNotFoundException("Invitation not found for this workspace"));
         if (!"PENDING".equals(invitation.getStatus())) {
             throw new IllegalArgumentException("Only pending invitations can be revoked");
         }
