@@ -3,24 +3,25 @@
     class="fixed inset-0 z-50 flex items-center justify-center"
     role="dialog"
     aria-modal="true"
-    [attr.aria-label]="title()"
+    [attr.aria-labelledby]="'modal-title'"
   >
     <button
       class="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
       (click)="closed.emit()"
       tabindex="-1"
-          [attr.aria-label]="translationService.translate('a11y.close-modal', { title: title() })"
+      [attr.aria-label]="translationService.translate('a11y.close-modal', { title: title() })"
     ></button>
     <div
+      #dialog
       class="relative bg-surface-primary rounded-xl shadow-2xl w-full animate-scale-in"
       [class]="width()"
     >
       <div class="flex items-center justify-between px-6 py-4 border-b border-border-light">
-        <h3 class="text-lg font-semibold text-text-primary">{{ title() }}</h3>
+        <h3 id="modal-title" class="text-lg font-semibold text-text-primary">{{ title() }}</h3>
         <button
           (click)="closed.emit()"
           class="text-text-tertiary hover:text-text-primary transition-colors p-1 rounded-md hover:bg-surface-secondary"
-      [attr.aria-label]="translationService.translate('a11y.close-modal', { title: title() })"
+          [attr.aria-label]="translationService.translate('a11y.close-modal', { title: title() })"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
