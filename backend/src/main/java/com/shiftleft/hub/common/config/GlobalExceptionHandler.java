@@ -5,6 +5,7 @@ import com.shiftleft.hub.document.domain.DocumentProcessingException;
 import com.shiftleft.hub.document.domain.DuplicateDocumentException;
 import com.shiftleft.hub.kcs.domain.KcsDraftingException;
 import com.shiftleft.hub.user.domain.AdminNotFoundException;
+import com.shiftleft.hub.user.domain.SelfModificationException;
 import com.shiftleft.hub.user.domain.UserNotFoundException;
 import com.shiftleft.hub.workspace.domain.InvitationNotFoundException;
 import com.shiftleft.hub.workspace.service.LastAdminException;
@@ -226,6 +227,20 @@ public class GlobalExceptionHandler {
         log.error("KCS drafting error: {} — {}", request.getRequestURI(), ex.getMessage());
         return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "Drafting Error", ex.getMessage(),
             "urn:shiftleft:problem:internal-error", request);
+    }
+
+    /**
+     * Handles self-modification conflicts.
+     *
+     * @param ex      the exception
+     * @param request the HTTP request
+     * @return a conflict problem detail
+     */
+    @ExceptionHandler(SelfModificationException.class)
+    public ProblemDetail handleSelfModification(SelfModificationException ex, HttpServletRequest request) {
+        log.warn("Self-modification attempt: {} — {}", request.getRequestURI(), ex.getMessage());
+        return buildProblem(HttpStatus.CONFLICT, "Conflict", ex.getMessage(),
+            "urn:shiftleft:problem:self-modification", request);
     }
 
     /**

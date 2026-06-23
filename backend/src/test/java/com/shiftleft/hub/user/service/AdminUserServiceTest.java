@@ -2,6 +2,7 @@ package com.shiftleft.hub.user.service;
 
 import com.shiftleft.hub.user.api.dto.UserResponse;
 import com.shiftleft.hub.user.domain.User;
+import com.shiftleft.hub.user.domain.SelfModificationException;
 import com.shiftleft.hub.user.domain.UserNotFoundException;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
@@ -131,7 +132,7 @@ class AdminUserServiceTest {
         User adminUser = createAdmin();
         when(userRepository.findById(adminId)).thenReturn(Optional.of(adminUser));
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(SelfModificationException.class,
             () -> adminUserService.updateUserRole(adminId, UserRole.ROLE_USER));
         verify(userRepository, never()).save(any());
     }
@@ -158,7 +159,7 @@ class AdminUserServiceTest {
         User adminUser = createAdmin();
         when(userRepository.findById(adminId)).thenReturn(Optional.of(adminUser));
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(SelfModificationException.class,
             () -> adminUserService.toggleUserStatus(adminId));
         verify(userRepository, never()).save(any());
     }
