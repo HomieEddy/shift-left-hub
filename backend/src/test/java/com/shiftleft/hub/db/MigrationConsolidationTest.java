@@ -285,10 +285,13 @@ class MigrationConsolidationTest {
              Statement st = conn.createStatement()) {
 
             int tagCount;
-            try (ResultSet rs = st.executeQuery(
-                    "SELECT count(*) FROM tag WHERE name_en = '" + v4TagTestUniqueName + "'")) {
-                rs.next();
-                tagCount = rs.getInt(1);
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT count(*) FROM tag WHERE name_en = ?")) {
+                ps.setString(1, v4TagTestUniqueName);
+                try (ResultSet rs = ps.executeQuery()) {
+                    rs.next();
+                    tagCount = rs.getInt(1);
+                }
             }
             assertThat(tagCount)
                 .as("V4 must dedup the tag table")
