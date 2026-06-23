@@ -1,5 +1,6 @@
 package com.shiftleft.hub.workspace.api;
 
+import com.shiftleft.hub.user.domain.AdminNotFoundException;
 import com.shiftleft.hub.user.domain.User;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.workspace.api.dto.AssignUserRequest;
@@ -12,6 +13,7 @@ import com.shiftleft.hub.workspace.api.dto.WorkspaceResponse;
 import com.shiftleft.hub.workspace.api.dto.WorkspaceUserResponse;
 import com.shiftleft.hub.workspace.domain.Workspace;
 import com.shiftleft.hub.workspace.domain.WorkspaceMember;
+import com.shiftleft.hub.workspace.domain.WorkspaceNotFoundException;
 import com.shiftleft.hub.workspace.service.WorkspaceInvitationService;
 import com.shiftleft.hub.workspace.service.WorkspaceService;
 import jakarta.validation.Valid;
@@ -55,7 +57,7 @@ public class AdminWorkspaceController {
             @Valid @RequestBody CreateWorkspaceRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
         User admin = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("Admin not found"));
+            .orElseThrow(() -> new AdminNotFoundException());
         Workspace workspace = workspaceService.createWorkspace(
             request.name(), request.description(), request.logoUrl(), admin.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(workspace));
@@ -82,7 +84,7 @@ public class AdminWorkspaceController {
     @GetMapping("/{id}")
     public ResponseEntity<WorkspaceResponse> getWorkspace(@PathVariable UUID id) {
         Workspace workspace = workspaceService.findById(id)
-            .orElseThrow(() -> new RuntimeException("Workspace not found: " + id));
+            .orElseThrow(() -> new WorkspaceNotFoundException(id));
         return ResponseEntity.ok(toResponse(workspace));
     }
 
@@ -200,7 +202,7 @@ public class AdminWorkspaceController {
             @Valid @RequestBody InvitationRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
         User admin = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("Admin not found"));
+            .orElseThrow(() -> new AdminNotFoundException());
         var invitation = invitationService.sendInvitation(id, request.userId(), admin.getId(), request.role());
         return ResponseEntity.status(HttpStatus.CREATED).body(invitationService.toResponse(invitation));
     }

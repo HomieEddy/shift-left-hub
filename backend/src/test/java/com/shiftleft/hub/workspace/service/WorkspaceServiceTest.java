@@ -338,6 +338,58 @@ class WorkspaceServiceTest {
         verify(workspaceRepository, times(2)).save(any(Workspace.class));
     }
 
+    // ── LastAdminException (Tier 13) ──────────────────────────
+
+    @Test
+    void leaveWorkspace_shouldThrowLastAdminWhenOnlyAdminLeaves() {
+        Workspace workspace = createWorkspace();
+        WorkspaceMember member = WorkspaceMember.builder()
+            .id(new WorkspaceMember.WorkspaceMemberId(workspaceId, userId))
+            .role("ADMIN")
+            .build();
+        when(workspaceRepository.findById(workspaceId)).thenReturn(Optional.of(workspace));
+        when(workspaceMemberRepository.findByIdWorkspaceIdAndIdUserId(workspaceId, userId))
+            .thenReturn(Optional.of(member));
+        when(workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN"))
+            .thenReturn(1L);
+
+        assertThrows(LastAdminException.class,
+            () -> workspaceService.leaveWorkspace(workspaceId, userId));
+        verify(workspaceMemberRepository, never()).delete(any());
+    }
+
+    @Test
+    void removeMember_shouldThrowLastAdminWhenOnlyAdmin() {
+        WorkspaceMember member = WorkspaceMember.builder()
+            .id(new WorkspaceMember.WorkspaceMemberId(workspaceId, userId))
+            .role("ADMIN")
+            .build();
+        when(workspaceMemberRepository.findByIdWorkspaceIdAndIdUserId(workspaceId, userId))
+            .thenReturn(Optional.of(member));
+        when(workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN"))
+            .thenReturn(1L);
+
+        assertThrows(LastAdminException.class,
+            () -> workspaceService.removeMember(workspaceId, userId));
+        verify(workspaceMemberRepository, never()).delete(any());
+    }
+
+    @Test
+    void changeMemberRole_shouldThrowLastAdminWhenDemotingOnlyAdmin() {
+        WorkspaceMember member = WorkspaceMember.builder()
+            .id(new WorkspaceMember.WorkspaceMemberId(workspaceId, userId))
+            .role("ADMIN")
+            .build();
+        when(workspaceMemberRepository.findByIdWorkspaceIdAndIdUserId(workspaceId, userId))
+            .thenReturn(Optional.of(member));
+        when(workspaceMemberRepository.countByIdWorkspaceIdAndRole(workspaceId, "ADMIN"))
+            .thenReturn(1L);
+
+        assertThrows(LastAdminException.class,
+            () -> workspaceService.changeMemberRole(workspaceId, userId, "MEMBER"));
+        verify(workspaceMemberRepository, never()).save(any(WorkspaceMember.class));
+    }
+
     private String anyString() {
         return org.mockito.ArgumentMatchers.anyString();
     }

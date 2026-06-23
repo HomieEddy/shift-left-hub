@@ -47,7 +47,7 @@ public class TicketController {
     @PostMapping("/{id}/cancel")
     public TicketResponse cancelTicket(
             @PathVariable UUID id,
-            @RequestBody(required = false) TicketCancelRequest request,
+            @Valid @RequestBody(required = false) TicketCancelRequest request,
             Authentication auth) {
         String reason = request != null ? request.cancelReason() : null;
         return ticketService.cancelTicket(id, auth.getName(), reason);

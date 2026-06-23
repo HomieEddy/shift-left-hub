@@ -174,7 +174,7 @@ public class WorkspaceService {
 
         long adminCount = countAdmins(workspaceId);
         if (adminCount <= 1 && "ADMIN".equals(member.getRole())) {
-            throw new IllegalArgumentException("Cannot leave — must leave at least one admin");
+            throw new LastAdminException("Cannot leave — must leave at least one admin");
         }
 
         workspaceMemberRepository.delete(member);
@@ -194,7 +194,7 @@ public class WorkspaceService {
 
         long adminCount = countAdmins(workspaceId);
         if (adminCount <= 1 && "ADMIN".equals(member.getRole())) {
-            throw new IllegalArgumentException("Cannot remove the only admin");
+            throw new LastAdminException("Cannot remove the only admin");
         }
 
         workspaceMemberRepository.delete(member);
@@ -216,7 +216,7 @@ public class WorkspaceService {
 
         long adminCount = countAdmins(workspaceId);
         if (adminCount <= 1 && "ADMIN".equals(member.getRole()) && !"ADMIN".equals(newRole)) {
-            throw new IllegalArgumentException("Cannot remove the only admin role");
+            throw new LastAdminException("Cannot remove the only admin role");
         }
 
         member.setRole(newRole.toUpperCase());
