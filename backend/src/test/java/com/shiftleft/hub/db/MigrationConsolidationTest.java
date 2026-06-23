@@ -12,10 +12,12 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -192,6 +194,170 @@ class MigrationConsolidationTest {
                       + "plus the simulated historical V1 row)")
                     .isGreaterThanOrEqualTo(1);
             }
+        }
+    }
+
+    private static String v4TagTestUniqueName;
+
+    @Test
+    @Order(4)
+    void v4TagDedupRemapsArticleTagBeforeDeleting() throws Exception {
+        // Simulate a database that ran V1..V3 with a pre-existing duplicate tag
+        // (workspace_id, name_en) that has an article_tag row referencing the
+        // duplicate. The V4 unique-constraint block must remap the article_tag
+        // row to the canonical (lowest-id) tag before deleting the duplicate —
+        // otherwise the DELETE would fail with an FK violation.
+
+        try (Connection conn = DriverManager.getConnection(
+                postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword());
+             Statement st = conn.createStatement()) {
+
+            UUID wsId = UUID.randomUUID();
+            UUID adminId = UUID.randomUUID();
+            UUID articleId = UUID.randomUUID();
+            UUID dupTagId = UUID.randomUUID();
+            UUID canonicalTagId = UUID.randomUUID();
+
+            st.execute(String.format(
+                "INSERT INTO app_user (id, email, password, display_name, role, enabled, created_at, updated_at) "
+              + "VALUES ('%s', 'a@b', 'x', 'Admin', 'ADMIN', true, now(), now())", adminId));
+            st.execute(String.format(
+                "INSERT INTO workspace (id, name, slug, created_by, created_at, updated_at) "
+              + "VALUES ('%s', 'ws', 'ws-%s', '%s', now(), now())", wsId, wsId, adminId));
+            st.execute(String.format(
+                "INSERT INTO article (id, title_en, content_en, status, view_count, "
+              + "  author_id, workspace_id, created_at, updated_at) "
+              + "VALUES ('%s', 't', 'c', 'PUBLISHED', 0, '%s', '%s', now(), now())",
+                articleId, adminId, wsId));
+
+            // Temporarily drop the constraint (added by test 1) so we can
+            // insert the duplicate tags. V4 will re-add it after the dedup.
+            st.execute("ALTER TABLE tag DROP CONSTRAINT IF EXISTS uc_tag_workspace_name_en");
+            st.execute("ALTER TABLE category DROP CONSTRAINT IF EXISTS uc_category_workspace_parent_name_en");
+
+            // Two tags with the same (workspace_id, name_en) — canonical is
+            // inserted FIRST so its id sorts lower (UUID ordering is random,
+            // but we explicitly force a tie-break with a deterministic id).
+            // Use a unique name per test run to avoid colliding with any
+            // existing rows from previous test methods (PostgreSQL container
+            // is shared across the test class).
+            v4TagTestUniqueName = "urgent-" + UUID.randomUUID();
+            st.execute(String.format(
+                "INSERT INTO tag (id, name_en, name_fr, color, workspace_id, created_at) "
+              + "VALUES ('%s', '%s', '%s', '#f00', '%s', now())",
+                canonicalTagId, v4TagTestUniqueName, v4TagTestUniqueName, wsId));
+            st.execute(String.format(
+                "INSERT INTO tag (id, name_en, name_fr, color, workspace_id, created_at) "
+              + "VALUES ('%s', '%s', '%s', '#f00', '%s', now())",
+                dupTagId, v4TagTestUniqueName, v4TagTestUniqueName, wsId));
+            // article_tag points to the DUPLICATE — V4 must remap this to canonical
+            st.execute(String.format(
+                "INSERT INTO article_tag (article_id, tag_id) "
+              + "VALUES ('%s', '%s')", articleId, dupTagId));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // Apply V4 — the dedup+remap must succeed
+        org.springframework.core.io.ClassPathResource v4 = new org.springframework.core.io.ClassPathResource(
+            "db/migration/V4__tier12_db_jpa_hygiene.sql");
+        try (java.io.InputStream in = v4.getInputStream();
+             java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(in));
+             Connection conn = DriverManager.getConnection(
+                 postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword());
+             Statement stmt = conn.createStatement()) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+            stmt.execute(sb.toString());
+        } catch (Exception e) {
+            throw new RuntimeException("V4 failed — likely the article_tag remap is missing or broken", e);
+        }
+
+        // After V4:
+        //   - only one tag remains (canonical)
+        //   - article_tag points to the canonical id
+        //   - the unique constraint is in place
+        try (Connection conn = DriverManager.getConnection(
+                postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword());
+             Statement st = conn.createStatement()) {
+
+            int tagCount;
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT count(*) FROM tag WHERE name_en = ?")) {
+                ps.setString(1, v4TagTestUniqueName);
+                try (ResultSet rs = ps.executeQuery()) {
+                    rs.next();
+                    tagCount = rs.getInt(1);
+                }
+            }
+            assertThat(tagCount)
+                .as("V4 must dedup the tag table")
+                .isEqualTo(1);
+
+            int articleTagCount;
+            try (ResultSet rs = st.executeQuery(
+                    "SELECT count(*) FROM article_tag")) {
+                rs.next();
+                articleTagCount = rs.getInt(1);
+            }
+            assertThat(articleTagCount)
+                .as("V4 must keep the article_tag row (remapped, not deleted)")
+                .isEqualTo(1);
+
+            int constraintCount;
+            try (ResultSet rs = st.executeQuery(
+                    "SELECT count(*) FROM pg_constraint WHERE conname = 'uc_tag_workspace_name_en'")) {
+                rs.next();
+                constraintCount = rs.getInt(1);
+            }
+            assertThat(constraintCount)
+                .as("V4 must add the unique constraint")
+                .isEqualTo(1);
+        }
+    }
+
+    @Test
+    @Order(5)
+    void v4CategoryUniqueConstraintTreatsNullParentAsDistinct() throws Exception {
+        // V4 must use NULLS NOT DISTINCT for the category unique constraint
+        // (PostgreSQL 15+), so two root categories (parent_id IS NULL) with
+        // the same name_en in the same workspace cannot coexist.
+
+        try (Connection conn = DriverManager.getConnection(
+                postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword());
+             Statement st = conn.createStatement()) {
+
+            UUID wsId = UUID.randomUUID();
+            UUID adminId = UUID.randomUUID();
+            st.execute(String.format(
+                "INSERT INTO app_user (id, email, password, display_name, role, enabled, created_at, updated_at) "
+              + "VALUES ('%s', 'c@b', 'x', 'Admin', 'ADMIN', true, now(), now())", adminId));
+            st.execute(String.format(
+                "INSERT INTO workspace (id, name, slug, created_by, created_at, updated_at) "
+              + "VALUES ('%s', 'ws-cat', 'ws-cat-%s', '%s', now(), now())", wsId, wsId, adminId));
+
+            // Two root categories with the same name_en — the second INSERT
+            // must fail because of the NULLS NOT DISTINCT constraint.
+            st.execute(String.format(
+                "INSERT INTO category (id, name_en, name_fr, workspace_id, created_at, updated_at) "
+              + "VALUES ('%s', 'root-dup', 'root-dup', '%s', now(), now())",
+                UUID.randomUUID(), wsId));
+
+            boolean insertSucceeded = true;
+            try {
+                st.execute(String.format(
+                    "INSERT INTO category (id, name_en, name_fr, workspace_id, created_at, updated_at) "
+                  + "VALUES ('%s', 'root-dup', 'root-dup', '%s', now(), now())",
+                    UUID.randomUUID(), wsId));
+            } catch (Exception expected) {
+                insertSucceeded = false;
+            }
+            assertThat(insertSucceeded)
+                .as("V4's NULLS NOT DISTINCT constraint must reject duplicate root categories")
+                .isFalse();
         }
     }
 }

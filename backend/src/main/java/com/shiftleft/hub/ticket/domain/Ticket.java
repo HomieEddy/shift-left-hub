@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -24,7 +25,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -35,7 +35,14 @@ import java.util.UUID;
  * Each ticket is associated with a user and may be assigned to an agent.</p>
  */
 @Entity
-@Table(name = "ticket")
+@Table(
+    name = "ticket",
+    indexes = {
+        @Index(name = "idx_ticket_user_id", columnList = "user_id"),
+        @Index(name = "idx_ticket_assigned_to_id", columnList = "assigned_to_id"),
+        @Index(name = "idx_ticket_resolved_by_id", columnList = "resolved_by_id")
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -50,7 +57,7 @@ public class Ticket extends WorkspaceAwareEntity {
     @Column(name = "ticket_number", nullable = false, unique = true, length = 9)
     private String ticketNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
