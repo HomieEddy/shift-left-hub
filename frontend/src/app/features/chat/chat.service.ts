@@ -118,7 +118,21 @@ export class ChatService {
       if (response.status === 401 && this.authService.isAuthenticated()) {
         try {
           await firstValueFrom(this.authService.refresh());
-          void handleResponse(await doFetch());
+          // Abort the first controller before retrying. The first reader
+          // (response.body.getReader()) may still be pushing tokens through
+          // subject.next(); without aborting, those tokens can interleave
+          // with the retry stream and garble the assistant message.
+          controller.abort();
+          const freshController = new AbortController();
+          const retryFetch = () =>
+            fetch(resolveApiUrl('/api/ai/chat'), {
+              method: 'POST',
+              headers: buildHeaders(),
+              credentials: 'include',
+              body: JSON.stringify({ message, history }),
+              signal: freshController.signal,
+            });
+          void handleResponse(await retryFetch());
           return;
         } catch {
           // refresh failed, fall through to error display

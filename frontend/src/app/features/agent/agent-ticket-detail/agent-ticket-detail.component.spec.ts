@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { AgentTicketDetailComponent } from './agent-ticket-detail.component';
 import { AgentTicketService } from '../agent-ticket.service';
@@ -56,7 +56,8 @@ describe('AgentTicketDetailComponent', () => {
     resolveTicket: ReturnType<typeof vi.fn>;
   };
   let translationService: { translate: ReturnType<typeof vi.fn> };
-  let activatedRoute: { snapshot: { paramMap: { get: ReturnType<typeof vi.fn> } } };
+  let paramMapSubject: BehaviorSubject<Map<string, string>>;
+  let activatedRoute: any;
   let router: { navigate: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
@@ -68,10 +69,10 @@ describe('AgentTicketDetailComponent', () => {
       resolveTicket: vi.fn(),
     };
     translationService = { translate: vi.fn(() => 'translated') };
+    paramMapSubject = new BehaviorSubject(new Map([['id', 'ticket-123']]));
     activatedRoute = {
-      snapshot: {
-        paramMap: { get: vi.fn().mockReturnValue('ticket-123') },
-      },
+      snapshot: { paramMap: { get: (k: string) => paramMapSubject.value.get(k) ?? null } },
+      paramMap: paramMapSubject.asObservable(),
     };
     router = { navigate: vi.fn().mockResolvedValue(true) };
 

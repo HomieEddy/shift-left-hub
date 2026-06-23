@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { provideMarkdown } from 'ngx-markdown';
 import { ArticleService } from '../../services/article.service';
@@ -19,6 +19,7 @@ describe('ArticleEditorComponent', () => {
     getTags: ReturnType<typeof vi.fn>;
   };
   let paramMap: { get: ReturnType<typeof vi.fn> };
+  let paramMapSubject: BehaviorSubject<Map<string, string>>;
   let router: { navigate: ReturnType<typeof vi.fn> };
 
   const mockArticle = {
@@ -60,8 +61,9 @@ describe('ArticleEditorComponent', () => {
     tagService = {
       getTags: vi.fn().mockReturnValue(of([])),
     };
+    paramMapSubject = new BehaviorSubject(new Map());
     paramMap = {
-      get: vi.fn(),
+      get: vi.fn((k: string) => paramMapSubject.value.get(k) ?? null),
     };
     router = { navigate: vi.fn().mockResolvedValue(true) };
 
@@ -70,7 +72,13 @@ describe('ArticleEditorComponent', () => {
       providers: [
         { provide: ArticleService, useValue: articleService },
         { provide: TagService, useValue: tagService },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap } } },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap },
+            paramMap: paramMapSubject.asObservable(),
+          },
+        },
         { provide: Router, useValue: router },
         provideMarkdown(),
       ],
@@ -85,7 +93,7 @@ describe('ArticleEditorComponent', () => {
 
   describe('create mode', () => {
     beforeEach(() => {
-      paramMap.get.mockReturnValue(null);
+      paramMapSubject.next(new Map());
       createComponent();
     });
 
@@ -137,7 +145,7 @@ describe('ArticleEditorComponent', () => {
 
   describe('edit mode', () => {
     beforeEach(() => {
-      paramMap.get.mockReturnValue('123');
+      paramMapSubject.next(new Map([['id', '123']]));
       articleService.getArticleById.mockReturnValue(of(mockArticle));
       createComponent();
     });

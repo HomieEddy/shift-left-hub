@@ -72,11 +72,15 @@ export class AgentTicketDetailComponent implements OnInit {
   readonly urgencyBadgeClass = urgencyBadgeClass;
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id != null) {
-      this.loadTicket(id);
-      this.loadWorkNotes(id);
-    }
+    // Subscribe to paramMap so navigating from /agent/tickets/A to /B
+    // (same component instance, Angular reuses it) reloads the data.
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id');
+      if (id != null) {
+        this.loadTicket(id);
+        this.loadWorkNotes(id);
+      }
+    });
   }
 
   /** Loads the full ticket detail from the API. */

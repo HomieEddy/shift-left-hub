@@ -56,6 +56,7 @@ export class ArticleListComponent implements OnInit {
         message: this.translationService.translate('confirm.message.publish-article'),
         confirmLabel: this.translationService.translate('confirm.label.publish'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (!confirmed) return;
         this.articleService
@@ -76,6 +77,7 @@ export class ArticleListComponent implements OnInit {
         message: this.translationService.translate('confirm.message.archive-article'),
         confirmLabel: this.translationService.translate('confirm.label.archive'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (!confirmed) return;
         this.articleService
@@ -96,6 +98,7 @@ export class ArticleListComponent implements OnInit {
         message: this.translationService.translate('confirm.message.delete-article'),
         confirmLabel: this.translationService.translate('confirm.label.delete'),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((confirmed) => {
         if (confirmed) {
           this.articleService

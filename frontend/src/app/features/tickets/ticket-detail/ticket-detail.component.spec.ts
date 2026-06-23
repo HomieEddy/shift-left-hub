@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { MarkdownModule } from 'ngx-markdown';
 import { TicketService } from '../ticket.service';
@@ -65,12 +65,19 @@ describe('TicketDetailComponent', () => {
     };
     router = { navigate: vi.fn().mockResolvedValue(true) };
 
+    const paramMapSubject = new BehaviorSubject(new Map([['id', 't1']]));
     await TestBed.configureTestingModule({
       imports: [TicketDetailComponent, MarkdownModule],
       providers: [
         { provide: TicketService, useValue: ticketService },
         { provide: TranslationService, useValue: translationService },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: new Map([['id', 't1']]) } } },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: { get: (k: string) => paramMapSubject.value.get(k) ?? null } },
+            paramMap: paramMapSubject.asObservable(),
+          },
+        },
         { provide: Router, useValue: router },
       ],
     }).compileComponents();

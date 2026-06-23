@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { provideMarkdown } from 'ngx-markdown';
 import { PublicArticleService } from '../../services/public-article.service';
@@ -53,13 +53,20 @@ describe('ArticleViewerComponent', () => {
       currentLang: vi.fn().mockReturnValue('en'),
     };
 
+    const paramMapSubject = new BehaviorSubject(new Map([['id', '1']]));
     await TestBed.configureTestingModule({
       imports: [ArticleViewerComponent],
       providers: [
         provideMarkdown(),
         { provide: PublicArticleService, useValue: publicArticleService },
         { provide: TranslationService, useValue: translationService },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: new Map([['id', '1']]) } } },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: { get: (k: string) => paramMapSubject.value.get(k) ?? null } },
+            paramMap: paramMapSubject.asObservable(),
+          },
+        },
       ],
     }).compileComponents();
 

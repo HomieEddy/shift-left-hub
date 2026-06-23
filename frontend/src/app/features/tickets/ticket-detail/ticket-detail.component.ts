@@ -44,10 +44,12 @@ export class TicketDetailComponent implements OnInit {
   kbSources = computed(() => this.parsedContext()?.sources ?? []);
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id != null) {
-      this.loadTicket(id);
-    }
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id');
+      if (id != null) {
+        this.loadTicket(id);
+      }
+    });
   }
 
   statusLabel(status: string): string {
