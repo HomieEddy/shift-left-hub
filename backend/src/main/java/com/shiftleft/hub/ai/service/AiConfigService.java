@@ -83,12 +83,12 @@ public class AiConfigService {
         return aiConfigRepository.findSingleConfig()
             .orElseGet(() -> {
                 AiConfig defaultConfig = AiConfig.builder()
-                    .llmProvider("OLLAMA")
-                    .ollamaEndpointUrl("http://host.docker.internal:11434")
-                    .chatModelName("llama3.2:3b")
-                    .embeddingModelName("nomic-embed-text")
-                    .similarityThreshold(0.35)
-                    .embeddingDimension(768)
+                    .llmProvider(AiDefaults.LLM_PROVIDER)
+                    .ollamaEndpointUrl(AiDefaults.OLLAMA_ENDPOINT)
+                    .chatModelName(AiDefaults.CHAT_MODEL)
+                    .embeddingModelName(AiDefaults.EMBEDDING_MODEL)
+                    .similarityThreshold(AiDefaults.SIMILARITY_THRESHOLD)
+                    .embeddingDimension(AiDefaults.EMBEDDING_DIMENSION)
                     .build();
                 return aiConfigRepository.save(defaultConfig);
             });

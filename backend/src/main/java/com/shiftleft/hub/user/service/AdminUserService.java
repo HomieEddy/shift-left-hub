@@ -1,6 +1,7 @@
 package com.shiftleft.hub.user.service;
 
 import com.shiftleft.hub.user.api.dto.UserResponse;
+import com.shiftleft.hub.user.domain.SelfModificationException;
 import com.shiftleft.hub.user.domain.UserNotFoundException;
 import com.shiftleft.hub.user.domain.UserRepository;
 import com.shiftleft.hub.user.domain.UserRole;
@@ -57,7 +58,7 @@ public class AdminUserService {
         var user = userRepository.findById(id)
             .orElseThrow(() -> new UserNotFoundException(id));
         if (user.getEmail().equals(currentUserEmail)) {
-            throw new IllegalStateException("Cannot modify your own role");
+            throw SelfModificationException.role(id);
         }
         user.setRole(newRole);
         userRepository.save(user);
@@ -76,7 +77,7 @@ public class AdminUserService {
         var user = userRepository.findById(id)
             .orElseThrow(() -> new UserNotFoundException(id));
         if (user.getEmail().equals(currentUserEmail)) {
-            throw new IllegalStateException("Cannot modify your own account status");
+            throw SelfModificationException.status(id);
         }
         user.setEnabled(!user.isEnabled());
         userRepository.save(user);
