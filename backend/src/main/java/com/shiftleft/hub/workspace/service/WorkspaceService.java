@@ -2,6 +2,7 @@ package com.shiftleft.hub.workspace.service;
 
 import com.shiftleft.hub.workspace.domain.Workspace;
 import com.shiftleft.hub.workspace.domain.WorkspaceMember;
+import com.shiftleft.hub.workspace.domain.WorkspaceMemberCount;
 import com.shiftleft.hub.workspace.domain.WorkspaceMemberRepository;
 import com.shiftleft.hub.workspace.domain.WorkspaceNotFoundException;
 import com.shiftleft.hub.workspace.domain.WorkspaceRepository;
@@ -11,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** Service for workspace management operations. */
 @Service
@@ -89,6 +93,30 @@ public class WorkspaceService {
 
     public long getMemberCount(UUID workspaceId) {
         return workspaceMemberRepository.countByIdWorkspaceId(workspaceId);
+    }
+
+    /**
+     * Bulk-load member counts for a collection of workspaces. Returns a
+     * map from workspaceId to member count, omitting workspaces that
+     * have no members (count = 0).
+     *
+     * <p>Use this when listing many workspaces to avoid the N+1 pattern
+     * of calling {@link #getMemberCount(UUID)} per row.
+     *
+     * @param workspaceIds the workspace IDs to count
+     * @return map of workspaceId to member count (workspaces with no
+     *         members are absent from the result)
+     */
+    public Map<UUID, Long> getMemberCounts(Collection<UUID> workspaceIds) {
+        if (workspaceIds == null || workspaceIds.isEmpty()) {
+            return Map.of();
+        }
+        return workspaceMemberRepository.countMembersByWorkspaceIds(workspaceIds).stream()
+            .collect(Collectors.toMap(
+                WorkspaceMemberCount::getWorkspaceId,
+                WorkspaceMemberCount::getMemberCount,
+                Long::sum,
+                java.util.HashMap::new));
     }
 
     /**

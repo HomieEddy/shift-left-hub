@@ -2,6 +2,7 @@ package com.shiftleft.hub.workspace.service;
 
 import com.shiftleft.hub.workspace.domain.Workspace;
 import com.shiftleft.hub.workspace.domain.WorkspaceMember;
+import com.shiftleft.hub.workspace.domain.WorkspaceMemberCount;
 import com.shiftleft.hub.workspace.domain.WorkspaceMemberRepository;
 import com.shiftleft.hub.workspace.domain.WorkspaceRepository;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -392,5 +395,39 @@ class WorkspaceServiceTest {
 
     private String anyString() {
         return org.mockito.ArgumentMatchers.anyString();
+    }
+
+    @Test
+    void getMemberCounts_returnsEmptyMapForEmptyInput() {
+        assertTrue(workspaceService.getMemberCounts(List.of()).isEmpty());
+        assertTrue(workspaceService.getMemberCounts((Collection<UUID>) null).isEmpty());
+    }
+
+    @Test
+    void getMemberCounts_returnsMapFromBulkQuery() {
+        UUID ws1 = UUID.randomUUID();
+        UUID ws2 = UUID.randomUUID();
+        when(workspaceMemberRepository.countMembersByWorkspaceIds(List.of(ws1, ws2)))
+            .thenReturn(List.of(row(ws1, 3L), row(ws2, 7L)));
+
+        Map<UUID, Long> result = workspaceService.getMemberCounts(List.of(ws1, ws2));
+
+        assertEquals(2, result.size());
+        assertEquals(3L, result.get(ws1));
+        assertEquals(7L, result.get(ws2));
+    }
+
+    private static WorkspaceMemberCount row(UUID id, long count) {
+        return new WorkspaceMemberCount() {
+            @Override
+            public UUID getWorkspaceId() {
+                return id;
+            }
+
+            @Override
+            public long getMemberCount() {
+                return count;
+            }
+        };
     }
 }
