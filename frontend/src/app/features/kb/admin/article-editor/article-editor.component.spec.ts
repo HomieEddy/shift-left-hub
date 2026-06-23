@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { provideMarkdown } from 'ngx-markdown';
@@ -18,8 +18,7 @@ describe('ArticleEditorComponent', () => {
   let tagService: {
     getTags: ReturnType<typeof vi.fn>;
   };
-  let paramMap: { get: ReturnType<typeof vi.fn> };
-  let paramMapSubject: BehaviorSubject<Map<string, string>>;
+  let paramMapSubject: BehaviorSubject<ParamMap>;
   let router: { navigate: ReturnType<typeof vi.fn> };
 
   const mockArticle = {
@@ -61,10 +60,13 @@ describe('ArticleEditorComponent', () => {
     tagService = {
       getTags: vi.fn().mockReturnValue(of([])),
     };
-    paramMapSubject = new BehaviorSubject(new Map());
-    paramMap = {
-      get: vi.fn((k: string) => paramMapSubject.value.get(k) ?? null),
-    };
+    const toParamMap = (m: Map<string, string>): ParamMap => ({
+      get: (k: string) => m.get(k) ?? null,
+      getAll: (k: string) => (m.has(k) ? [m.get(k) as string] : []),
+      has: (k: string) => m.has(k),
+      keys: Array.from(m.keys()),
+    });
+    paramMapSubject = new BehaviorSubject<ParamMap>(toParamMap(new Map<string, string>()));
     router = { navigate: vi.fn().mockResolvedValue(true) };
 
     await TestBed.configureTestingModule({
@@ -75,7 +77,6 @@ describe('ArticleEditorComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap },
             paramMap: paramMapSubject.asObservable(),
           },
         },
@@ -93,7 +94,12 @@ describe('ArticleEditorComponent', () => {
 
   describe('create mode', () => {
     beforeEach(() => {
-      paramMapSubject.next(new Map());
+      paramMapSubject.next({
+        get: (_k: string) => null,
+        getAll: (_k: string) => [],
+        has: (_k: string) => false,
+        keys: [],
+      });
       createComponent();
     });
 
@@ -145,7 +151,12 @@ describe('ArticleEditorComponent', () => {
 
   describe('edit mode', () => {
     beforeEach(() => {
-      paramMapSubject.next(new Map([['id', '123']]));
+      paramMapSubject.next({
+        get: (k: string) => (k === 'id' ? '123' : null),
+        getAll: (k: string) => (k === 'id' ? ['123'] : []),
+        has: (k: string) => k === 'id',
+        keys: [],
+      });
       articleService.getArticleById.mockReturnValue(of(mockArticle));
       createComponent();
     });

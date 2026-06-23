@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { AgentTicketDetailComponent } from './agent-ticket-detail.component';
@@ -56,9 +56,16 @@ describe('AgentTicketDetailComponent', () => {
     resolveTicket: ReturnType<typeof vi.fn>;
   };
   let translationService: { translate: ReturnType<typeof vi.fn> };
-  let paramMapSubject: BehaviorSubject<Map<string, string>>;
-  let activatedRoute: any;
+  let paramMapSubject: BehaviorSubject<ParamMap>;
+  let activatedRoute: Partial<ActivatedRoute>;
   let router: { navigate: ReturnType<typeof vi.fn> };
+
+  const toParamMap = (m: Map<string, string>): ParamMap => ({
+    get: (k: string) => m.get(k) ?? null,
+    getAll: (k: string) => (m.has(k) ? [m.get(k) as string] : []),
+    has: (k: string) => m.has(k),
+    keys: Array.from(m.keys()),
+  });
 
   beforeEach(async () => {
     agentTicketService = {
@@ -69,9 +76,9 @@ describe('AgentTicketDetailComponent', () => {
       resolveTicket: vi.fn(),
     };
     translationService = { translate: vi.fn(() => 'translated') };
-    paramMapSubject = new BehaviorSubject(new Map([['id', 'ticket-123']]));
+    const initial = toParamMap(new Map([['id', 'ticket-123']]));
+    paramMapSubject = new BehaviorSubject<ParamMap>(initial);
     activatedRoute = {
-      snapshot: { paramMap: { get: (k: string) => paramMapSubject.value.get(k) ?? null } },
       paramMap: paramMapSubject.asObservable(),
     };
     router = { navigate: vi.fn().mockResolvedValue(true) };

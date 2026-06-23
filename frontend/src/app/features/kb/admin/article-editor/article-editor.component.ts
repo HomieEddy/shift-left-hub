@@ -60,7 +60,7 @@ export class ArticleEditorComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const id = params.get('id');
-      if (id) {
+      if (id !== null && id !== '') {
         this.isEdit.set(true);
         this.articleId.set(id);
         this.loadArticle(id);
