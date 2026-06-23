@@ -11,12 +11,15 @@
 --   - idx_article_last_editor_id (admin article listing by last editor)
 --
 -- Unique constraints:
---   - uc_tag_workspace_slug       (prevents duplicate slugs within a workspace)
+--   - uc_tag_workspace_name_en    (prevents duplicate tag names within a workspace)
 --   - uc_category_workspace_parent_name_en
---                                (prevents duplicate sibling category names)
+--                                (prevents duplicate sibling category names,
+--                                 NULLS NOT DISTINCT so root categories are
+--                                 also unique on (workspace_id, name_en))
 --
--- Safety: every block is idempotent. The unique-constraint blocks fail loudly
--- if existing data violates the new constraint (DISTINCT ON check first).
+-- Safety: every block is idempotent. The unique-constraint blocks delete
+-- existing duplicates (keeping the lowest id) and remap dependent
+-- article_tag rows to the canonical tag first.
 
 -- ============================================================
 -- INDEXES
@@ -75,6 +78,29 @@ BEGIN
     IF NOT EXISTS (
         SELECT 1 FROM pg_constraint WHERE conname = 'uc_tag_workspace_name_en'
     ) THEN
+        -- Remap article_tag rows from duplicate tags to the canonical (lowest-id)
+        -- tag BEFORE deleting the duplicates. article_tag.tag_id has no
+        -- ON DELETE CASCADE, so a blind DELETE would fail with FK violation
+        -- in production data. Uses a CTE to pick MIN(id) per (workspace_id,
+        -- name_en) — PostgreSQL has no built-in MIN(uuid) aggregate, so we
+        -- pick via an ordered subquery.
+        WITH canonical AS (
+            SELECT DISTINCT ON (workspace_id, name_en)
+                id AS canonical_id,
+                workspace_id,
+                name_en
+            FROM tag
+            ORDER BY workspace_id, name_en, id
+        )
+        UPDATE article_tag at
+        SET tag_id = c.canonical_id
+        FROM tag dup
+        JOIN canonical c
+          ON c.workspace_id = dup.workspace_id
+         AND c.name_en = dup.name_en
+        WHERE at.tag_id = dup.id
+          AND dup.id > c.canonical_id;
+
         DELETE FROM tag a
         USING tag b
         WHERE a.workspace_id = b.workspace_id
@@ -88,9 +114,10 @@ END;
 $$;
 
 -- Category: (workspace_id, parent_id, name_en) must be unique among siblings.
--- NULL parent_id is treated as a distinct group (standard SQL NULL semantics
--- in UNIQUE constraints), so root categories can share names across workspaces
--- but not within a workspace.
+-- Root categories (parent_id IS NULL) must also be unique on (workspace_id,
+-- name_en). Standard SQL UNIQUE treats NULLs as distinct, so we use
+-- NULLS NOT DISTINCT (PostgreSQL 15+; AGENTS.md mandates pgvector 0.8.0-pg16,
+-- i.e. PostgreSQL 16, so this syntax is available).
 DO $$
 BEGIN
     IF NOT EXISTS (
@@ -105,7 +132,7 @@ BEGIN
 
         ALTER TABLE category
             ADD CONSTRAINT uc_category_workspace_parent_name_en
-            UNIQUE (workspace_id, parent_id, name_en);
+            UNIQUE NULLS NOT DISTINCT (workspace_id, parent_id, name_en);
     END IF;
 END;
 $$;
