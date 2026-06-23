@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { MarkdownModule } from 'ngx-markdown';
 import { TicketService } from '../ticket.service';
@@ -65,12 +65,25 @@ describe('TicketDetailComponent', () => {
     };
     router = { navigate: vi.fn().mockResolvedValue(true) };
 
+    const toParamMap = (m: Map<string, string>): ParamMap => ({
+      get: (k: string) => m.get(k) ?? null,
+      getAll: (k: string) => (m.has(k) ? [m.get(k) as string] : []),
+      has: (k: string) => m.has(k),
+      keys: Array.from(m.keys()),
+    });
+    const paramMapSubject = new BehaviorSubject<ParamMap>(toParamMap(new Map([['id', 't1']])));
     await TestBed.configureTestingModule({
       imports: [TicketDetailComponent, MarkdownModule],
       providers: [
         { provide: TicketService, useValue: ticketService },
         { provide: TranslationService, useValue: translationService },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: new Map([['id', 't1']]) } } },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: paramMapSubject.value },
+            paramMap: paramMapSubject.asObservable(),
+          },
+        },
         { provide: Router, useValue: router },
       ],
     }).compileComponents();

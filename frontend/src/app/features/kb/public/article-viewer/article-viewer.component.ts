@@ -24,13 +24,15 @@ export class ArticleViewerComponent implements OnInit {
   errorMessage = signal('');
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id != null) {
-      this.loadArticle(id);
-    } else {
-      this.errorMessage.set(this.translationService.translate('kb.invalid-id'));
-      this.isLoading.set(false);
-    }
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id');
+      if (id != null) {
+        this.loadArticle(id);
+      } else {
+        this.errorMessage.set(this.translationService.translate('kb.invalid-id'));
+        this.isLoading.set(false);
+      }
+    });
   }
 
   loadArticle(id: string): void {

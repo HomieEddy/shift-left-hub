@@ -58,12 +58,17 @@ export class ArticleEditorComponent implements OnInit {
   selectedCategoryId = signal<string | null>(null);
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id !== null) {
-      this.isEdit.set(true);
-      this.articleId.set(id);
-      this.loadArticle(id);
-    }
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const id = params.get('id');
+      if (id !== null && id !== '') {
+        this.isEdit.set(true);
+        this.articleId.set(id);
+        this.loadArticle(id);
+      } else {
+        this.isEdit.set(false);
+        this.articleId.set(null);
+      }
+    });
     this.loadTags();
     this.loadCategories();
   }

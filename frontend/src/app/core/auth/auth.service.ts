@@ -9,9 +9,12 @@ import { AuthTokenService } from './auth-token.service';
 export class AuthService {
   private readonly userSignal = signal<AuthResponse | null>(null);
   readonly user = this.userSignal.asReadonly();
-  readonly isAuthenticated = signal(false);
-  readonly isAdmin = signal(false);
-  readonly isAgent = signal(false);
+  private readonly isAuthenticatedSignal = signal(false);
+  private readonly isAdminSignal = signal(false);
+  private readonly isAgentSignal = signal(false);
+  readonly isAuthenticated = this.isAuthenticatedSignal.asReadonly();
+  readonly isAdmin = this.isAdminSignal.asReadonly();
+  readonly isAgent = this.isAgentSignal.asReadonly();
 
   private readonly http = inject(HttpClient);
   private readonly authTokenService = inject(AuthTokenService);
@@ -87,17 +90,17 @@ export class AuthService {
   private setSession(response: AuthResponse): void {
     this.userSignal.set(response);
     this.authTokenService.setAccessToken(response.accessToken);
-    this.isAuthenticated.set(true);
-    this.isAdmin.set(response.role === 'ROLE_ADMIN');
-    this.isAgent.set(response.role === 'ROLE_AGENT' || response.role === 'ROLE_ADMIN');
+    this.isAuthenticatedSignal.set(true);
+    this.isAdminSignal.set(response.role === 'ROLE_ADMIN');
+    this.isAgentSignal.set(response.role === 'ROLE_AGENT' || response.role === 'ROLE_ADMIN');
   }
 
   private clearSession(): void {
     this.userSignal.set(null);
     this.authTokenService.clear();
-    this.isAuthenticated.set(false);
-    this.isAdmin.set(false);
-    this.isAgent.set(false);
+    this.isAuthenticatedSignal.set(false);
+    this.isAdminSignal.set(false);
+    this.isAgentSignal.set(false);
   }
 
   private tryRefreshToken(): void {

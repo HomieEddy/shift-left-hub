@@ -33,27 +33,29 @@ export class WorkspaceDetailComponent implements OnInit {
   activeTab = signal<'members' | 'llm' | 'documents' | 'settings'>('members');
 
   ngOnInit() {
-    const idOrNull = this.route.snapshot.paramMap.get('id');
-    if (idOrNull === null) {
-      this.errorMessage.set(this.translationService.translate('admin.workspaces.detail.not-found'));
-      this.isLoading.set(false);
-      return;
-    }
-    this.workspaceService
-      .getWorkspace(idOrNull)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (ws) => {
-          this.workspace.set(ws);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.errorMessage.set(
-            this.translationService.translate('admin.workspaces.detail.not-found'),
-          );
-          this.isLoading.set(false);
-        },
-      });
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const idOrNull = params.get('id');
+      if (idOrNull === null) {
+        this.errorMessage.set(this.translationService.translate('admin.workspaces.detail.not-found'));
+        this.isLoading.set(false);
+        return;
+      }
+      this.workspaceService
+        .getWorkspace(idOrNull)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (ws) => {
+            this.workspace.set(ws);
+            this.isLoading.set(false);
+          },
+          error: () => {
+            this.errorMessage.set(
+              this.translationService.translate('admin.workspaces.detail.not-found'),
+            );
+            this.isLoading.set(false);
+          },
+        });
+    });
   }
 
   switchTab(tabId: string) {

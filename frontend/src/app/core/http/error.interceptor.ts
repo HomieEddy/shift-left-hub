@@ -30,9 +30,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if (req.url.includes('/auth/refresh') || (error.url?.includes('/auth/refresh') ?? false)) {
           return throwError(() => error);
         }
-        const body = error.error as { message?: string; error?: string } | null;
+        const body = error.error as
+          | { detail?: string; message?: string; error?: string }
+          | null;
+        // Prefer `detail` (RFC 7807 ProblemDetail emitted by the backend
+        // GlobalExceptionHandler) over the legacy `message`/`error` fields.
         message =
-          body?.message ?? body?.error ?? translationService.translate('http.error.invalidRequest');
+          body?.detail ??
+          body?.message ??
+          body?.error ??
+          translationService.translate('http.error.invalidRequest');
       } else if (error.status >= 500) {
         message = translationService.translate('http.error.serverError');
       }
