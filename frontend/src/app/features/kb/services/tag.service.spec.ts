@@ -34,13 +34,20 @@ describe('TagService', () => {
   });
 
   it('should GET /api/admin/tags with article counts', () => {
-    service.getTags().subscribe((tags) => {
-      expect(tags.length).toBe(1);
-      expect(tags[0].articleCount).toBe(5);
+    service.getTags().subscribe((page) => {
+      expect(page.content.length).toBe(1);
+      expect(page.content[0].articleCount).toBe(5);
     });
-    const req = httpMock.expectOne('/api/admin/tags');
+    const req = httpMock.expectOne('/api/admin/tags?page=0&size=20');
     expect(req.request.method).toBe('GET');
-    req.flush([mockTag]);
+    req.flush({ content: [mockTag], totalPages: 1, totalElements: 1, number: 0, size: 20 });
+  });
+
+  it('should send custom page and size params', () => {
+    service.getTags(2, 50).subscribe();
+    const req = httpMock.expectOne('/api/admin/tags?page=2&size=50');
+    expect(req.request.method).toBe('GET');
+    req.flush({ content: [], totalPages: 0, totalElements: 0, number: 2, size: 50 });
   });
 
   it('should GET /api/admin/tags/:id on getTagById', () => {

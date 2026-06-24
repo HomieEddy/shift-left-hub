@@ -24,6 +24,8 @@ export class TagManagerComponent implements OnInit {
   errorMessage = signal('');
   showForm = signal(false);
   editingTag = signal<TagDto | null>(null);
+  currentPage = signal(0);
+  totalPages = signal(0);
 
   formNameEn = '';
   formNameFr = '';
@@ -36,11 +38,12 @@ export class TagManagerComponent implements OnInit {
   loadTags(): void {
     this.isLoading.set(true);
     this.tagService
-      .getTags()
+      .getTags(this.currentPage())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => {
-          this.tags.set(data);
+        next: (page) => {
+          this.tags.set(page.content);
+          this.totalPages.set(page.totalPages);
           this.isLoading.set(false);
         },
         error: () => {
@@ -48,6 +51,11 @@ export class TagManagerComponent implements OnInit {
           this.isLoading.set(false);
         },
       });
+  }
+
+  changePage(page: number): void {
+    this.currentPage.set(page);
+    this.loadTags();
   }
 
   openCreate(): void {
