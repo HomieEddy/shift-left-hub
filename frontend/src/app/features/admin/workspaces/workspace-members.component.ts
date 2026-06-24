@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { WorkspaceService } from './workspace.service';
@@ -15,6 +15,7 @@ import { ConfirmationDialogService } from '../../../shared/ui/confirmation-dialo
   selector: 'app-workspace-members',
   standalone: true,
   imports: [FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workspace-members.component.html',
 })
 export class WorkspaceMembersComponent implements OnInit {
