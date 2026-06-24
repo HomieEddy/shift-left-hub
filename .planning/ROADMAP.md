@@ -4,7 +4,9 @@
 
 - ✅ **v1.0 Initial MVP** — Phases 1-8 (shipped 2026-06-08)
 - ✅ **v2.0 Workspace Platform** — Phases 9-16 (shipped 2026-06-14)
-- 🚧 **v2.1 Deployment** — Phases 17-21 (in progress)
+- ✅ **v2.1 Deployment** — Phases 17-21 (shipped 2026-06-15)
+- ✅ **v2.2 Post-Cleanup Polish** — Tier 12-18 (shipped 2026-06-23)
+- 🚧 **v2.3 Deferred Items** — Phases 22-25 (in progress)
 
 ## Phases
 
@@ -44,7 +46,16 @@
 - [x] **Phase 18: Unit Test Tightening** — Backend and frontend unit tests expanded with meaningful coverage
 - [x] **Phase 19: E2E Test Coverage** — 8 Playwright e2e happy-path tests covering all user-facing features
 - [x] **Phase 20: Security Audit & Hardening** — Full security audit of backend, frontend, and infrastructure
-- [ ] **Phase 21: Production Deployment** — Deploy frontend (Vercel), backend (Railway), and verify live
+- [x] **Phase 21: Production Deployment** — Deploy frontend (Vercel), backend (Railway), and verify live
+
+### 🚧 v2.3 Deferred Items (In Progress)
+
+**Milestone Goal:** Address the four open follow-ups from v2.2 — OnPush change detection migration (42 components), TagService pagination, SpringDoc/OpenAPI documentation, and bundle size optimization.
+
+- [ ] **Phase 22: OnPush Migration** — Migrate all 42 Angular components to `ChangeDetectionStrategy.OnPush` for performance
+- [ ] **Phase 23: TagService Pagination** — Add backend pagination + frontend `<app-pagination>` to tag manager
+- [ ] **Phase 24: SpringDoc/OpenAPI** — Add auto-generated OpenAPI docs at `/swagger-ui.html`
+- [ ] **Phase 25: Bundle Size Optimization** — Reduce initial bundle from 560KB to under 500KB budget
 
 ## Phase Details
 
@@ -136,9 +147,81 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 21-01 — Pre-deploy code changes: env.js runtime config, base URL interceptor, Dockerfile/CI verification, pre-deploy checklist
-- [ ] 21-02 — Pre-deploy setup: create Railway project + PostgreSQL + environment variables, create Vercel project
-- [ ] 21-03 — Deploy & smoke test: set production Railway URL, update demo walkthrough, push to main, manual smoke test
+- [x] 21-01 — Pre-deploy code changes: env.js runtime config, base URL interceptor, Dockerfile/CI verification, pre-deploy checklist
+- [x] 21-02 — Pre-deploy setup: create Railway project + PostgreSQL + environment variables, create Vercel project
+- [x] 21-03 — Deploy & smoke test: set production Railway URL, update demo walkthrough, push to main, manual smoke test
+
+**Completed:** 2026-06-15
+
+### Phase 22: OnPush Migration
+**Goal**: Migrate all 42 Angular components from `Default` to `ChangeDetectionStrategy.OnPush` to reduce change detection cycles and improve runtime performance.
+**Depends on**: Phase 21
+**Requirements**: PERF-01, PERF-02
+**Success Criteria** (what must be TRUE):
+   1. All 42 component files declare `changeDetection: ChangeDetectionStrategy.OnPush` in their `@Component` decorator
+   2. Components with imperative `.subscribe()` assignments convert to `signal()` patterns or use `markForCheck()` to remain OnPush-compatible
+   3. `pnpm test -- --watch=false` passes — all 306 frontend tests still green
+   4. `pnpm build` produces a clean production build with no template/type errors
+   5. All 8 Playwright e2e tests pass against the OnPush-migrated build
+**Plans**: 5 plans
+
+Plans:
+- [ ] 22-01 — Dumb + shared UI components (14 components: button, icon-button, card, badge, table, pagination, icon-picker, skeleton×3, search-input, confirmation-dialog, toast-container, modal)
+- [ ] 22-02 — Auth, Landing, Workspace Switcher, Chat, App (7 components: login, register, landing, workspace-switcher, invitation-badge, chat, app)
+- [ ] 22-03 — Tickets + Agent + KB (12 components: ticket-list, ticket-detail, escalation-form, agent-ticket-list, agent-ticket-detail, article-list×2, article-search, article-viewer, article-editor, tag-manager, kb-admin-article-list)
+- [ ] 22-04 — Admin (9 components: user-list, kcs-draft-list, document-list, taxonomy-tree, taxonomy-bulk, llm-settings, workspace-list, workspace-detail, workspace-settings, workspace-members)
+- [ ] 22-05 — Verification: run all 306 frontend tests + Playwright E2E smoke test
+
+### Phase 23: TagService Pagination
+**Goal**: Add Spring Data pagination to the tag backend and wire the existing `<app-pagination>` component into the tag manager UI so the tag list scales beyond a single page.
+**Depends on**: Phase 22
+**Requirements**: TAG-01, TAG-02
+**Success Criteria** (what must be TRUE):
+   1. `GET /api/admin/tags?page=N&size=M` returns a Spring `Page<TagResponse>` (no more `List<TagResponse>`)
+   2. `TagService.getAllTags(page, size)` returns `Page<TagResponse>` with article counts preserved
+   3. `TagManagerComponent` displays pagination controls when `totalPages > 1` and fetches the next page on click
+   4. Backend integration test verifies pagination parameters are honored
+   5. `mvn test` and `pnpm test -- --watch=false` both pass cleanly
+**Plans**: 3 plans
+
+Plans:
+- [ ] 23-01 — Backend pagination: `TagRepository.findAll(Pageable)`, `TagService.getAllTags(page, size) → Page<TagResponse>`, `AdminTagController` accepts `@RequestParam page, size`
+- [ ] 23-02 — Frontend pagination: `PaginatedResponse<TagDto>`, `tag.service.getTags(page, size)`, `TagManagerComponent` with `currentPage`/`totalPages` signals and `<app-pagination>`
+- [ ] 23-03 — Verify: 2 backend tests + 1 frontend spec added, full test suite green, manual smoke test with 25+ tags
+
+### Phase 24: SpringDoc/OpenAPI
+**Goal**: Add `springdoc-openapi-starter-webmvc-ui:3.0.3` to auto-generate OpenAPI documentation accessible at `/swagger-ui.html` for the 17 backend controllers.
+**Depends on**: Phase 23
+**Requirements**: DOC-01, DOC-02
+**Success Criteria** (what must be TRUE):
+   1. `springdoc-openapi-starter-webmvc-ui:3.0.3` is added to `pom.xml`
+   2. `/swagger-ui.html` and `/v3/api-docs` are accessible without authentication (permitted in SecurityConfig)
+   3. All 17 controllers appear in the OpenAPI spec with HTTP methods, paths, request/response schemas
+   4. `mvn test` passes
+   5. `mvn compile` clean (no Spring Boot 4.x compatibility issues)
+**Plans**: 1 plan
+
+Plans:
+- [ ] 24-01 — Single plan: add dependency, configure application.properties, update SecurityConfig, verify
+
+### Phase 25: Bundle Size Optimization
+**Goal**: Reduce the production initial bundle from 560KB to under the 500KB warning budget through targeted eager-dependency fixes.
+**Depends on**: Phase 24
+**Requirements**: PERF-03, PERF-04, PERF-05
+**Success Criteria** (what must be TRUE):
+   1. `ngx-markdown` is no longer in the main bundle — only loaded for article viewer/editor routes
+   2. `translations.ts` (61KB) is split — FR translations lazy-loaded separately
+   3. `WorkspaceSwitcherComponent`, `InvitationBadgeComponent`, and sidebar Lucide icons are wrapped in `@defer` blocks (render after auth check)
+   4. `KcsDraftService` is conditionally injected only for admin users
+   5. `pnpm build` produces an initial bundle under 500KB (the warning budget)
+**Plans**: 3 plans
+
+Plans:
+- [ ] 25-01 — Lazy `ngx-markdown` + split translations
+- [ ] 25-02 — `@defer` workspace components + sidebar icons
+- [ ] 25-03 — Lazy `KcsDraftService` + verify bundle under 500KB
+
+## Progress
 
 ## Progress
 
@@ -164,8 +247,12 @@ Plans:
 | 18. Unit Test Tightening | v2.1 | 5/5 | Complete | 2026-06-14 |
 | 19. E2E Test Coverage | v2.1 | 6/6 | Complete | 2026-06-14 |
 | 20. Security Audit & Hardening | v2.1 | 3/3 | Complete | 2026-06-15 |
-| 21. Production Deployment | v2.1 | 0/3 | Planned | - |
+| 21. Production Deployment | v2.1 | 3/3 | Complete | 2026-06-15 |
+| 22. OnPush Migration | v2.3 | 0/5 | Planned | - |
+| 23. TagService Pagination | v2.3 | 0/3 | Planned | - |
+| 24. SpringDoc/OpenAPI | v2.3 | 0/1 | Planned | - |
+| 25. Bundle Size Optimization | v2.3 | 0/3 | Planned | - |
 
 ---
 
-*Last updated: 2026-06-15 — v2.1 Deployment: Phase 20 complete*
+*Last updated: 2026-06-23 — v2.3 Deferred Items: Phases 22-25 planned*
