@@ -111,6 +111,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
+                // SpringDoc / OpenAPI documentation (auto-generated, public)
+                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/v3/api-docs.yaml").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/articles/**").permitAll()
                 .requestMatchers("/api/ai/**").authenticated()
                 .requestMatchers("/api/tickets/**").authenticated()
