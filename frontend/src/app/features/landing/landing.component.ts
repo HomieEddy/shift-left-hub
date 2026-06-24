@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError } from 'rxjs';
@@ -35,6 +35,7 @@ import {
     LucideLayoutDashboard,
     LucideInbox,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './landing.component.html',
 })
 export class LandingComponent implements OnInit {

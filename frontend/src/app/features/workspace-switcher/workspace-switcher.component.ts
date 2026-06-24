@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/auth/auth.service';
@@ -12,6 +12,7 @@ import { LucideChevronsUpDown, LucideCheck, LucideBuilding2 } from '@lucide/angu
   selector: 'app-workspace-switcher',
   standalone: true,
   imports: [LucideChevronsUpDown, LucideCheck, LucideBuilding2],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workspace-switcher.component.html',
 })
 export class WorkspaceSwitcherComponent implements OnInit {

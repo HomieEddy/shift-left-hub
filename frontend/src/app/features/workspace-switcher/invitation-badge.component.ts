@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WorkspaceService } from '../admin/workspaces/workspace.service';
 import { InvitationDto } from '../admin/workspaces/workspace.model';
@@ -9,6 +9,7 @@ import { LucideBell, LucideCheck, LucideX, LucideUsers } from '@lucide/angular';
   selector: 'app-invitation-badge',
   standalone: true,
   imports: [LucideBell, LucideCheck, LucideX, LucideUsers],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './invitation-badge.component.html',
 })
 export class InvitationBadgeComponent implements OnInit {
