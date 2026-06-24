@@ -57,7 +57,7 @@ describe('ChatComponent', () => {
   });
 
   it('should call chatService.sendMessage on sendMessage()', () => {
-    component.currentInput = 'How do I reset my password?';
+    component.currentInput.set('How do I reset my password?');
     component.sendMessage();
 
     expect(chatService.sendMessage).toHaveBeenCalledWith(
@@ -68,7 +68,7 @@ describe('ChatComponent', () => {
   });
 
   it('should append user message and create assistant message slot', () => {
-    component.currentInput = 'Hello';
+    component.currentInput.set('Hello');
     component.sendMessage();
 
     const msgs = component.messages();
@@ -80,7 +80,7 @@ describe('ChatComponent', () => {
   });
 
   it('should append token events to assistant message', () => {
-    component.currentInput = 'Hello';
+    component.currentInput.set('Hello');
     component.sendMessage();
 
     eventsSubject.next(mockStreamEvent('token', 'Step 1: '));
@@ -91,7 +91,7 @@ describe('ChatComponent', () => {
   });
 
   it('should set showFeedback on done event', () => {
-    component.currentInput = 'Hello';
+    component.currentInput.set('Hello');
     component.sendMessage();
 
     eventsSubject.next(
@@ -104,7 +104,7 @@ describe('ChatComponent', () => {
   });
 
   it('should show fallback on fallback event', () => {
-    component.currentInput = 'unknown issue';
+    component.currentInput.set('unknown issue');
     component.sendMessage();
 
     eventsSubject.next(mockStreamEvent('fallback', 'No results found'));
@@ -114,7 +114,7 @@ describe('ChatComponent', () => {
   });
 
   it('should show error on error event', () => {
-    component.currentInput = 'Hello';
+    component.currentInput.set('Hello');
     component.sendMessage();
 
     eventsSubject.next(mockStreamEvent('error', 'Server error'));
@@ -124,17 +124,17 @@ describe('ChatComponent', () => {
   });
 
   it('should not send empty messages', () => {
-    component.currentInput = '   ';
+    component.currentInput.set('   ');
     component.sendMessage();
 
     expect(chatService.sendMessage).not.toHaveBeenCalled();
   });
 
   it('should not send while streaming', () => {
-    component.currentInput = 'msg1';
+    component.currentInput.set('msg1');
     component.sendMessage();
 
-    component.currentInput = 'msg2';
+    component.currentInput.set('msg2');
     component.sendMessage();
 
     expect(chatService.sendMessage).toHaveBeenCalledTimes(1);
@@ -146,7 +146,7 @@ describe('ChatComponent', () => {
   });
 
   it('should render source excerpt for article sources', () => {
-    component.currentInput = 'How do I set up VPN?';
+    component.currentInput.set('How do I set up VPN?');
     component.sendMessage();
 
     eventsSubject.next(
@@ -174,7 +174,7 @@ describe('ChatComponent', () => {
   });
 
   it('should render source excerpt for document sources', () => {
-    component.currentInput = 'Show me the network diagram';
+    component.currentInput.set('Show me the network diagram');
     component.sendMessage();
 
     eventsSubject.next(

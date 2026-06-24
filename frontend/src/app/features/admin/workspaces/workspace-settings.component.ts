@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import { IconPickerComponent } from './icon-picker.component';
   selector: 'app-workspace-settings',
   standalone: true,
   imports: [FormsModule, IconPickerComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workspace-settings.component.html',
 })
 export class WorkspaceSettingsComponent implements OnInit {

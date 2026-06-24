@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -22,12 +23,12 @@ export class LoginComponent {
   email = '';
   password = '';
   showPassword = false;
-  errorMessage = '';
-  isLoading = false;
+  errorMessage = signal('');
+  isLoading = signal(false);
 
   onSubmit(): void {
-    this.errorMessage = '';
-    this.isLoading = true;
+    this.errorMessage.set('');
+    this.isLoading.set(true);
 
     this.authService
       .login({ email: this.email, password: this.password })
@@ -37,15 +38,15 @@ export class LoginComponent {
           void this.router.navigate(['/articles']);
         },
         error: (err: HttpErrorResponse) => {
-          this.isLoading = false;
+          this.isLoading.set(false);
           if (err.status === 401) {
-            this.errorMessage = this.translationService.translate('error.invalid-credentials');
+            this.errorMessage.set(this.translationService.translate('error.invalid-credentials'));
           } else {
-            this.errorMessage = this.translationService.translate('error.login-failed');
+            this.errorMessage.set(this.translationService.translate('error.login-failed'));
           }
         },
         complete: () => {
-          this.isLoading = false;
+          this.isLoading.set(false);
         },
       });
   }

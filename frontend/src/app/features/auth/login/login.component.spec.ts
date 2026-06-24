@@ -62,7 +62,7 @@ describe('LoginComponent', () => {
     component.password = 'password';
     component.onSubmit();
 
-    expect(component.isLoading).toBe(true);
+    expect(component.isLoading()).toBe(true);
   });
 
   it('should set errorMessage on 401 response', () => {
@@ -72,8 +72,8 @@ describe('LoginComponent', () => {
     component.password = 'wrong';
     component.onSubmit();
 
-    expect(component.errorMessage).toBe('Invalid email or password.');
-    expect(component.isLoading).toBe(false);
+    expect(component.errorMessage()).toBe('Invalid email or password.');
+    expect(component.isLoading()).toBe(false);
   });
 
   it('should set generic error on non-401 response', () => {
@@ -83,7 +83,7 @@ describe('LoginComponent', () => {
     component.password = 'password';
     component.onSubmit();
 
-    expect(component.errorMessage).toBe('Login failed. Please try again.');
-    expect(component.isLoading).toBe(false);
+    expect(component.errorMessage()).toBe('Login failed. Please try again.');
+    expect(component.isLoading()).toBe(false);
   });
 });

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { TranslationService } from '../../../../core/i18n/translation.service';
   selector: 'app-article-search',
   standalone: true,
   imports: [RouterLink, FormsModule, DatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './article-search.component.html',
 })
 export class ArticleSearchComponent implements OnInit {

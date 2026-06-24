@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +16,7 @@ import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-di
   selector: 'app-article-editor',
   standalone: true,
   imports: [FormsModule, MarkdownModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './article-editor.component.html',
 })
 export class ArticleEditorComponent implements OnInit {

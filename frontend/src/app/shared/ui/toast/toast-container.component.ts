@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from './toast.service';
 import { ToastMessage, DEFAULT_DURATION } from './toast.model';
@@ -7,6 +7,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
 @Component({
   selector: 'app-toast-container',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './toast-container.component.html',
   styleUrl: './toast-container.component.css',
 })

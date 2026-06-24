@@ -11,29 +11,35 @@ v2.0 Extended: file upload format support (HTML, XML, Word), UI neutralization t
 
 Shift resolution as close to the user as possible by intercepting Level 0/1 issues before they reach the queue, while simultaneously eliminating the documentation burden on agents.
 
-## Current Milestone: v2.1 Deployment
+## Current Milestone: v2.3 Deferred Items
 
-**Goal:** Harden and deploy the v2.0 Workspace Platform to production.
+**Goal:** Address the four open follow-ups from v2.2 (Post-Cleanup Polish) — OnPush change detection migration across 42 components, TagService pagination, SpringDoc/OpenAPI documentation, and bundle size optimization to bring the production build under the 500KB warning budget.
 
 **Target features:**
-- Codebase-wide review (frontend, backend, database)
-- Tightening unit tests + happy-path e2e tests
-- Full security audit
-- Deploy on Vercel (frontend) and Railway (backend/db)
+- Phase 22: Migrate all 42 Angular components to `ChangeDetectionStrategy.OnPush`
+- Phase 23: Add Spring Data pagination to `TagService` and wire `<app-pagination>` into the tag manager UI
+- Phase 24: Add `springdoc-openapi-starter-webmvc-ui:3.0.3` for auto-generated API docs at `/swagger-ui.html`
+- Phase 25: Reduce the initial production bundle from 560KB to under 500KB through targeted eager-dependency fixes (lazy `ngx-markdown`, split translations, `@defer` workspace switcher, lazy `KcsDraftService`)
 
 ## Current State
 
-**v2.0 Workspace Platform** — Shipped 2026-06-14
+**v2.2 Post-Cleanup Polish** — Shipped 2026-06-23
 
-The application has been fully transformed from an IT-specific helpdesk into a general-purpose knowledge platform:
+The application has been hardened and the v2.0 platform was deployed to production (Vercel + Railway) during v2.1. v2.2 added a final cleanup pass:
 
-- **8 phases** (9-16), **34 plans** executed
-- **249 files changed**, +24,596 / -3,662 lines
-- **Multi-tenant workspaces** with row-level isolation
-- **Document ingestion** pipeline supporting 6 formats (markdown, text, PDF, HTML, XML, Word)
-- **BYO LLM** — per-workspace OpenAI-compatible endpoint configuration
-- **Domain-agnostic branding** — warm slate/charcoal palette, neutral terminology
-- **4 seeded workspaces** (HR, Legal, IT, Public) with 40 bilingual articles
+- **v2.2 PRs #126-#131** (6 PRs, 469 backend + 306 frontend tests, all green)
+- **Tier 12**: DB/JPA hygiene — LAZY fetch + missing `@Index` + 2 unique constraints
+- **Tier 13**: Domain exception hygiene — 3 new typed exceptions, 10 sites replaced
+- **Tier 15**: 4 real frontend bugs fixed + auth signal hardening
+- **Tier 16/17**: Routing (`canMatch`), modal a11y, commitlint, Prometheus
+- **Tier 14/18**: Polish — `AiDefaults`, `SelfModificationException`, N+1 fix
+- **Tier 17.5/17.6**: Infrastructure — `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`, editorconfig, PR template
+
+**Open follow-ups from v2.2 → addressed in v2.3:**
+- OnPush migration (42 components)
+- TagService pagination
+- SpringDoc/OpenAPI (blocker reason was stale)
+- Bundle size optimization (560KB → <500KB)
 
 ## Requirements
 
@@ -56,10 +62,20 @@ The application has been fully transformed from an IT-specific helpdesk into a g
 - ✓ SEED-01–06: Workspace-aware seeding — v2.0
 - ✓ FUF-01–05: HTML/XML/Word file upload — v2.0
 - ✓ UIN-01–05: Domain-agnostic UI/branding — v2.0
+- ✓ DEP-01–05: Production deployment (Vercel + Railway) — v2.1
+- ✓ TIER-12/13/14/15/16/17/18: Post-cleanup tiers — v2.2
 
-### Active
+### Active (v2.3 Deferred Items)
 
-(Next milestone requirements to be defined — see `.planning/REQUIREMENTS.md`)
+- **PERF-01**: All 42 Angular components use `ChangeDetectionStrategy.OnPush`
+- **PERF-02**: Components with imperative `.subscribe()` patterns converted to `signal()` or use `markForCheck()`
+- **TAG-01**: `TagService.getAllTags()` returns `Page<TagResponse>` (Spring Data pagination)
+- **TAG-02**: `TagManagerComponent` displays pagination controls via `<app-pagination>`
+- **DOC-01**: `springdoc-openapi-starter-webmvc-ui:3.0.3` added as a dependency
+- **DOC-02**: `/swagger-ui.html` and `/v3/api-docs` accessible without authentication
+- **PERF-03**: `ngx-markdown` is lazy-loaded (no longer in main bundle)
+- **PERF-04**: `translations.ts` is split — FR translations lazy-loaded
+- **PERF-05**: Initial production bundle < 500KB (currently 560KB)
 
 ### Out of Scope
 

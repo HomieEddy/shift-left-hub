@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { LoggerService } from '../../../core/logging/logger.service';
   selector: 'app-agent-ticket-list',
   standalone: true,
   imports: [DatePipe, RouterLink, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './agent-ticket-list.component.html',
 })
 /**

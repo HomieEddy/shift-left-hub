@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, isDevMode, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, isDevMode, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import { WorkspaceRoleService } from './core/auth/workspace-role.service';
@@ -52,6 +52,7 @@ import { InvitationBadgeComponent } from './features/workspace-switcher/invitati
     WorkspaceSwitcherComponent,
     InvitationBadgeComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

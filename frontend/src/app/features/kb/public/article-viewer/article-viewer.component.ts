@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,6 +11,7 @@ import { MarkdownModule } from 'ngx-markdown';
   selector: 'app-article-viewer',
   standalone: true,
   imports: [DatePipe, RouterLink, MarkdownModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './article-viewer.component.html',
 })
 export class ArticleViewerComponent implements OnInit {

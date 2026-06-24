@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryService } from './category.service';
@@ -9,6 +9,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
   selector: 'app-taxonomy-tree',
   standalone: true,
   imports: [FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './taxonomy-tree.component.html',
 })
 export class TaxonomyTreeComponent implements OnInit {

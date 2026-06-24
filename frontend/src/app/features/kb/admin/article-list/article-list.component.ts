@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { NgClass, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,6 +11,7 @@ import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-di
   selector: 'app-article-list',
   standalone: true,
   imports: [NgClass, DatePipe, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './article-list.component.html',
 })
 export class ArticleListComponent implements OnInit {

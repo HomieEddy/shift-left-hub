@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -6,6 +6,7 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 @Component({
   selector: 'app-icon-button',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './icon-button.component.html',
 })
 export class IconButtonComponent {

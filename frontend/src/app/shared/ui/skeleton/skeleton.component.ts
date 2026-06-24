@@ -1,9 +1,10 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslationService } from '../../../core/i18n/translation.service';
 
 @Component({
   selector: 'app-skeleton',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './skeleton.component.html',
 })
 export class SkeletonComponent {

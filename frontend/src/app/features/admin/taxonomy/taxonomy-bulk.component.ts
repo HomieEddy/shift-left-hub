@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from './category.service';
@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-taxonomy-bulk',
   standalone: true,
   imports: [FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './taxonomy-bulk.component.html',
 })
 export class TaxonomyBulkComponent implements OnInit {
