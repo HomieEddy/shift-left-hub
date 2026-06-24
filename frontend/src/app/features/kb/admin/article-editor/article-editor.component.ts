@@ -117,10 +117,10 @@ export class ArticleEditorComponent implements OnInit {
 
   loadTags(): void {
     this.tagService
-      .getTags()
+      .getTags(0, 1000)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (tags) => this.allTags.set(tags),
+        next: (page) => this.allTags.set(page.content),
         error: () => this.errorMessage.set(this.translationService.translate('kb.tags.error.load')),
       });
   }

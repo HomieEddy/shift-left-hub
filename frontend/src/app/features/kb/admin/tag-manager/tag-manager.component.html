@@ -161,5 +161,30 @@
         </tbody>
       </table>
     </div>
+
+    @if (totalPages() > 1) {
+      <div class="flex items-center justify-center gap-2 mt-6">
+        <button
+          (click)="changePage(currentPage() - 1)"
+          [disabled]="currentPage() === 0"
+          class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
+        >
+          {{ translationService.translate('pagination.previous') }}
+        </button>
+        <span class="text-sm text-text-secondary">{{
+          translationService.translate('pagination.page-of', {
+            VAR_PLURAL: currentPage() + 1,
+            VAR_TOTALPAGES: totalPages(),
+          })
+        }}</span>
+        <button
+          (click)="changePage(currentPage() + 1)"
+          [disabled]="currentPage() >= totalPages() - 1"
+          class="px-3 py-1.5 text-sm rounded border border-border-default text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
+        >
+          {{ translationService.translate('pagination.next') }}
+        </button>
+      </div>
+    }
   }
 </div>
