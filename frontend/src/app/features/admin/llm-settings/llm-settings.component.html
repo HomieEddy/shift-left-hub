@@ -1,5 +1,5 @@
 <div class="max-w-2xl mx-auto py-8 px-4">
-  @if (config) {
+  @if (config()) {
     <div class="space-y-6">
       <div class="bg-surface-primary rounded-xl shadow-sm border border-border-default p-6">
         <h1 class="text-xl font-semibold text-text-primary mb-6">
@@ -41,8 +41,8 @@
             }}</label>
             <select
               id="provider"
-              [(ngModel)]="config.llmProvider"
-              (change)="onProviderChange()"
+              [ngModel]="config()?.llmProvider"
+              (ngModelChange)="updateConfigField('llmProvider', $event); onProviderChange()"
               class="w-full rounded-xl border border-border-default px-3 py-2 text-sm text-text-primary bg-surface-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               @for (p of providers(); track p.value) {
@@ -51,19 +51,20 @@
             </select>
           </div>
 
-          @if (config.llmProvider === 'OLLAMA' || config.llmProvider === 'OPENAI_COMPATIBLE') {
+          @if (config()?.llmProvider === 'OLLAMA' || config()?.llmProvider === 'OPENAI_COMPATIBLE') {
             <div>
               <label
                 for="ollamaEndpoint"
                 class="block text-sm font-medium text-text-secondary mb-1"
-                >{{ config.llmProvider === 'OLLAMA'
+                >{{ config()?.llmProvider === 'OLLAMA'
                    ? translationService.translate('admin.settings.llm.ollama-endpoint')
                    : 'API Base URL' }}</label
               >
               <input
                 id="ollamaEndpoint"
-                [(ngModel)]="config.ollamaEndpointUrl"
-                [placeholder]="config.llmProvider === 'OLLAMA'
+                [ngModel]="config()?.ollamaEndpointUrl"
+                (ngModelChange)="updateConfigField('ollamaEndpointUrl', $event)"
+                [placeholder]="config()?.llmProvider === 'OLLAMA'
                    ? 'http://host.docker.internal:11434'
                    : 'https://api.openai.com/v1'"
                 class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -71,19 +72,20 @@
             </div>
           }
 
-          @if (config.llmProvider === 'OPENAI_COMPATIBLE') {
+          @if (config()?.llmProvider === 'OPENAI_COMPATIBLE') {
             <div>
               <label for="openaiKey" class="block text-sm font-medium text-text-secondary mb-1">{{
                 translationService.translate('admin.settings.llm.openai-key')
               }}</label>
               <input
                 id="openaiKey"
-                [(ngModel)]="openaiApiKey"
+                [ngModel]="openaiApiKey()"
+                (ngModelChange)="openaiApiKey.set($event)"
                 type="password"
                 placeholder="sk-..."
                 class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
-              @if (config.hasOpenaiKey) {
+              @if (config()?.hasOpenaiKey) {
                 <p class="text-xs text-text-tertiary mt-1">
                   {{ translationService.translate('admin.settings.llm.key-stored') }}
                 </p>
@@ -104,7 +106,8 @@
             <input
               id="chatModel"
               list="model-suggestions"
-              [(ngModel)]="config.chatModelName"
+              [ngModel]="config()?.chatModelName"
+              (ngModelChange)="updateConfigField('chatModelName', $event)"
               placeholder="llama3.2"
               class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
@@ -124,7 +127,8 @@
             <input
               id="embeddingModel"
               list="embedding-suggestions"
-              [(ngModel)]="config.embeddingModelName"
+              [ngModel]="config()?.embeddingModelName"
+              (ngModelChange)="updateConfigField('embeddingModelName', $event)"
               placeholder="nomic-embed-text"
               class="w-full rounded-xl border border-border-default px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
@@ -143,7 +147,8 @@
             >
             <input
               id="similarityThreshold"
-              [(ngModel)]="config.similarityThreshold"
+              [ngModel]="config()?.similarityThreshold"
+              (ngModelChange)="updateConfigField('similarityThreshold', +$event)"
               type="number"
               step="0.05"
               min="0"
@@ -160,7 +165,7 @@
             >
             <input
               id="embeddingDimension"
-              [value]="config.embeddingDimension"
+              [value]="config()?.embeddingDimension"
               disabled
               class="w-full rounded-xl border border-border-default px-3 py-2 text-sm bg-surface-secondary text-text-tertiary"
             />
@@ -170,47 +175,47 @@
         <div class="mt-6 flex items-center gap-3">
           <button
             (click)="save()"
-            [disabled]="isSaving"
+            [disabled]="isSaving()"
             class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
           >
             {{
-              isSaving
+              isSaving()
                 ? translationService.translate('admin.settings.llm.saving')
                 : translationService.translate('admin.settings.llm.save')
             }}
           </button>
           <button
             (click)="testConnection()"
-            [disabled]="isTesting"
+            [disabled]="isTesting()"
             class="rounded-lg border border-border-default px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary disabled:opacity-50 font-medium transition-colors"
           >
             {{
-              isTesting
+              isTesting()
                 ? translationService.translate('admin.settings.llm.testing')
                 : translationService.translate('admin.settings.llm.test')
             }}
           </button>
         </div>
 
-        @if (saveMessage) {
+        @if (saveMessage()) {
           <div
             class="mt-3 bg-accent-success-muted border border-accent-success text-accent-success rounded-lg p-3 text-sm"
           >
-            {{ saveMessage }}
+            {{ saveMessage() }}
           </div>
         }
 
-        @if (testResult) {
+        @if (testResult()) {
           <div
             class="mt-3 border rounded-lg p-3 text-sm"
-            [class.bg-accent-success-muted]="testResult.success"
-            [class.border-accent-success]="testResult.success"
-            [class.text-accent-success]="testResult.success"
-            [class.bg-accent-danger-muted]="!testResult.success"
-            [class.border-accent-danger]="!testResult.success"
-            [class.text-accent-danger]="!testResult.success"
+            [class.bg-accent-success-muted]="testResult()?.success"
+            [class.border-accent-success]="testResult()?.success"
+            [class.text-accent-success]="testResult()?.success"
+            [class.bg-accent-danger-muted]="!testResult()?.success"
+            [class.border-accent-danger]="!testResult()?.success"
+            [class.text-accent-danger]="!testResult()?.success"
           >
-            {{ testResult.message }}
+            {{ testResult()?.message }}
           </div>
         }
       </div>
@@ -278,11 +283,11 @@
           </p>
           <button
             (click)="reindex()"
-            [disabled]="isReindexing"
+            [disabled]="isReindexing()"
             class="rounded-lg bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50 font-medium transition-colors"
           >
             {{
-              isReindexing
+              isReindexing()
                 ? translationService.translate('admin.settings.llm.reindexing')
                 : translationService.translate('admin.settings.llm.reindex')
             }}

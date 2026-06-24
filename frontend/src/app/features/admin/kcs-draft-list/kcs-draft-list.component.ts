@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,6 +11,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
   selector: 'app-kcs-draft-list',
   standalone: true,
   imports: [DatePipe, RouterLink, ModalComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './kcs-draft-list.component.html',
 })
 export class KcsDraftListComponent implements OnInit {

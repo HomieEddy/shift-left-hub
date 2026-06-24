@@ -218,7 +218,8 @@
   <div class="border-t border-border-default px-4 py-3">
     <div class="flex gap-2">
       <input
-        [(ngModel)]="currentInput"
+        [ngModel]="currentInput()"
+        (ngModelChange)="currentInput.set($event)"
         (keydown.enter)="sendMessage()"
         data-testid="chat-input"
         [placeholder]="translationService.translate('chat.input-placeholder')"
@@ -227,7 +228,7 @@
       />
       <button
         (click)="sendMessage()"
-        [disabled]="!currentInput.trim() || isStreaming()"
+        [disabled]="!currentInput().trim() || isStreaming()"
         data-testid="chat-send"
         class="rounded-xl bg-primary-600 px-4 py-2.5 text-sm text-white hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm flex items-center gap-1.5"
       >

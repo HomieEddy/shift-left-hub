@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
   selector: 'app-workspace-list',
   standalone: true,
   imports: [DatePipe, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workspace-list.component.html',
 })
 export class WorkspaceListComponent implements OnInit {

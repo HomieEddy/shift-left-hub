@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-register',
   standalone: true,
   imports: [FormsModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
@@ -21,8 +22,8 @@ export class RegisterComponent {
   password = '';
   showPassword = false;
   displayName = '';
-  errorMessage = '';
-  isLoading = false;
+  errorMessage = signal('');
+  isLoading = signal(false);
   showPasswordRules = false;
 
   get passwordStrength(): number {
@@ -38,14 +39,14 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
-    this.errorMessage = '';
+    this.errorMessage.set('');
 
     if (!this.passwordValid) {
-      this.errorMessage = this.translationService.translate('error.password-rules');
+      this.errorMessage.set(this.translationService.translate('error.password-rules'));
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
 
     this.authService
       .register({
@@ -59,15 +60,15 @@ export class RegisterComponent {
           void this.router.navigate(['/articles']);
         },
         error: (err: HttpErrorResponse) => {
-          this.isLoading = false;
+          this.isLoading.set(false);
           if (err.status === 409) {
-            this.errorMessage = this.translationService.translate('error.email-exists');
+            this.errorMessage.set(this.translationService.translate('error.email-exists'));
           } else {
-            this.errorMessage = this.translationService.translate('error.registration-failed');
+            this.errorMessage.set(this.translationService.translate('error.registration-failed'));
           }
         },
         complete: () => {
-          this.isLoading = false;
+          this.isLoading.set(false);
         },
       });
   }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WorkspaceService } from './workspace.service';
@@ -11,6 +11,7 @@ import { WorkspaceSettingsComponent } from './workspace-settings.component';
   selector: 'app-workspace-detail',
   standalone: true,
   imports: [WorkspaceMembersComponent, WorkspaceSettingsComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workspace-detail.component.html',
 })
 export class WorkspaceDetailComponent implements OnInit {

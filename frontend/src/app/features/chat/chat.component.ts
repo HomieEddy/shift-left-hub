@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   inject,
   isDevMode,
@@ -35,6 +36,7 @@ import { LoggerService } from '../../core/logging/logger.service';
     ModalComponent,
     EscalationFormComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
@@ -45,7 +47,7 @@ export class ChatComponent {
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   messages = signal<ChatMessage[]>([]);
-  currentInput = '';
+  currentInput = signal('');
   isStreaming = signal(false);
   showFeedback = signal(false);
   showFollowUp = signal(false);
@@ -78,10 +80,10 @@ export class ChatComponent {
   });
 
   sendMessage() {
-    const text = this.currentInput.trim();
+    const text = this.currentInput().trim();
     if (!text || this.isStreaming()) return;
 
-    this.currentInput = '';
+    this.currentInput.set('');
     this.errorMessage.set(null);
     this.escalationPayload.set(null);
     this.showFeedback.set(false);
@@ -192,8 +194,9 @@ export class ChatComponent {
       const userMessages = this.messages().filter((m) => m.role === 'user');
       const lastUserContent =
         userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
-      this.currentInput =
-        'The user indicated this did not solve their problem. Original issue: ' + lastUserContent;
+      this.currentInput.set(
+        'The user indicated this did not solve their problem. Original issue: ' + lastUserContent,
+      );
       this.sendMessage();
     }
   }
@@ -201,7 +204,7 @@ export class ChatComponent {
   handleFollowUp(yes: boolean) {
     this.showFollowUp.set(false);
     if (yes) {
-      this.currentInput = '';
+      this.currentInput.set('');
     } else {
       this.showCloseModal.set(true);
     }
@@ -250,7 +253,7 @@ export class ChatComponent {
     this.errorMessage.set(null);
     const lastUserMsg = [...this.messages()].reverse().find((m) => m.role === 'user');
     if (lastUserMsg) {
-      this.currentInput = lastUserMsg.content;
+      this.currentInput.set(lastUserMsg.content);
       const lastIdx = this.messages().lastIndexOf(lastUserMsg);
       this.messages.update((m) => m.slice(0, lastIdx));
       this.sendMessage();

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
   selector: 'app-document-list',
   standalone: true,
   imports: [DatePipe, FormsModule, ModalComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './document-list.component.html',
 })
 export class DocumentListComponent implements OnInit {
