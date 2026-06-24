@@ -16,6 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -62,31 +65,46 @@ class TagServiceTest {
             .build();
     }
 
-    // ── getAllTags ────────────────────────────────────────────
+    // ── getAllTags (paginated) ───────────────────────────────
 
     @Test
-    void getAllTags_shouldReturnListWithArticleCounts() {
+    void getAllTags_shouldReturnPageWithArticleCounts() {
         Tag tag = createTag();
-        when(tagRepository.findAll()).thenReturn(List.of(tag));
+        when(tagRepository.findAll(any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of(tag)));
         when(articleRepository.countByTagIds(List.of(tagId))).thenReturn(List.of());
 
-        List<TagResponse> responses = tagService.getAllTags();
+        Page<TagResponse> page = tagService.getAllTags(0, 20);
 
-        assertEquals(1, responses.size());
-        assertEquals(nameEn, responses.getFirst().nameEn());
-        assertEquals(0L, responses.getFirst().articleCount());
+        assertEquals(1, page.getContent().size());
+        assertEquals(nameEn, page.getContent().get(0).nameEn());
+        assertEquals(0L, page.getContent().get(0).articleCount());
     }
 
     @Test
-    void getAllTags_shouldReturnEmptyList() {
-        when(tagRepository.findAll()).thenReturn(List.of());
+    void getAllTags_shouldReturnEmptyPage() {
+        when(tagRepository.findAll(any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of()));
 
-        List<TagResponse> responses = tagService.getAllTags();
+        Page<TagResponse> page = tagService.getAllTags(0, 20);
 
-        assertTrue(responses.isEmpty());
+        assertTrue(page.getContent().isEmpty());
     }
 
-    // ── getTagById ────────────────────────────────────────────
+    @Test
+    void getAllTags_shouldPassPageableWithCorrectSize() {
+        when(tagRepository.findAll(any(Pageable.class)))
+            .thenAnswer(inv -> {
+                Pageable p = inv.getArgument(0);
+                assertEquals(1, p.getPageNumber());
+                assertEquals(5, p.getPageSize());
+                return new PageImpl<>(List.of());
+            });
+
+        tagService.getAllTags(1, 5);
+    }
+
+    // ── getTagById ──────────────────────────────────────────
 
     @Test
     void getTagById_shouldSucceed() {
@@ -109,7 +127,7 @@ class TagServiceTest {
             () -> tagService.getTagById(tagId));
     }
 
-    // ── createTag ─────────────────────────────────────────────
+    // ── createTag ───────────────────────────────────────────
 
     @Test
     void createTag_shouldSucceed() {
@@ -124,7 +142,7 @@ class TagServiceTest {
         verify(tagRepository).save(any(Tag.class));
     }
 
-    // ── updateTag ─────────────────────────────────────────────
+    // ── updateTag ───────────────────────────────────────────
 
     @Test
     void updateTag_shouldSucceed() {
@@ -149,7 +167,7 @@ class TagServiceTest {
             () -> tagService.updateTag(tagId, request));
     }
 
-    // ── deleteTag ─────────────────────────────────────────────
+    // ── deleteTag ───────────────────────────────────────────
 
     @Test
     void deleteTag_shouldSucceedWhenUnused() {
@@ -181,7 +199,7 @@ class TagServiceTest {
             () -> tagService.deleteTag(tagId));
     }
 
-    // ── createTag: validation ──────────────────────────────────
+    // ── createTag: validation ────────────────────────────────
 
     @Test
     void createTag_shouldThrowWhenNameBlank() {

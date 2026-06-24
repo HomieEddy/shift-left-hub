@@ -10,6 +10,9 @@ import com.shiftleft.hub.tag.domain.TagInUseException;
 import com.shiftleft.hub.tag.domain.TagNotFoundException;
 import com.shiftleft.hub.tag.domain.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,16 +30,18 @@ public class TagService {
     private final ArticleRepository articleRepository;
 
     /**
-     * Retrieves all tags with their article counts.
+     * Retrieves a paginated list of tags with their article counts.
      *
-     * @return the list of all tag responses
+     * @param page the page index (zero-based)
+     * @param size the page size
+     * @return a page of tag responses
      */
-    public List<TagResponse> getAllTags() {
-        List<Tag> tags = tagRepository.findAll();
-        Map<UUID, Long> articleCounts = countArticlesPerTag(tags);
-        return tags.stream()
-            .map(tag -> TagResponse.from(tag, articleCounts.getOrDefault(tag.getId(), 0L)))
-            .toList();
+    public Page<TagResponse> getAllTags(int page, int size) {
+        Page<Tag> tagPage = tagRepository.findAll(
+            PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")));
+        Map<UUID, Long> articleCounts = countArticlesPerTag(tagPage.getContent());
+        return tagPage.map(tag ->
+            TagResponse.from(tag, articleCounts.getOrDefault(tag.getId(), 0L)));
     }
 
     /**

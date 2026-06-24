@@ -6,6 +6,7 @@ import com.shiftleft.hub.tag.api.dto.UpdateTagRequest;
 import com.shiftleft.hub.tag.service.TagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,10 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,13 +31,17 @@ public class AdminTagController {
     private final TagService tagService;
 
     /**
-     * Retrieves all tags.
+     * Retrieves a paginated list of tags.
      *
-     * @return the list of all tag responses
+     * @param page the page index (zero-based, defaults to 0)
+     * @param size the page size (defaults to 20)
+     * @return paginated tag responses
      */
     @GetMapping
-    public List<TagResponse> getAllTags() {
-        return tagService.getAllTags();
+    public Page<TagResponse> getAllTags(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return tagService.getAllTags(page, size);
     }
 
     /**
@@ -77,7 +82,7 @@ public class AdminTagController {
     }
 
     /**
-     * Deletes a tag by its ID.
+     * Deletes a tag.
      *
      * @param id the tag UUID
      */
