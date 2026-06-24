@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, isDevMode, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import { WorkspaceRoleService } from './core/auth/workspace-role.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
-import { KcsDraftService } from './features/admin/kcs-draft.service';
-import { interval, switchMap, filter } from 'rxjs';
+import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucideMenu,
@@ -23,9 +22,9 @@ import {
   LucideUpload,
 } from '@lucide/angular';
 import { ToastContainer } from './shared/ui/toast/toast-container.component';
-import { LoggerService } from './core/logging/logger.service';
 import { WorkspaceSwitcherComponent } from './features/workspace-switcher/workspace-switcher.component';
 import { InvitationBadgeComponent } from './features/workspace-switcher/invitation-badge.component';
+import { KcsDraftBadgeComponent } from './features/admin/kcs-draft-badge/kcs-draft-badge.component';
 
 @Component({
   selector: 'app-root',
@@ -51,6 +50,7 @@ import { InvitationBadgeComponent } from './features/workspace-switcher/invitati
     ToastContainer,
     WorkspaceSwitcherComponent,
     InvitationBadgeComponent,
+    KcsDraftBadgeComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
@@ -61,11 +61,8 @@ export class App {
   protected workspaceRoleService = inject(WorkspaceRoleService);
   protected translationService = inject(TranslationService);
   private router = inject(Router);
-  private kcsDraftService = inject(KcsDraftService);
   private destroyRef = inject(DestroyRef);
-  private logger = inject(LoggerService);
 
-  pendingKcsCount = signal(0);
   isMobileMenuOpen = signal(false);
   showLogoutModal = signal(false);
   private readonly hideRoutes = ['/login', '/register'];
@@ -82,25 +79,10 @@ export class App {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((e) => this.hideSidebar.set(this.shouldHideSidebar(e.url)));
-
-    interval(60000)
-      .pipe(
-        filter(() => this.authService.isAdmin()),
-        switchMap(() => this.kcsDraftService.getPendingCount()),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe({
-        next: (response) => this.pendingKcsCount.set(response.pendingCount),
-        error: (err) => {
-          if (isDevMode()) {
-            this.logger.warn('KCS pending-count poll failed:', err);
-          }
-        },
-      });
   }
 
   switchLanguage(lang: SupportedLanguage): void {
-    this.translationService.switchLanguage(lang);
+    void this.translationService.switchLanguage(lang);
   }
 
   confirmLogout(): void {
