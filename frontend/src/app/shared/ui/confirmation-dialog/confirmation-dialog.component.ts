@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ConfirmationData } from './confirmation-dialog.model';
 import { TranslationService } from '../../../core/i18n/translation.service';
@@ -7,6 +7,7 @@ import { from } from 'rxjs';
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './confirmation-dialog.component.html',
 })
 export class ConfirmDialogComponent {
