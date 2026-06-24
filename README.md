@@ -1,42 +1,117 @@
 # Shift-Left Knowledge Hub
 
-A plug-and-play knowledge platform that turns any collection of documents into an intelligent, AI-powered assistant. Workspaces can bring their own knowledge base and their own LLM — making it domain-agnostic. IT helpdesk, HR policy lookup, legal research: the KB defines the domain.
+> **Shift resolution as close to the user as possible.** An AI-powered, multi-tenant knowledge platform that intercepts Level 0/1 issues before they hit the queue — and learns from every ticket it can't.
 
-## Status
+---
 
-| Milestone | Status | Date | Phases |
-|-----------|--------|------|--------|
-| v1.0 Initial MVP | Shipped | 2026-06-08 | 1-8 |
-| v2.0 Workspace Platform | Shipped | 2026-06-14 | 9-16 |
-| v2.1 Codebase Hardening | Shipped | 2026-06-22 | Security (S-1..S-17) + Tiers 1-10 cleanup (PRs #72-#125) |
-| v2.2 Post-Cleanup Polish | Shipped | 2026-06-23 | Tiers 12, 13, 14/18, 15, 16/17, 17.5/17.6 (PRs #126-#131) |
+## The Problem
+
+Knowledge work has a documentation paradox: the teams best positioned to write knowledge articles are the same teams drowning in tickets. The result is a knowledge base that's always six months out of date, agents answering the same five questions a day, and users waiting in a queue for answers that already exist somewhere.
+
+Traditional helpdesk platforms treat AI as a layer on top of a ticketing system. **Shift-Left Knowledge Hub inverts that** — the knowledge base *is* the product, the AI is the front door, and tickets are a fallback that capture the gaps.
+
+## What It Does
+
+- **Resolves issues at the source.** Users describe a problem in natural language and get a grounded answer sourced from the workspace's own documents, with citations back to the source.
+- **Escapes gracefully.** When the AI can't answer confidently, the entire chat context — messages, retrieved sources, similarity scores — is bundled into a ticket and routed to a human agent. No re-explaining.
+- **Closes the loop automatically.** Resolved tickets flagged as knowledge gaps trigger an AI-drafted article for agent review, so the next user with the same problem gets a Level 0 answer instead of a queue position.
+- **Works for any domain.** IT, HR, legal, finance — the knowledge base defines the domain. Bring your own docs, bring your own LLM, ship in an afternoon.
+
+## Highlights
+
+- **Hybrid RAG pipeline** — Reciprocal Rank Fusion over PostgreSQL full-text search (persistent `tsvector` + GIN) and pgvector cosine similarity, with a configurable similarity floor (default 0.65) to suppress hallucination.
+- **Modular monolith, package-by-module** — 13 bounded contexts (`user`, `article`, `ticket`, `ai`, `workspace`, `kcs`, …) sharing a single deployable. Clear module boundaries now, microservices later if scale demands it.
+- **BYO LLM with encrypted secrets** — Per-workspace OpenAI-compatible endpoint (Ollama, Voyage, OpenAI, anything). API keys encrypted at rest; SSRF validation on every endpoint URL.
+- **Event-driven knowledge capture (KCS)** — Spring `ApplicationEventPublisher` wires ticket resolution into AI-drafted articles. No message broker, no eventual-consistency surprises.
+- **Security-first by audit** — JWT with HttpOnly cookies + refresh rotation, path-traversal-safe uploads, fail-fast on weak dev secrets. 17 threat mitigations verified in a dedicated v2.1 security pass.
+- **Bilingual EN/FR from day one** — `@angular/localize` with dynamic layout handling. No retrofit, no `i18n.addLater()`.
 
 ## Features
 
-- **Multi-Tenant Workspaces** — Isolated workspaces with their own users, KB, LLM config, and taxonomy
-- **Document Ingestion** — Drag-and-drop upload for markdown, text, PDF, HTML, XML, Word; async ETL pipeline
-- **BYO LLM** — Per-workspace OpenAI-compatible endpoint configuration; API keys encrypted at rest
-- **AI Assistant** — Conversational interface with hybrid search (FTS + vector + RRF) across articles and document chunks
-- **Domain-Agnostic Taxonomy** — Custom categories and system prompts with template variables
-- **Contextual Ticketing** — Escalate with full AI chat context preserved
-- **KCS Auto-Drafting** — AI drafts new articles from resolved tickets flagged as knowledge gaps
-- **Bilingual** — English/French from day one with dynamic layout handling
-- **Security** — JWT with HttpOnly cookies + refresh rotation, path-traversal-safe uploads, SSRF-safe AI endpoints, fail-fast on weak dev secrets (v2.1 audit, S-1..S-17)
-- **Accessibility** — ARIA-labelled dialogs, focus management, keyboard navigation (v2.2 tier 17)
-- **Observability** — `/actuator/prometheus`, `/actuator/metrics`, `/actuator/info` (v2.2 tier 17)
+### Multi-tenant workspaces
+Isolated workspaces with their own users, knowledge base, taxonomy, and LLM configuration. Workspace admins manage everything from a single console.
+
+### Document ingestion
+Drag-and-drop upload for markdown, plain text, PDF, HTML, XML, and Word. Async ETL pipeline chunks, embeds, and indexes content without blocking the UI.
+
+### AI assistant
+Conversational interface with streaming responses, source citations, and hybrid search across both curated articles and raw document chunks. Similarity threshold prevents the assistant from fabricating answers when the KB is silent.
+
+### Domain-agnostic taxonomy
+Custom categories and per-workspace system prompts with template variables. The same platform serves IT helpdesk, HR policy, and legal research by changing the taxonomy and the seed content.
+
+### Contextual ticketing
+"Get me a human" preserves the full conversation: messages, retrieved sources, similarity scores, and the user's original query. Agents see exactly what the AI tried before escalating.
+
+### KCS auto-drafting
+Tickets marked as "knowledge gap" at resolution trigger an AI draft of a new article — pre-populated with the conversation context, ready for an agent to review and publish.
+
+### Bilingual
+English and French from initial release. Dynamic layout adapts to language direction and content length without breaking the grid.
+
+### Security & observability
+- JWT auth with HttpOnly cookies + refresh rotation (no localStorage)
+- Encrypted LLM secrets at rest
+- SSRF-safe AI endpoint validation
+- Path-traversal-safe file uploads
+- `/actuator/{health,info,prometheus,metrics}` exposed for monitoring
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Angular 21.2, Tailwind CSS v4, RxJS, Lucide Icons, Vitest |
-| Backend | Spring Boot 4.0.6, Java 21, Spring Security, JJWT 0.13.0 |
-| Database | PostgreSQL 16 + pgvector |
-| AI | Spring AI 1.1.7, OpenAI-compatible API (Ollama, Voyage, etc.) |
-| Deployment | Docker Compose, Vercel (frontend), Railway (backend + DB) |
-| CI/CD | GitHub Actions, Maven, pnpm, SonarCloud, commitlint |
+| **Frontend** | Angular 21.2, Tailwind CSS v4, RxJS, Lucide Icons, Vitest |
+| **Backend** | Spring Boot 4.0.6, Java 21, Spring Security, JJWT 0.13.0 |
+| **Database** | PostgreSQL 16 + pgvector (persistent `tsvector` + GIN for FTS) |
+| **AI** | Spring AI 1.1.7, OpenAI-compatible API (Ollama, Voyage, OpenAI, …) |
+| **Deployment** | Docker Compose, Vercel (frontend), Railway (backend + DB) |
+| **CI/CD** | GitHub Actions, Maven, pnpm, SonarCloud, commitlint + Husky |
 
-## Quick Start
+## How It Works
+
+```
+User asks a question
+        │
+        ▼
+┌─────────────────────┐
+│  Hybrid Retriever   │  ◀── FTS (tsvector + GIN) ──┐
+│  (RRF rank fusion)  │  ◀── pgvector cosine sim  ───┤
+└─────────┬───────────┘                            │
+          │ best chunk similarity > 0.65?           │
+          ├── yes ──▶ LLM drafts grounded answer    │
+          │              with citations              │
+          │                                         │  Workspace
+          └── no  ──▶ "Get me a human" button        │  knowledge
+                       │                            │  base
+                       ▼                            │
+              ┌─────────────────┐                   │
+              │  Ticket created │ ──── carries ─────┘
+              │  with full      │      full chat
+              │  chat context   │      context
+              └────────┬────────┘
+                       │ resolved + flagged
+                       ▼
+              ┌─────────────────┐
+              │  KCS pipeline   │  ──▶ AI-drafted article
+              │  (events)       │      for agent review
+              └─────────────────┘
+```
+
+## Project Status
+
+| Milestone | Status | Date | Scope |
+|-----------|--------|------|-------|
+| v1.0 Initial MVP | Shipped | 2026-06-08 | Phases 1-8 |
+| v2.0 Workspace Platform | Shipped | 2026-06-14 | Phases 9-16 |
+| v2.1 Codebase Hardening | Shipped | 2026-06-22 | Security audit (S-1..S-17) + Tiers 1-10 (PRs #72-#125) |
+| v2.2 Post-Cleanup Polish | Shipped | 2026-06-23 | Tiers 12-17.6 (PRs #126-#131) |
+
+---
+
+## Developer Notes
+
+<details>
+<summary><strong>Quick Start</strong></summary>
 
 ```bash
 # 1. Start PostgreSQL with pgvector
@@ -51,7 +126,10 @@ cd frontend && pnpm install && pnpm start
 # 4. Open http://localhost:4200
 ```
 
-## Project Structure
+</details>
+
+<details>
+<summary><strong>Project Structure</strong></summary>
 
 ```
 shift-left-hub/
@@ -89,45 +167,44 @@ shift-left-hub/
 │   ├── TSD.md                     # Testing Strategy Document
 │   ├── DHS.md                     # Deployment & Hosting Strategy
 │   ├── VCG.md                     # Version Control Guidelines
-│   ├── LDIG.md                    # Local Development & Infrastructure Guide
-│   ├── pre-deploy-checklist.md    # Step-by-step production deploy
-│   └── demo-walkthrough.md        # End-to-end demo script
+│   └── LDIG.md                    # Local Development & Infrastructure Guide
 ├── e2e/                           # Playwright specs (1 Golden Path + 9 exploratory)
-├── scripts/                       # Local helper scripts
-├── run/                           # Local run configurations
 ├── .github/                       # CI workflows, PR template, CODEOWNERS
-├── LICENSE
-├── CONTRIBUTING.md
-├── SECURITY.md
-└── docker-compose.yml             # PostgreSQL + pgvector
+├── docker-compose.yml             # PostgreSQL + pgvector
+├── AGENTS.md                      # Project guide for AI agents and contributors
+├── CONTRIBUTING.md                # Workflow, quality gates, commit types
+└── SECURITY.md                    # Reporting vulnerabilities, security model
 ```
 
-## Documentation
+</details>
 
-The `docs/` directory contains the full design rationale for the project. Start with:
+<details>
+<summary><strong>Test Coverage (v2.2)</strong></summary>
+
+| Layer | Count | Stack |
+|-------|-------|-------|
+| Backend | 469 | JUnit 5 + Mockito + Testcontainers (PostgreSQL 16) |
+| Frontend | 306 | Vitest, HttpTestingController, signal-based components |
+| E2E | 10 | 1 Golden Path (CI-required) + 9 exploratory (non-gating) |
+
+</details>
+
+<details>
+<summary><strong>Documentation</strong></summary>
+
+The `docs/` directory contains the full design rationale. Start here:
 
 - [PRD](docs/PRD.md) — Product requirements and value proposition
 - [ARD](docs/ARD.md) — Architecture and data flows
 - [DDD](docs/DDD.md) — Database schema and indexing strategy
 - [CCG](docs/CCG.md) — Coding standards and conventions
+- [TSD](docs/TSD.md) — Testing strategy
 
-The project also ships developer-facing guides at the repo root:
+For an end-to-end walkthrough, see [demo-walkthrough.md](docs/demo-walkthrough.md).
 
-- [AGENTS.md](AGENTS.md) — Project guide for AI agents and human contributors
-- [CONTRIBUTING.md](CONTRIBUTING.md) — Workflow, quality gates, commit types
-- [SECURITY.md](SECURITY.md) — Reporting vulnerabilities, security model
+</details>
 
-## Test counts (as of v2.2)
-
-| Layer | Count | Note |
-|-------|-------|------|
-| Backend tests | 469 | JUnit 5 + Mockito + Testcontainers (PostgreSQL 16) |
-| Frontend tests | 306 | Vitest, HttpTestingController, signal-based components |
-| E2E specs | 10 | 1 Golden Path (CI-required) + 9 exploratory (non-gating) |
-
-## Demo
-
-See [demo-walkthrough.md](docs/demo-walkthrough.md) for a guided end-to-end tour of the application.
+---
 
 ## License
 
