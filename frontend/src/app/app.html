@@ -17,85 +17,86 @@
       </div>
 
       <nav class="flex flex-col gap-0.5 p-3 flex-1">
-        <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link">
-          <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
-          <span class="sidebar-label">{{ translationService.translate('nav.home') }}</span>
-        </a>
-
-        <div class="mt-4 mb-1 px-2">
-          <span
-            class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider"
-            >{{ translationService.translate('nav.section.user') }}</span
-          >
-        </div>
-
-        <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link">
-          <span class="sidebar-icon"><svg lucideBookOpen /></span>
-          <span class="sidebar-label">{{
-            translationService.translate('nav.knowledge-base')
-          }}</span>
-        </a>
-
-        @if (authService.isAuthenticated()) {
-          <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideMessageSquare /></span>
-            <span class="sidebar-label">{{
-              translationService.translate('nav.ai-assistant')
-            }}</span>
-          </a>
-          <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideTicket /></span>
-            <span class="sidebar-label">{{ translationService.translate('nav.my-tickets') }}</span>
-          </a>
-        }
-
-        @if (authService.isAuthenticated() && authService.isAgent() && !authService.isAdmin()) {
-          <div class="mt-4 mb-1 px-2">
-            <span
-              class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider"
-              >{{ translationService.translate('nav.section.agent') }}</span
-            >
-          </div>
-
-          <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideLayoutList /></span>
-            <span class="sidebar-label">{{
-              translationService.translate('nav.ticket-queue')
-            }}</span>
-          </a>
-        }
-
-        @if (authService.isAuthenticated() && authService.isAdmin()) {
-          <div class="mt-4 mb-1 px-2">
-            <span
-              class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider"
-              >{{ translationService.translate('nav.section.admin') }}</span
-            >
-          </div>
-
-          <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideLayoutList /></span>
-            <span class="sidebar-label">{{
-              translationService.translate('nav.ticket-queue')
-            }}</span>
-          </a>
-
-          <a routerLink="/admin/workspaces" routerLinkActive="sidebar-active" class="sidebar-link">
+        @defer (on viewport; prefetch on idle) {
+          <a routerLink="/" routerLinkActive="sidebar-active" class="sidebar-link">
             <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
-            <span class="sidebar-label">{{ translationService.translate('nav.workspaces') }}</span>
+            <span class="sidebar-label">{{ translationService.translate('nav.home') }}</span>
           </a>
-          <a routerLink="/admin/documents" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideUpload /></span>
-            <span class="sidebar-label">{{ translationService.translate('nav.documents') }}</span>
+
+          <div class="mt-4 mb-1 px-2">
+            <span
+              class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider"
+              >{{ translationService.translate('nav.section.user') }}</span
+            >
+          </div>
+
+          <a routerLink="/articles" routerLinkActive="sidebar-active" class="sidebar-link">
+            <span class="sidebar-icon"><svg lucideBookOpen /></span>
+            <span class="sidebar-label">{{
+              translationService.translate('nav.knowledge-base')
+            }}</span>
           </a>
-          <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideUsers /></span>
-            <span class="sidebar-label">{{ translationService.translate('nav.users') }}</span>
-          </a>
-          <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideFileText /></span>
-            <span class="sidebar-label">{{ translationService.translate('nav.articles') }}</span>
-          </a>
+
+          @if (authService.isAuthenticated()) {
+            <a routerLink="/chat" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideMessageSquare /></span>
+              <span class="sidebar-label">{{
+                translationService.translate('nav.ai-assistant')
+              }}</span>
+            </a>
+            <a routerLink="/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideTicket /></span>
+              <span class="sidebar-label">{{ translationService.translate('nav.my-tickets') }}</span>
+            </a>
+          }
+
+          @if (authService.isAuthenticated() && authService.isAgent() && !authService.isAdmin()) {
+            <div class="mt-4 mb-1 px-2">
+              <span
+                class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider"
+                >{{ translationService.translate('nav.section.agent') }}</span
+              >
+            </div>
+
+            <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideLayoutList /></span>
+              <span class="sidebar-label">{{
+                translationService.translate('nav.ticket-queue')
+              }}</span>
+            </a>
+          }
+
+          @if (authService.isAuthenticated() && authService.isAdmin()) {
+            <div class="mt-4 mb-1 px-2">
+              <span
+                class="sidebar-label text-text-tertiary text-xs font-semibold uppercase tracking-wider"
+                >{{ translationService.translate('nav.section.admin') }}</span
+              >
+            </div>
+
+            <a routerLink="/agent/tickets" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideLayoutList /></span>
+              <span class="sidebar-label">{{
+                translationService.translate('nav.ticket-queue')
+              }}</span>
+            </a>
+
+            <a routerLink="/admin/workspaces" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideLayoutDashboard /></span>
+              <span class="sidebar-label">{{ translationService.translate('nav.workspaces') }}</span>
+            </a>
+            <a routerLink="/admin/documents" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideUpload /></span>
+              <span class="sidebar-label">{{ translationService.translate('nav.documents') }}</span>
+            </a>
+            <a routerLink="/admin/users" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideUsers /></span>
+              <span class="sidebar-label">{{ translationService.translate('nav.users') }}</span>
+            </a>
+            <a routerLink="/admin/articles" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideFileText /></span>
+              <span class="sidebar-label">{{ translationService.translate('nav.articles') }}</span>
+            </a>
           <a
             routerLink="/admin/kcs-drafts"
             routerLinkActive="sidebar-active"
@@ -103,27 +104,25 @@
           >
             <span class="sidebar-icon"><svg lucideClipboardList /></span>
             <span class="sidebar-label">{{ translationService.translate('nav.kcs-drafts') }}</span>
-            @if (pendingKcsCount() > 0) {
-              <span class="absolute top-1 right-2 flex h-2 w-2">
-                <span
-                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"
-                ></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-              </span>
-            }
+            @defer (on idle; prefetch on idle) {
+              <app-kcs-draft-badge />
+            } @placeholder {}
           </a>
-          <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link">
-            <span class="sidebar-icon"><svg lucideTag /></span>
-            <span class="sidebar-label">{{ translationService.translate('nav.tags') }}</span>
-          </a>
-          <a
-            routerLink="/admin/settings/llm"
-            routerLinkActive="sidebar-active"
-            class="sidebar-link"
-          >
-            <span class="sidebar-icon"><svg lucideSettings /></span>
-            <span class="sidebar-label">{{ translationService.translate('nav.ai-settings') }}</span>
-          </a>
+            <a routerLink="/admin/tags" routerLinkActive="sidebar-active" class="sidebar-link">
+              <span class="sidebar-icon"><svg lucideTag /></span>
+              <span class="sidebar-label">{{ translationService.translate('nav.tags') }}</span>
+            </a>
+            <a
+              routerLink="/admin/settings/llm"
+              routerLinkActive="sidebar-active"
+              class="sidebar-link"
+            >
+              <span class="sidebar-icon"><svg lucideSettings /></span>
+              <span class="sidebar-label">{{ translationService.translate('nav.ai-settings') }}</span>
+            </a>
+          }
+        } @placeholder {
+          <div class="h-32"></div>
         }
       </nav>
 
@@ -168,7 +167,11 @@
           <span class="text-sm text-text-secondary truncate max-w-[160px]">{{
             authService.user()?.displayName
           }}</span>
-          <app-workspace-switcher />
+          @defer (on idle; prefetch on idle) {
+            <app-workspace-switcher />
+          } @placeholder {
+            <div class="w-32 h-8"></div>
+          }
         }
         <div
           class="flex items-center border border-border-default rounded-lg overflow-hidden text-xs"
@@ -195,7 +198,11 @@
           </button>
         </div>
         @if (authService.isAuthenticated()) {
-          <app-invitation-badge />
+          @defer (on idle; prefetch on idle) {
+            <app-invitation-badge />
+          } @placeholder {
+            <div class="w-8 h-8"></div>
+          }
           <button
             (click)="confirmLogout()"
             data-testid="nav-logout"
@@ -406,14 +413,9 @@
             <span class="sidebar-label !opacity-100">{{
               translationService.translate('nav.kcs-drafts')
             }}</span>
-            @if (pendingKcsCount() > 0) {
-              <span class="absolute top-1.5 right-3 flex h-2 w-2">
-                <span
-                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"
-                ></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-              </span>
-            }
+            @defer (on idle; prefetch on idle) {
+              <app-kcs-draft-badge />
+            } @placeholder {}
           </a>
           <a
             routerLink="/admin/tags"

@@ -1,8 +1,16 @@
 import { Routes } from '@angular/router';
+import { MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 import { authGuard } from './core/auth/auth.guard';
 import { adminGuard } from './core/auth/admin.guard';
 import { agentGuard } from './core/auth/agent.guard';
 import { redirectIfAuthenticatedGuard } from './core/auth/redirect-if-authenticated.guard';
+
+const markdownProviders = provideMarkdown({
+  markedOptions: {
+    provide: MARKED_OPTIONS,
+    useValue: { gfm: true, breaks: true },
+  },
+});
 
 /** Application route configuration with lazy-loaded feature modules. */
 export const routes: Routes = [
@@ -39,6 +47,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/articles/new',
+    providers: [markdownProviders],
     loadComponent: () =>
       import('./features/kb/admin/article-editor/article-editor.component').then(
         (m) => m.ArticleEditorComponent,
@@ -47,6 +56,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/articles/:id/edit',
+    providers: [markdownProviders],
     loadComponent: () =>
       import('./features/kb/admin/article-editor/article-editor.component').then(
         (m) => m.ArticleEditorComponent,
@@ -63,6 +73,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/kcs-drafts/:id/edit',
+    providers: [markdownProviders],
     loadComponent: () =>
       import('./features/kb/admin/article-editor/article-editor.component').then(
         (m) => m.ArticleEditorComponent,
@@ -174,6 +185,7 @@ export const routes: Routes = [
   },
   {
     path: 'articles/:id',
+    providers: [markdownProviders],
     loadComponent: () =>
       import('./features/kb/public/article-viewer/article-viewer.component').then(
         (m) => m.ArticleViewerComponent,
