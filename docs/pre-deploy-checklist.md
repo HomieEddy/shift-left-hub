@@ -1,4 +1,9 @@
-# Pre-Deploy Checklist — Phase 21
+# Pre-Deploy Checklist — Phase 21 (v2.1)
+
+> **Updated:** 2026-06-23 — v2.2.
+> Backend Spring Boot 4.0.6 (not 3.5). Actuator exposes `health`, `info`,
+> `prometheus`, `metrics` (v2.2 tier 17). Frontend build output is
+> `dist/shiftleft-hub/browser` (Angular 17+ application builder).
 
 ## Prerequisites
 

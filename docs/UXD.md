@@ -1,5 +1,10 @@
 # Shift-Left Knowledge Hub - UX/UI Document (UXD)
 
+> **Updated:** 2026-06-23 — v2.2. Modal a11y hardened (`aria-labelledby`, focus
+> capture/restore, first focusable child auto-focused). All role-restricted
+> routes use `canMatch` (auth) so unauthorized users no longer trigger a
+> chunk download.
+
 ## 1. The Design Philosophy: Functional Animation
 Avoid heavy third-party animation libraries. Leverage **Native Angular Animations** (`@angular/animations`) combined with **Tailwind CSS**. Motion is used strictly to guide the user's eye, explain state transitions, and reduce cognitive load.
 

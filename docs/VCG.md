@@ -1,72 +1,80 @@
 # Shift-Left Knowledge Hub - Version Control Guidelines (VCG)
 
-> **Updated:** 2026-06-14 — v2.0 Workspace Platform milestone.
-> Now enforced: PR branches use the pattern `feat/phase-N-short-description` for milestone-aligned contributions (e.g., `feat/phase-14-seeding-revamp`). All squashed PRs merge to `main`.
+> **Updated:** 2026-06-23 — v2.2.
+> Default branch is `master` (not `main`). Commit scopes are module names (`auth`, `kb`, `ticket`, etc.), not layers. Commitlint is enforced via `.husky/commit-msg`.
 
 ## 1. Branching Strategy (GitHub Flow)
-To maintain a clean and deployable codebase, this project uses a simplified, continuous delivery branching model (GitHub Flow). 
 
-* **`main`:** The single source of truth. Code in `main` must **always** be in a deployable state. Direct commits to `main` are strictly prohibited.
-* **Feature Branches:** All work happens in short-lived feature branches created from `main`.
+To maintain a clean and deployable codebase, this project uses a simplified, continuous delivery branching model (GitHub Flow).
+
+- **`master`:** The single source of truth. Code in `master` must **always** be in a deployable state. Direct commits to `master` are strictly prohibited.
+- **Feature Branches:** All work happens in short-lived feature branches created from `master`.
 
 ### Branch Naming Convention
-Branches must be named purposefully using the following format: `<type>/<short-description>`
+
+`<type>/<short-description>` — used for any non-phase work, OR `<type>/phase-N-short-description` for milestone-aligned contributions.
 
 **Types:**
-* `feat/` - A new feature or product addition (e.g., `feat/agent-dashboard-ui`)
-* `fix/` - A bug fix (e.g., `fix/jwt-token-expiration`)
-* `chore/` - Maintenance, dependencies, or configuration changes (e.g., `chore/update-angular-v17`)
-* `docs/` - Documentation updates (e.g., `docs/update-api-readme`)
-* `refactor/` - Code changes that neither fix a bug nor add a feature (e.g., `refactor/ticket-service-logic`)
+
+- `feat/` — A new feature or product addition (e.g. `feat/agent-dashboard-ui`)
+- `fix/` — A bug fix (e.g. `fix/jwt-token-expiration`)
+- `chore/` — Maintenance, dependencies, or configuration changes (e.g. `chore/update-angular-v21`)
+- `docs/` — Documentation updates (e.g. `docs/align-with-v2.2`)
+- `refactor/` — Code changes that neither fix a bug nor add a feature (e.g. `refactor/ticket-service-logic`)
+- `test/` — Adding or fixing tests
 
 ---
 
 ## 2. Commit Message Standards (Conventional Commits)
-This project enforces the **Conventional Commits** specification. This creates a readable history and allows for automated semantic versioning and changelog generation.
+
+This project enforces the **Conventional Commits** specification via `commitlint.config.cjs` and a `.husky/commit-msg` hook. Every commit must follow the format below or the commit will be rejected locally.
 
 ### Format
+
 `<type>(<scope>): <subject>`
 
 ### Rules
-1. **Type:** Must be one of `feat`, `fix`, `chore`, `docs`, `refactor`, `style`, `test`.
-2. **Scope (Optional but recommended):** Because this is a monorepo, always indicate which part of the app the commit affects: `(ui)`, `(api)`, `(db)`, or `(infra)`.
-3. **Subject:** Use the imperative, present tense ("add feature" not "added feature"). Do not capitalize the first letter. Do not end with a period.
+
+1. **Type:** Must be one of `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `style`, `perf`.
+2. **Scope:** Module or area of the monorepo (e.g. `auth`, `kb`, `ticket`, `ai`, `docker`, `deps`, `frontend`, `backend`). The project uses **module names**, not layers like `(ui)` / `(api)`.
+3. **Subject:** Imperative present tense ("add feature", not "added feature"). No capital first letter. No trailing period. ≤100 chars.
 
 ### Examples
-* ✅ `feat(api): implement postgres full-text search for articles`
-* ✅ `fix(ui): resolve overflow issue on ticket escalation form`
-* ✅ `chore(infra): add pgadmin to docker-compose`
-* ❌ `Added the new search thing to the backend.` *(Bad: not conventional, past tense, capitalized, ends in period)*
+
+- `feat(kb): add article slug uniqueness check` (good)
+- `fix(ticket): prevent null pointer on empty context` (good)
+- `chore(deps): bump JJWT to 0.13.0` (good)
+- `Added the new search thing to the backend.` (bad — not conventional, past tense, capitalized, ends in period)
+- `feat(ui): tweak the button` (acceptable but prefer `feat(<module>):`)
 
 ---
 
 ## 3. Pull Request (PR) Lifecycle
-Code merges into `main` strictly via Pull Requests. 
+
+Code merges into `master` strictly via Pull Requests.
 
 ### A. The "Self-Review" Rule
-Before opening a PR or assigning a reviewer, the author **must** review their own "Files Changed" tab in GitHub/GitLab. 
-* Check for accidentally committed `console.log()` or `System.out.println()`.
-* Ensure no commented-out block of code is left behind.
-* Verify that only files relevant to the feature are included.
 
-### B. Standardized PR Template
-Every PR description must use the following structure to provide context to reviewers:
+Before opening a PR or assigning a reviewer, the author **must** review their own "Files Changed" tab in GitHub.
 
-```markdown
-## Description
-## Type of Change
-- [ ] Bug fix (non-breaking change)
-- [ ] New feature (non-breaking change)
-- [ ] Refactor (code improvement)
-- [ ] Breaking change (requires database migration or API contract update)
+- Check for accidentally committed `console.log()` or `System.out.println()`.
+- Ensure no commented-out block of code is left behind.
+- Verify that only files relevant to the feature are included.
+- No `.planning/` files in the diff (those are gitignored).
 
-## Testing Performed
-## Checklist
-- [ ] I have performed a self-review of my code.
-- [ ] My commits follow the Conventional Commits standard.
-- [ ] I have updated the documentation (if applicable).
-```
+### B. PR Template (`.github/pull_request_template.md`)
+
+Every PR description must use the project template, which requires:
+
+- **What this PR does** (1-2 sentences)
+- **Requirements** (REQ-IDs from `REQUIREMENTS.md` or phase numbers from `ROADMAP.md`)
+- **Decisions** (any non-obvious trade-offs)
+- **Test counts** (e.g. `Backend: 469 (was 459, +10). Frontend: 306 (unchanged).`)
+- **Checklist** (4 items: self-review, no secrets, no `.planning/`, branch rebased)
 
 ### C. Merging Rules
-* Squash and Merge: When merging a PR into main, always use "Squash and Merge". This compresses all the minor commits (wip, fixing typo) into a single, clean Conventional Commit on the main branch timeline.
-* Delete the feature branch immediately after merging to keep the repository clean.
+
+- **Squash and Merge:** When merging a PR into `master`, always use "Squash and Merge". The squash commit message becomes the single Conventional Commits entry for the feature on the `master` timeline.
+- **Delete the feature branch** immediately after merging (use `gh pr merge --delete-branch` or the GitHub UI toggle) to keep the repository clean.
+- **Never merge directly to `master`**, even for solo development.
+- **Conflicts:** Rebase the feature branch onto `master` and resolve locally; never resolve via the GitHub UI.
