@@ -63,47 +63,47 @@ describe('TranslationService', () => {
   });
 
   describe('switchLanguage', () => {
-    it('should switch to French and persist to localStorage', () => {
+    it('should switch to French and persist to localStorage', async () => {
       service = TestBed.inject(TranslationService);
       expect(service.currentLang()).toBe('en');
 
-      service.switchLanguage('fr');
+      await service.switchLanguage('fr');
       expect(service.currentLang()).toBe('fr');
       expect(localStorage.getItem(STORAGE_KEY)).toBe('fr');
     });
 
-    it('should switch back to English and persist', () => {
+    it('should switch back to English and persist', async () => {
       localStorage.setItem(STORAGE_KEY, 'fr');
       service = TestBed.inject(TranslationService);
       expect(service.currentLang()).toBe('fr');
 
-      service.switchLanguage('en');
+      await service.switchLanguage('en');
       expect(service.currentLang()).toBe('en');
       expect(localStorage.getItem(STORAGE_KEY)).toBe('en');
     });
 
-    it('should toggle between languages multiple times', () => {
+    it('should toggle between languages multiple times', async () => {
       service = TestBed.inject(TranslationService);
 
-      service.switchLanguage('fr');
+      await service.switchLanguage('fr');
       expect(service.currentLang()).toBe('fr');
 
-      service.switchLanguage('en');
+      await service.switchLanguage('en');
       expect(service.currentLang()).toBe('en');
 
-      service.switchLanguage('fr');
+      await service.switchLanguage('fr');
       expect(service.currentLang()).toBe('fr');
     });
   });
 
   describe('signal reactivity', () => {
-    it('should update signal value immediately on switchLanguage', () => {
+    it('should update signal value immediately on switchLanguage', async () => {
       service = TestBed.inject(TranslationService);
 
-      service.switchLanguage('fr');
+      await service.switchLanguage('fr');
       expect(service.currentLang()).toBe('fr');
 
-      service.switchLanguage('en');
+      await service.switchLanguage('en');
       expect(service.currentLang()).toBe('en');
     });
 

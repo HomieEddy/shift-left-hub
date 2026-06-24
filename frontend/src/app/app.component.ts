@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, isDevMode, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import { WorkspaceRoleService } from './core/auth/workspace-role.service';
 import { TranslationService, SupportedLanguage } from './core/i18n/translation.service';
-import { interval, switchMap, filter } from 'rxjs';
+import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucideMenu,
@@ -22,7 +22,6 @@ import {
   LucideUpload,
 } from '@lucide/angular';
 import { ToastContainer } from './shared/ui/toast/toast-container.component';
-import { LoggerService } from './core/logging/logger.service';
 import { WorkspaceSwitcherComponent } from './features/workspace-switcher/workspace-switcher.component';
 import { InvitationBadgeComponent } from './features/workspace-switcher/invitation-badge.component';
 import { KcsDraftBadgeComponent } from './features/admin/kcs-draft-badge/kcs-draft-badge.component';
@@ -63,7 +62,6 @@ export class App {
   protected translationService = inject(TranslationService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
-  private logger = inject(LoggerService);
 
   isMobileMenuOpen = signal(false);
   showLogoutModal = signal(false);
