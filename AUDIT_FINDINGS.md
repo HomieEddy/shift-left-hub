@@ -1,9 +1,11 @@
 # Cleanup Audit — Phase A Discovery
 
-**Date:** 2026-06-21
+**Date:** 2026-06-21 (initial audit) — 2026-06-23 (v2.2 follow-up)
 **Scope:** 628 source files (194 Java, 110 TS, 62 tests)
 **Method:** 4 parallel audit agents across 9 categories (correctness, security, performance, test coverage, tech debt, dependencies, DX, i18n, a11y)
-**Verdict:** 80+ findings. Many HIGH-confidence, many S-effort. Significant cleanup opportunity.
+**Verdict:** 80+ findings in the initial Phase A discovery. A follow-up v2.2 audit
+identified the remaining 6 tiers (Tier 12-18), all closed in PRs #126-#131.
+**Milestone status:** v2.1 closed 2026-06-22, v2.2 closed 2026-06-23.
 
 ---
 
@@ -170,3 +172,39 @@
 - **Stubs:** 2 findings (deferred by design — leave for planned phases)
 
 **Estimated total cleanup effort:** ~30 PRs across 5 atomic commit groups.
+
+---
+
+## v2.2 Follow-up (Tiers 12-18, 2026-06-23)
+
+After v2.1 the audit identified six remaining tiers of cleanup. All six were closed in six PRs (PRs #126-#131) over a single day, with full CI green and the test count moving from 443→469 (backend) and 284→306 (frontend).
+
+| Tier | Title | PR | Commit | Files |
+|------|-------|----|----|-------|
+| 12 | DB/JPA hygiene — LAZY fetches, 4 missing indexes, 2 unique constraints (V4) | #126 | `eb10061` | `Article.java`, `Ticket.java`, `V4__tier12_db_jpa_hygiene.sql` |
+| 13 | Exception hygiene — 3 typed exceptions, 10 sites replaced, `@Valid` on cancelTicket | #127 | `84716f4` | `InvitationNotFoundException`, `AdminNotFoundException`, `LastAdminException`, `GlobalExceptionHandler` |
+| 15 | Frontend real bugs — 5 route-param subscription fixes, error.interceptor, auth signals, SSE retry | #128 | `4876130` | 7 component files + interceptor + auth + chat |
+| 16/17 | Routing (canMatch), modal a11y, commitlint hook, Prometheus actuator | #129 | `310fdc9` | 4 guards, modal, commitlint config, prometheus dep |
+| 14/18 | Backend polish — `AiDefaults` constants, `WorkspaceResponse.from`, `SelfModificationException`, bulk member count query | #130 | `6acd76c` | `AiDefaults`, `SelfModificationException`, `WorkspaceResponse`, `WorkspaceMemberRepository.countMembersByWorkspaceIds` |
+| 17.5/17.6 | Repo infra — LICENSE, CONTRIBUTING, SECURITY, `.editorconfig`, PR/issue templates | #131 | `be766f1` | 6 root files |
+
+### Test deltas
+
+| Layer | Pre-v2.2 | Post-v2.2 | Delta |
+|-------|----------|-----------|-------|
+| Backend | 443 (start of v2.2) | 469 | +26 |
+| Frontend | 284 | 306 | +22 |
+
+### Decisions (carried over from v2.2 milestones)
+
+- **No SpringDoc/OpenAPI** in v2.2: AGENTS.md bans swagger annotations unless they already exist in the codebase, and there is no official SpringDoc release for Spring Boot 4. Deferred.
+- **No `@angular/cdk` for the modal**: 20 lines of focus management beat 50KB of bundle weight for a single shared component.
+- **Commitlint as warnings, not errors, on footer style**: pre-existing footers in PRs #127/#128 don't have a leading blank line before `BREAKING CHANGE`. Let those pass with a warning rather than rewriting history.
+- **Bulk member count query** in `WorkspaceMemberRepository` uses a JPQL projection; the call site (`WorkspaceService.getMemberCounts`) returns a `Map<UUID, Long>`. Workspaces with no members are absent from the result — callers default to 0.
+
+### Skipped items (deferred to v2.3)
+
+- **OnPush migration** across 30+ components: large surface, no functional benefit beyond the existing zone.js change detection. Re-evaluate once Web Vitals signal a real bottleneck.
+- **TagService pagination**: no `TagService` exists yet; the tag admin UI hits the repository directly. Defer until the admin UI is built.
+- **Bundle size**: initial bundle is 560KB / 500KB budget. Address via route-level code-splitting when more admin modules are added.
+- **Spring Boot 4 SpringDoc**: track the upstream SpringDoc release notes; add when a Spring Boot 4-compatible version ships.
