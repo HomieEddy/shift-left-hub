@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,6 +11,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
   selector: 'app-ticket-list',
   standalone: true,
   imports: [DatePipe, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ticket-list.component.html',
 })
 export class TicketListComponent implements OnInit {

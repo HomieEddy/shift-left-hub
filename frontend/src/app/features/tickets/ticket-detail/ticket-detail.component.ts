@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
@@ -12,6 +12,7 @@ import { TranslationService } from '../../../core/i18n/translation.service';
   selector: 'app-ticket-detail',
   standalone: true,
   imports: [DatePipe, RouterLink, MarkdownModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ticket-detail.component.html',
 })
 export class TicketDetailComponent implements OnInit {

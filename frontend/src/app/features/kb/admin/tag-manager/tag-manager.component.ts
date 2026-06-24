@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TagService } from '../../services/tag.service';
@@ -10,6 +10,7 @@ import { ConfirmationDialogService } from '../../../../shared/ui/confirmation-di
   selector: 'app-tag-manager',
   standalone: true,
   imports: [FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tag-manager.component.html',
 })
 export class TagManagerComponent implements OnInit {
